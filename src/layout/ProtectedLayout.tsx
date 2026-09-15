@@ -18,7 +18,7 @@ export default function ProtectedLayout({
     return <Navigate to={"/"} replace />
   }
 
-  if (user.role !== allowedRole) {
+  if (!user.role.includes(allowedRole)) {
     return <Navigate to={"/unauthorized"} replace />
   }
 

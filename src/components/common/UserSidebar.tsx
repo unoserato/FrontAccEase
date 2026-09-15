@@ -1,4 +1,4 @@
-import { SidebarIcon } from "lucide-react"
+import { Settings, SidebarIcon } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -13,9 +13,10 @@ import {
 import { Logo } from "./Logo"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import { NavLink } from "react-router-dom"
-import { adminNav, instructorNav, learnerNav } from "@/const/navigation"
+import { schoolAdminNav, instructorNav, learnerNav } from "@/const/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { useInvalidateKeys } from "@/services/tanstack/auth"
+import { buttonVariants } from "../ui/button"
 
 export default function UserSidebar({ user = "LEARNER" }: { user: string }) {
   const { open, setOpen } = useSidebar()
@@ -26,7 +27,7 @@ export default function UserSidebar({ user = "LEARNER" }: { user: string }) {
       ? learnerNav
       : user == "INSTRUCTOR"
         ? instructorNav
-        : adminNav
+        : schoolAdminNav
 
   async function handleLogout() {
     invalidate(["user"])
@@ -100,11 +101,13 @@ export default function UserSidebar({ user = "LEARNER" }: { user: string }) {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="pb-4">
+      <SidebarFooter
+        className={`${open ? "flex-row items-center" : "flex-col-reverse"} ease justify-between pb-4 transition-all duration-500`}
+      >
         <NavLink
           to="/"
           onClick={handleLogout}
-          className="flex items-center gap-2 rounded-md py-2 hover:bg-muted"
+          className="flex shrink-0 items-center gap-2 rounded-md py-2"
         >
           <Avatar>
             <AvatarImage
@@ -116,6 +119,19 @@ export default function UserSidebar({ user = "LEARNER" }: { user: string }) {
           </Avatar>
           {open && <p className="shrink-0">Last Name</p>}
         </NavLink>
+        <div className="flex">
+          <Tooltip>
+            <TooltipTrigger>
+              <NavLink
+                to="/settings"
+                className={buttonVariants({ variant: "ghost" })}
+              >
+                <Settings size={16} />
+              </NavLink>
+            </TooltipTrigger>
+            <TooltipContent>Settings</TooltipContent>
+          </Tooltip>
+        </div>
       </SidebarFooter>
     </Sidebar>
   )

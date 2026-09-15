@@ -24,6 +24,7 @@ export const learnerNav = [
   { name: "Chat", href: "/learner/chat", icon: BotMessageSquare },
   { name: "Analyzer", href: "/learner/analyzer", icon: FileSearch2 },
 ]
+
 export const instructorNav = [
   { name: "Dashboard", href: "/instructor/dashboard", icon: LayoutDashboard },
   { name: "Modules", href: "/instructor/modules", icon: Book },
@@ -31,9 +32,15 @@ export const instructorNav = [
   { name: "Classroom", href: "/instructor/classroom", icon: SiGoogleclassroom },
   { name: "Analyzer Logs", href: "/instructor/logs", icon: FileText },
 ]
-export const adminNav = [
+
+export const schoolAdminNav = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { name: "Academic Materials", href: "/admin/materials", icon: Book },
+  { name: "Learning Materials", href: "/admin/learning-materials", icon: Book },
+  {
+    name: "Instructor Materials",
+    href: "/admin/instructor-materials",
+    icon: SiGoogleclassroom,
+  },
   { name: "Instruments", href: "/admin/instruments", icon: Files },
   { name: "Users", href: "/admin/users", icon: Users },
   { name: "Analyzer Logs", href: "/admin/logs", icon: FileText },
