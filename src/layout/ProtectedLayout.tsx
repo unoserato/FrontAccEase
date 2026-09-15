@@ -29,7 +29,7 @@ export default function ProtectedLayout({
     <div
       className={`flex ${isMobile ? "flex-col" : "flex-row"} h-screen w-screen overflow-hidden`}
     >
-      <UserSidebar user={allowedRole.toUpperCase()} />
+      <UserSidebar />
       {isMobile && <UserHeader />}
       <main className="min-h-0 min-w-0 flex-1 overflow-y-auto">
         <Outlet />

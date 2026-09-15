@@ -1,14 +1,14 @@
+import { user } from "@/const/data"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-
-const user = ["admin", "learner", "instructor"]
 
 export function useUser() {
   return useQuery({
     queryKey: ["user"],
     queryFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000))
-      return { role: user }
+      return user
     },
+    refetchInterval: 0,
   })
 }
 
