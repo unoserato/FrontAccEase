@@ -13,37 +13,24 @@ import {
 import { Logo } from "./Logo"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import { NavLink } from "react-router-dom"
-import { schoolAdminNav, instructorNav, learnerNav } from "@/const/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { useInvalidateKeys, useUser } from "@/services/tanstack/auth"
+import { useInvalidateKeys } from "@/services/tanstack/auth"
 import { buttonVariants } from "../ui/button"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { useMemo } from "react"
 
-export default function UserSidebar() {
-  const { data: user } = useUser()
+interface UserSidebarProps {
+  links: { name: string; href: string; icon: any }[]
+  name: string
+}
+
+export default function UserSidebar({ links, name }: UserSidebarProps) {
   const { open, setOpen, openMobile, setOpenMobile } = useSidebar()
   const invalidate = useInvalidateKeys()
   const isMobile = useIsMobile()
 
-  const links = useMemo(() => {
-    switch (user?.role) {
-      case "learner":
-        return learnerNav
-      case "instructor":
-        return instructorNav
-      case "admin":
-        return schoolAdminNav
-      default:
-        return []
-    }
-  }, [user])
-
   async function handleLogout() {
     invalidate(["user"])
   }
-
-  if (!user) return null
 
   return (
     <Sidebar side={isMobile ? "right" : "left"} collapsible="icon">
@@ -152,7 +139,7 @@ export default function UserSidebar() {
             />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <p className="shrink-0">{user.name}</p>
+          <p className="shrink-0 capitalize">{name}</p>
         </NavLink>
 
         <div className="flex">

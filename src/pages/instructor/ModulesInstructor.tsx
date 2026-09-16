@@ -1,7 +1,8 @@
 import PageWithTitleTemplate, {
   type CtaItem,
 } from "@/components/common/PageWithTitleTemplate"
-import { Book, Pencil } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Pencil, Plus } from "lucide-react"
 
 const cta: CtaItem[] = [
   {
@@ -9,16 +10,15 @@ const cta: CtaItem[] = [
     ctaFn: function alertFn() {
       alert("Draft button clicked")
     },
-    variant: "secondary",
+    variant: "ghost",
     iconPos: "start",
-    icon: Pencil,
   },
   {
     name: "New Module",
     href: "./new",
     variant: "default",
     iconPos: "start",
-    icon: Book,
+    icon: Plus,
   },
 ]
 

@@ -29,7 +29,7 @@ import Analyzer from "./pages/learner/Analyzer"
 import Chat from "./pages/learner/Chat"
 import Classroom from "./pages/learner/Classroom"
 import Quizzes from "./pages/learner/Quizzes"
-import TextEditor from "./features/TextEditor"
+import ModuleEditor from "./features/ModuleEditor"
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -61,7 +61,7 @@ export const router = createBrowserRouter(
         <Route path="classroom" element={<ClassroomInstructor />} />
         <Route path="logs" element={<AnalyzerLogsInstructor />} />
       </Route>
-      <Route path="/instructor/modules/new" element={<TextEditor />} />
+      <Route path="/instructor/modules/new" element={<ModuleEditor />} />
       {/*  */}
       {/* SCHOOL ADMIN */}
       <Route path="admin" element={<ProtectedLayout allowedRole="admin" />}>
