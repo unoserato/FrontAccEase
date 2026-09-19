@@ -1,5 +1,5 @@
-@import './styles/_variables.scss';
-@import './styles/_keyframe-animations.scss';
+@import "./styles/_variables.scss";
+@import "./styles/_keyframe-animations.scss";
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -16,6 +16,14 @@
 .dark::selection {
   background-color: white;
   color: black;
+}
+
+.p-responsive {
+  @apply mx-auto max-w-7xl space-y-6 p-4 pb-24 md:p-8 lg:p-12;
+}
+
+.grid-responsive {
+  @apply grid grid-cols-1 gap-2 sm:grid-cols-2 md:gap-4 lg:grid-cols-3;
 }
 
 @theme inline {

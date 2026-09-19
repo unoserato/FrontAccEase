@@ -13,9 +13,12 @@ import {
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
-import { classrooms } from "@/const/data"
-import type { ClassroomProps } from "@/const/materialsProps"
-import { useUnmount } from "@/hooks/UseUnmount"
+import { classrooms, modules } from "@/const/data"
+import {
+  type ClassroomProps,
+  type WCAGPrinciple,
+  WCAG_PRINCIPLES_DATA,
+} from "@/const/materialsProps"
 import {
   Check,
   ChevronLeft,
@@ -23,26 +26,58 @@ import {
   Globe,
   Lock,
   Save,
-  Search,
   Send,
   X,
 } from "lucide-react"
-import { useMemo, useState } from "react"
-import { Link } from "react-router-dom"
+import { useEffect, useMemo, useState } from "react"
+import { Link, useParams } from "react-router-dom"
 import { useHotkeys } from "react-hotkeys-hook"
 import { cn } from "cn"
 import SearchTemplate from "@/components/common/SearchTemplate"
+import { useUnmount } from "@/hooks/useUnmount"
 
 const MODULES_PATH = "/instructor/modules"
 
 export default function ModuleEditor() {
-  const [title, setTitle] = useState("Untitled Module")
-  const [content, setContent] = useState("")
+  const { id } = useParams<{ id?: string }>()
+  const existingModule = useMemo(
+    () => (id ? modules.find((doc) => String(doc.id) === String(id)) : null),
+    [id]
+  )
+
+  const [title, setTitle] = useState(
+    existingModule ? existingModule.name : "Untitled Module"
+  )
+  const [content, setContent] = useState<any>(
+    existingModule ? existingModule.content : ""
+  )
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedClassrooms, setSelectedClassrooms] = useState<string[]>([])
+  const [selectedClassrooms, setSelectedClassrooms] = useState<string[]>(
+    existingModule?.classrooms ? existingModule.classrooms : []
+  )
+  const [selectedPrinciple, setSelectedPrinciple] = useState<WCAGPrinciple>(
+    existingModule?.principle ? existingModule.principle : "Perceivable"
+  )
+  const [selectedTags, setSelectedTags] = useState<string[]>(
+    existingModule?.tags ? existingModule.tags : []
+  )
   const [isSaving, setIsSaving] = useState(false)
+
+  useEffect(() => {
+    if (existingModule) {
+      setTitle(existingModule.name)
+      setContent(existingModule.content)
+      if (existingModule.principle)
+        setSelectedPrinciple(existingModule.principle)
+      if (existingModule.tags) setSelectedTags(existingModule.tags)
+      if (existingModule.classrooms)
+        setSelectedClassrooms(existingModule.classrooms)
+    }
+  }, [existingModule])
+
+  const availableTags = WCAG_PRINCIPLES_DATA[selectedPrinciple] || []
 
   useUnmount({ when: !!content })
 
@@ -83,11 +118,19 @@ export default function ModuleEditor() {
     )
   }
 
+  function handleToggleTag(tag: string) {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    )
+  }
+
   function handleSave() {
     setIsSaving(true)
     const payload = {
       title,
       content,
+      principle: selectedPrinciple,
+      tags: selectedTags,
       classrooms: selectedClassrooms,
       status: isPublish ? "published" : "draft",
     }
@@ -172,6 +215,105 @@ export default function ModuleEditor() {
                 </DialogHeader>
 
                 <div className="flex-1 space-y-4 overflow-y-auto py-2 pr-1">
+                  {/* WCAG Principle Selector (Single Principle Only) */}
+                  <Field className="flex flex-col gap-2">
+                    <FieldLabel className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                      WCAG Principle (Select One)
+                    </FieldLabel>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                      {(
+                        [
+                          "Perceivable",
+                          "Operable",
+                          "Understandable",
+                          "Robust",
+                        ] as const
+                      ).map((principle) => {
+                        const isSelected = selectedPrinciple === principle
+                        return (
+                          <Button
+                            key={principle}
+                            type="button"
+                            variant={isSelected ? "default" : "outline"}
+                            size="sm"
+                            className="h-8 text-xs font-medium"
+                            onClick={() => {
+                              setSelectedPrinciple(principle)
+                              setSelectedTags([])
+                            }}
+                          >
+                            {principle}
+                          </Button>
+                        )
+                      })}
+                    </div>
+                  </Field>
+
+                  {/* WCAG Tags / Success Criteria Selector (Filtered by Principle) */}
+                  <Field className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <FieldLabel className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                        WCAG Topics / Tags ({selectedTags.length})
+                      </FieldLabel>
+                      {selectedTags.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedTags([])}
+                          className="text-xs text-muted-foreground underline hover:text-foreground"
+                        >
+                          Clear tags
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="max-h-36 divide-y overflow-y-auto rounded-lg border bg-background">
+                      {availableTags.map((tag) => {
+                        const checked = selectedTags.includes(tag)
+                        return (
+                          <label
+                            key={tag}
+                            className={cn(
+                              "flex cursor-pointer items-center gap-3 p-2 text-xs transition-colors select-none hover:bg-muted/50",
+                              checked && "bg-accent/40 font-medium"
+                            )}
+                          >
+                            <Checkbox
+                              checked={checked}
+                              onCheckedChange={() => handleToggleTag(tag)}
+                            />
+                            <span className="flex-1 truncate">{tag}</span>
+                            {checked && (
+                              <Check className="size-3.5 shrink-0 text-primary" />
+                            )}
+                          </label>
+                        )
+                      })}
+                    </div>
+
+                    {selectedTags.length > 0 && (
+                      <div className="flex max-h-24 flex-wrap gap-1.5 overflow-y-auto rounded-md border bg-muted/20 p-2">
+                        {selectedTags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground"
+                          >
+                            <span className="max-w-[180px] truncate">
+                              {tag}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleToggleTag(tag)}
+                              className="rounded-full p-0.5 hover:bg-muted"
+                              aria-label={`Remove ${tag}`}
+                            >
+                              <X className="size-3" />
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </Field>
+
                   {/* Toggle: All Classrooms */}
                   <div className="flex items-center justify-between rounded-lg border bg-muted/30 p-3">
                     <div className="space-y-0.5 pr-2">
@@ -217,8 +359,8 @@ export default function ModuleEditor() {
                     </div> */}
                     <SearchTemplate
                       title="classrooms by name or code"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e)}
+                      search={searchQuery}
+                      setSearch={(e) => setSearchQuery(e)}
                     />
 
                     {/* Classroom List */}
@@ -338,7 +480,10 @@ export default function ModuleEditor() {
 
       {/* Editor Body */}
       <main className="flex-1 overflow-hidden">
-        <SimpleEditor onChange={setContent} />
+        <SimpleEditor
+          onChange={setContent}
+          initialContent={content || existingModule?.content}
+        />
       </main>
     </div>
   )

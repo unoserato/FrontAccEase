@@ -1,4 +1,3 @@
-import { useDocumentContext } from "@/context/DocumentContext"
 import FindAndReplace from "@tiptap/extension-find-and-replace"
 import Highlight from "@tiptap/extension-highlight"
 import HorizontalRule from "@tiptap/extension-horizontal-rule"
@@ -13,19 +12,29 @@ import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import { ArrowLeft, Calendar, FileText } from "lucide-react"
 import { useEffect } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import { useIsMobile } from "@/hooks/use-mobile"
+import { modules } from "@/const/data"
+import { Card } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { getDateString } from "@/hooks/date-to-string"
 
 export default function ModuleReadOnly() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { documents, loading } = useDocumentContext()
+  const location = useLocation()
 
-  // Handle numerical ID vs string ID parsing
-  const documentId = id ? (isNaN(Number(id)) ? id : Number(id)) : null
-  const targetDoc = documents.find((doc) => doc.id === documentId)
-  const isMobile = useIsMobile()
+  const handleBack = () => {
+    const segments = location.pathname.split("/").filter(Boolean)
+    if (segments.length > 1) {
+      segments.pop()
+      navigate(`/${segments.join("/")}`)
+    } else {
+      navigate(-1)
+    }
+  }
+
+  const targetDoc = modules.find((doc) => String(doc.id) === String(id))
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -35,9 +44,9 @@ export default function ModuleReadOnly() {
         autocomplete: "off",
         autocorrect: "off",
         autocapitalize: "off",
-        "aria-label": "Read-only document content area.",
+        "aria-label": "Read-only module content area.",
         class:
-          "prose dark:prose-invert max-w-none focus:outline-none min-h-[500px]",
+          "prose dark:prose-invert max-w-none focus:outline-none min-h-[450px] leading-relaxed text-foreground",
       },
     },
     extensions: [
@@ -66,7 +75,7 @@ export default function ModuleReadOnly() {
     content: "",
   })
 
-  // Sync content dynamically when document finishes loading from Context
+  // Sync content dynamically when document finishes loading
   useEffect(() => {
     if (editor && targetDoc?.content) {
       try {
@@ -77,94 +86,90 @@ export default function ModuleReadOnly() {
 
         editor.commands.setContent(parsedContent)
       } catch {
-        // Fallback if content is raw HTML or plain string
         editor.commands.setContent(targetDoc.content)
       }
     }
   }, [editor, targetDoc])
 
-  if (loading) {
-    return (
-      <div className="flex h-96 items-center justify-center">
-        <div className="flex flex-col items-center gap-2">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-          <p className="text-sm font-medium text-muted-foreground">
-            Loading document...
-          </p>
-        </div>
-      </div>
-    )
-  }
-
   if (!targetDoc) {
     return (
-      <div className="mx-auto my-12 max-w-md rounded-2xl border bg-card p-8 text-center shadow-sm">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-          <FileText className="h-6 w-6 text-muted-foreground" />
-        </div>
-        <h2 className="text-lg font-semibold">Document Not Found</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          The requested document could not be found or may have been deleted.
-        </p>
-        <Button
-          onClick={() => navigate("/documents")}
-          variant="outline"
-          className="mt-6 gap-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Documents
-        </Button>
+      <div className="mx-auto my-auto flex min-h-[70vh] items-center justify-center p-4">
+        <Card className="max-w-md p-8 text-center shadow-sm">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+            <FileText className="h-6 w-6 text-muted-foreground" />
+          </div>
+          <h2 className="text-lg font-bold text-foreground">
+            Module Not Found
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            The requested module could not be found or may have been deleted.
+          </p>
+          <Button onClick={handleBack} variant="outline" className="mt-6 gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Modules
+          </Button>
+        </Card>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-muted/20 pb-12">
-      <div
-        className={`sticky top-0 left-0 z-10 flex h-15 w-full items-center justify-between border ${isMobile ? "px-2" : "px-8"}`}
-      >
-        <header className="sticky top-0 z-50 flex h-14 w-full items-center justify-between bg-background/95 px-4 backdrop-blur sm:px-6">
-          {/* Left Section: Back Button + Title */}
-          <div className="flex w-full max-w-xl items-center gap-3">
+    <div className="min-h-screen w-full bg-background pb-16">
+      {/* Sticky Reader Header Bar */}
+      <header className="sticky top-0 z-40 w-full border-b border-border/80 bg-background/95 backdrop-blur-md">
+        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
+          <div className="flex min-w-0 items-center gap-3">
             <Button
               variant="ghost"
               size="icon"
-              asChild
-              className="h-8 w-8 shrink-0"
+              onClick={handleBack}
+              title="Back"
+              aria-label="Back"
+              className="shrink-0"
             >
-              <Link to="../documents" title="Back to documents">
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
+              <ArrowLeft className="h-4 w-4" />
             </Button>
+            <div className="flex min-w-0 items-center gap-2.5">
+              <span className="shrink-0 bg-foreground px-1.5 py-0.5 text-[9px] font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
+                {targetDoc.principle}
+              </span>
+              <h1 className="truncate text-sm font-semibold text-foreground sm:text-base">
+                {targetDoc.name}
+              </h1>
+            </div>
           </div>
-        </header>
-      </div>
-      <main className="mx-auto max-w-5xl px-4 pt-8 sm:px-6">
-        <div className="rounded-2xl border bg-card p-8 shadow-sm sm:p-12">
-          <header className="mb-8 space-y-3 border-b pb-6">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              {targetDoc.title || "Untitled Document"}
+        </div>
+      </header>
+
+      {/* Main Document Area */}
+      <main className="mx-auto max-w-4xl px-4 pt-6 sm:px-6 sm:pt-8">
+        <Card className="p-6 shadow-sm sm:p-10">
+          <header className="mb-6 space-y-3 border-b border-border pb-6">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="outline" className="text-xs font-semibold">
+                {targetDoc.principle}
+              </Badge>
+              {targetDoc.tags?.map((tag, i) => (
+                <Badge key={i} variant="secondary" className="text-xs">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+
+            <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+              {targetDoc.name}
             </h1>
+
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <Calendar className="h-3.5 w-3.5" />
-                Created on{" "}
-                {targetDoc.created_at
-                  ? new Date(targetDoc.created_at).toLocaleDateString(
-                      undefined,
-                      {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      }
-                    )
-                  : "Recently"}
+                Created {getDateString(targetDoc.created_at)}
               </span>
             </div>
           </header>
 
           <EditorContent editor={editor} />
-        </div>
+        </Card>
       </main>
     </div>
   )

@@ -1,22 +1,17 @@
 import PageWithTitleTemplate, {
   type CtaItem,
 } from "@/components/common/PageWithTitleTemplate"
-import { Book, Pencil } from "lucide-react"
+import { FileText } from "lucide-react"
 
 const cta: CtaItem[] = [
   {
-    name: "Drafts",
-    href: "/",
-    variant: "secondary",
-    iconPos: "start",
-    icon: Pencil,
-  },
-  {
-    name: "New Module",
-    href: "/",
+    name: "Export Data",
+    ctaFn: () => {
+      alert("Export")
+    },
     variant: "default",
     iconPos: "start",
-    icon: Book,
+    icon: FileText,
   },
 ]
 

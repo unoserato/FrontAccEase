@@ -206,8 +206,10 @@ const MobileToolbarContent = ({
 
 export function SimpleEditor({
   onChange,
+  initialContent,
 }: {
   onChange?: (content: any) => void
+  initialContent?: any
 }) {
   const isMobile = useIsBreakpoint()
   const { height } = useWindowSize()
@@ -217,6 +219,18 @@ export function SimpleEditor({
   const [isSearchAndReplaceOpen, setIsSearchAndReplaceOpen] = useState(false)
   const toolbarRef = useRef<HTMLDivElement>(null)
   const searchAndReplaceButtonRef = useRef<HTMLButtonElement>(null)
+
+  const parseInitialContent = (raw: any) => {
+    if (!raw) return content
+    if (typeof raw === "string") {
+      try {
+        return JSON.parse(raw)
+      } catch {
+        return raw
+      }
+    }
+    return raw
+  }
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -259,11 +273,25 @@ export function SimpleEditor({
         onError: (error) => console.error("Upload failed:", error),
       }),
     ],
-    content,
+    content: parseInitialContent(initialContent),
     onUpdate: ({ editor }) => {
       onChange?.(editor.getJSON())
     },
   })
+
+  useEffect(() => {
+    if (editor && initialContent) {
+      try {
+        const parsed =
+          typeof initialContent === "string"
+            ? JSON.parse(initialContent)
+            : initialContent
+        editor.commands.setContent(parsed)
+      } catch {
+        editor.commands.setContent(initialContent)
+      }
+    }
+  }, [editor, initialContent])
 
   const rect = useCursorVisibility({
     editor,

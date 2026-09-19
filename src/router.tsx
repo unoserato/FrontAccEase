@@ -29,7 +29,10 @@ import Analyzer from "./pages/learner/Analyzer"
 import Chat from "./pages/learner/Chat"
 import Classroom from "./pages/learner/Classroom"
 import Quizzes from "./pages/learner/Quizzes"
-import ModuleEditor from "./features/ModuleEditor"
+import ModuleEditor from "./features/instructor/ModuleEditor"
+import QuizEditor from "./features/instructor/QuizEditor"
+import ClassroomInstructorView from "./pages/instructor/ClassroomInstructorView"
+import ModuleReadOnly from "./features/ModuleReadOnly"
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -61,7 +64,16 @@ export const router = createBrowserRouter(
         <Route path="classroom" element={<ClassroomInstructor />} />
         <Route path="logs" element={<AnalyzerLogsInstructor />} />
       </Route>
+      <Route
+        path="/instructor/classroom/:id"
+        element={<ClassroomInstructorView />}
+      />
+      <Route path="/instructor/modules/:id" element={<ModuleReadOnly />} />
+      <Route path="/learner/modules/:id" element={<ModuleReadOnly />} />
       <Route path="/instructor/modules/new" element={<ModuleEditor />} />
+      <Route path="/instructor/modules/edit/:id" element={<ModuleEditor />} />
+      <Route path="/instructor/quizzes/new" element={<QuizEditor />} />
+      <Route path="/instructor/quizzes/edit/:id" element={<QuizEditor />} />
       {/*  */}
       {/* SCHOOL ADMIN */}
       <Route path="admin" element={<ProtectedLayout allowedRole="admin" />}>

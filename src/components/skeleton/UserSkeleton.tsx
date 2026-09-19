@@ -10,7 +10,6 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar"
 import { Logo } from "../common/Logo"
-import { NavLink } from "react-router-dom"
 import { Avatar } from "../ui/avatar"
 
 export default function UserSkeleton() {
@@ -19,13 +18,8 @@ export default function UserSkeleton() {
       <Sidebar side="left" collapsible="icon" className="pointer-events-none">
         <SidebarHeader className="overflow-hidden">
           <div className="flex items-center gap-2">
-            <Logo
-              size={32}
-              className={!open ? "group-hover/logo:hidden" : ""}
-            />
-            <div className="flex h-full w-full flex-col justify-center text-lg font-bold">
-              <h1>FrontAccEase</h1>
-            </div>
+            <Logo className="h-8 w-8 shrink-0" />
+            <Skeleton className="h-8 w-40" />
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -43,17 +37,14 @@ export default function UserSkeleton() {
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter className="pb-4">
-          <NavLink
-            to="/"
-            className="flex items-center gap-2 rounded-md py-2 hover:bg-muted"
-          >
+          <div className="flex items-center gap-2 overflow-hidden rounded-md py-2">
             <Avatar render={<Skeleton className="w-full" />} />
             <Skeleton className="h-full w-full" />
             <Skeleton className="aspect-square h-full" />
-          </NavLink>
+          </div>
         </SidebarFooter>
       </Sidebar>
-      <main className="h-fit w-full space-y-6 border p-8">
+      <div className="h-fit w-full space-y-6 p-8">
         <Skeleton className="h-10 w-xs" />
         <div className="flex w-full gap-6">
           <div className="w-2/3 space-y-6">
@@ -66,7 +57,7 @@ export default function UserSkeleton() {
           </div>
         </div>
         <Skeleton className="h-80 w-full" />
-      </main>
+      </div>
     </div>
   )
 }

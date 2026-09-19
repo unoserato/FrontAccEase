@@ -40,7 +40,7 @@ export default function ProtectedLayout({
     >
       <UserSidebar links={links} name={user.name} />
       {isMobile && <UserHeader />}
-      <main className="min-h-0 min-w-0 flex-1 overflow-y-auto">
+      <main className="min-h-0 min-w-0 flex-1 overflow-y-auto bg-background">
         <Outlet />
       </main>
     </div>

@@ -8,7 +8,7 @@ export function useUser() {
       await new Promise((resolve) => setTimeout(resolve, 1000))
       return user
     },
-    refetchInterval: 0,
+    refetchInterval: 10,
   })
 }
 

@@ -4,21 +4,22 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
 
 interface SearchInputProps {
   title: string
-  value: string
-  onChange: (value: string) => void
+  search: string
+  setSearch: (value: string) => void
 }
 
 export default function SearchTemplate({
   title,
-  value,
-  onChange,
+  search,
+  setSearch,
 }: SearchInputProps) {
   return (
-    <InputGroup>
+    <InputGroup className="max-w-lg">
       <InputGroupInput
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
         placeholder={`Search ${title.toLowerCase()}...`}
+        className="text-xs sm:text-sm md:text-base"
       />
       <InputGroupAddon align={"inline-start"}>
         <Search />
