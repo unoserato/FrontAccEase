@@ -68,10 +68,48 @@ export interface ModuleProps {
   classrooms: string[]
 }
 
+export type QuestionType =
+  | "radiogroup"
+  | "checkbox"
+  | "dropdown"
+  | "ranking"
+  | "boolean"
+
+export interface QuestionElement {
+  type: QuestionType
+  name: string
+  title: string
+  choices?: string[]
+  correctAnswer?: any
+  isRequired?: boolean
+  points?: number
+}
+
+export interface QuizPage {
+  name: string
+  title: string
+  elements: QuestionElement[]
+}
+
+export interface QuizJson {
+  title: string
+  description?: string
+  showQuestionNumbers?: string
+  showProgressBar?: boolean | string
+  progressBarLocation?: string
+  progressBarType?: string
+  progressBarShowPageNumbers?: boolean
+  progressBarShowNavigationText?: boolean
+  completedHtml?: string
+  pages: QuizPage[]
+}
+
 export interface QuizProps {
   id: string
   name: string
   created_at: string
+  content?: string | QuizJson | object
+  quizContent?: QuizJson
   principle?: WCAGPrinciple
   questions_count?: number
   time_limit?: number
@@ -84,7 +122,8 @@ export interface QuizProps {
   submissions_count?: number
   total_submissions?: number
   due_date?: string
-  availability?: string
+  classrooms?: string[]
+  theme?: string
 }
 
 export interface ClassroomProps {
@@ -107,4 +146,13 @@ export interface Classwork {
   name: string
   due: string | null
   submissions: Submission[]
+}
+
+export interface QuizSubmissionProps {
+  id: string
+  quizId: string
+  learnerId: string
+  content: string | object
+  score?: number
+  submitted_at?: string
 }

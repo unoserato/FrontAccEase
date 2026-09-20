@@ -2,3 +2,5 @@
 shadcn-ui
 @tanstack/react-query
 react-icons
+surver-react-ui
+@tiptap/cli@latest add simple-editor

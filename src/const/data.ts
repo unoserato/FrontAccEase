@@ -3,6 +3,7 @@ import type {
   Classwork,
   ModuleProps,
   QuizProps,
+  QuizSubmissionProps,
 } from "./materialsProps"
 
 export interface UserProps {
@@ -32,50 +33,74 @@ export const learners: UserProps[] = [
     role: "learner",
     img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuiUj56VGtklGJA3F-rc285WPO_MOs2wJ2ETva28DInPemGbQeKfkQf_w&s=10",
   },
+  {
+    id: "1235-1235",
+    name: "Alyssa Nicole Santos",
+    role: "learner",
+    img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80",
+  },
+  {
+    id: "1236-1236",
+    name: "Marc Ethan Villanueva",
+    role: "learner",
+    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+  },
+  {
+    id: "1237-1237",
+    name: "Sophia Isabel Reyes",
+    role: "learner",
+    img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&auto=format&fit=crop&q=80",
+  },
+  {
+    id: "1238-1238",
+    name: "Joshua Miguel Dela Cruz",
+    role: "learner",
+    img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
+  },
 ]
 
 export const classrooms: ClassroomProps[] = [
   {
     id: "1",
-    classroom_code: "PUP Baskbetballers",
-    name: "Swimming Lesson Swimming Lesson Swimming Lesson",
-    join_code: "jasd81",
-    learners: ["1234-1234", "1233-1233"],
+    classroom_code: "WCAG-101",
+    name: "Web Accessibility Fundamentals",
+    join_code: "wcag81",
+    learners: ["1234-1234", "1233-1233", "1235-1235", "1236-1236"],
   },
   {
     id: "2",
-    classroom_code: "PUP Baskbetballers",
-    name: "Swimming Lesson",
-    join_code: "jasd81",
-    learners: ["1234-1234", "1233-1233"],
+    classroom_code: "UIUX-202",
+    name: "Inclusive UI/UX Engineering",
+    join_code: "uiux92",
+    learners: ["1234-1234", "1237-1237", "1238-1238"],
   },
   {
     id: "3",
-    classroom_code: "PUP Baskbetballers",
-    name: "Swimming Lesson",
-    join_code: "jasd81",
-    learners: ["1234-1234", "1233-1233"],
+    classroom_code: "CS-401",
+    name: "Frontend Systems & Architecture",
+    join_code: "cs401x",
+    learners: ["1233-1233", "1236-1236", "1238-1238"],
   },
   {
     id: "4",
-    classroom_code: "PUP Baskbetballers",
-    name: "Swimming Lesson",
-    join_code: "jasd81",
-    learners: ["1234-1234", "1233-1233"],
+    classroom_code: "QA-102",
+    name: "Software Quality & Compliance Testing",
+    join_code: "qa102p",
+    learners: ["1235-1235", "1237-1237"],
   },
   {
     id: "5",
-    classroom_code: "PUP Baskbetballers",
-    name: "Swimming Lesson",
-    join_code: "jasd81",
-    learners: ["1234-1234", "1233-1233"],
+    classroom_code: "MOB-301",
+    name: "Mobile Assistive Technology Lab",
+    join_code: "mob301",
+    learners: ["1234-1234", "1235-1235"],
   },
   {
     id: "6",
-    classroom_code: "PUP Baskbetballers",
-    name: "Swimming Lesson",
-    join_code: "jasd81",
-    learners: ["1234-1234", "1233-1233"],
+    classroom_code: "DIGI-501",
+    name: "Digital Inclusivity Workshop",
+    join_code: "digi50",
+    learners: ["1233-1233", "1236-1236", "1237-1237"],
   },
 ]
 
@@ -461,13 +486,85 @@ export const quizzes: QuizProps[] = [
     submissions_count: 35,
     total_submissions: 59,
     due_date: "Aug 27, 2026",
-    availability: "Everyone",
+    classrooms: ["1", "2"],
+    theme: "Default",
     created_at: "Aug 31 2026 17:00:00 GMT+0800",
     principle: "Perceivable",
     questions_count: 10,
     time_limit: 20,
     total_points: 50,
     tags: ["1.1.1 Non-Text Content", "1.2.1 Audio-only and Video-only"],
+    content: {
+      title: "UI Quiz 1",
+      description:
+        "Assessment on WCAG 2.1 Perceivable guidelines including Non-Text Content and Media alternatives.",
+      showQuestionNumbers: "on",
+      showProgressBar: true,
+      pages: [
+        {
+          name: "page1",
+          title: "Section 1: Non-Text Content (1.1.1)",
+          elements: [
+            {
+              type: "radiogroup",
+              name: "q_1",
+              title: "What is the primary purpose of an alt attribute on an informative image?",
+              choices: [
+                "To provide a text equivalent for screen readers and search engines",
+                "To make the image load faster",
+                "To change the background color of the web page",
+                "To create a popup tooltip when hovered",
+              ],
+              correctAnswer:
+                "To provide a text equivalent for screen readers and search engines",
+              isRequired: true,
+            },
+            {
+              type: "boolean",
+              name: "q_2",
+              title: "Decorative images should have an empty alt attribute (alt='') or role='presentation'.",
+              correctAnswer: true,
+              isRequired: true,
+            },
+            {
+              type: "checkbox",
+              name: "q_3",
+              title: "Which of the following are valid techniques for accessible images? (Select all that apply)",
+              choices: [
+                "Using descriptive alt text for informative images",
+                "Leaving alt attributes missing on essential icons",
+                "Using aria-hidden='true' for purely decorative icons",
+                "Writing image filenames into alt text",
+              ],
+              correctAnswer: [
+                "Using descriptive alt text for informative images",
+                "Using aria-hidden='true' for purely decorative icons",
+              ],
+              isRequired: true,
+            },
+          ],
+        },
+        {
+          name: "page2",
+          title: "Section 2: Audio & Video Media (1.2.1)",
+          elements: [
+            {
+              type: "radiogroup",
+              name: "q_4",
+              title: "What alternative is required for pre-recorded audio-only content under WCAG 1.2.1?",
+              choices: [
+                "A full text transcript",
+                "Sign language video only",
+                "Audio description track",
+                "Background music",
+              ],
+              correctAnswer: "A full text transcript",
+              isRequired: true,
+            },
+          ],
+        },
+      ],
+    },
   },
   {
     id: "2",
@@ -479,12 +576,152 @@ export const quizzes: QuizProps[] = [
     submissions_count: 42,
     total_submissions: 59,
     due_date: "Sep 10, 2026",
-    availability: "Everyone",
+    classrooms: ["1"],
+    theme: "Soft",
     created_at: "Sep 05 2026 14:30:00 GMT+0800",
     principle: "Operable",
     questions_count: 15,
     time_limit: 30,
     total_points: 75,
     tags: ["2.1.1 Keyboard", "2.4.7 Focus Visible"],
+    content: {
+      title: "Operable & Keyboard Navigation Evaluation",
+      description:
+        "Evaluation covering keyboard accessibility, focus management, and interactive element control.",
+      showQuestionNumbers: "on",
+      showProgressBar: true,
+      pages: [
+        {
+          name: "page1",
+          title: "Section 1: Keyboard Accessibility (2.1.1)",
+          elements: [
+            {
+              type: "radiogroup",
+              name: "q_1",
+              title: "Which key allows users to move forward through interactive elements on a web page?",
+              choices: ["Tab", "Enter", "Spacebar", "Escape"],
+              correctAnswer: "Tab",
+              isRequired: true,
+            },
+            {
+              type: "boolean",
+              name: "q_2",
+              title: "All functionality of the content must be operable through a keyboard interface without requiring specific timings for individual keystrokes.",
+              correctAnswer: true,
+              isRequired: true,
+            },
+            {
+              type: "dropdown",
+              name: "q_3",
+              title: "What happens if an interactive element causes a keyboard trap?",
+              choices: [
+                "The user cannot move focus away using standard keyboard controls",
+                "The browser closes automatically",
+                "The element turns red",
+                "Screen readers automatically skip the section",
+              ],
+              correctAnswer:
+                "The user cannot move focus away using standard keyboard controls",
+              isRequired: true,
+            },
+          ],
+        },
+        {
+          name: "page2",
+          title: "Section 2: Focus Visible (2.4.7)",
+          elements: [
+            {
+              type: "radiogroup",
+              name: "q_4",
+              title: "Why is CSS outline: none on focused elements harmful to accessibility when not replaced?",
+              choices: [
+                "It hides focus indicator for keyboard users",
+                "It breaks screen reader voice synthesis",
+                "It stops form submission",
+                "It changes font sizing",
+              ],
+              correctAnswer: "It hides focus indicator for keyboard users",
+              isRequired: true,
+            },
+          ],
+        },
+      ],
+    },
   },
 ]
+
+export const quizSubmissions: QuizSubmissionProps[] = [
+  // Submissions for UI Quiz 1 (total_points: 50)
+  {
+    id: "sub-101",
+    quizId: "1",
+    learnerId: "1234-1234",
+    content: {
+      q_1: "Web Content Accessibility Guidelines",
+    },
+    score: 48,
+    submitted_at: "Aug 26, 2026 14:20 GMT+0800",
+  },
+  {
+    id: "sub-102",
+    quizId: "1",
+    learnerId: "1233-1233",
+    content: {
+      q_1: "Web Content Accessibility Guidelines",
+    },
+    score: 44,
+    submitted_at: "Aug 27, 2026 09:15 GMT+0800",
+  },
+  {
+    id: "sub-103",
+    quizId: "1",
+    learnerId: "1235-1235",
+    content: {
+      q_1: "Web Content Accessibility Guidelines",
+    },
+    score: 50,
+    submitted_at: "Aug 27, 2026 11:30 GMT+0800",
+  },
+  {
+    id: "sub-104",
+    quizId: "1",
+    learnerId: "1237-1237",
+    content: {
+      q_1: "Web Content Accessibility Guidelines",
+    },
+    score: 38,
+    submitted_at: "Aug 27, 2026 16:45 GMT+0800",
+  },
+  // Submissions for Operable & Keyboard Navigation Evaluation (total_points: 75)
+  {
+    id: "sub-201",
+    quizId: "2",
+    learnerId: "1234-1234",
+    content: {
+      q_1: "Keyboard navigation guidelines",
+    },
+    score: 70,
+    submitted_at: "Sep 08, 2026 11:45 GMT+0800",
+  },
+  {
+    id: "sub-202",
+    quizId: "2",
+    learnerId: "1233-1233",
+    content: {
+      q_1: "Keyboard navigation guidelines",
+    },
+    score: 65,
+    submitted_at: "Sep 09, 2026 15:10 GMT+0800",
+  },
+  {
+    id: "sub-203",
+    quizId: "2",
+    learnerId: "1235-1235",
+    content: {
+      q_1: "Keyboard navigation guidelines",
+    },
+    score: 72,
+    submitted_at: "Sep 10, 2026 08:30 GMT+0800",
+  },
+]
+

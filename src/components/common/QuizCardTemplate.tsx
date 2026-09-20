@@ -1,4 +1,5 @@
 import type { QuizProps } from "@/const/materialsProps"
+import { classrooms, quizSubmissions } from "@/const/data"
 import { Card } from "../ui/card"
 import { Badge } from "../ui/badge"
 import { Archive, EllipsisVertical, Pencil, Trash } from "lucide-react"
@@ -15,6 +16,7 @@ import DeleteArchiveDialog, {
 } from "../instructor/DeleteArchiveDialog"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
+import { useNavigate, useLocation } from "react-router-dom"
 
 export type QuizCardTemplateProps = {
   quiz: QuizProps
@@ -23,19 +25,69 @@ export type QuizCardTemplateProps = {
 export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
   const [action, setAction] = useState<ActionType>(null)
   const isMobile = useIsMobile()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const handleNavigate = () => {
+    const currentPath = location.pathname.replace(/\/$/, "")
+    navigate(`${currentPath}/${quiz.id}`)
+  }
+
+  // Calculate dynamic submissions over total learners in assigned classrooms
+  const matchingSubmissions = quizSubmissions.filter(
+    (s) => String(s.quizId) === String(quiz.id)
+  )
+
+  const quizClassroomIds = quiz.classrooms ?? []
+  const assignedClassrooms = quizClassroomIds
+    .map((cId) => classrooms.find((c) => String(c.id) === String(cId)))
+    .filter(Boolean)
+
+  const assignedLearnerIds = Array.from(
+    new Set(assignedClassrooms.flatMap((c) => c?.learners ?? []))
+  )
+
+  const totalLearners =
+    assignedLearnerIds.length > 0
+      ? assignedLearnerIds.length
+      : (quiz.total_submissions ?? 0)
+
+  const submissionsCount =
+    matchingSubmissions.length > 0
+      ? matchingSubmissions.length
+      : (quiz.submissions_count ?? 0)
+
+  const totalPoints = quiz.total_points ?? 50
+
+  const avgScore =
+    matchingSubmissions.length > 0
+      ? Math.round(
+          (matchingSubmissions.reduce((acc, s) => acc + (s.score ?? 0), 0) /
+            matchingSubmissions.length /
+            totalPoints) *
+            100
+        )
+      : (quiz.avg_score ?? 84)
+
+  const passingCount = matchingSubmissions.filter(
+    (s) => (s.score ?? 0) >= Math.round(totalPoints * 0.75)
+  ).length
+
+  const passingRate =
+    matchingSubmissions.length > 0
+      ? Math.round((passingCount / matchingSubmissions.length) * 100)
+      : (quiz.passing_rate ?? 92)
 
   const quizStatus = quiz.status || "Open"
   const quizAuthor = quiz.author || "You"
-  const passingRate = quiz.passing_rate ?? 92
-  const avgScore = quiz.avg_score ?? 84
-  const submissionsCount = quiz.submissions_count ?? 35
-  const totalSubmissions = quiz.total_submissions ?? 59
   const dueDate = quiz.due_date || "Aug 27, 2026"
-  const availability = quiz.availability || "Everyone"
+  const classroomsCount = quiz.classrooms?.length ?? 0
+  const classroomsLabel =
+    classroomsCount === 1 ? "1 Classroom" : `${classroomsCount} Classrooms`
 
   const progressPercent = Math.min(
     100,
-    Math.max(0, Math.round((submissionsCount / (totalSubmissions || 1)) * 100))
+    Math.max(0, Math.round((submissionsCount / (totalLearners || 1)) * 100))
   )
 
   const actionsDropdown = (
@@ -80,7 +132,10 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
 
   return (
     <>
-      <Card className="group relative flex w-full flex-col justify-between overflow-hidden p-4 transition-all hover:shadow-sm sm:p-5">
+      <Card
+        className="group relative flex w-full cursor-pointer flex-col justify-between overflow-hidden p-4 transition-all hover:shadow-sm sm:p-5"
+        onClick={handleNavigate}
+      >
         {/* Top Bar / Dropdown in Top Right Corner */}
         <div className="flex items-center justify-between">
           <Badge
@@ -140,7 +195,7 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
                   Submissions
                 </span>
                 <span className="font-semibold text-foreground">
-                  {submissionsCount} / {totalSubmissions}
+                  {submissionsCount} / {totalLearners}
                 </span>
               </div>
               <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
@@ -160,22 +215,12 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground">
-                  Availability
+                  Classrooms
                 </p>
                 <p className="text-xs font-bold text-foreground">
-                  {availability}
+                  {classroomsLabel}
                 </p>
               </div>
-            </div>
-
-            <div className="pt-2 text-center">
-              <Button
-                variant="ghost"
-                className="w-full text-xs font-semibold text-foreground hover:bg-muted/50"
-                onClick={() => alert(`View results for ${quiz.name}`)}
-              >
-                View Results
-              </Button>
             </div>
           </div>
         ) : (
@@ -213,7 +258,7 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
                 <div className="flex justify-between text-xs font-medium text-muted-foreground">
                   <span>Submissions</span>
                   <span className="font-semibold text-foreground">
-                    {submissionsCount}/{totalSubmissions}
+                    {submissionsCount}/{totalLearners}
                   </span>
                 </div>
                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
@@ -225,7 +270,7 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
               </div>
             </div>
 
-            {/* Meta: Due Date & Availability */}
+            {/* Meta: Due Date & Classrooms */}
             <div className="flex shrink-0 items-center gap-6">
               <div>
                 <p className="text-xs font-medium text-muted-foreground">
@@ -237,30 +282,24 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground">
-                  Availability
+                  Classrooms
                 </p>
                 <p className="text-xs font-bold text-foreground sm:text-sm">
-                  {availability}
+                  {classroomsLabel}
                 </p>
               </div>
-            </div>
-
-            {/* Action CTA */}
-            <div className="shrink-0">
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-xs font-semibold"
-                onClick={() => alert(`View results for ${quiz.name}`)}
-              >
-                View Results
-              </Button>
             </div>
           </div>
         )}
       </Card>
 
-      <DeleteArchiveDialog action={action} setAction={setAction} item={quiz} />
+      <DeleteArchiveDialog
+        action={action}
+        setAction={setAction}
+        item={quiz}
+        editUrl={`/instructor/quizzes/edit/${quiz.id}`}
+        itemType="quiz"
+      />
     </>
   )
 }

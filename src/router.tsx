@@ -32,6 +32,7 @@ import Quizzes from "./pages/learner/Quizzes"
 import ModuleEditor from "./features/instructor/ModuleEditor"
 import QuizEditor from "./features/instructor/QuizEditor"
 import ClassroomInstructorView from "./pages/instructor/ClassroomInstructorView"
+import QuizzesInstructorView from "./pages/instructor/QuizzesInstructorView"
 import ModuleReadOnly from "./features/ModuleReadOnly"
 
 export const router = createBrowserRouter(
@@ -74,6 +75,7 @@ export const router = createBrowserRouter(
       <Route path="/instructor/modules/edit/:id" element={<ModuleEditor />} />
       <Route path="/instructor/quizzes/new" element={<QuizEditor />} />
       <Route path="/instructor/quizzes/edit/:id" element={<QuizEditor />} />
+      <Route path="/instructor/quizzes/:id" element={<QuizzesInstructorView />} />
       {/*  */}
       {/* SCHOOL ADMIN */}
       <Route path="admin" element={<ProtectedLayout allowedRole="admin" />}>

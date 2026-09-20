@@ -128,6 +128,8 @@ export default function ClassroomCardTemplate({
         action={action}
         setAction={setAction}
         item={classroom}
+        editUrl={`/instructor/classroom/edit/${classroom.id}`}
+        itemType="classroom"
       />
     </>
   )

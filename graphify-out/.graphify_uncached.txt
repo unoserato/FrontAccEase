@@ -1,6 +1,0 @@
-C:\Users\unoys\Documents\Programming\FrontAccEase\react\README.md
-C:\Users\unoys\Documents\Programming\FrontAccEase\react\index.html
-C:\Users\unoys\Documents\Programming\FrontAccEase\react\requirements.txt
-C:\Users\unoys\Documents\Programming\FrontAccEase\react\public\logo.svg
-C:\Users\unoys\Documents\Programming\FrontAccEase\react\public\vite.svg
-C:\Users\unoys\Documents\Programming\FrontAccEase\react\src\assets\react.svg

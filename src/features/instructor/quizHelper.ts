@@ -1,37 +1,11 @@
-export type QuestionType =
-  | "radiogroup"
-  | "checkbox"
-  | "dropdown"
-  | "ranking"
-  | "boolean"
+import type {
+  QuestionType,
+  QuestionElement,
+  QuizPage,
+  QuizJson,
+} from "@/const/materialsProps"
 
-export interface QuestionElement {
-  type: QuestionType
-  name: string
-  title: string
-  choices?: string[]
-  correctAnswer?: any
-  isRequired?: boolean
-}
-
-export interface QuizPage {
-  name: string
-  title: string
-  elements: QuestionElement[]
-}
-
-export interface QuizJson {
-  title: string
-  description?: string
-  showQuestionNumbers?: string
-  showProgressBar?: boolean | string
-  progressBarLocation?: string
-  progressBarType?: string
-  progressBarShowPageNumbers?: boolean
-  progressBarShowNavigationText?: boolean
-  completedHtml?: string
-  pages: QuizPage[]
-}
+export type { QuestionType, QuestionElement, QuizPage, QuizJson }
 
 export const DEFAULT_QUIZ_JSON: QuizJson = {
   title: "New Quiz Assessment",
@@ -61,10 +35,37 @@ export const DEFAULT_QUIZ_JSON: QuizJson = {
           ],
           correctAnswer: "Web Content Accessibility Guidelines",
           isRequired: true,
+          points: 1,
         },
       ],
     },
   ],
+}
+
+export function getQuizJson(
+  quiz?: { name?: string; content?: any; quizContent?: QuizJson } | null
+): QuizJson {
+  if (!quiz) return DEFAULT_QUIZ_JSON
+  const targetContent = quiz.quizContent || quiz.content
+  if (
+    targetContent &&
+    typeof targetContent === "object" &&
+    "pages" in targetContent
+  ) {
+    return targetContent as QuizJson
+  }
+  if (typeof targetContent === "string") {
+    try {
+      const parsed = JSON.parse(targetContent)
+      if (parsed && typeof parsed === "object" && "pages" in parsed) {
+        return parsed as QuizJson
+      }
+    } catch {}
+  }
+  return {
+    ...DEFAULT_QUIZ_JSON,
+    title: quiz.name || DEFAULT_QUIZ_JSON.title,
+  }
 }
 
 export function addPage(quizJson: QuizJson): QuizJson {
@@ -91,7 +92,7 @@ export function addPage(quizJson: QuizJson): QuizJson {
 
 export function deletePage(quizJson: QuizJson, pIdx: number): QuizJson {
   if (quizJson.pages.length <= 1) return quizJson
-  const pages = quizJson.pages.filter((_, idx) => idx !== pIdx)
+  const pages = quizJson.pages.filter((_: unknown, idx: number) => idx !== pIdx)
   return { ...quizJson, pages }
 }
 
@@ -103,7 +104,7 @@ export function duplicatePage(quizJson: QuizJson, pIdx: number): QuizJson {
     ...pageToDup,
     name: `page_${Date.now()}`,
     title: `${pageToDup.title} (Copy)`,
-    elements: pageToDup.elements.map((elem) => ({
+    elements: pageToDup.elements.map((elem: QuestionElement) => ({
       ...elem,
       name: `q_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
       choices: elem.choices ? [...elem.choices] : undefined,
@@ -142,6 +143,7 @@ export function addQuestion(
     name: `q_${Date.now()}`,
     title: `Question ${qNum}`,
     isRequired: true,
+    points: 1,
   }
 
   if (type === "boolean") {
@@ -170,7 +172,9 @@ export function deleteQuestion(
   const page = pages[pIdx]
   if (!page) return quizJson
 
-  const elements = page.elements.filter((_, idx) => idx !== qIdx)
+  const elements = page.elements.filter(
+    (_: unknown, idx: number) => idx !== qIdx
+  )
   pages[pIdx] = { ...page, elements }
   return { ...quizJson, pages }
 }
@@ -244,13 +248,16 @@ export function updateQuestion(
       delete updatedQ.choices
       updatedQ.correctAnswer = true
     } else if (newType === "checkbox") {
-      updatedQ.choices = q.choices && q.choices.length > 0 ? q.choices : ["Option 1", "Option 2"]
+      updatedQ.choices =
+        q.choices && q.choices.length > 0 ? q.choices : ["Option 1", "Option 2"]
       updatedQ.correctAnswer = [updatedQ.choices[0]]
     } else if (newType === "ranking") {
-      updatedQ.choices = q.choices && q.choices.length > 0 ? q.choices : ["Item 1", "Item 2"]
+      updatedQ.choices =
+        q.choices && q.choices.length > 0 ? q.choices : ["Item 1", "Item 2"]
       updatedQ.correctAnswer = [...updatedQ.choices]
     } else {
-      updatedQ.choices = q.choices && q.choices.length > 0 ? q.choices : ["Option 1", "Option 2"]
+      updatedQ.choices =
+        q.choices && q.choices.length > 0 ? q.choices : ["Option 1", "Option 2"]
       updatedQ.correctAnswer = updatedQ.choices[0]
     }
   }
@@ -277,7 +284,10 @@ export function addChoice(
 
   let updatedCorrectAnswer = q.correctAnswer
   if (q.type === "ranking") {
-    updatedCorrectAnswer = [...(Array.isArray(q.correctAnswer) ? q.correctAnswer : []), newChoice]
+    updatedCorrectAnswer = [
+      ...(Array.isArray(q.correctAnswer) ? q.correctAnswer : []),
+      newChoice,
+    ]
   } else if (q.correctAnswer === undefined || q.correctAnswer === null) {
     if (q.type === "checkbox") {
       updatedCorrectAnswer = [newChoice]
@@ -315,11 +325,11 @@ export function updateChoice(
   let updatedCorrectAnswer = q.correctAnswer
 
   if (q.type === "checkbox" && Array.isArray(q.correctAnswer)) {
-    updatedCorrectAnswer = q.correctAnswer.map((ans) =>
+    updatedCorrectAnswer = q.correctAnswer.map((ans: string) =>
       ans === oldChoiceText ? text : ans
     )
   } else if (q.type === "ranking" && Array.isArray(q.correctAnswer)) {
-    updatedCorrectAnswer = q.correctAnswer.map((ans) =>
+    updatedCorrectAnswer = q.correctAnswer.map((ans: string) =>
       ans === oldChoiceText ? text : ans
     )
   } else if (q.correctAnswer === oldChoiceText) {
@@ -348,17 +358,23 @@ export function deleteChoice(
   if (!page || !q || !q.choices || q.choices.length <= 1) return quizJson
 
   const removedChoice = q.choices[cIdx]
-  const updatedChoices = q.choices.filter((_, idx) => idx !== cIdx)
+  const updatedChoices = q.choices.filter(
+    (_: unknown, idx: number) => idx !== cIdx
+  )
 
   let updatedCorrectAnswer = q.correctAnswer
 
   if (q.type === "checkbox" && Array.isArray(q.correctAnswer)) {
-    updatedCorrectAnswer = q.correctAnswer.filter((ans) => ans !== removedChoice)
+    updatedCorrectAnswer = q.correctAnswer.filter(
+      (ans: string) => ans !== removedChoice
+    )
     if (updatedCorrectAnswer.length === 0 && updatedChoices.length > 0) {
       updatedCorrectAnswer = [updatedChoices[0]]
     }
   } else if (q.type === "ranking" && Array.isArray(q.correctAnswer)) {
-    updatedCorrectAnswer = q.correctAnswer.filter((ans) => ans !== removedChoice)
+    updatedCorrectAnswer = q.correctAnswer.filter(
+      (ans: string) => ans !== removedChoice
+    )
   } else if (q.correctAnswer === removedChoice) {
     updatedCorrectAnswer = updatedChoices[0] || ""
   }

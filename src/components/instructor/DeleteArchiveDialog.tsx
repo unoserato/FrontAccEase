@@ -10,7 +10,11 @@ import {
   DialogTitle,
 } from "../ui/dialog"
 import { Button } from "../ui/button"
-import type { ClassroomProps, ModuleProps, QuizProps } from "@/const/materialsProps"
+import type {
+  ClassroomProps,
+  ModuleProps,
+  QuizProps,
+} from "@/const/materialsProps"
 
 export type ActionType = "delete" | "archive" | "edit" | null
 
@@ -18,40 +22,32 @@ interface Props {
   action: ActionType
   setAction: (value: ActionType) => void
   item: ModuleProps | ClassroomProps | QuizProps
+  editUrl?: string
+  itemType?: "module" | "classroom" | "quiz" | string
 }
 
 export default function DeleteArchiveDialog({
   action,
   setAction,
   item,
+  editUrl,
+  itemType: customItemType,
 }: Props) {
   const navigate = useNavigate()
 
   useEffect(() => {
     if (action === "edit") {
       setAction(null)
-      if ("principle" in item) {
-        navigate(`/instructor/modules/edit/${item.id}`)
-      } else if ("classroom_code" in item) {
-        navigate(`/instructor/classroom/edit/${item.id}`)
-      } else if (
-        "total_submissions" in item ||
-        "due_date" in item ||
-        "questions" in item
-      ) {
-        navigate(`/instructor/quizzes/edit/${item.id}`)
-      } else {
-        navigate(`./edit/${item.id}`)
-      }
+      const targetUrl = editUrl ?? `./edit/${item.id}`
+      navigate(targetUrl)
     }
-  }, [action, item, navigate, setAction])
+  }, [action, editUrl, item.id, navigate, setAction])
 
   const getItemTypeLabel = () => {
+    if (customItemType) return customItemType
     if ("principle" in item) return "module"
     if ("classroom_code" in item) return "classroom"
-    if ("total_submissions" in item || "due_date" in item || "questions" in item)
-      return "quiz"
-    return "item"
+    return "quiz"
   }
 
   const itemType = getItemTypeLabel()

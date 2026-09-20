@@ -217,6 +217,8 @@ export default function ModuleCardTemplate({
         action={action}
         setAction={setAction}
         item={module}
+        editUrl={`/instructor/modules/edit/${module.id}`}
+        itemType="module"
       />
     </>
   )

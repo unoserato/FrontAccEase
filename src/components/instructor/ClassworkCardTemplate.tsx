@@ -43,7 +43,7 @@ export default function ClassworkCardTemplate({
   }
 
   return (
-    <Accordion className="space-y-3">
+    <Accordion multiple className="space-y-3">
       {classworkList.map((work) => {
         const submissionCount = work.submissions.length
         const totalLearners = classroom.learners.length
