@@ -24,7 +24,7 @@ export default function ClassworkCardTemplate({
   classroom: ClassroomProps
 }) {
   const classworkList: Classwork[] = useMemo(
-    () => classworks.filter((cl) => cl.classroom_id === classroom.id),
+    () => classworks.filter((cl) => cl.classroomId === classroom.id),
     [classroom.id]
   )
 
@@ -111,7 +111,7 @@ export default function ClassworkCardTemplate({
               ) : (
                 <div className="divide-y divide-border/40 rounded-lg border border-border/60 bg-background">
                   {work.submissions.map((sub) => {
-                    const student = learners.find((l) => sub.user_id == l.id)
+                    const student = learners.find((l) => sub.userId == l.id)
                     const initials = student?.name
                       .split(" ")
                       .map((n) => n[0])
@@ -121,7 +121,7 @@ export default function ClassworkCardTemplate({
 
                     return (
                       <div
-                        key={sub.user_id}
+                        key={sub.userId}
                         className="flex items-center justify-between px-4 py-3 text-sm transition-colors hover:bg-muted/40"
                       >
                         {/* Student Info */}

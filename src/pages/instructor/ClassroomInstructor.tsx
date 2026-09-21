@@ -13,12 +13,12 @@ export default function ClassroomInstructor() {
   const filteredClassrooms = classrooms.filter((c) =>
     search.trim().length > 0
       ? c.name.toLowerCase().includes(search.toLowerCase()) ||
-        c.classroom_code.toLowerCase().includes(search.toLowerCase())
+        c.classroomCode.toLowerCase().includes(search.toLowerCase())
       : true
   )
 
   return (
-    <section className="p-responsive space-y-4 sm:space-y-6">
+    <section className="p-responsive">
       <HeaderTemplate
         title="Classroom Management"
         subtitle="Manage classrooms"

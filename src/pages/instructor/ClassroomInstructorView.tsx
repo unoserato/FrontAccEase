@@ -72,7 +72,7 @@ export default function ClassroomInstructorView() {
     <section className="p-responsive w-full space-y-4 bg-background sm:space-y-6">
       <HeaderTemplate
         backTo="/instructor/classroom"
-        title={classroom?.classroom_code}
+        title={classroom?.classroomCode}
         subtitle={classroom?.name}
         cta={[
           <Button key="export" onClick={() => alert("Export data")}>
@@ -143,7 +143,7 @@ function Dashboard({ classroom }: { classroom: ClassroomProps }) {
                 className="size-7 text-muted-foreground"
                 onClick={() =>
                   copyText({
-                    textToCopy: classroom.join_code,
+                    textToCopy: classroom.joinCode,
                     setCopied(value) {
                       setCopied(value)
                     },
@@ -162,7 +162,7 @@ function Dashboard({ classroom }: { classroom: ClassroomProps }) {
           </CardHeader>
           <CardContent className="p-3.5 pt-0 sm:p-5 sm:pt-0">
             <p className="font-mono text-sm font-bold tracking-wider text-foreground sm:text-lg">
-              {classroom?.join_code}
+              {classroom?.joinCode}
             </p>
           </CardContent>
         </Card>
@@ -365,7 +365,7 @@ function Dashboard({ classroom }: { classroom: ClassroomProps }) {
             <div className="flex items-center justify-between text-xs sm:text-sm">
               <span className="text-muted-foreground">Classroom Code:</span>
               <span className="font-semibold text-foreground">
-                {classroom.classroom_code}
+                {classroom.classroomCode}
               </span>
             </div>
             <div className="flex items-center justify-between text-xs sm:text-sm">

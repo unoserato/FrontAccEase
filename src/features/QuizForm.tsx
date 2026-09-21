@@ -93,8 +93,8 @@ export default function QuizForm({
         ...rawContent,
         showProgressBar: progressBarValue,
         progressBarType: progressBarTypeVal,
-        ...(quiz.time_limit && quiz.time_limit > 0
-          ? { maxTimeToFinish: quiz.time_limit * 60 }
+        ...(quiz.timeLimit && quiz.timeLimit > 0
+          ? { maxTimeToFinish: quiz.timeLimit * 60 }
           : {}),
       }
 

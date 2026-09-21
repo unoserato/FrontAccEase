@@ -1,26 +1,20 @@
-import PageWithTitleTemplate, {
-  type CtaItem,
-} from "@/components/common/PageWithTitleTemplate"
+import HeaderTemplate from "@/components/common/PageTemplate"
+import { Button } from "@/components/ui/button"
 import { FileText } from "lucide-react"
-
-const cta: CtaItem[] = [
-  {
-    name: "Export Data",
-    ctaFn: () => {
-      alert("Export")
-    },
-    variant: "default",
-    iconPos: "start",
-    icon: FileText,
-  },
-]
 
 export default function AnalyzerLogsInstructor() {
   return (
-    <PageWithTitleTemplate
-      title="Analyzer Logs"
-      subtitle="Real-time audit history and automated scan execution logs for this classroom."
-      cta={cta}
-    ></PageWithTitleTemplate>
+    <section className="p-responsive">
+      <HeaderTemplate
+        title="Analyzer Logs"
+        subtitle="Real-time audit history and automated scan execution logs for this classroom."
+        cta={[
+          <Button>
+            <FileText />
+            Export Data
+          </Button>,
+        ]}
+      />
+    </section>
   )
 }

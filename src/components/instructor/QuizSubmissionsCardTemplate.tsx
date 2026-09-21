@@ -18,7 +18,7 @@ export type QuizSubmissionsCardTemplateProps = {
 export default function QuizSubmissionsCardTemplate({
   quiz,
 }: QuizSubmissionsCardTemplateProps) {
-  const totalPoints = quiz.total_points ?? 50
+  const totalPoints = quiz.totalPoints ?? 50
   const quizClassroomIds = quiz.classrooms ?? []
 
   const assignedClassrooms = useMemo(
@@ -91,7 +91,7 @@ export default function QuizSubmissionsCardTemplate({
                       {classroom.name}
                     </h3>
                     <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <span>Code: {classroom.classroom_code}</span>
+                      <span>Code: {classroom.classroomCode}</span>
                       <span>•</span>
                       <span>{classroomLearners.length} Enrolled Learners</span>
                     </div>
@@ -165,7 +165,7 @@ export default function QuizSubmissionsCardTemplate({
                             </p>
                             <p className="text-[11px] text-muted-foreground">
                               {isSubmitted
-                                ? `Submitted: ${submission?.submitted_at || "Recently"}`
+                                ? `Submitted: ${submission?.submittedAt || "Recently"}`
                                 : "No submission yet"}
                             </p>
                           </div>

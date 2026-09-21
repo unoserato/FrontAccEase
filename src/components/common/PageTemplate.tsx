@@ -24,6 +24,7 @@ export default function HeaderTemplate({
   const isMobile = useIsMobile()
   const hasCta = Boolean(cta && cta.length > 0)
 
+  document.title = `${title} | FrontAccEase`
   return (
     <header className={cn("space-y-6", classname)}>
       {backTo && (

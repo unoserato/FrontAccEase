@@ -34,6 +34,8 @@ import QuizEditor from "./features/instructor/QuizEditor"
 import ClassroomInstructorView from "./pages/instructor/ClassroomInstructorView"
 import QuizzesInstructorView from "./pages/instructor/QuizzesInstructorView"
 import ModuleReadOnly from "./features/ModuleReadOnly"
+import CoreModuleReadOnly from "./features/CoreModuleReadOnly"
+import CoreModulesView from "./pages/common/CoreModulesView"
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,11 +49,17 @@ export const router = createBrowserRouter(
         <Route index element={<Navigate to="dashboard" />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="modules" element={<Modules />} />
+        <Route path="modules/:principleId" element={<CoreModulesView />} />
         <Route path="quizzes" element={<Quizzes />} />
         <Route path="classroom" element={<Classroom />} />
         <Route path="chat" element={<Chat />} />
         <Route path="analyzer" element={<Analyzer />} />
       </Route>
+      <Route
+        path="/learner/modules/:principleId/:topicId/:lessonId"
+        element={<CoreModuleReadOnly />}
+      />
+
       {/*  */}
       {/* INSTRUCTOR */}
       <Route
@@ -70,12 +78,15 @@ export const router = createBrowserRouter(
         element={<ClassroomInstructorView />}
       />
       <Route path="/instructor/modules/:id" element={<ModuleReadOnly />} />
-      <Route path="/learner/modules/:id" element={<ModuleReadOnly />} />
+
       <Route path="/instructor/modules/new" element={<ModuleEditor />} />
       <Route path="/instructor/modules/edit/:id" element={<ModuleEditor />} />
       <Route path="/instructor/quizzes/new" element={<QuizEditor />} />
       <Route path="/instructor/quizzes/edit/:id" element={<QuizEditor />} />
-      <Route path="/instructor/quizzes/:id" element={<QuizzesInstructorView />} />
+      <Route
+        path="/instructor/quizzes/:id"
+        element={<QuizzesInstructorView />}
+      />
       {/*  */}
       {/* SCHOOL ADMIN */}
       <Route path="admin" element={<ProtectedLayout allowedRole="admin" />}>
@@ -90,6 +101,8 @@ export const router = createBrowserRouter(
       </Route>
       <Route path="unauthorized" element={<Unauthorized />} />
       <Route path="*" element={<NotFound />} />
+      {/*  */}
+      {/* MULTIPLE */}
     </Route>
   )
 )

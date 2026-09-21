@@ -100,7 +100,7 @@ export default function ModuleEditor() {
     return classrooms.filter(
       (c: ClassroomProps) =>
         c.name.toLowerCase().includes(q) ||
-        c.classroom_code.toLowerCase().includes(q)
+        c.classroomCode.toLowerCase().includes(q)
     )
   }, [searchQuery])
 
@@ -391,7 +391,7 @@ export default function ModuleEditor() {
                                   {cls.name}
                                 </span>
                                 <span className="text-[11px] text-muted-foreground">
-                                  Code: {cls.classroom_code}
+                                  Code: {cls.classroomCode}
                                 </span>
                               </div>
                               {checked && (

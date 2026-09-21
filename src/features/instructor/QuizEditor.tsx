@@ -137,17 +137,17 @@ export default function QuizEditor() {
   const [activePageIndex, setActivePageIndex] = useState(0)
   const [createdBy, setCreatedBy] = useState("Instructor")
   const [hasTimeLimit, setHasTimeLimit] = useState<boolean>(() =>
-    Boolean(existingQuiz?.time_limit)
+    Boolean(existingQuiz?.timeLimit)
   )
   const [timeLimit, setTimeLimit] = useState<number>(
-    () => existingQuiz?.time_limit || 30
+    () => existingQuiz?.timeLimit || 30
   )
   const [dueDate, setDueDate] = useState<Date | undefined>(() =>
-    existingQuiz?.due_date ? new Date(existingQuiz.due_date) : undefined
+    existingQuiz?.dueDate ? new Date(existingQuiz.dueDate) : undefined
   )
   const [dueTime, setDueTime] = useState<string>(() =>
-    existingQuiz?.due_date
-      ? format(new Date(existingQuiz.due_date), "HH:mm")
+    existingQuiz?.dueDate
+      ? format(new Date(existingQuiz.dueDate), "HH:mm")
       : "23:59"
   )
   const [isSaving, setIsSaving] = useState(false)
@@ -242,7 +242,7 @@ export default function QuizEditor() {
     return classrooms.filter(
       (c: ClassroomProps) =>
         c.name.toLowerCase().includes(q) ||
-        c.classroom_code.toLowerCase().includes(q)
+        c.classroomCode.toLowerCase().includes(q)
     )
   }, [searchQuery])
 
@@ -270,16 +270,16 @@ export default function QuizEditor() {
     return {
       id: id || "preview-quiz",
       name: quizJson.title || "Quiz Preview",
-      created_at: existingQuiz?.created_at || new Date().toISOString(),
-      time_limit: hasTimeLimit ? timeLimit : undefined,
-      due_date: dueDate ? dueDate.toISOString() : undefined,
+      createdAt: existingQuiz?.createdAt || new Date().toISOString(),
+      timeLimit: hasTimeLimit ? timeLimit : undefined,
+      dueDate: dueDate ? dueDate.toISOString() : undefined,
       theme: selectedTheme,
       principle: selectedPrinciple,
       tags: selectedTags,
       classrooms: selectedClassrooms,
       status: isPublish ? "Open" : "Draft",
-      questions_count: computedTotalQuestions,
-      total_points: computedTotalPoints,
+      questionsCount: computedTotalQuestions,
+      totalPoints: computedTotalPoints,
       quizContent: quizJson,
       content: quizJson,
       author: createdBy,
@@ -321,14 +321,14 @@ export default function QuizEditor() {
       if (existingQuiz.tags) setSelectedTags(existingQuiz.tags)
       if (existingQuiz.classrooms)
         setSelectedClassrooms(existingQuiz.classrooms)
-      if (existingQuiz.time_limit !== undefined) {
+      if (existingQuiz.timeLimit !== undefined) {
         setHasTimeLimit(true)
-        setTimeLimit(existingQuiz.time_limit)
+        setTimeLimit(existingQuiz.timeLimit)
       } else {
         setHasTimeLimit(false)
       }
-      if (existingQuiz.due_date) {
-        const parsed = new Date(existingQuiz.due_date)
+      if (existingQuiz.dueDate) {
+        const parsed = new Date(existingQuiz.dueDate)
         if (!isNaN(parsed.getTime())) {
           setDueDate(parsed)
           setDueTime(format(parsed, "HH:mm"))
@@ -356,10 +356,10 @@ export default function QuizEditor() {
       principle: selectedPrinciple,
       tags: selectedTags,
       classrooms: selectedClassrooms,
-      questions_count: computedTotalQuestions,
-      total_points: computedTotalPoints,
-      time_limit: hasTimeLimit ? timeLimit : undefined,
-      due_date: dueDate ? dueDate.toISOString() : undefined,
+      questionsCount: computedTotalQuestions,
+      totalPoints: computedTotalPoints,
+      timeLimit: hasTimeLimit ? timeLimit : undefined,
+      dueDate: dueDate ? dueDate.toISOString() : undefined,
       theme: selectedTheme,
       quizJson,
     }
@@ -1422,7 +1422,7 @@ export default function QuizEditor() {
                             {cls.name}
                           </span>
                           <span className="text-[11px] text-muted-foreground">
-                            Code: {cls.classroom_code}
+                            Code: {cls.classroomCode}
                           </span>
                         </div>
                         {checked && (

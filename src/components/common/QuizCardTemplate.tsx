@@ -50,14 +50,14 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
   const totalLearners =
     assignedLearnerIds.length > 0
       ? assignedLearnerIds.length
-      : (quiz.total_submissions ?? 0)
+      : (quiz.totalSubmissions ?? 0)
 
   const submissionsCount =
     matchingSubmissions.length > 0
       ? matchingSubmissions.length
-      : (quiz.submissions_count ?? 0)
+      : (quiz.submissionsCount ?? 0)
 
-  const totalPoints = quiz.total_points ?? 50
+  const totalPoints = quiz.totalPoints ?? 50
 
   const avgScore =
     matchingSubmissions.length > 0
@@ -67,7 +67,7 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
             totalPoints) *
             100
         )
-      : (quiz.avg_score ?? 84)
+      : (quiz.avgScore ?? 84)
 
   const passingCount = matchingSubmissions.filter(
     (s) => (s.score ?? 0) >= Math.round(totalPoints * 0.75)
@@ -76,11 +76,11 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
   const passingRate =
     matchingSubmissions.length > 0
       ? Math.round((passingCount / matchingSubmissions.length) * 100)
-      : (quiz.passing_rate ?? 92)
+      : (quiz.passingRate ?? 92)
 
   const quizStatus = quiz.status || "Open"
   const quizAuthor = quiz.author || "You"
-  const dueDate = quiz.due_date || "Aug 27, 2026"
+  const dueDate = quiz.dueDate || "Aug 27, 2026"
   const classroomsCount = quiz.classrooms?.length ?? 0
   const classroomsLabel =
     classroomsCount === 1 ? "1 Classroom" : `${classroomsCount} Classrooms`

@@ -46,7 +46,7 @@ export default function DeleteArchiveDialog({
   const getItemTypeLabel = () => {
     if (customItemType) return customItemType
     if ("principle" in item) return "module"
-    if ("classroom_code" in item) return "classroom"
+    if ("classroomCode" in item) return "classroom"
     return "quiz"
   }
 

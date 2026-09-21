@@ -148,12 +148,12 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
   const totalSubmissions =
     assignedLearnerIds.length > 0
       ? assignedLearnerIds.length
-      : (quiz.total_submissions ?? 59)
+      : (quiz.totalSubmissions ?? 59)
 
   const submissionsCount =
     matchingSubmissions.length > 0
       ? matchingSubmissions.length
-      : (quiz.submissions_count ?? 35)
+      : (quiz.submissionsCount ?? 35)
 
   const avgScore =
     matchingSubmissions.length > 0
@@ -161,23 +161,23 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
           matchingSubmissions.reduce((acc, s) => acc + (s.score ?? 0), 0) /
             matchingSubmissions.length
         )
-      : (quiz.avg_score ?? 84)
+      : (quiz.avgScore ?? 84)
 
   const passingCount = matchingSubmissions.filter(
-    (s) => (s.score ?? 0) >= Math.round((quiz.total_points ?? 50) * 0.75)
+    (s) => (s.score ?? 0) >= Math.round((quiz.totalPoints ?? 50) * 0.75)
   ).length
 
   const passingRate =
     matchingSubmissions.length > 0
       ? Math.round((passingCount / matchingSubmissions.length) * 100)
-      : (quiz.passing_rate ?? 92)
+      : (quiz.passingRate ?? 92)
 
   const quizStatus = quiz.status || "Open"
   const quizAuthor = quiz.author || "You"
-  const dueDate = quiz.due_date || "Aug 27, 2026"
-  const questionsCount = quiz.questions_count ?? 10
-  const timeLimit = quiz.time_limit ?? 20
-  const totalPoints = quiz.total_points ?? 50
+  const dueDate = quiz.dueDate || "Aug 27, 2026"
+  const questionsCount = quiz.questionsCount ?? 10
+  const timeLimit = quiz.timeLimit ?? 20
+  const totalPoints = quiz.totalPoints ?? 50
   const tags = quiz.tags ?? ["1.1.1 Non-Text Content"]
 
   const progressPercent = Math.min(
@@ -281,7 +281,7 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
               <span className="font-semibold text-foreground">
                 {quizAuthor}
               </span>{" "}
-              • Created: {quiz.created_at}
+              • Created: {quiz.createdAt}
             </CardDescription>
           </div>
         </CardHeader>
@@ -345,7 +345,7 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
                 <p className="max-w-[200px] truncate text-sm font-semibold text-foreground">
                   {assignedClassrooms.length > 0
                     ? assignedClassrooms
-                        .map((c) => c?.classroom_code || c?.name)
+                        .map((c) => c?.classroomCode || c?.name)
                         .join(", ")
                     : "No classrooms assigned"}
                 </p>

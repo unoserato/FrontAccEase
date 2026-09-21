@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react"
+
 export type WCAGPrinciple =
   "Perceivable" | "Operable" | "Understandable" | "Robust"
 
@@ -60,7 +62,7 @@ export const WCAG_PRINCIPLES_DATA: Record<WCAGPrinciple, string[]> = {
 
 export interface ModuleProps {
   id: string
-  created_at: string
+  createdAt: string
   name: string
   principle: WCAGPrinciple
   content: string | object
@@ -68,12 +70,31 @@ export interface ModuleProps {
   classrooms: string[]
 }
 
+export interface CoreModulesProps {
+  id: string
+  principle: WCAGPrinciple
+  description: string
+  topics: CoreTopicsProps[]
+  icon: LucideIcon
+}
+
+export interface CoreTopicsProps {
+  id: string
+  name: string
+  description: string
+  lessons: CoreLessonsProps[]
+}
+
+export interface CoreLessonsProps {
+  id: string
+  name: string //from WCAG_PRINCIPLE_DATA e.g., 1.1.1
+  description: string
+  content: string | object // the Tiptap contents
+  lastModified: string
+}
+
 export type QuestionType =
-  | "radiogroup"
-  | "checkbox"
-  | "dropdown"
-  | "ranking"
-  | "boolean"
+  "radiogroup" | "checkbox" | "dropdown" | "ranking" | "boolean"
 
 export interface QuestionElement {
   type: QuestionType
@@ -107,21 +128,21 @@ export interface QuizJson {
 export interface QuizProps {
   id: string
   name: string
-  created_at: string
+  createdAt: string
   content?: string | QuizJson | object
   quizContent?: QuizJson
   principle?: WCAGPrinciple
-  questions_count?: number
-  time_limit?: number
-  total_points?: number
+  questionsCount?: number
+  timeLimit?: number
+  totalPoints?: number
   tags?: string[]
   status?: "Open" | "Closed" | "Draft"
   author?: string
-  passing_rate?: number
-  avg_score?: number
-  submissions_count?: number
-  total_submissions?: number
-  due_date?: string
+  passingRate?: number
+  avgScore?: number
+  submissionsCount?: number
+  totalSubmissions?: number
+  dueDate?: string
   classrooms?: string[]
   theme?: string
 }
@@ -129,20 +150,20 @@ export interface QuizProps {
 export interface ClassroomProps {
   id: string
   name: string
-  classroom_code: string
-  join_code: string
+  classroomCode: string
+  joinCode: string
   learners: string[]
 }
 
 export interface Submission {
-  user_id: string
+  userId: string
   content: string
   score: number | null
 }
 
 export interface Classwork {
   id: string
-  classroom_id: string
+  classroomId: string
   name: string
   due: string | null
   submissions: Submission[]
@@ -154,5 +175,5 @@ export interface QuizSubmissionProps {
   learnerId: string
   content: string | object
   score?: number
-  submitted_at?: string
+  submittedAt?: string
 }

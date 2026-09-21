@@ -18,7 +18,9 @@ import {
 } from "../ui/dropdown-menu"
 import { Button } from "../ui/button"
 import { useState } from "react"
-import DeleteArchiveDialog, { type ActionType } from "../instructor/DeleteArchiveDialog"
+import DeleteArchiveDialog, {
+  type ActionType,
+} from "../instructor/DeleteArchiveDialog"
 import { useNavigate, useLocation } from "react-router-dom"
 
 export type ModuleCardTemplateProps = {
@@ -134,7 +136,7 @@ export default function ModuleCardTemplate({
                 className="text-[9px] font-medium text-foreground sm:text-xs"
                 id={`created_at_${module.id}`}
               >
-                {getDateString(module.created_at)}
+                {getDateString(module.createdAt)}
               </p>
             </div>
 
@@ -167,7 +169,7 @@ export default function ModuleCardTemplate({
             </div>
           </div>
 
-          <CardTitle className="mt-1.5 pr-6 line-clamp-2 text-xs leading-snug font-semibold tracking-tight capitalize sm:line-clamp-3 sm:text-base md:text-lg">
+          <CardTitle className="mt-1.5 line-clamp-2 pr-6 text-xs leading-snug font-semibold tracking-tight capitalize sm:line-clamp-3 sm:text-base md:text-lg">
             {module.name}
           </CardTitle>
         </CardHeader>
@@ -207,7 +209,7 @@ export default function ModuleCardTemplate({
               className="truncate text-[9px] font-medium text-foreground sm:text-xs"
               id={`created_at_${module.id}`}
             >
-              {getDateString(module.created_at)}
+              {getDateString(module.createdAt)}
             </p>
           </div>
         </CardFooter>

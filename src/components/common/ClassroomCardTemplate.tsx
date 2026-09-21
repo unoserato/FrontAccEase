@@ -47,7 +47,7 @@ export default function ClassroomCardTemplate({
         <CardHeader className="relative bg-foreground p-4 pr-12 text-background sm:p-5">
           <div className="space-y-1 pr-6">
             <CardTitle className="line-clamp-1 text-base font-bold text-background capitalize sm:text-lg">
-              {classroom.classroom_code}
+              {classroom.classroomCode}
             </CardTitle>
             <CardDescription className="line-clamp-1 text-xs text-background/80 sm:text-sm">
               {classroom.name}

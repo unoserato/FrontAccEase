@@ -16,7 +16,7 @@ export interface UserProps {
 export const user: UserProps = {
   id: "0223-2127",
   name: "John Mark Boragay",
-  role: "instructor",
+  role: "learner",
   img: "",
 }
 
@@ -62,44 +62,44 @@ export const learners: UserProps[] = [
 export const classrooms: ClassroomProps[] = [
   {
     id: "1",
-    classroom_code: "WCAG-101",
+    classroomCode: "WCAG-101",
     name: "Web Accessibility Fundamentals",
-    join_code: "wcag81",
+    joinCode: "wcag81",
     learners: ["1234-1234", "1233-1233", "1235-1235", "1236-1236"],
   },
   {
     id: "2",
-    classroom_code: "UIUX-202",
+    classroomCode: "UIUX-202",
     name: "Inclusive UI/UX Engineering",
-    join_code: "uiux92",
+    joinCode: "uiux92",
     learners: ["1234-1234", "1237-1237", "1238-1238"],
   },
   {
     id: "3",
-    classroom_code: "CS-401",
+    classroomCode: "CS-401",
     name: "Frontend Systems & Architecture",
-    join_code: "cs401x",
+    joinCode: "cs401x",
     learners: ["1233-1233", "1236-1236", "1238-1238"],
   },
   {
     id: "4",
-    classroom_code: "QA-102",
+    classroomCode: "QA-102",
     name: "Software Quality & Compliance Testing",
-    join_code: "qa102p",
+    joinCode: "qa102p",
     learners: ["1235-1235", "1237-1237"],
   },
   {
     id: "5",
-    classroom_code: "MOB-301",
+    classroomCode: "MOB-301",
     name: "Mobile Assistive Technology Lab",
-    join_code: "mob301",
+    joinCode: "mob301",
     learners: ["1234-1234", "1235-1235"],
   },
   {
     id: "6",
-    classroom_code: "DIGI-501",
+    classroomCode: "DIGI-501",
     name: "Digital Inclusivity Workshop",
-    join_code: "digi50",
+    joinCode: "digi50",
     learners: ["1233-1233", "1236-1236", "1237-1237"],
   },
 ]
@@ -198,7 +198,7 @@ export const modules: ModuleProps[] = [
         },
       ],
     },
-    created_at: "Aug 31 2026 17:00:00 GMT+0800",
+    createdAt: "Aug 31 2026 17:00:00 GMT+0800",
     principle: "Perceivable",
     tags: ["1.1.1 Non-Text Content"],
     classrooms: ["1"],
@@ -277,7 +277,7 @@ export const modules: ModuleProps[] = [
         },
       ],
     },
-    created_at: "Aug 31 2026 17:00:00 GMT+0800",
+    createdAt: "Aug 31 2026 17:00:00 GMT+0800",
     principle: "Perceivable",
     tags: ["1.1.1 Non-Text Content"],
     classrooms: ["1"],
@@ -343,7 +343,7 @@ export const modules: ModuleProps[] = [
         },
       ],
     },
-    created_at: "Aug 31 2026 17:00:00 GMT+0800",
+    createdAt: "Aug 31 2026 17:00:00 GMT+0800",
     principle: "Perceivable",
     tags: ["1.1.1 Non-Text Content"],
     classrooms: ["1"],
@@ -430,7 +430,7 @@ export const modules: ModuleProps[] = [
         },
       ],
     },
-    created_at: "Aug 31 2026 17:00:00 GMT+0800",
+    createdAt: "Aug 31 2026 17:00:00 GMT+0800",
     principle: "Perceivable",
     tags: [
       "1.2.1 Audio-only and Video-only ",
@@ -444,17 +444,17 @@ export const modules: ModuleProps[] = [
 export const classworks: Classwork[] = [
   {
     id: "1",
-    classroom_id: "1",
+    classroomId: "1",
     name: "Quiz about Bobet Mr. MVP",
     due: "Sep 01 2026 19:41:18 GMT+0800",
     submissions: [
       {
-        user_id: "1234-1234",
+        userId: "1234-1234",
         content: "",
         score: 0,
       },
       {
-        user_id: "1233-1233",
+        userId: "1233-1233",
         content: "",
         score: 0,
       },
@@ -462,12 +462,12 @@ export const classworks: Classwork[] = [
   },
   {
     id: "2",
-    classroom_id: "1",
+    classroomId: "1",
     name: "Quiz about Bobet Mr. MVP",
     due: "",
     submissions: [
       {
-        user_id: "1234-1234",
+        userId: "1234-1234",
         content: "",
         score: 0,
       },
@@ -481,18 +481,18 @@ export const quizzes: QuizProps[] = [
     name: "UI Quiz 1",
     author: "You",
     status: "Open",
-    passing_rate: 92,
-    avg_score: 84,
-    submissions_count: 35,
-    total_submissions: 59,
-    due_date: "Aug 27, 2026",
+    passingRate: 92,
+    avgScore: 84,
+    submissionsCount: 35,
+    totalSubmissions: 59,
+    dueDate: "Aug 27, 2026",
     classrooms: ["1", "2"],
     theme: "Default",
-    created_at: "Aug 31 2026 17:00:00 GMT+0800",
+    createdAt: "Aug 31 2026 17:00:00 GMT+0800",
     principle: "Perceivable",
-    questions_count: 10,
-    time_limit: 20,
-    total_points: 50,
+    questionsCount: 10,
+    timeLimit: 20,
+    totalPoints: 50,
     tags: ["1.1.1 Non-Text Content", "1.2.1 Audio-only and Video-only"],
     content: {
       title: "UI Quiz 1",
@@ -508,7 +508,8 @@ export const quizzes: QuizProps[] = [
             {
               type: "radiogroup",
               name: "q_1",
-              title: "What is the primary purpose of an alt attribute on an informative image?",
+              title:
+                "What is the primary purpose of an alt attribute on an informative image?",
               choices: [
                 "To provide a text equivalent for screen readers and search engines",
                 "To make the image load faster",
@@ -522,14 +523,16 @@ export const quizzes: QuizProps[] = [
             {
               type: "boolean",
               name: "q_2",
-              title: "Decorative images should have an empty alt attribute (alt='') or role='presentation'.",
+              title:
+                "Decorative images should have an empty alt attribute (alt='') or role='presentation'.",
               correctAnswer: true,
               isRequired: true,
             },
             {
               type: "checkbox",
               name: "q_3",
-              title: "Which of the following are valid techniques for accessible images? (Select all that apply)",
+              title:
+                "Which of the following are valid techniques for accessible images? (Select all that apply)",
               choices: [
                 "Using descriptive alt text for informative images",
                 "Leaving alt attributes missing on essential icons",
@@ -551,7 +554,8 @@ export const quizzes: QuizProps[] = [
             {
               type: "radiogroup",
               name: "q_4",
-              title: "What alternative is required for pre-recorded audio-only content under WCAG 1.2.1?",
+              title:
+                "What alternative is required for pre-recorded audio-only content under WCAG 1.2.1?",
               choices: [
                 "A full text transcript",
                 "Sign language video only",
@@ -571,18 +575,18 @@ export const quizzes: QuizProps[] = [
     name: "Operable & Keyboard Navigation Evaluation",
     author: "You",
     status: "Open",
-    passing_rate: 88,
-    avg_score: 79,
-    submissions_count: 42,
-    total_submissions: 59,
-    due_date: "Sep 10, 2026",
+    passingRate: 88,
+    avgScore: 79,
+    submissionsCount: 42,
+    totalSubmissions: 59,
+    dueDate: "Sep 10, 2026",
     classrooms: ["1"],
     theme: "Soft",
-    created_at: "Sep 05 2026 14:30:00 GMT+0800",
+    createdAt: "Sep 05 2026 14:30:00 GMT+0800",
     principle: "Operable",
-    questions_count: 15,
-    time_limit: 30,
-    total_points: 75,
+    questionsCount: 15,
+    timeLimit: 30,
+    totalPoints: 75,
     tags: ["2.1.1 Keyboard", "2.4.7 Focus Visible"],
     content: {
       title: "Operable & Keyboard Navigation Evaluation",
@@ -598,7 +602,8 @@ export const quizzes: QuizProps[] = [
             {
               type: "radiogroup",
               name: "q_1",
-              title: "Which key allows users to move forward through interactive elements on a web page?",
+              title:
+                "Which key allows users to move forward through interactive elements on a web page?",
               choices: ["Tab", "Enter", "Spacebar", "Escape"],
               correctAnswer: "Tab",
               isRequired: true,
@@ -606,14 +611,16 @@ export const quizzes: QuizProps[] = [
             {
               type: "boolean",
               name: "q_2",
-              title: "All functionality of the content must be operable through a keyboard interface without requiring specific timings for individual keystrokes.",
+              title:
+                "All functionality of the content must be operable through a keyboard interface without requiring specific timings for individual keystrokes.",
               correctAnswer: true,
               isRequired: true,
             },
             {
               type: "dropdown",
               name: "q_3",
-              title: "What happens if an interactive element causes a keyboard trap?",
+              title:
+                "What happens if an interactive element causes a keyboard trap?",
               choices: [
                 "The user cannot move focus away using standard keyboard controls",
                 "The browser closes automatically",
@@ -633,7 +640,8 @@ export const quizzes: QuizProps[] = [
             {
               type: "radiogroup",
               name: "q_4",
-              title: "Why is CSS outline: none on focused elements harmful to accessibility when not replaced?",
+              title:
+                "Why is CSS outline: none on focused elements harmful to accessibility when not replaced?",
               choices: [
                 "It hides focus indicator for keyboard users",
                 "It breaks screen reader voice synthesis",
@@ -651,7 +659,7 @@ export const quizzes: QuizProps[] = [
 ]
 
 export const quizSubmissions: QuizSubmissionProps[] = [
-  // Submissions for UI Quiz 1 (total_points: 50)
+  // Submissions for UI Quiz 1 (totalPoints: 50)
   {
     id: "sub-101",
     quizId: "1",
@@ -660,7 +668,7 @@ export const quizSubmissions: QuizSubmissionProps[] = [
       q_1: "Web Content Accessibility Guidelines",
     },
     score: 48,
-    submitted_at: "Aug 26, 2026 14:20 GMT+0800",
+    submittedAt: "Aug 26, 2026 14:20 GMT+0800",
   },
   {
     id: "sub-102",
@@ -670,7 +678,7 @@ export const quizSubmissions: QuizSubmissionProps[] = [
       q_1: "Web Content Accessibility Guidelines",
     },
     score: 44,
-    submitted_at: "Aug 27, 2026 09:15 GMT+0800",
+    submittedAt: "Aug 27, 2026 09:15 GMT+0800",
   },
   {
     id: "sub-103",
@@ -680,7 +688,7 @@ export const quizSubmissions: QuizSubmissionProps[] = [
       q_1: "Web Content Accessibility Guidelines",
     },
     score: 50,
-    submitted_at: "Aug 27, 2026 11:30 GMT+0800",
+    submittedAt: "Aug 27, 2026 11:30 GMT+0800",
   },
   {
     id: "sub-104",
@@ -690,9 +698,9 @@ export const quizSubmissions: QuizSubmissionProps[] = [
       q_1: "Web Content Accessibility Guidelines",
     },
     score: 38,
-    submitted_at: "Aug 27, 2026 16:45 GMT+0800",
+    submittedAt: "Aug 27, 2026 16:45 GMT+0800",
   },
-  // Submissions for Operable & Keyboard Navigation Evaluation (total_points: 75)
+  // Submissions for Operable & Keyboard Navigation Evaluation (totalPoints: 75)
   {
     id: "sub-201",
     quizId: "2",
@@ -701,7 +709,7 @@ export const quizSubmissions: QuizSubmissionProps[] = [
       q_1: "Keyboard navigation guidelines",
     },
     score: 70,
-    submitted_at: "Sep 08, 2026 11:45 GMT+0800",
+    submittedAt: "Sep 08, 2026 11:45 GMT+0800",
   },
   {
     id: "sub-202",
@@ -711,7 +719,7 @@ export const quizSubmissions: QuizSubmissionProps[] = [
       q_1: "Keyboard navigation guidelines",
     },
     score: 65,
-    submitted_at: "Sep 09, 2026 15:10 GMT+0800",
+    submittedAt: "Sep 09, 2026 15:10 GMT+0800",
   },
   {
     id: "sub-203",
@@ -721,7 +729,6 @@ export const quizSubmissions: QuizSubmissionProps[] = [
       q_1: "Keyboard navigation guidelines",
     },
     score: 72,
-    submitted_at: "Sep 10, 2026 08:30 GMT+0800",
+    submittedAt: "Sep 10, 2026 08:30 GMT+0800",
   },
 ]
-
