@@ -139,7 +139,9 @@ export default function QuizEditor() {
   const [hasTimeLimit, setHasTimeLimit] = useState<boolean>(() =>
     Boolean(existingQuiz?.time_limit)
   )
-  const [timeLimit, setTimeLimit] = useState<number>(() => existingQuiz?.time_limit || 30)
+  const [timeLimit, setTimeLimit] = useState<number>(
+    () => existingQuiz?.time_limit || 30
+  )
   const [dueDate, setDueDate] = useState<Date | undefined>(() =>
     existingQuiz?.due_date ? new Date(existingQuiz.due_date) : undefined
   )
@@ -180,8 +182,7 @@ export default function QuizEditor() {
   const computedTotalPoints = useMemo(() => {
     return quizJson.pages.reduce((acc, page) => {
       return (
-        acc +
-        (page.elements?.reduce((sum, q) => sum + (q.points ?? 5), 0) || 0)
+        acc + (page.elements?.reduce((sum, q) => sum + (q.points ?? 5), 0) || 0)
       )
     }, 0)
   }, [quizJson])
@@ -318,7 +319,8 @@ export default function QuizEditor() {
       if (existingQuiz.theme) setSelectedTheme(existingQuiz.theme)
       if (existingQuiz.principle) setSelectedPrinciple(existingQuiz.principle)
       if (existingQuiz.tags) setSelectedTags(existingQuiz.tags)
-      if (existingQuiz.classrooms) setSelectedClassrooms(existingQuiz.classrooms)
+      if (existingQuiz.classrooms)
+        setSelectedClassrooms(existingQuiz.classrooms)
       if (existingQuiz.time_limit !== undefined) {
         setHasTimeLimit(true)
         setTimeLimit(existingQuiz.time_limit)
@@ -460,7 +462,10 @@ export default function QuizEditor() {
           <Card className="relative overflow-hidden border-t-8 border-t-primary bg-background p-6 shadow-sm sm:p-8">
             <div className="space-y-4">
               <div className="space-y-1.5">
-                <FieldLabel htmlFor="quiz-title-input" className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                <FieldLabel
+                  htmlFor="quiz-title-input"
+                  className="text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+                >
                   Quiz Title
                 </FieldLabel>
                 <Input
@@ -475,7 +480,10 @@ export default function QuizEditor() {
               </div>
 
               <div className="space-y-1.5">
-                <FieldLabel htmlFor="quiz-desc-input" className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                <FieldLabel
+                  htmlFor="quiz-desc-input"
+                  className="text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+                >
                   Quiz Description
                 </FieldLabel>
                 <Textarea
@@ -721,7 +729,7 @@ export default function QuizEditor() {
                         </div>
 
                         {/* Top Right Controls: Question Type Selector & Individual Points */}
-                        <div className="flex items-center gap-2 shrink-0">
+                        <div className="flex shrink-0 items-center gap-2">
                           {/* Question Objective Type Selector */}
                           <div className="w-full sm:w-56">
                             <select
@@ -748,8 +756,8 @@ export default function QuizEditor() {
                           </div>
 
                           {/* Individual Question Points Input */}
-                          <div className="flex h-10 items-center gap-1.5 rounded-md border border-input bg-muted/40 px-3 py-1 shadow-xs transition-colors hover:bg-muted/70 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
-                            <span className="text-xs font-semibold text-muted-foreground whitespace-nowrap">
+                          <div className="flex h-10 items-center gap-1.5 rounded-md border border-input bg-muted/40 px-3 py-1 shadow-xs transition-colors focus-within:border-primary focus-within:ring-1 focus-within:ring-primary hover:bg-muted/70">
+                            <span className="text-xs font-semibold whitespace-nowrap text-muted-foreground">
                               Pts:
                             </span>
                             <Input
@@ -758,7 +766,10 @@ export default function QuizEditor() {
                               max={100}
                               value={q.points ?? 5}
                               onChange={(e) => {
-                                const val = Math.max(1, parseInt(e.target.value) || 1)
+                                const val = Math.max(
+                                  1,
+                                  parseInt(e.target.value) || 1
+                                )
                                 setQuizJson((prev) =>
                                   updateQuestion(
                                     prev,
@@ -1129,7 +1140,8 @@ export default function QuizEditor() {
               Save Quiz Assessment
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground sm:text-sm">
-              Assign target classrooms to publish immediately, or leave empty to save as a draft.
+              Assign target classrooms to publish immediately, or leave empty to
+              save as a draft.
             </DialogDescription>
           </DialogHeader>
 
@@ -1141,7 +1153,7 @@ export default function QuizEditor() {
                   <AlertCircle className="size-4 shrink-0 text-destructive" />
                   <span>Submission Safeguards - Please fix before saving:</span>
                 </div>
-                <ul className="mt-1.5 list-disc pl-5 space-y-0.5">
+                <ul className="mt-1.5 list-disc space-y-0.5 pl-5">
                   {validationErrors.map((err, idx) => (
                     <li key={idx}>{err}</li>
                   ))}
@@ -1175,7 +1187,9 @@ export default function QuizEditor() {
                 />
 
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-medium text-muted-foreground">at</span>
+                  <span className="text-xs font-medium text-muted-foreground">
+                    at
+                  </span>
                   <Input
                     type="time"
                     value={dueTime}
@@ -1328,9 +1342,7 @@ export default function QuizEditor() {
                       key={tag}
                       className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground"
                     >
-                      <span className="max-w-[180px] truncate">
-                        {tag}
-                      </span>
+                      <span className="max-w-[180px] truncate">{tag}</span>
                       <button
                         type="button"
                         onClick={() => handleToggleTag(tag)}
@@ -1403,9 +1415,7 @@ export default function QuizEditor() {
                       >
                         <Checkbox
                           checked={checked}
-                          onCheckedChange={() =>
-                            handleToggleClassroom(cls.id)
-                          }
+                          onCheckedChange={() => handleToggleClassroom(cls.id)}
                         />
                         <div className="flex min-w-0 flex-1 flex-col">
                           <span className="truncate text-xs font-medium sm:text-sm">
@@ -1457,9 +1467,7 @@ export default function QuizEditor() {
 
           <DialogFooter className="flex flex-col items-center justify-between gap-3 border-t pt-3 sm:flex-row">
             <div className="flex items-center gap-2 self-start sm:self-center">
-              <span className="text-xs text-muted-foreground">
-                Status:
-              </span>
+              <span className="text-xs text-muted-foreground">Status:</span>
               <span
                 className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                   isPublish
