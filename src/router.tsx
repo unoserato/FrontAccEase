@@ -36,7 +36,9 @@ import ClassroomInstructorView from "./pages/instructor/ClassroomInstructorView"
 import QuizzesInstructorView from "./pages/instructor/QuizzesInstructorView"
 import ModuleReadOnly from "./features/ModuleReadOnly"
 import CoreModuleReadOnly from "./features/CoreModuleReadOnly"
-import CoreModulesView from "./pages/common/CoreModulesView"
+import CoreModulesView from "./pages/learner/CoreModulesView"
+import AnalyzerResults from "./pages/common/AnalyzerResults"
+import AnalyzerExtension from "./pages/learner/AnalyzerExtension"
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -55,6 +57,8 @@ export const router = createBrowserRouter(
         <Route path="classroom" element={<Classroom />} />
         <Route path="chat" element={<Chat />} />
         <Route path="analyzer" element={<Analyzer />} />
+        <Route path="analyzer/extension" element={<AnalyzerExtension />} />
+        <Route path="analyzer/:id" element={<AnalyzerResults />} />
       </Route>
       <Route
         path="/learner/modules/:principleId/:topicId/:lessonId"

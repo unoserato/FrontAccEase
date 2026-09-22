@@ -8,7 +8,7 @@ import { cn } from "cn"
 
 interface HeaderTemplateProps {
   title?: string
-  subtitle?: string
+  subtitle?: string | ReactNode
   cta?: ReactNode[]
   backTo?: string
   classname?: string

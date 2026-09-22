@@ -179,3 +179,70 @@ export interface QuizSubmissionProps {
   score?: number
   submittedAt?: string
 }
+
+export interface Result {
+  overall_score: number
+  principle_scores: [
+    {
+      principle: string
+      score: number
+    },
+  ]
+  principles: [
+    {
+      name: string
+      data: {
+        score: number
+        issues: [
+          {
+            wcag: string
+            message: string
+            level?: string
+            selector?: string
+            element?: string
+          },
+        ]
+        manual_review: [
+          {
+            wcag: string
+            level: string
+            element: string
+            selector: string
+            message: string
+          },
+        ]
+        passed: [
+          {
+            wcag: string
+            level: string
+            element: string
+            selector: string
+            message: string
+          },
+        ]
+        summary: {
+          critical_count: number
+          failed_count: number
+          manual_review_count: number
+          minor_count: number
+          moderate_count: number
+          passed_count: number
+          serious_count: number
+        }
+      }
+    },
+  ]
+  summary: [
+    {
+      name: string
+      count: number
+    },
+  ]
+  url: string
+}
+
+export interface AnalyzerResultItem {
+  id: string
+  scannerId: string
+  data: Result
+}

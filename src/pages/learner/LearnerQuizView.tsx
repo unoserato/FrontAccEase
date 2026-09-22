@@ -209,8 +209,9 @@ export default function LearnerQuizView() {
               Quiz Terminated
             </h2>
             <p className="text-sm text-muted-foreground">
-              You exited full screen mode or switched windows during the assessment.
-              As per security guidelines, your quiz attempt has been cancelled.
+              You exited full screen mode or switched windows during the
+              assessment. As per security guidelines, your quiz attempt has been
+              cancelled.
             </p>
           </div>
           <div className="flex justify-center gap-3 pt-2">

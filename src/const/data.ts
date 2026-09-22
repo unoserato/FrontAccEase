@@ -4,6 +4,7 @@ import type {
   ModuleProps,
   QuizProps,
   QuizSubmissionProps,
+  AnalyzerResultItem,
 } from "./materialsProps"
 
 export interface UserProps {
@@ -732,5 +733,158 @@ export const quizSubmissions: QuizSubmissionProps[] = [
     },
     score: 72,
     submittedAt: "Sep 10, 2026 08:30 GMT+0800",
+  },
+]
+
+export const analyzerResults: AnalyzerResultItem[] = [
+  {
+    id: "1",
+    scannerId: "1234-1234",
+    data: {
+      url: "https://attendex.online",
+      overall_score: 82,
+      principle_scores: [
+        { principle: "Perceivable", score: 75 },
+        { principle: "Operable", score: 80 },
+        { principle: "Understandable", score: 100 },
+        { principle: "Robust", score: 75 },
+      ] as any,
+      summary: [
+        { name: "critical", count: 2 },
+        { name: "serious", count: 2 },
+        { name: "minor", count: 2 },
+        { name: "total_passed", count: 18 },
+      ] as any,
+      principles: [
+        {
+          name: "Perceivable",
+          data: {
+            score: 75,
+            issues: [
+              {
+                wcag: "1.1.1",
+                message:
+                  "Non-text content is missing alt text or an accessible name.",
+                level: "Level A",
+                selector: ".btn_login",
+                element:
+                  '<Add Override class="btn_login" style="background: #55A100; color: #FFFFFF;">Sign In to...',
+              },
+              {
+                wcag: "1.4.3",
+                message:
+                  "Element has insufficient color contrast ratio (2.8:1, minimum 4.5:1 required).",
+                level: "Level AA",
+                selector: "#subtext_label",
+                element:
+                  '<span id="subtext_label" style="color: #888888;">Welcome back, please log in</span>',
+              },
+            ] as any,
+            manual_review: [
+              {
+                wcag: "1.2.1",
+                level: "Level A",
+                element: "<video src='/intro.mp4'></video>",
+                selector: "video#intro",
+                message:
+                  "Verify video alternative track or transcript availability.",
+              },
+            ] as any,
+            passed: [
+              {
+                wcag: "1.3.1",
+                level: "Level A",
+                element: "<h1>AttenDEX Login</h1>",
+                selector: "h1",
+                message: "Heading hierarchy properly structured.",
+              },
+            ] as any,
+            summary: {
+              critical_count: 1,
+              failed_count: 2,
+              manual_review_count: 1,
+              minor_count: 0,
+              moderate_count: 0,
+              passed_count: 5,
+              serious_count: 1,
+            },
+          },
+        },
+        {
+          name: "Operable",
+          data: {
+            score: 80,
+            issues: [
+              {
+                wcag: "2.1.1",
+                message:
+                  "Interactive button is not operable using keyboard Space/Enter keys.",
+                level: "Level A",
+                selector: "#custom-btn",
+                element:
+                  '<div id="custom-btn" onclick="submitForm()">Submit</div>',
+              },
+            ] as any,
+            manual_review: [] as any,
+            passed: [] as any,
+            summary: {
+              critical_count: 1,
+              failed_count: 1,
+              manual_review_count: 0,
+              minor_count: 0,
+              moderate_count: 0,
+              passed_count: 4,
+              serious_count: 0,
+            },
+          },
+        },
+        {
+          name: "Understandable",
+          data: {
+            score: 100,
+            issues: [] as any,
+            manual_review: [] as any,
+            passed: [] as any,
+            summary: {
+              critical_count: 0,
+              failed_count: 0,
+              manual_review_count: 0,
+              minor_count: 0,
+              moderate_count: 0,
+              passed_count: 6,
+              serious_count: 0,
+            },
+          },
+        },
+        {
+          name: "Robust",
+          data: {
+            score: 75,
+            issues: [
+              {
+                wcag: "4.1.2",
+                message:
+                  "Form control lacks valid aria-label or associated <label> element.",
+                level: "Level A",
+                selector: "input[type='text']",
+                element:
+                  '<input type="text" id="username_field" placeholder="Username" />',
+              },
+            ] as any,
+            manual_review: [] as any,
+            passed: [] as any,
+            summary: {
+              critical_count: 0,
+              failed_count: 1,
+              manual_review_count: 0,
+              minor_count: 1,
+              moderate_count: 0,
+              passed_count: 3,
+              serious_count: 0,
+            },
+          },
+        },
+      ] as any,
+    },
   },
 ]
