@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { classrooms, learners, quizSubmissions } from "@/const/data"
 import type { QuizProps } from "@/const/materialsProps"
 import { Users, User, Clock, FileText } from "lucide-react"
+import { getQuizTotalPoints } from "@/features/instructor/quizHelper"
 
 export type QuizSubmissionsCardTemplateProps = {
   quiz: QuizProps
@@ -18,7 +19,8 @@ export type QuizSubmissionsCardTemplateProps = {
 export default function QuizSubmissionsCardTemplate({
   quiz,
 }: QuizSubmissionsCardTemplateProps) {
-  const totalPoints = quiz.totalPoints ?? 50
+  const computedPoints = getQuizTotalPoints(quiz)
+  const totalPoints = computedPoints > 0 ? computedPoints : 50
   const quizClassroomIds = quiz.classrooms ?? []
 
   const assignedClassrooms = useMemo(

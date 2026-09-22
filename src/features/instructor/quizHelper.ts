@@ -3,6 +3,7 @@ import type {
   QuestionElement,
   QuizPage,
   QuizJson,
+  QuizProps,
 } from "@/const/materialsProps"
 
 export type { QuestionType, QuestionElement, QuizPage, QuizJson }
@@ -60,7 +61,9 @@ export function getQuizJson(
       if (parsed && typeof parsed === "object" && "pages" in parsed) {
         return parsed as QuizJson
       }
-    } catch {}
+    } catch {
+      // Ignore fallback on invalid json
+    }
   }
   return {
     ...DEFAULT_QUIZ_JSON,
@@ -388,3 +391,26 @@ export function deleteChoice(
   pages[pIdx] = { ...page, elements }
   return { ...quizJson, pages }
 }
+
+export function getQuizTotalQuestions(
+  quizOrJson?: QuizProps | QuizJson | null
+): number {
+  if (!quizOrJson) return 0
+  const json = getQuizJson(quizOrJson as any)
+  if (!json || !json.pages) return 0
+  return json.pages.reduce((acc, page) => acc + (page.elements?.length || 0), 0)
+}
+
+export function getQuizTotalPoints(
+  quizOrJson?: QuizProps | QuizJson | null
+): number {
+  if (!quizOrJson) return 0
+  const json = getQuizJson(quizOrJson as any)
+  if (!json || !json.pages) return 0
+  return json.pages.reduce((acc, page) => {
+    const pagePoints =
+      page.elements?.reduce((pAcc, elem) => pAcc + (elem.points ?? 1), 0) || 0
+    return acc + pagePoints
+  }, 0)
+}
+

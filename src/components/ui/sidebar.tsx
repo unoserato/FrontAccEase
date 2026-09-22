@@ -68,7 +68,7 @@ function getSidebarState() {
 }
 
 function SidebarProvider({
-  defaultOpen = true,
+  defaultOpen: _defaultOpen = true,
   open: openProp,
   onOpenChange: setOpenProp,
   className,

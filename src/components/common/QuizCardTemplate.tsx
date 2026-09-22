@@ -17,6 +17,7 @@ import DeleteArchiveDialog, {
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useNavigate, useLocation } from "react-router-dom"
+import { getQuizTotalPoints } from "@/features/instructor/quizHelper"
 
 export type QuizCardTemplateProps = {
   quiz: QuizProps
@@ -57,7 +58,8 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
       ? matchingSubmissions.length
       : (quiz.submissionsCount ?? 0)
 
-  const totalPoints = quiz.totalPoints ?? 50
+  const computedPoints = getQuizTotalPoints(quiz)
+  const totalPoints = computedPoints > 0 ? computedPoints : 50
 
   const avgScore =
     matchingSubmissions.length > 0

@@ -223,6 +223,7 @@ export default function QuizEditor() {
       errors.push("Every choice option must have non-empty text.")
     }
 
+    // eslint-disable-next-line react-hooks/purity
     if (dueDate && dueDate.getTime() < Date.now()) {
       errors.push("Due date & time cannot be set in the past.")
     }
@@ -267,6 +268,10 @@ export default function QuizEditor() {
   }
 
   const previewQuizProps: QuizProps = useMemo(() => {
+    const updatedQuizJson: QuizJson = {
+      ...quizJson,
+      timeLimit: hasTimeLimit ? timeLimit : undefined,
+    }
     return {
       id: id || "preview-quiz",
       name: quizJson.title || "Quiz Preview",
@@ -279,9 +284,8 @@ export default function QuizEditor() {
       classrooms: selectedClassrooms,
       status: isPublish ? "Open" : "Draft",
       questionsCount: computedTotalQuestions,
-      totalPoints: computedTotalPoints,
-      quizContent: quizJson,
-      content: quizJson,
+      quizContent: updatedQuizJson,
+      content: updatedQuizJson,
       author: createdBy,
     }
   }, [
@@ -296,7 +300,6 @@ export default function QuizEditor() {
     selectedClassrooms,
     isPublish,
     computedTotalQuestions,
-    computedTotalPoints,
     existingQuiz,
     createdBy,
   ])

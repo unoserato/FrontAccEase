@@ -183,7 +183,7 @@ export function scrollCurrentResultIntoView(
   const editorDom = editor.view.dom
   if (editorDom.contains(document.activeElement)) return
 
-  let target: HTMLElement | null = null
+  let target: HTMLElement | null
   try {
     const { node } = editor.view.domAtPos(result.from)
     target = node instanceof HTMLElement ? node : node.parentElement
@@ -290,6 +290,7 @@ export function useSearchAndReplace(config?: UseSearchAndReplaceConfig) {
     if (!storage) return
 
     if (storage.searchTerm) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSearchTermState((previous) => previous || storage.searchTerm)
     }
     if (storage.replaceTerm) {
@@ -306,6 +307,7 @@ export function useSearchAndReplace(config?: UseSearchAndReplaceConfig) {
 
   useEffect(() => {
     if (!editor || !isFindAndReplaceAvailable(editor)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEditorState(EMPTY_EDITOR_STATE)
       return
     }

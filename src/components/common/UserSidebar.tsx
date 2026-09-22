@@ -31,10 +31,10 @@ export default function UserSidebar({ links, name }: UserSidebarProps) {
   const { open, setOpen, openMobile, setOpenMobile } = useSidebar()
   const invalidate = useInvalidateKeys()
   const isMobile = useIsMobile()
+  const navigate = useNavigate()
 
   async function handleLogout() {
-    const nav = useNavigate()
-    nav("/")
+    navigate("/")
     invalidate(["user"])
   }
 

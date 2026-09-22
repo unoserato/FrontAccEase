@@ -11,7 +11,6 @@ import { Selection } from "@tiptap/extensions"
 import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import { ArrowLeft, Calendar, FileText } from "lucide-react"
-// import { useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { coreModules } from "@/const/coreModules"
@@ -21,17 +20,9 @@ import { Badge } from "@/components/ui/badge"
 export default function CoreModuleReadOnly() {
   const { principleId, topicId, lessonId } = useParams()
   const navigate = useNavigate()
-  // const location = useLocation()
 
-  const handleBack = () => {
+  function handleBack() {
     navigate(-1)
-    // const segments = location.pathname.split("/").filter(Boolean)
-    // if (segments.length > 1) {
-    //   segments.pop()
-    //   navigate(`/${segments.join("/")}`)
-    // } else {
-    //   navigate(-1)
-    // }
   }
 
   const targetPrinciple = coreModules.find(

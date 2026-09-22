@@ -123,6 +123,8 @@ export interface QuizJson {
   progressBarShowNavigationText?: boolean
   completedHtml?: string
   pages: QuizPage[]
+  timeLimit?: number
+  showTimer?: boolean
 }
 
 export interface QuizProps {
@@ -134,7 +136,7 @@ export interface QuizProps {
   principle?: WCAGPrinciple
   questionsCount?: number
   timeLimit?: number
-  totalPoints?: number
+  maxAttempts?: number
   tags?: string[]
   status?: "Open" | "Closed" | "Draft"
   author?: string

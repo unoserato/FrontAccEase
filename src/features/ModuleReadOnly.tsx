@@ -12,7 +12,7 @@ import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import { ArrowLeft, Calendar, FileText } from "lucide-react"
 import { useEffect } from "react"
-import { useLocation, useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { modules } from "@/const/data"
 import { Card } from "@/components/ui/card"
@@ -22,16 +22,9 @@ import { getDateString } from "@/hooks/date-to-string"
 export default function ModuleReadOnly() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const location = useLocation()
 
-  const handleBack = () => {
-    const segments = location.pathname.split("/").filter(Boolean)
-    if (segments.length > 1) {
-      segments.pop()
-      navigate(`/${segments.join("/")}`)
-    } else {
-      navigate(-1)
-    }
+  function handleBack() {
+    navigate(-1)
   }
 
   const targetDoc = modules.find((doc) => String(doc.id) === String(id))

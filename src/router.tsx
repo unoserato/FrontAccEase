@@ -29,6 +29,7 @@ import Analyzer from "./pages/learner/Analyzer"
 import Chat from "./pages/learner/Chat"
 import Classroom from "./pages/learner/Classroom"
 import Quizzes from "./pages/learner/Quizzes"
+import LearnerQuizView from "./pages/learner/LearnerQuizView"
 import ModuleEditor from "./features/instructor/ModuleEditor"
 import QuizEditor from "./features/instructor/QuizEditor"
 import ClassroomInstructorView from "./pages/instructor/ClassroomInstructorView"
@@ -58,6 +59,11 @@ export const router = createBrowserRouter(
       <Route
         path="/learner/modules/:principleId/:topicId/:lessonId"
         element={<CoreModuleReadOnly />}
+      />
+      <Route path="/learner/quizzes/:id" element={<LearnerQuizView />} />
+      <Route
+        path="/learner/classroom/module/:id"
+        element={<ModuleReadOnly />}
       />
 
       {/*  */}

@@ -21,27 +21,21 @@ import { useState } from "react"
 import DeleteArchiveDialog, {
   type ActionType,
 } from "../instructor/DeleteArchiveDialog"
-import { useNavigate, useLocation } from "react-router-dom"
 
 export type ModuleCardTemplateProps = {
   module: ModuleProps
   view?: "grid" | "list"
+  isEditor?: boolean
 }
 
 export default function ModuleCardTemplate({
   module,
   view = "grid",
+  isEditor = false,
 }: ModuleCardTemplateProps) {
   const [action, setAction] = useState<ActionType>(null)
-  const navigate = useNavigate()
-  const location = useLocation()
 
-  const handleNavigate = () => {
-    const currentPath = location.pathname.replace(/\/$/, "")
-    navigate(`${currentPath}/${module.id}`)
-  }
-
-  const actionsDropdown = (
+  const actionsDropdown = isEditor && (
     <div onClick={(e) => e.stopPropagation()} className="shrink-0">
       <DropdownMenu>
         <DropdownMenuTrigger
@@ -84,22 +78,17 @@ export default function ModuleCardTemplate({
   if (view === "list") {
     return (
       <>
-        <div
-          className="group relative flex w-full cursor-pointer flex-col justify-between gap-2.5 rounded-xl border border-border bg-card p-3 transition-all hover:shadow-sm sm:flex-row sm:items-center sm:gap-4 sm:p-4"
-          onClick={handleNavigate}
-        >
+        <div className="group relative flex w-full cursor-pointer flex-col justify-between gap-2.5 rounded-xl border border-border bg-card p-3 transition-all hover:shadow-sm sm:flex-row sm:items-center sm:gap-4 sm:p-4">
           {/* Main Info */}
           <div className="flex min-w-0 flex-1 flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-4">
             <div className="w-fit max-w-full shrink-0 truncate bg-foreground px-1.5 py-0.5 text-[9px] font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
               <p className="truncate">{module.principle}</p>
             </div>
-
             <div className="min-w-0 flex-1 pr-8 sm:pr-0">
               <h3 className="truncate text-xs font-semibold text-foreground capitalize sm:text-base">
                 {module.name}
               </h3>
             </div>
-
             {/* Tags */}
             <div className="flex shrink-0 items-center gap-1.5 overflow-hidden">
               {module.tags.slice(0, 2).map((tag, i) => (
@@ -111,7 +100,6 @@ export default function ModuleCardTemplate({
                   <span className="truncate">{tag.trim()}</span>
                 </Badge>
               ))}
-
               {module.tags.length > 2 && (
                 <Badge
                   variant="secondary"
@@ -122,7 +110,6 @@ export default function ModuleCardTemplate({
               )}
             </div>
           </div>
-
           {/* Meta & Actions */}
           <div className="flex shrink-0 items-center justify-between gap-3 border-t border-border pt-1.5 sm:border-t-0 sm:pt-0">
             <div className="text-left sm:text-right">
@@ -139,7 +126,6 @@ export default function ModuleCardTemplate({
                 {getDateString(module.createdAt)}
               </p>
             </div>
-
             {actionsDropdown}
           </div>
         </div>
@@ -155,10 +141,7 @@ export default function ModuleCardTemplate({
 
   return (
     <>
-      <Card
-        className="group relative flex aspect-3/4 min-h-48 w-full cursor-pointer flex-col justify-between overflow-hidden p-0 transition-all hover:shadow-md sm:aspect-3/4"
-        onClick={handleNavigate}
-      >
+      <Card className="group relative flex aspect-3/4 min-h-48 w-full cursor-pointer flex-col justify-between overflow-hidden p-0 transition-all hover:shadow-md sm:aspect-3/4">
         <CardHeader className="p-3.5 pb-1.5 sm:p-5 sm:pb-3">
           <div className="flex items-start justify-between gap-2">
             <div className="w-fit max-w-[calc(100%-2.5rem)] truncate bg-foreground px-1.5 py-0.5 text-[9px] font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">

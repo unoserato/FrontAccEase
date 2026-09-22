@@ -16,6 +16,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 import QuizSubmissionsCardTemplate from "@/components/instructor/QuizSubmissionsCardTemplate"
+import {
+  getQuizJson,
+  getQuizTotalQuestions,
+  getQuizTotalPoints,
+} from "@/features/instructor/quizHelper"
 
 // Icons
 import {
@@ -129,13 +134,12 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
     [quiz.id]
   )
 
-  const quizClassroomIds = quiz.classrooms ?? []
   const assignedClassrooms = useMemo(
     () =>
-      quizClassroomIds
+      (quiz.classrooms ?? [])
         .map((cId) => classrooms.find((c) => String(c.id) === String(cId)))
         .filter(Boolean),
-    [quizClassroomIds]
+    [quiz.classrooms]
   )
 
   const assignedLearnerIds = useMemo(
@@ -163,8 +167,11 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
         )
       : (quiz.avgScore ?? 84)
 
+  const computedPoints = getQuizTotalPoints(quiz)
+  const totalPoints = computedPoints > 0 ? computedPoints : 50
+
   const passingCount = matchingSubmissions.filter(
-    (s) => (s.score ?? 0) >= Math.round((quiz.totalPoints ?? 50) * 0.75)
+    (s) => (s.score ?? 0) >= Math.round(totalPoints * 0.75)
   ).length
 
   const passingRate =
@@ -175,9 +182,10 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
   const quizStatus = quiz.status || "Open"
   const quizAuthor = quiz.author || "You"
   const dueDate = quiz.dueDate || "Aug 27, 2026"
-  const questionsCount = quiz.questionsCount ?? 10
-  const timeLimit = quiz.timeLimit ?? 20
-  const totalPoints = quiz.totalPoints ?? 50
+  const quizJson = getQuizJson(quiz)
+  const computedQuestions = getQuizTotalQuestions(quiz)
+  const questionsCount = computedQuestions > 0 ? computedQuestions : 10
+  const timeLimit = quizJson.timeLimit ?? quiz.timeLimit ?? 20
   const tags = quiz.tags ?? ["1.1.1 Non-Text Content"]
 
   const progressPercent = Math.min(
@@ -421,13 +429,12 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
   )
 }
 function SubmissionsTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
-  const quizClassroomIds = quiz.classrooms ?? []
   const assignedClassrooms = useMemo(
     () =>
-      quizClassroomIds
+      (quiz.classrooms ?? [])
         .map((cId) => classrooms.find((c) => String(c.id) === String(cId)))
         .filter(Boolean),
-    [quizClassroomIds]
+    [quiz.classrooms]
   )
 
   const targetClassrooms =

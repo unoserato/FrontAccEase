@@ -740,7 +740,7 @@
     "semantic_hash": "beab90836356f1903f782c54cf49bfaa"
   },
   "src/components/ui/sidebar.tsx": {
-    "mtime": 1789662635.374667,
+    "mtime": 1790004196.9018948,
     "ast_hash": "ec242e8bdaa4fcb022ed3b7f8662cb1f",
     "semantic_hash": "ec242e8bdaa4fcb022ed3b7f8662cb1f"
   },
@@ -775,8 +775,8 @@
     "semantic_hash": ""
   },
   "src/const/materialsProps.ts": {
-    "mtime": 1789990559.912712,
-    "ast_hash": "ff2192ca6264d867cd1a3cb4ab38d8e2",
+    "mtime": 1790003714.3789861,
+    "ast_hash": "33117f50eb8d0dbca04f4028f76d69c5",
     "semantic_hash": ""
   },
   "src/const/navigation.ts": {
@@ -950,8 +950,8 @@
     "semantic_hash": "3dbbeaa01d650a6baa7607bf85ae59ba"
   },
   "src/pages/learner/Modules.tsx": {
-    "mtime": 1790000831.6934135,
-    "ast_hash": "d8cef063d188eb12535146e122e577dd",
+    "mtime": 1790004514.0218923,
+    "ast_hash": "ac3234a2d9dd1a66b28760ae11777c99",
     "semantic_hash": ""
   },
   "src/pages/learner/Quizzes.tsx": {
@@ -1210,8 +1210,8 @@
     "semantic_hash": ""
   },
   "src/const/coreModules.ts": {
-    "mtime": 1790003468.757294,
-    "ast_hash": "88826d9a5d04f71aa5e9e81bde663c9d",
+    "mtime": 1790003775.9779553,
+    "ast_hash": "a8809d8a0e74c489ae5db3a2e340d951",
     "semantic_hash": ""
   },
   "src/features/CoreModuleReadOnly.tsx": {
@@ -1225,8 +1225,8 @@
     "semantic_hash": ""
   },
   "src/pages/common/CoreModulesView.tsx": {
-    "mtime": 1790003354.3776033,
-    "ast_hash": "d4e3cf2f50856b021b1ecd15efcea85e",
+    "mtime": 1790003653.0322478,
+    "ast_hash": "1dfedea7b12c9a6b661452b7f79f8a26",
     "semantic_hash": ""
   }
 }

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+import { useEffect, type ReactNode } from "react"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Button, buttonVariants } from "../ui/button"
@@ -24,7 +24,10 @@ export default function HeaderTemplate({
   const isMobile = useIsMobile()
   const hasCta = Boolean(cta && cta.length > 0)
 
-  document.title = `${title} | FrontAccEase`
+  useEffect(() => {
+    document.title = `${title} | FrontAccEase`
+  }, [title])
+
   return (
     <header className={cn("space-y-6", classname)}>
       {backTo && (
