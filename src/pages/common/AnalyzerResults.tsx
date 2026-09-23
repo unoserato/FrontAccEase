@@ -4,7 +4,6 @@ import { analyzerResults } from "@/const/data"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
@@ -20,11 +19,11 @@ import {
   FileText,
   Filter,
   RotateCcw,
-  Search,
   Star,
   X,
 } from "lucide-react"
 import HeaderTemplate from "@/components/common/PageTemplate"
+import SearchTemplate from "@/components/common/SearchTemplate"
 
 export default function AnalyzerResults() {
   const { id } = useParams<{ id: string }>()
@@ -450,13 +449,10 @@ export default function AnalyzerResults() {
           {/* Search & Filter Trigger */}
           <div className="flex items-center gap-2">
             <div className="relative w-full sm:w-64">
-              <Search className="absolute top-2.5 left-3 size-4 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search element or rule..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-9 rounded-xl pl-9 text-xs"
+              <SearchTemplate
+                title="results"
+                search={searchQuery}
+                setSearch={(value) => setSearchQuery(value)}
               />
             </div>
             <Button

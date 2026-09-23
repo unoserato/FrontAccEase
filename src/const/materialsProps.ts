@@ -246,3 +246,15 @@ export interface AnalyzerResultItem {
   scannerId: string
   data: Result
 }
+
+export interface ChatMessage {
+  id: string
+  sender: "user" | "assistant"
+  text: string
+  codeSnippet?: {
+    language: string
+    code: string
+  }
+  createdAt?: string
+}
+

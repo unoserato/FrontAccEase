@@ -1,3 +1,9 @@
+import ErrorOne from "@/components/error-1"
+
 export default function NotFound() {
-  return <div>Not Found</div>
+  return (
+    <div className="h-full w-full">
+      <ErrorOne />
+    </div>
+  )
 }

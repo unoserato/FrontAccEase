@@ -13,16 +13,15 @@ import type { CoreModulesProps } from "@/const/materialsProps"
 import { ArrowUpRight } from "lucide-react"
 import { Link } from "react-router-dom"
 
-const MOCK_MODULE_PROGRESS: Record<string, number> = {
+export const MOCK_MODULE_PROGRESS: Record<string, number> = {
   perceivable: 75,
   operable: 40,
   understandable: 10,
   robust: 0,
 }
+const continueModule = coreModules[0].topics[0].lessons[0]
 
 export default function Modules() {
-  const continueModule = coreModules[0].topics[0].lessons[0]
-
   return (
     <section className="p-responsive">
       <HeaderTemplate
@@ -34,26 +33,7 @@ export default function Modules() {
           <h2 className="text-lg font-bold text-foreground">
             Continue Learning
           </h2>
-          <Card className="cursor-pointer invert transition-all hover:opacity-95">
-            <CardHeader>
-              <div className="flex gap-2">
-                <div className="w-fit max-w-[calc(100%-2.5rem)] truncate bg-foreground px-1.5 py-0.5 text-[9px] font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
-                  <p className="truncate">{coreModules[0].principle}</p>
-                </div>
-              </div>
-              <CardTitle>
-                <p className="line-clamp-2 text-3xl font-bold">
-                  {continueModule.name}
-                </p>
-              </CardTitle>
-              <CardDescription>{continueModule.description}</CardDescription>
-              <CardAction>
-                <Link to="" className={buttonVariants({ variant: "default" })}>
-                  Continue <ArrowUpRight />
-                </Link>
-              </CardAction>
-            </CardHeader>
-          </Card>
+          <ContinueLearningCard />
         </section>
         <section className="space-y-4">
           <h2 className="text-lg font-bold text-foreground">Core Principles</h2>
@@ -101,7 +81,7 @@ function CoreModuleCardTemplate({
               : "bg-muted text-muted-foreground/60"
           }`}
         >
-          {Icon && <Icon className="h-6 w-6 stroke-[2]" />}
+          {Icon && <Icon className="h-6 w-6 stroke-2" />}
         </div>
 
         {/* Title & Description */}
@@ -126,6 +106,31 @@ function CoreModuleCardTemplate({
           />
         </div>
       </div>
+    </Card>
+  )
+}
+
+export function ContinueLearningCard() {
+  return (
+    <Card className="cursor-pointer invert transition-all hover:opacity-95">
+      <CardHeader>
+        <div className="flex gap-2">
+          <div className="w-fit max-w-[calc(100%-2.5rem)] truncate bg-foreground px-1.5 py-0.5 text-[9px] font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
+            <p className="truncate">{coreModules[0].principle}</p>
+          </div>
+        </div>
+        <CardTitle>
+          <p className="line-clamp-2 text-3xl font-bold">
+            {continueModule.name}
+          </p>
+        </CardTitle>
+        <CardDescription>{continueModule.description}</CardDescription>
+        <CardAction>
+          <Link to="" className={buttonVariants({ variant: "default" })}>
+            Continue <ArrowUpRight />
+          </Link>
+        </CardAction>
+      </CardHeader>
     </Card>
   )
 }

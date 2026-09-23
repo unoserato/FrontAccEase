@@ -1,26 +1,27 @@
 import LearnerQuizCardTemplate from "@/components/common/LearnerQuizCardTemplate"
 import ModuleCardTemplate from "@/components/common/ModuleCardTemplate"
 import HeaderTemplate from "@/components/common/PageTemplate"
+import { Button } from "@/components/ui/button"
 import { classrooms, modules, quizzes, user } from "@/const/data"
-import { BookOpen, FileQuestion } from "lucide-react"
+import { BookOpen, FileQuestion, LogOut } from "lucide-react"
 import { Link } from "react-router-dom"
 
+const myClassroom =
+  classrooms.find((classroom) =>
+    classroom.learners.some(
+      (learnerId) => learnerId === "1234-1234" || learnerId === user.id
+    )
+  ) || classrooms[0]
+
+const classroomModules = modules.filter((m) =>
+  m.classrooms?.includes(myClassroom.id)
+)
+
+export const classroomQuizzes = quizzes.filter((q) =>
+  q.classrooms?.includes(myClassroom.id)
+)
+
 export default function Classroom() {
-  const myClassroom =
-    classrooms.find((classroom) =>
-      classroom.learners.some(
-        (learnerId) => learnerId === "1234-1234" || learnerId === user.id
-      )
-    ) || classrooms[0]
-
-  const classroomModules = modules.filter((m) =>
-    m.classrooms?.includes(myClassroom.id)
-  )
-
-  const classroomQuizzes = quizzes.filter((q) =>
-    q.classrooms?.includes(myClassroom.id)
-  )
-
   return (
     <section className="p-responsive space-y-8">
       <HeaderTemplate
@@ -77,6 +78,14 @@ export default function Classroom() {
             </p>
           </div>
         )}
+      </div>
+      <div className="space-y-4">
+        <h2 className="text-lg font-bold text-foreground">Settings</h2>
+
+        <Button variant={"destructive"}>
+          <LogOut />
+          Leave Classroom
+        </Button>
       </div>
     </section>
   )

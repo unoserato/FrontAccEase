@@ -209,40 +209,7 @@ export default function CoreModulesView() {
           </Card>
 
           {/* Card 2: Earned Badges */}
-          <Card className="border border-border/80 shadow-sm">
-            <CardHeader className="p-4 sm:p-5">
-              <div className="flex items-center gap-2 text-foreground">
-                <Award className="size-5 stroke-[2.5] text-foreground" />
-                <CardTitle className="text-base font-bold sm:text-lg">
-                  Earned Badges
-                </CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3 p-4 pt-0 sm:p-5 sm:pt-0">
-              {mockModuleProgress.earnedBadges.map((badge) => {
-                const IconComponent = badge.icon
-                return (
-                  <div
-                    key={badge.id}
-                    className="flex items-center gap-3.5 rounded-xl border border-border/70 bg-card p-3 shadow-2xs transition-colors"
-                  >
-                    <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-foreground text-background">
-                      <IconComponent className="size-5" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-xs font-bold text-foreground sm:text-sm">
-                        {badge.title}
-                      </p>
-                      <p className="truncate text-[11px] font-medium text-muted-foreground">
-                        {badge.subtitle}
-                      </p>
-                    </div>
-                  </div>
-                )
-              })}
-            </CardContent>
-          </Card>
-
+          <EarnedBagdes />
           {/* Card 3: Remaining Topics */}
           <Card className="border border-border/80 shadow-sm">
             <CardHeader className="p-4 sm:p-5">
@@ -275,5 +242,43 @@ export default function CoreModulesView() {
         </div>
       </div>
     </section>
+  )
+}
+
+export function EarnedBagdes() {
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-2 text-foreground">
+          <Award className="size-5" />
+          <CardTitle className="text-base font-bold sm:text-lg">
+            Earned Badges
+          </CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-3 p-4 pt-0 sm:p-5 sm:pt-0">
+        {mockModuleProgress.earnedBadges.map((badge) => {
+          const IconComponent = badge.icon
+          return (
+            <div
+              key={badge.id}
+              className="flex items-center gap-3.5 rounded-xl border border-border/70 bg-card p-3 shadow-2xs transition-colors"
+            >
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-foreground text-background">
+                <IconComponent className="size-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-bold text-foreground sm:text-sm">
+                  {badge.title}
+                </p>
+                <p className="truncate text-[11px] font-medium text-muted-foreground">
+                  {badge.subtitle}
+                </p>
+              </div>
+            </div>
+          )
+        })}
+      </CardContent>
+    </Card>
   )
 }

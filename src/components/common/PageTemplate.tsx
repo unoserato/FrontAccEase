@@ -12,21 +12,25 @@ interface HeaderTemplateProps {
   cta?: ReactNode[]
   backTo?: string
   classname?: string
+  changeTitle?: boolean
 }
 
 export default function HeaderTemplate({
   title = "Page Title",
-  subtitle = "Page Subtitle",
+  subtitle,
   cta,
   backTo,
   classname,
+  changeTitle = true,
 }: HeaderTemplateProps) {
   const isMobile = useIsMobile()
   const hasCta = Boolean(cta && cta.length > 0)
 
   useEffect(() => {
-    document.title = `${title} | FrontAccEase`
-  }, [title])
+    if (changeTitle) {
+      document.title = `${title} | FrontAccEase`
+    }
+  }, [changeTitle, title])
 
   return (
     <header className={cn("space-y-6", classname)}>
@@ -44,7 +48,7 @@ export default function HeaderTemplate({
           <h1 className="text-lg font-bold tracking-tight capitalize sm:text-xl md:text-2xl lg:text-3xl">
             {title}
           </h1>
-          <p className="text-base">{subtitle}</p>
+          {subtitle && <p className="text-base">{subtitle}</p>}
         </div>
         {hasCta &&
           (!isMobile ? (
