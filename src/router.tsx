@@ -22,7 +22,6 @@ import Instruments from "./pages/schoolAdmin/Instruments"
 import Users from "./pages/schoolAdmin/Users"
 import AnalyzerLogsSchoolAdmin from "./pages/schoolAdmin/AnalyzerLogsSchoolAdmin"
 import Permissions from "./pages/schoolAdmin/Permissions"
-import Unauthorized from "./pages/errors/Unauthorized"
 import NotFound from "./pages/errors/NotFound"
 import Modules from "./pages/learner/Modules"
 import Analyzer from "./pages/learner/Analyzer"
@@ -103,13 +102,18 @@ export const router = createBrowserRouter(
         <Route index element={<Navigate to="dashboard" />} />
         <Route path="dashboard" element={<DashboardSchoolAdmin />} />
         <Route path="learning-materials" element={<LearningMaterials />} />
+        <Route
+          path="learning-materials/:principleId"
+          element={<CoreModulesView />}
+        />
         <Route path="instructor-materials" element={<InstructorMaterials />} />
         <Route path="instruments" element={<Instruments />} />
+        <Route path="instruments/:guidelineId" element={<Instruments />} />
         <Route path="users" element={<Users />} />
         <Route path="logs" element={<AnalyzerLogsSchoolAdmin />} />
         <Route path="permissions" element={<Permissions />} />
       </Route>
-      <Route path="unauthorized" element={<Unauthorized />} />
+      {/* ERRORS */}
       <Route path="*" element={<NotFound />} />
       {/*  */}
       {/* MULTIPLE */}

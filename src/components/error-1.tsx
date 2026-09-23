@@ -47,7 +47,7 @@ function GradientCode({ code }: { code: string }) {
 
 function PillButton({ label, icon, href, onClick }: ErrorOneAction) {
   const cls =
-    "h-10 rounded-full px-6 text-sm font-semibold rounded transition-opacity hover:opacity-90 mt-4 shadow-[inset_0_2px_4px_0_rgba(255,255,255,0.7),inset_0_-2px_4px_0_rgba(0,0,0,0.2)] sm:w-auto dark:shadow-[inset_0_-2px_4px_0_rgba(0,0,0,0.2),inset_0_2px_4px_0_rgba(255,255,255,0.5)]"
+    "h-10  px-6 text-sm font-semibold transition-opacity hover:opacity-90 mt-4 "
 
   const content = (
     <>

@@ -2,8 +2,8 @@ import HeaderTemplate from "@/components/common/PageTemplate"
 import { buttonVariants } from "@/components/ui/button"
 import {
   Card,
-  CardAction,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -29,12 +29,7 @@ export default function Modules() {
         subtitle="Track your progress and continue learning."
       />
       <div className="space-y-12">
-        <section className="space-y-4">
-          <h2 className="text-lg font-bold text-foreground">
-            Continue Learning
-          </h2>
-          <ContinueLearningCard />
-        </section>
+        <ContinueLearningCard />
         <section className="space-y-4">
           <h2 className="text-lg font-bold text-foreground">Core Principles</h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -54,7 +49,7 @@ export default function Modules() {
   )
 }
 
-function CoreModuleCardTemplate({
+export function CoreModuleCardTemplate({
   module,
   progress = 0,
 }: {
@@ -125,12 +120,16 @@ export function ContinueLearningCard() {
           </p>
         </CardTitle>
         <CardDescription>{continueModule.description}</CardDescription>
-        <CardAction>
-          <Link to="" className={buttonVariants({ variant: "default" })}>
-            Continue <ArrowUpRight />
-          </Link>
-        </CardAction>
       </CardHeader>
+
+      <CardFooter className="flex justify-end">
+        <Link
+          to="/learner/modules/perceivable/topic-1-1/lesson-1-1-1"
+          className={buttonVariants({ variant: "default" })}
+        >
+          Continue Learning <ArrowUpRight />
+        </Link>
+      </CardFooter>
     </Card>
   )
 }

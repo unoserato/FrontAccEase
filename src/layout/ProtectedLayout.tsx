@@ -3,8 +3,10 @@ import UserSidebar from "@/components/common/UserSidebar"
 import UserSkeleton from "@/components/skeleton/UserSkeleton"
 import { instructorNav, learnerNav, schoolAdminNav } from "@/const/navigation"
 import { useIsMobile } from "@/hooks/use-mobile"
+import Forbidden from "@/pages/errors/Forbidden"
+import Unauthorized from "@/pages/errors/Unauthorized"
 import { useUser } from "@/services/tanstack/auth"
-import { Navigate, Outlet } from "react-router-dom"
+import { Outlet } from "react-router-dom"
 
 const linksByRole = {
   learner: learnerNav,
@@ -25,11 +27,11 @@ export default function ProtectedLayout({
   }
 
   if (!user) {
-    return <Navigate to={"/"} replace />
+    return <Unauthorized />
   }
 
   if (!user.role.includes(allowedRole)) {
-    return <Navigate to={"/unauthorized"} replace />
+    return <Forbidden />
   }
 
   const links = linksByRole[user.role]

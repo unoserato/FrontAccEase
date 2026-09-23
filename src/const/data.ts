@@ -18,7 +18,7 @@ export interface UserProps {
 export const user: UserProps = {
   id: "0223-2127",
   name: "John Mark Boragay",
-  role: "learner",
+  role: "admin",
   img: "",
 }
 
@@ -944,4 +944,3 @@ export default function AnalogClock({
     },
   },
 ]
-

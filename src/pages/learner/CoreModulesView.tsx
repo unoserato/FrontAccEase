@@ -1,6 +1,8 @@
+import { useState } from "react"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { coreModules } from "@/const/coreModules"
+import type { CoreTopicsProps } from "@/const/materialsProps"
 import { Link, useParams } from "react-router-dom"
 import NotFound from "../errors/NotFound"
 import {
@@ -26,8 +28,24 @@ import {
   Keyboard,
   Layers,
   Palette,
+  Pencil,
   Volume2,
 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { useUser } from "@/services/tanstack/auth"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
 
 // Mock data at the top of the file for missing progress, badges, and remaining topics
 const mockModuleProgress = {
@@ -65,18 +83,22 @@ const mockModuleProgress = {
 
 export default function CoreModulesView() {
   const { principleId } = useParams()
+  const { data: user } = useUser()
+
   const targetModule = coreModules.find((c) => c.id === principleId)
 
   if (!targetModule) {
     return <NotFound />
   }
 
+  const isEditor = user?.role == "admin" || false
+
   return (
     <section className="p-responsive">
       <HeaderTemplate
         title={targetModule?.principle}
         subtitle={targetModule?.description}
-        backTo="/learner/modules"
+        backTo={"-1"}
       />
 
       <div className="grid grid-cols-1 gap-6 pt-6 sm:pt-6 lg:grid-cols-3">
@@ -109,13 +131,16 @@ export default function CoreModulesView() {
                       className="w-full rounded-xl border border-border/80 bg-card p-0 shadow-sm transition-all hover:border-border"
                     >
                       <AccordionTrigger className={`p-3 sm:p-5`}>
-                        <div className="space">
-                          <h3 className="text-base font-bold tracking-tight text-foreground sm:text-lg">
-                            {topic.name}
-                          </h3>
-                          <p className="line-clamp-2 text-xs font-normal text-muted-foreground sm:text-sm">
-                            {topic.description}
-                          </p>
+                        <div className="flex flex-1 justify-between">
+                          <div>
+                            <h3 className="text-base font-bold tracking-tight text-foreground sm:text-lg">
+                              {topic.name}
+                            </h3>
+                            <p className="line-clamp-2 text-xs font-normal text-muted-foreground sm:text-sm">
+                              {topic.description}
+                            </p>
+                          </div>
+                          {isEditor && <EditButton topic={topic} />}
                         </div>
                       </AccordionTrigger>
 
@@ -280,5 +305,83 @@ export function EarnedBagdes() {
         })}
       </CardContent>
     </Card>
+  )
+}
+
+function EditButton({ topic }: { topic: CoreTopicsProps }) {
+  const [open, setOpen] = useState(false)
+  const [name, setName] = useState(topic.name)
+  const [description, setDescription] = useState(topic.description)
+
+  function handleSubmit() {
+    setOpen(false)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger
+        render={
+          <Button
+            onClick={(e) => {
+              e.stopPropagation()
+            }}
+            variant="ghost"
+            size="xs"
+          />
+        }
+      >
+        <Pencil className="size-4" />
+      </DialogTrigger>
+      <DialogContent onClick={(e) => e.stopPropagation()} className={`w-lg`}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            handleSubmit()
+          }}
+          className="space-y-4"
+        >
+          <DialogHeader>
+            <DialogTitle>Edit Topic</DialogTitle>
+            <DialogDescription>
+              Update the topic title and description below.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <Label htmlFor={`topic-name-${topic.id}`}>Topic Name</Label>
+              <Input
+                id={`topic-name-${topic.id}`}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor={`topic-desc-${topic.id}`}>Description</Label>
+              <Textarea
+                id={`topic-desc-${topic.id}`}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+                required
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <DialogClose
+              render={
+                <Button type="button" variant="outline">
+                  Cancel
+                </Button>
+              }
+            />
+            <Button type="submit">Save Changes</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   )
 }

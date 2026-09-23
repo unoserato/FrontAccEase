@@ -1,5 +1,4 @@
 import HeaderTemplate from "@/components/common/PageTemplate"
-import { useUser } from "@/services/tanstack/auth"
 import { ContinueLearningCard } from "./Modules"
 import { EarnedBagdes } from "./CoreModulesView"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -20,21 +19,16 @@ const progress = [
 ]
 
 export default function Dashboard() {
-  const { data: user } = useUser()
-  if (!user) return null
   return (
     <section className="p-responsive capitalize">
       <HeaderTemplate title={`Dashboard`} />
       <section className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="col-span-2 space-y-6">
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-foreground">
-              Continue Learning
-            </h2>
             <ContinueLearningCard />
           </div>
           {classroomQuizzes.length > 0 ? (
-            <LearnerQuizCardTemplate quizzes={classroomQuizzes} title="Due" />
+            <LearnerQuizCardTemplate quizzes={classroomQuizzes} />
           ) : (
             <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-10 text-center">
               <FileQuestion className="mb-2 size-8 text-muted-foreground/50" />

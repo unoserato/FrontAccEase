@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import { ChevronDown, ChevronUp, FileQuestion } from "lucide-react"
 import { Link } from "react-router-dom"
 import { getQuizTotalQuestions } from "@/features/instructor/quizHelper"
+import { Badge } from "../ui/badge"
 
 interface LearnerQuizCardTemplateProps {
   quizzes?: QuizProps[]
@@ -34,18 +35,22 @@ export default function LearnerQuizCardTemplate({
         <h3 className="text-base font-bold tracking-tight text-foreground sm:text-lg">
           {title}
         </h3>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-8 text-muted-foreground hover:text-foreground"
-          aria-label="Toggle section"
-        >
-          {isOpen ? (
-            <ChevronUp className="size-4" />
-          ) : (
-            <ChevronDown className="size-4" />
-          )}
-        </Button>
+
+        <div className="flex items-center gap-1">
+          <Badge variant={"secondary"}>{list.length}</Badge>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 text-muted-foreground hover:text-foreground"
+            aria-label="Toggle section"
+          >
+            {isOpen ? (
+              <ChevronUp className="size-4" />
+            ) : (
+              <ChevronDown className="size-4" />
+            )}
+          </Button>
+        </div>
       </div>
 
       {/* Quiz List Items */}

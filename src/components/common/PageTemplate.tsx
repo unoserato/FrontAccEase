@@ -1,9 +1,9 @@
 import { useEffect, type ReactNode } from "react"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
-import { Button, buttonVariants } from "../ui/button"
+import { Button } from "../ui/button"
 import { ChevronLeft, Plus } from "lucide-react"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { cn } from "cn"
 
 interface HeaderTemplateProps {
@@ -26,6 +26,17 @@ export default function HeaderTemplate({
   const isMobile = useIsMobile()
   const hasCta = Boolean(cta && cta.length > 0)
 
+  const navigate = useNavigate()
+
+  function handleBack() {
+    if (backTo)
+      if (backTo == "-1") {
+        navigate(-1)
+      } else {
+        navigate(backTo)
+      }
+  }
+
   useEffect(() => {
     if (changeTitle) {
       document.title = `${title} | FrontAccEase`
@@ -35,13 +46,10 @@ export default function HeaderTemplate({
   return (
     <header className={cn("space-y-6", classname)}>
       {backTo && (
-        <Link
-          to={backTo}
-          className={cn(buttonVariants({ variant: "ghost", size: "xs" }))}
-        >
+        <Button onClick={handleBack} variant={"ghost"} size={"xs"}>
           <ChevronLeft />
           Back
-        </Link>
+        </Button>
       )}
       <div className="flex items-center justify-between">
         <div className="space-y-1">

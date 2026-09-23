@@ -21,9 +21,13 @@ import { getQuizTotalPoints } from "@/features/instructor/quizHelper"
 
 export type QuizCardTemplateProps = {
   quiz: QuizProps
+  isEditor?: boolean
 }
 
-export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
+export default function QuizCardTemplate({
+  quiz,
+  isEditor,
+}: QuizCardTemplateProps) {
   const [action, setAction] = useState<ActionType>(null)
   const isMobile = useIsMobile()
   const navigate = useNavigate()
@@ -92,7 +96,7 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
     Math.max(0, Math.round((submissionsCount / (totalLearners || 1)) * 100))
   )
 
-  const actionsDropdown = (
+  const actionsDropdown = isEditor && (
     <div onClick={(e) => e.stopPropagation()} className="shrink-0">
       <DropdownMenu>
         <DropdownMenuTrigger
