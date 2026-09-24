@@ -16,7 +16,6 @@ import DeleteArchiveDialog, {
 } from "../instructor/DeleteArchiveDialog"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { useNavigate, useLocation } from "react-router-dom"
 import { getQuizTotalPoints } from "@/features/instructor/quizHelper"
 
 export type QuizCardTemplateProps = {
@@ -30,13 +29,6 @@ export default function QuizCardTemplate({
 }: QuizCardTemplateProps) {
   const [action, setAction] = useState<ActionType>(null)
   const isMobile = useIsMobile()
-  const navigate = useNavigate()
-  const location = useLocation()
-
-  const handleNavigate = () => {
-    const currentPath = location.pathname.replace(/\/$/, "")
-    navigate(`${currentPath}/${quiz.id}`)
-  }
 
   // Calculate dynamic submissions over total learners in assigned classrooms
   const matchingSubmissions = quizSubmissions.filter(
@@ -138,10 +130,7 @@ export default function QuizCardTemplate({
 
   return (
     <>
-      <Card
-        className="group relative flex w-full cursor-pointer flex-col justify-between overflow-hidden p-4 transition-all hover:shadow-sm sm:p-5"
-        onClick={handleNavigate}
-      >
+      <Card className="group relative flex w-full cursor-pointer flex-col justify-between overflow-hidden p-4 transition-all hover:shadow-sm sm:p-5">
         {/* Top Bar / Dropdown in Top Right Corner */}
         <div className="flex items-center justify-between">
           <Badge

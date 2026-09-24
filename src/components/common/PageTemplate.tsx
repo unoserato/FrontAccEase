@@ -53,7 +53,7 @@ export default function HeaderTemplate({
       )}
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h1 className="text-lg font-bold tracking-tight capitalize sm:text-xl md:text-2xl lg:text-3xl">
+          <h1 className="text-xl font-bold tracking-tight capitalize md:text-2xl lg:text-3xl">
             {title}
           </h1>
           {subtitle && <p className="text-base">{subtitle}</p>}

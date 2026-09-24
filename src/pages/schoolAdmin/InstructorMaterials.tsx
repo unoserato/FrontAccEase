@@ -1,112 +1,140 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import HeaderTemplate from "@/components/common/PageTemplate"
-import ModuleCardTemplate from "@/components/common/ModuleCardTemplate"
-import QuizCardTemplate from "@/components/common/QuizCardTemplate"
 import SearchTemplate from "@/components/common/SearchTemplate"
-import GridListButtonGroupTemplate from "@/components/common/GridListButtonGroupTemplate"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { modules, quizzes } from "@/const/data"
+import { Card } from "@/components/ui/card"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { classrooms, instructors, modules, quizzes } from "@/const/data"
+import { ChevronRight } from "lucide-react"
 
 export default function InstructorMaterials() {
-  const [moduleSearch, setModuleSearch] = useState("")
-  const [quizSearch, setQuizSearch] = useState("")
-  const [gridView, setGridView] = useState(true)
+  const [search, setSearch] = useState("")
+  const navigate = useNavigate()
 
-  const filteredModules = modules.filter((module) => {
-    if (moduleSearch.trim().length > 0) {
-      return (
-        module.name.toLowerCase().includes(moduleSearch.toLowerCase()) ||
-        module.principle.toLowerCase().includes(moduleSearch.toLowerCase())
-      )
+  const filteredInstructors = instructors.filter((instructor) => {
+    if (search.trim().length > 0) {
+      return instructor.name.toLowerCase().includes(search.toLowerCase())
     }
     return true
   })
 
-  const filteredQuizzes = quizzes.filter((quiz) => {
-    if (quizSearch.trim().length > 0) {
-      return (
-        quiz.name.toLowerCase().includes(quizSearch.toLowerCase()) ||
-        quiz.principle?.toLowerCase().includes(quizSearch.toLowerCase())
-      )
-    }
-    return true
-  })
+  function getInitials(name: string) {
+    return name
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase()
+  }
 
   return (
     <section className="p-responsive space-y-4 sm:space-y-6">
       <HeaderTemplate
         title="Instructor Materials"
-        subtitle="View and manage instructor created learning modules and quizzes."
+        subtitle="View instructors and a summary of their created classrooms, modules, and quizzes."
       />
 
-      <Tabs defaultValue="modules" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2 sm:w-64">
-          <TabsTrigger value="modules">Modules ({modules.length})</TabsTrigger>
-          <TabsTrigger value="quizzes">Quizzes ({quizzes.length})</TabsTrigger>
-        </TabsList>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="w-full flex-1 sm:max-w-md md:max-w-lg">
+          <SearchTemplate
+            search={search}
+            setSearch={setSearch}
+            title="instructor name"
+          />
+        </div>
+      </div>
 
-        {/* Modules Tab Content */}
-        <TabsContent value="modules" className="space-y-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="w-full flex-1 sm:max-w-md md:max-w-lg">
-              <SearchTemplate
-                search={moduleSearch}
-                setSearch={setModuleSearch}
-                title="modules or principle"
-              />
-            </div>
-            <div className="flex shrink-0 items-center justify-end gap-2">
-              <GridListButtonGroupTemplate
-                gridView={gridView}
-                setGridView={setGridView}
-              />
-            </div>
-          </div>
+      <Card className="overflow-hidden">
+        <div className="w-full overflow-x-auto">
+          <Table className="min-w-[650px]">
+            <TableHeader>
+              <TableRow className="bg-muted/40 hover:bg-muted/40">
+                <TableHead className="whitespace-nowrap pl-4">Name</TableHead>
+                <TableHead className="whitespace-nowrap text-center">Classrooms</TableHead>
+                <TableHead className="whitespace-nowrap text-center">Modules</TableHead>
+                <TableHead className="whitespace-nowrap text-center">Quizzes</TableHead>
+                <TableHead className="w-32 pr-4 text-right whitespace-nowrap">View Details</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredInstructors.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
+                    No instructors found.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredInstructors.map((instructor) => {
+                  const classroomCount = classrooms.filter(
+                    (c) => c.created_by === instructor.id
+                  ).length
+                  const moduleCount = modules.filter(
+                    (m) => m.created_by === instructor.id
+                  ).length
+                  const quizCount = quizzes.filter(
+                    (q) =>
+                      q.created_by === instructor.id || q.author === instructor.name
+                  ).length
 
-          {filteredModules.length === 0 ? (
-            <div className="flex h-32 w-full items-center justify-center rounded-xl border border-dashed text-sm text-muted-foreground">
-              No modules found.
-            </div>
-          ) : gridView ? (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
-              {filteredModules.map((module) => (
-                <ModuleCardTemplate module={module} key={module.id} view="grid" />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col gap-2">
-              {filteredModules.map((module) => (
-                <ModuleCardTemplate module={module} key={module.id} view="list" />
-              ))}
-            </div>
-          )}
-        </TabsContent>
-
-        {/* Quizzes Tab Content */}
-        <TabsContent value="quizzes" className="space-y-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="w-full flex-1 sm:max-w-md md:max-w-lg">
-              <SearchTemplate
-                search={quizSearch}
-                setSearch={setQuizSearch}
-                title="quizzes or principle"
-              />
-            </div>
-          </div>
-
-          {filteredQuizzes.length === 0 ? (
-            <div className="flex h-32 w-full items-center justify-center rounded-xl border border-dashed text-sm text-muted-foreground">
-              No quizzes found.
-            </div>
-          ) : (
-            <div className="flex flex-col gap-3 sm:gap-4">
-              {filteredQuizzes.map((quiz) => (
-                <QuizCardTemplate quiz={quiz} key={quiz.id} />
-              ))}
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+                  return (
+                    <TableRow
+                      key={instructor.id}
+                      className="group cursor-pointer hover:bg-muted/40"
+                      onClick={() => navigate(`./${instructor.id}`)}
+                    >
+                      <TableCell className="pl-4 whitespace-nowrap">
+                        <div className="flex items-center gap-3">
+                          <Avatar size="sm">
+                            <AvatarImage src={instructor.img} alt={instructor.name} />
+                            <AvatarFallback>{getInitials(instructor.name)}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <span className="font-semibold text-foreground block group-hover:underline">
+                              {instructor.name}
+                            </span>
+                            <Badge variant="secondary" className="capitalize text-[10px] py-0 px-1.5 mt-0.5">
+                              {instructor.role}
+                            </Badge>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-center font-bold text-foreground whitespace-nowrap">
+                        {classroomCount}
+                      </TableCell>
+                      <TableCell className="text-center font-bold text-foreground whitespace-nowrap">
+                        {moduleCount}
+                      </TableCell>
+                      <TableCell className="text-center font-bold text-foreground whitespace-nowrap">
+                        {quizCount}
+                      </TableCell>
+                      <TableCell className="pr-4 text-right whitespace-nowrap">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="font-medium text-xs sm:text-sm text-foreground group-hover:text-primary"
+                        >
+                          View Details
+                          <ChevronRight className="ml-1 h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </Card>
     </section>
   )
 }

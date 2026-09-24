@@ -16,7 +16,6 @@ import {
   FileText,
   KeyboardIcon,
   ScanSearch,
-  Users,
   ShieldCheck,
 } from "lucide-react"
 import {
@@ -71,7 +70,7 @@ export default function ClassroomInstructorView() {
   return (
     <section className="p-responsive w-full space-y-4 bg-background sm:space-y-6">
       <HeaderTemplate
-        backTo="/instructor/classroom"
+        backTo="-1"
         title={classroom?.classroomCode}
         subtitle={classroom?.name}
         cta={[
@@ -132,11 +131,9 @@ function Dashboard({ classroom }: { classroom: ClassroomProps }) {
       {/* Stat Cards Grid */}
       <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
         <Card>
-          <CardHeader className="p-3.5 pb-1 sm:p-5 sm:pb-2">
-            <div className="flex items-center justify-between">
-              <CardDescription className="text-xs font-medium">
-                Class Join Code
-              </CardDescription>
+          <CardHeader>
+            <CardTitle>Class Join Code</CardTitle>
+            <CardAction>
               <Button
                 variant="ghost"
                 size="icon"
@@ -158,9 +155,9 @@ function Dashboard({ classroom }: { classroom: ClassroomProps }) {
                 )}
                 <span className="sr-only">Copy Join Code</span>
               </Button>
-            </div>
+            </CardAction>
           </CardHeader>
-          <CardContent className="p-3.5 pt-0 sm:p-5 sm:pt-0">
+          <CardContent>
             <p className="font-mono text-sm font-bold tracking-wider text-foreground sm:text-lg">
               {classroom?.joinCode}
             </p>
@@ -168,26 +165,19 @@ function Dashboard({ classroom }: { classroom: ClassroomProps }) {
         </Card>
 
         <Card>
-          <CardHeader className="p-3.5 pb-1 sm:p-5 sm:pb-2">
-            <CardDescription className="text-xs font-medium">
-              Learners
-            </CardDescription>
+          <CardHeader>
+            <CardTitle>Learners</CardTitle>
           </CardHeader>
-          <CardContent className="p-3.5 pt-0 sm:p-5 sm:pt-0">
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-muted-foreground sm:h-5 sm:w-5" />
-              <p className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-                {classroom?.learners.length}
-              </p>
-            </div>
+          <CardContent>
+            <p className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+              {classroom?.learners.length}
+            </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="p-3.5 pb-1 sm:p-5 sm:pb-2">
-            <CardDescription className="text-xs font-medium">
-              Modules
-            </CardDescription>
+          <CardHeader>
+            <CardTitle>Modules</CardTitle>
           </CardHeader>
           <CardContent className="p-3.5 pt-0 sm:p-5 sm:pt-0">
             <div className="flex items-center gap-2">

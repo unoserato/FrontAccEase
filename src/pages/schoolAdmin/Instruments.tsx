@@ -423,7 +423,7 @@ function EditCriterionDialog({
           </Button>
         }
       />
-      <DialogContent>
+      <DialogContent className={"max-w-xl"}>
         <form onSubmit={handleSubmit} className="space-y-4">
           <DialogHeader>
             <DialogTitle>Edit Criterion</DialogTitle>

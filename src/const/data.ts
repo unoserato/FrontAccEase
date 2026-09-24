@@ -8,10 +8,12 @@ import type {
   ChatMessage,
 } from "./materialsProps"
 
+export type Role = "learner" | "instructor" | "admin"
+
 export interface UserProps {
   id: string
   name: string
-  role: "learner" | "instructor" | "admin"
+  role: Role
   img: string
 }
 
@@ -61,6 +63,27 @@ export const learners: UserProps[] = [
   },
 ]
 
+export const instructors: UserProps[] = [
+  {
+    id: "inst-1",
+    name: "Dr. Evelyn Reed",
+    role: "instructor",
+    img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+  },
+  {
+    id: "inst-2",
+    name: "Prof. Alan Turing",
+    role: "instructor",
+    img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+  },
+  {
+    id: "inst-3",
+    name: "Sarah Jenkins",
+    role: "instructor",
+    img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80",
+  },
+]
+
 export const classrooms: ClassroomProps[] = [
   {
     id: "1",
@@ -68,6 +91,7 @@ export const classrooms: ClassroomProps[] = [
     name: "Web Accessibility Fundamentals",
     joinCode: "wcag81",
     learners: ["1234-1234"],
+    created_by: "inst-1",
   },
   {
     id: "2",
@@ -75,6 +99,7 @@ export const classrooms: ClassroomProps[] = [
     name: "Inclusive UI/UX Engineering",
     joinCode: "uiux92",
     learners: ["1233-1233"],
+    created_by: "inst-1",
   },
   {
     id: "3",
@@ -82,6 +107,7 @@ export const classrooms: ClassroomProps[] = [
     name: "Frontend Systems & Architecture",
     joinCode: "cs401x",
     learners: ["1235-1235"],
+    created_by: "inst-2",
   },
   {
     id: "4",
@@ -89,6 +115,7 @@ export const classrooms: ClassroomProps[] = [
     name: "Software Quality & Compliance Testing",
     joinCode: "qa102p",
     learners: ["1236-1236"],
+    created_by: "inst-2",
   },
   {
     id: "5",
@@ -96,6 +123,7 @@ export const classrooms: ClassroomProps[] = [
     name: "Mobile Assistive Technology Lab",
     joinCode: "mob301",
     learners: ["1237-1237"],
+    created_by: "inst-3",
   },
   {
     id: "6",
@@ -103,6 +131,7 @@ export const classrooms: ClassroomProps[] = [
     name: "Digital Inclusivity Workshop",
     joinCode: "digi50",
     learners: ["1238-1238"],
+    created_by: "inst-3",
   },
 ]
 
@@ -204,6 +233,7 @@ export const modules: ModuleProps[] = [
     principle: "Perceivable",
     tags: ["1.1.1 Non-Text Content"],
     classrooms: ["1"],
+    created_by: "inst-1",
   },
   {
     id: "2",
@@ -283,6 +313,7 @@ export const modules: ModuleProps[] = [
     principle: "Perceivable",
     tags: ["1.1.1 Non-Text Content"],
     classrooms: ["1"],
+    created_by: "inst-2",
   },
   {
     id: "3",
@@ -349,6 +380,7 @@ export const modules: ModuleProps[] = [
     principle: "Perceivable",
     tags: ["1.1.1 Non-Text Content"],
     classrooms: ["1"],
+    created_by: "inst-1",
   },
   {
     id: "4",
@@ -440,6 +472,7 @@ export const modules: ModuleProps[] = [
       "1.2.1 Audio-only and Video-only ",
     ],
     classrooms: ["1"],
+    created_by: "inst-3",
   },
 ]
 
@@ -481,7 +514,8 @@ export const quizzes: QuizProps[] = [
   {
     id: "1",
     name: "UI Quiz 1",
-    author: "You",
+    author: "Dr. Evelyn Reed",
+    created_by: "inst-1",
     status: "Open",
     passingRate: 92,
     avgScore: 84,
@@ -576,7 +610,8 @@ export const quizzes: QuizProps[] = [
   {
     id: "2",
     name: "Operable & Keyboard Navigation Evaluation",
-    author: "You",
+    author: "Prof. Alan Turing",
+    created_by: "inst-2",
     status: "Open",
     passingRate: 88,
     avgScore: 79,

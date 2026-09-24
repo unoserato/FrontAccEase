@@ -13,17 +13,12 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
 import { Button } from "../ui/button"
-import {
-  Archive,
-  EllipsisVertical,
-  Pencil,
-  Trash,
-  Users,
-} from "lucide-react"
+import { Archive, EllipsisVertical, Pencil, Trash, Users } from "lucide-react"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
 import { Badge } from "../ui/badge"
-import DeleteArchiveDialog, { type ActionType } from "../instructor/DeleteArchiveDialog"
+import DeleteArchiveDialog, {
+  type ActionType,
+} from "../instructor/DeleteArchiveDialog"
 
 export default function ClassroomCardTemplate({
   classroom,
@@ -31,18 +26,10 @@ export default function ClassroomCardTemplate({
   classroom: ClassroomProps
 }) {
   const [action, setAction] = useState<ActionType>(null)
-  const nav = useNavigate()
-
-  const handleNavigate = () => {
-    nav(classroom.id)
-  }
 
   return (
     <>
-      <Card
-        className="group relative flex min-h-52 w-full cursor-pointer flex-col justify-between overflow-hidden p-0 sm:min-h-56"
-        onClick={handleNavigate}
-      >
+      <Card className="group relative flex min-h-52 w-full cursor-pointer flex-col justify-between overflow-hidden p-0 sm:min-h-56">
         {/* Google Classroom Header Banner */}
         <CardHeader className="relative bg-foreground p-4 pr-12 text-background sm:p-5">
           <div className="space-y-1 pr-6">

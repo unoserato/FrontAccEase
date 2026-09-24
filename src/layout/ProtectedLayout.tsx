@@ -1,12 +1,13 @@
 import UserHeader from "@/components/common/UserHeader"
 import UserSidebar from "@/components/common/UserSidebar"
-import UserSkeleton from "@/components/skeleton/UserSkeleton"
+// import UserSkeleton from "@/components/skeleton/UserSkeleton"
+import type { Role } from "@/const/data"
 import { instructorNav, learnerNav, schoolAdminNav } from "@/const/navigation"
 import { useIsMobile } from "@/hooks/use-mobile"
-import Forbidden from "@/pages/errors/Forbidden"
-import Unauthorized from "@/pages/errors/Unauthorized"
-import { useUser } from "@/services/tanstack/auth"
-import { Outlet } from "react-router-dom"
+// import Forbidden from "@/pages/errors/Forbidden"
+// import Unauthorized from "@/pages/errors/Unauthorized"
+// import { useUser } from "@/services/tanstack/auth"
+import { Outlet, useLocation } from "react-router-dom"
 
 const linksByRole = {
   learner: learnerNav,
@@ -15,32 +16,46 @@ const linksByRole = {
 }
 
 export default function ProtectedLayout({
-  allowedRole,
+  allowedRoles,
 }: {
-  allowedRole: string
+  allowedRoles: Role | Role[]
 }) {
-  const { data: user, isLoading } = useUser()
+  // const { data: user, isLoading } = useUser()
+
   const isMobile = useIsMobile()
 
-  if (isLoading) {
-    return <UserSkeleton />
-  }
+  // if (isLoading) {
+  //   return <UserSkeleton />
+  // }
 
-  if (!user) {
-    return <Unauthorized />
-  }
+  // if (!user) {
+  //   return <Unauthorized />
+  // }
 
-  if (!user.role.includes(allowedRole)) {
-    return <Forbidden />
-  }
+  // const userRole = user.role
 
-  const links = linksByRole[user.role]
+  // const isPermitted = Array.isArray(allowedRoles)
+  //   ? allowedRoles.includes(userRole)
+  //   : userRole === allowedRoles
+
+  // if (!isPermitted) {
+  //   return <Forbidden />
+  // }
+
+  // const links = linksByRole[user.role]
+
+  // temporary routing
+  const { pathname } = useLocation()
+  const path = pathname.split("/")[1]
+  console.log(path, allowedRoles)
+  const role = path as Role
+  const links = linksByRole[role]
 
   return (
     <div
       className={`flex ${isMobile ? "flex-col" : "flex-row"} h-screen w-screen overflow-hidden`}
     >
-      <UserSidebar links={links} name={user.name} />
+      <UserSidebar links={links} name={"John Mark"} />
       {isMobile && <UserHeader />}
       <main className="min-h-0 min-w-0 flex-1 overflow-y-auto bg-background">
         <Outlet />

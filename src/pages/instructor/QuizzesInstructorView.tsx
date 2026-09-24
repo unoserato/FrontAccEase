@@ -39,8 +39,10 @@ import {
 } from "lucide-react"
 
 import QuizForm from "@/features/QuizForm"
+import { useUser } from "@/services/tanstack/auth"
 
 export default function QuizzesInstructorView() {
+  const { data: user } = useUser()
   const { id } = useParams<{ id: string }>()
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -70,26 +72,31 @@ export default function QuizzesInstructorView() {
     )
   }
 
+  const isEditor = user && user.role == "instructor" ? true : false
+  const cta = [
+    isEditor && (
+      <Link
+        key="edit-quiz"
+        to={`/instructor/quizzes/edit/${quiz.id}`}
+        className={buttonVariants({ variant: "outline" })}
+      >
+        <Pencil className="h-4 w-4" />
+        Edit Quiz
+      </Link>
+    ),
+    <Button key="export" onClick={() => alert("Export quiz results")}>
+      <FileText className="h-4 w-4" />
+      Export Data
+    </Button>,
+  ]
+
   return (
     <section className="p-responsive w-full space-y-4 bg-background sm:space-y-6">
       <HeaderTemplate
-        backTo="/instructor/quizzes"
+        backTo="-1"
         title={quiz.name}
         subtitle={`Author: ${quiz.author || "You"} • Principle: ${quiz.principle || "General"}`}
-        cta={[
-          <Link
-            key="edit-quiz"
-            to={`/instructor/quizzes/edit/${quiz.id}`}
-            className={buttonVariants({ variant: "outline" })}
-          >
-            <Pencil className="h-4 w-4" />
-            Edit Quiz
-          </Link>,
-          <Button key="export" onClick={() => alert("Export quiz results")}>
-            <FileText className="h-4 w-4" />
-            Export Data
-          </Button>,
-        ]}
+        cta={cta}
       />
 
       <Tabs
@@ -97,7 +104,7 @@ export default function QuizzesInstructorView() {
         onValueChange={(val) => handleTabChange(String(val))}
         className="w-full"
       >
-        <div className="sticky top-0 z-40 w-full border-b border-border/80 bg-background/95 py-1 backdrop-blur-md">
+        <div className="sticky top-0 z-40 w-fit border-b border-border/80 bg-background/95 py-1 backdrop-blur-md">
           <TabsList variant="line" className="w-full justify-start gap-4">
             <TabsTrigger value="dashboard" className="text-xs sm:text-sm">
               Dashboard & Details

@@ -17,7 +17,6 @@ import ClassroomInstructor from "./pages/instructor/ClassroomInstructor"
 import AnalyzerLogsInstructor from "./pages/instructor/AnalyzerLogsInstructor"
 import DashboardSchoolAdmin from "./pages/schoolAdmin/DashboardSchoolAdmin"
 import LearningMaterials from "./pages/schoolAdmin/LearningMaterials"
-import InstructorMaterials from "./pages/schoolAdmin/InstructorMaterials"
 import Instruments from "./pages/schoolAdmin/Instruments"
 import Users from "./pages/schoolAdmin/Users"
 import AnalyzerLogsSchoolAdmin from "./pages/schoolAdmin/AnalyzerLogsSchoolAdmin"
@@ -38,6 +37,8 @@ import CoreModuleReadOnly from "./features/CoreModuleReadOnly"
 import CoreModulesView from "./pages/learner/CoreModulesView"
 import AnalyzerResults from "./pages/common/AnalyzerResults"
 import AnalyzerExtension from "./pages/learner/AnalyzerExtension"
+import InstructorMaterialsView from "./pages/schoolAdmin/InstructorMaterialsView"
+import InstructorMaterials from "./pages/schoolAdmin/InstructorMaterials"
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,7 +48,10 @@ export const router = createBrowserRouter(
       </Route>
       {/*  */}
       {/* LEARNER */}
-      <Route path="learner" element={<ProtectedLayout allowedRole="learner" />}>
+      <Route
+        path="learner"
+        element={<ProtectedLayout allowedRoles="learner" />}
+      >
         <Route index element={<Navigate to="dashboard" />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="modules" element={<Modules />} />
@@ -73,7 +77,7 @@ export const router = createBrowserRouter(
       {/* INSTRUCTOR */}
       <Route
         path="instructor"
-        element={<ProtectedLayout allowedRole="instructor" />}
+        element={<ProtectedLayout allowedRoles="instructor" />}
       >
         <Route index element={<Navigate to="dashboard" />} />
         <Route path="dashboard" element={<DashboardInstructor />} />
@@ -98,7 +102,7 @@ export const router = createBrowserRouter(
       />
       {/*  */}
       {/* SCHOOL ADMIN */}
-      <Route path="admin" element={<ProtectedLayout allowedRole="admin" />}>
+      <Route path="admin" element={<ProtectedLayout allowedRoles="admin" />}>
         <Route index element={<Navigate to="dashboard" />} />
         <Route path="dashboard" element={<DashboardSchoolAdmin />} />
         <Route path="learning-materials" element={<LearningMaterials />} />
@@ -107,6 +111,22 @@ export const router = createBrowserRouter(
           element={<CoreModulesView />}
         />
         <Route path="instructor-materials" element={<InstructorMaterials />} />
+        <Route
+          path="instructor-materials/:id"
+          element={<InstructorMaterialsView />}
+        />
+        <Route
+          path="instructor-materials/:id/classroom/:id"
+          element={<ClassroomInstructorView />}
+        />
+        <Route
+          path="instructor-materials/:id/modules/:id"
+          element={<ModuleReadOnly />}
+        />
+        <Route
+          path="instructor-materials/:id/quizzes/:id"
+          element={<QuizzesInstructorView />}
+        />
         <Route path="instruments" element={<Instruments />} />
         <Route path="instruments/:guidelineId" element={<Instruments />} />
         <Route path="users" element={<Users />} />

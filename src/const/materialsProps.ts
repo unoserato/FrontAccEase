@@ -68,6 +68,7 @@ export interface ModuleProps {
   content: string | object
   tags: string[]
   classrooms: string[]
+  created_by?: string
 }
 
 export interface CoreModulesProps {
@@ -147,6 +148,7 @@ export interface QuizProps {
   dueDate?: string
   classrooms?: string[]
   theme?: string
+  created_by?: string
 }
 
 export interface ClassroomProps {
@@ -155,6 +157,7 @@ export interface ClassroomProps {
   classroomCode: string
   joinCode: string
   learners: string[]
+  created_by?: string
 }
 
 export interface Submission {
