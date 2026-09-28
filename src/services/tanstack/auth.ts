@@ -1,14 +1,13 @@
-import { user } from "@/const/data"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
+// import { meAPI } from "../api/authAPI"
+import { user } from "@/const/data"
 
 export function useUser() {
   return useQuery({
     queryKey: ["user"],
     queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
       return user
     },
-    refetchInterval: 10,
   })
 }
 

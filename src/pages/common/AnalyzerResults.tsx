@@ -213,7 +213,7 @@ export default function AnalyzerResults() {
         {/* Card 1: ACCESSIBILITY SCORE */}
         <Card className="rounded-2xl border border-border/70 bg-card p-5 shadow-xs">
           <CardHeader className="p-0 pb-3">
-            <p className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+            <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
               Accessibility Score
             </p>
           </CardHeader>
@@ -235,15 +235,15 @@ export default function AnalyzerResults() {
         {/* Card 2: FAILED AUDITS */}
         <Card className="rounded-2xl border border-border/70 bg-card p-5 shadow-xs">
           <CardHeader className="p-0 pb-3">
-            <p className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+            <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
               Failed Audits
             </p>
           </CardHeader>
           <CardContent className="flex items-center justify-between gap-4 p-0">
             {/* Donut / Gauge Visualization representation */}
-            <div className="relative flex size-28 shrink-0 flex-col items-center justify-center rounded-full border-[10px] border-muted border-t-amber-500 border-r-amber-500 border-l-muted">
+            <div className="relative flex size-28 shrink-0 flex-col items-center justify-center rounded-full border-8 border-muted border-t-amber-500 border-r-amber-500 border-l-muted">
               <span className="text-2xl font-black text-foreground">4</span>
-              <span className="text-[9px] font-bold tracking-widest text-muted-foreground uppercase">
+              <span className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
                 Violations
               </span>
             </div>
@@ -286,7 +286,7 @@ export default function AnalyzerResults() {
         {/* Card 3: SCAN DETAILS */}
         <Card className="rounded-2xl border border-border/70 bg-card p-5 shadow-xs">
           <CardHeader className="p-0 pb-3">
-            <p className="text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+            <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
               Scan Details
             </p>
           </CardHeader>
@@ -300,7 +300,7 @@ export default function AnalyzerResults() {
                   <Clock className="size-3.5 text-muted-foreground" />
                   <span>40.67s</span>
                 </div>
-                <Badge className="border-amber-500/30 bg-amber-500/10 text-[10px] font-bold text-amber-700 dark:text-amber-400">
+                <Badge className="border-amber-500/30 bg-amber-500/10 text-xs font-bold text-amber-700 dark:text-amber-400">
                   Slow
                 </Badge>
               </div>
@@ -344,12 +344,12 @@ export default function AnalyzerResults() {
               2
             </Badge>
           </div>
-          <p className="text-[11px] leading-tight text-muted-foreground">
+          <p className="text-xs leading-tight text-muted-foreground">
             Contrast, Text Alternatives, Layout.
           </p>
           <div className="space-y-1 pt-1">
             <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-              <div className="h-full w-[75%] rounded-full bg-rose-500" />
+              <div className="h-full w-3/4 rounded-full bg-rose-500" />
             </div>
             <p className="text-right text-xs font-extrabold text-foreground">
               75
@@ -368,12 +368,12 @@ export default function AnalyzerResults() {
               1
             </Badge>
           </div>
-          <p className="text-[11px] leading-tight text-muted-foreground">
+          <p className="text-xs leading-tight text-muted-foreground">
             Keyboard Navigability, Timeouts.
           </p>
           <div className="space-y-1 pt-1">
             <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-              <div className="h-full w-[80%] rounded-full bg-amber-500" />
+              <div className="h-full w-4/5 rounded-full bg-amber-500" />
             </div>
             <p className="text-right text-xs font-extrabold text-foreground">
               80
@@ -394,12 +394,12 @@ export default function AnalyzerResults() {
               0
             </Badge>
           </div>
-          <p className="text-[11px] leading-tight text-muted-foreground">
+          <p className="text-xs leading-tight text-muted-foreground">
             Readable Language, Predictable Inputs.
           </p>
           <div className="space-y-1 pt-1">
             <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-              <div className="h-full w-[100%] rounded-full bg-emerald-500" />
+              <div className="h-full w-full rounded-full bg-emerald-500" />
             </div>
             <p className="text-right text-xs font-extrabold text-foreground">
               100
@@ -418,12 +418,12 @@ export default function AnalyzerResults() {
               1
             </Badge>
           </div>
-          <p className="text-[11px] leading-tight text-muted-foreground">
+          <p className="text-xs leading-tight text-muted-foreground">
             ARIA Specs, Markup Parsing Integrity.
           </p>
           <div className="space-y-1 pt-1">
             <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-              <div className="h-full w-[75%] rounded-full bg-rose-500" />
+              <div className="h-full w-3/4 rounded-full bg-rose-500" />
             </div>
             <p className="text-right text-xs font-extrabold text-foreground">
               75
@@ -528,7 +528,7 @@ export default function AnalyzerResults() {
 
               {/* Target Element Box */}
               <div className="space-y-1.5 rounded-xl border border-border/50 bg-muted/40 p-3">
-                <p className="font-mono text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+                <p className="font-mono text-xs font-bold tracking-wider text-muted-foreground uppercase">
                   Target Element:
                 </p>
                 <div className="overflow-x-auto rounded-lg bg-zinc-950 p-2.5 font-mono text-xs text-zinc-100">

@@ -68,7 +68,6 @@ export function AvatarGroup({
     <div className={cn('flex', className)} onMouseLeave={() => setActiveIndex(null)}>
       {items.map((child, index) => (
         <div
-          // eslint-disable-next-line react/no-array-index-key -- position is the identity here
           key={index}
           className={cn('relative', index > 0 && overlap)}
           style={itemStyle(index)}

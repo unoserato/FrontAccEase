@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -61,14 +61,16 @@ export default function Instruments() {
   const selectedGuidelineId = guidelineId || "1.1"
 
   // Sync selected criterion when guidelineId changes
-  useEffect(() => {
+  const [prevGuidelineId, setPrevGuidelineId] = useState(selectedGuidelineId)
+  if (selectedGuidelineId !== prevGuidelineId) {
+    setPrevGuidelineId(selectedGuidelineId)
     const firstCriterion = criteriaList.find(
       (c) => c.guidelineId === selectedGuidelineId
     )
     if (firstCriterion) {
       setSelectedCriterionId(firstCriterion.id)
     }
-  }, [selectedGuidelineId, criteriaList])
+  }
 
   // Filter guidelines based on search query
   const filteredGuidelines = wcagGuidelines.filter((g) => {
@@ -367,7 +369,7 @@ function BrowseGuidelinesContent({
                       <span>{guideline.name}</span>
                       {subCount > 1 && (
                         <span
-                          className={`rounded-md px-1.5 py-0.5 text-[11px] ${
+                          className={`rounded-md px-1.5 py-0.5 text-xs ${
                             isActive
                               ? "bg-background/20 text-background"
                               : "bg-muted text-muted-foreground"

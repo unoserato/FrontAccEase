@@ -428,8 +428,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "package_dependencies_base_ui_react",
-      "community": 49,
-      "community_name": "dependencies",
+      "community": 108,
+      "community_name": "@base-ui/react",
       "norm_label": "@base-ui/react"
     },
     {
@@ -439,8 +439,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "base_ui_react",
-      "community": 49,
-      "community_name": "dependencies",
+      "community": 108,
+      "community_name": "@base-ui/react",
       "norm_label": "@base-ui/react"
     },
     {
@@ -934,8 +934,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "package_dependencies_clsx",
-      "community": 61,
-      "community_name": "clsx",
+      "community": 49,
+      "community_name": "dependencies",
       "norm_label": "clsx"
     },
     {
@@ -945,8 +945,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "clsx",
-      "community": 61,
-      "community_name": "clsx",
+      "community": 49,
+      "community_name": "dependencies",
       "norm_label": "clsx"
     },
     {
@@ -1066,8 +1066,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "package_dependencies_react",
-      "community": 68,
-      "community_name": "chart.tsx",
+      "community": 32,
+      "community_name": "react",
       "norm_label": "react"
     },
     {
@@ -1077,8 +1077,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "react",
-      "community": 68,
-      "community_name": "chart.tsx",
+      "community": 32,
+      "community_name": "react",
       "norm_label": "react"
     },
     {
@@ -1715,8 +1715,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app",
-      "community": 32,
-      "community_name": "main.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "app.tsx"
     },
     {
@@ -1726,8 +1726,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_app_client",
-      "community": 32,
-      "community_name": "main.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "client"
     },
     {
@@ -1738,8 +1738,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_app_app",
-      "community": 32,
-      "community_name": "main.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "app()"
     },
     {
@@ -1761,7 +1761,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_common_classroomcardtemplate_classroomcardtemplate",
-      "community": 37,
+      "community": 31,
       "community_name": "ui/button.tsx",
       "norm_label": "classroomcardtemplate()"
     },
@@ -1797,8 +1797,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_common_gridlistbuttongrouptemplate_gridlistbuttongrouptemplate",
-      "community": 52,
-      "community_name": "GridListButtonGroupTemplate.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "gridlistbuttongrouptemplate()"
     },
     {
@@ -1808,8 +1808,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_common_learnerquizcardtemplate",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "learnerquizcardtemplate.tsx"
     },
     {
@@ -1821,8 +1821,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_common_learnerquizcardtemplate_learnerquizcardtemplateprops",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "learnerquizcardtemplateprops"
     },
     {
@@ -1833,8 +1833,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_common_learnerquizcardtemplate_learnerquizcardtemplate",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "learnerquizcardtemplate()"
     },
     {
@@ -1916,7 +1916,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_common_pagetemplate",
-      "community": 37,
+      "community": 31,
       "community_name": "ui/button.tsx",
       "norm_label": "pagetemplate.tsx"
     },
@@ -1929,7 +1929,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_common_pagetemplate_headertemplateprops",
-      "community": 37,
+      "community": 31,
       "community_name": "ui/button.tsx",
       "norm_label": "headertemplateprops"
     },
@@ -1941,7 +1941,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_common_pagetemplate_headertemplate",
-      "community": 37,
+      "community": 31,
       "community_name": "ui/button.tsx",
       "norm_label": "headertemplate()"
     },
@@ -1952,8 +1952,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_common_pagewithtitletemplate",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 46,
+      "community_name": "useIsMobile",
       "norm_label": "pagewithtitletemplate.tsx"
     },
     {
@@ -1965,8 +1965,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_common_pagewithtitletemplate_ctaitem",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 46,
+      "community_name": "useIsMobile",
       "norm_label": "ctaitem"
     },
     {
@@ -1978,8 +1978,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_common_pagewithtitletemplate_statustabvalue",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 46,
+      "community_name": "useIsMobile",
       "norm_label": "statustabvalue"
     },
     {
@@ -1991,8 +1991,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_common_pagewithtitletemplate_viewmode",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 46,
+      "community_name": "useIsMobile",
       "norm_label": "viewmode"
     },
     {
@@ -2004,8 +2004,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_common_pagewithtitletemplate_breadcrumbitem",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 46,
+      "community_name": "useIsMobile",
       "norm_label": "breadcrumbitem"
     },
     {
@@ -2017,8 +2017,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_common_pagewithtitletemplate_sectionheadertemplateprops",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 46,
+      "community_name": "useIsMobile",
       "norm_label": "sectionheadertemplateprops"
     },
     {
@@ -2029,8 +2029,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_common_pagewithtitletemplate_pagewithtitletemplate",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 46,
+      "community_name": "useIsMobile",
       "norm_label": "pagewithtitletemplate()"
     },
     {
@@ -2065,8 +2065,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_common_quizcardtemplate_quizcardtemplate",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "quizcardtemplate()"
     },
     {
@@ -2077,7 +2077,7 @@
       "_origin": "ast",
       "id": "src_components_common_searchtemplate",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "searchtemplate.tsx"
     },
     {
@@ -2090,7 +2090,7 @@
       "_origin": "ast",
       "id": "src_components_common_searchtemplate_searchinputprops",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "searchinputprops"
     },
     {
@@ -2102,7 +2102,7 @@
       "_origin": "ast",
       "id": "src_components_common_searchtemplate_searchtemplate",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "searchtemplate()"
     },
     {
@@ -2112,7 +2112,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_common_tooltipbuttontemplate",
-      "community": 37,
+      "community": 31,
       "community_name": "ui/button.tsx",
       "norm_label": "tooltipbuttontemplate.tsx"
     },
@@ -2125,7 +2125,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_common_tooltipbuttontemplate_tooltiptemplateprops",
-      "community": 37,
+      "community": 31,
       "community_name": "ui/button.tsx",
       "norm_label": "tooltiptemplateprops"
     },
@@ -2137,7 +2137,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_common_tooltipbuttontemplate_tooltipbuttontemplate",
-      "community": 37,
+      "community": 31,
       "community_name": "ui/button.tsx",
       "norm_label": "tooltipbuttontemplate()"
     },
@@ -2160,8 +2160,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_common_userheader_userheader",
-      "community": 22,
-      "community_name": "UserSidebar.tsx",
+      "community": 51,
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "userheader()"
     },
     {
@@ -2196,8 +2196,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_common_usersidebar_usersidebar",
-      "community": 22,
-      "community_name": "UserSidebar.tsx",
+      "community": 51,
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "usersidebar()"
     },
     {
@@ -2207,8 +2207,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_common_viewtoggle",
-      "community": 15,
-      "community_name": "command.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "viewtoggle.tsx"
     },
     {
@@ -2220,8 +2220,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_common_viewtoggle_viewmode",
-      "community": 15,
-      "community_name": "command.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "viewmode"
     },
     {
@@ -2233,8 +2233,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_common_viewtoggle_viewtoggleprops",
-      "community": 15,
-      "community_name": "command.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "viewtoggleprops"
     },
     {
@@ -2245,8 +2245,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_common_viewtoggle_viewtoggle",
-      "community": 15,
-      "community_name": "command.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "viewtoggle()"
     },
     {
@@ -2364,7 +2364,7 @@
       "_origin": "ast",
       "id": "src_components_instructor_deletearchivedialog",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "deletearchivedialog.tsx"
     },
     {
@@ -2389,8 +2389,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_instructor_deletearchivedialog_props",
-      "community": 34,
-      "community_name": "Instruments.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "props"
     },
     {
@@ -2437,8 +2437,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_instructor_quizsubmissionscardtemplate_quizsubmissionscardtemplate",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "quizsubmissionscardtemplate()"
     },
     {
@@ -2473,8 +2473,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_modetoggle_modetoggle",
-      "community": 31,
-      "community_name": "theme-provider.tsx",
+      "community": 13,
+      "community_name": "AnalyzerResults.tsx",
       "norm_label": "modetoggle()"
     },
     {
@@ -2484,8 +2484,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_motion_avatar_group",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "avatar-group.tsx"
     },
     {
@@ -2496,8 +2496,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_motion_avatar_group_avatargroup",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "avatargroup()"
     },
     {
@@ -2530,8 +2530,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_theme_provider",
-      "community": 31,
-      "community_name": "theme-provider.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "theme-provider.tsx"
     },
     {
@@ -2543,8 +2543,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_theme_provider_theme",
-      "community": 31,
-      "community_name": "theme-provider.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "theme"
     },
     {
@@ -2556,8 +2556,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_theme_provider_resolvedtheme",
-      "community": 31,
-      "community_name": "theme-provider.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "resolvedtheme"
     },
     {
@@ -2569,8 +2569,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_theme_provider_themeproviderprops",
-      "community": 31,
-      "community_name": "theme-provider.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "themeproviderprops"
     },
     {
@@ -2582,8 +2582,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_theme_provider_themeproviderstate",
-      "community": 31,
-      "community_name": "theme-provider.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "themeproviderstate"
     },
     {
@@ -2593,8 +2593,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_components_theme_provider_theme_values",
-      "community": 31,
-      "community_name": "theme-provider.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "theme_values"
     },
     {
@@ -2604,8 +2604,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_components_theme_provider_themeprovidercontext",
-      "community": 31,
-      "community_name": "theme-provider.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "themeprovidercontext"
     },
     {
@@ -2616,8 +2616,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_theme_provider_istheme",
-      "community": 31,
-      "community_name": "theme-provider.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "istheme()"
     },
     {
@@ -2628,8 +2628,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_theme_provider_getsystemtheme",
-      "community": 31,
-      "community_name": "theme-provider.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "getsystemtheme()"
     },
     {
@@ -2640,8 +2640,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_theme_provider_disabletransitionstemporarily",
-      "community": 31,
-      "community_name": "theme-provider.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "disabletransitionstemporarily()"
     },
     {
@@ -2652,8 +2652,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_theme_provider_themeprovider",
-      "community": 31,
-      "community_name": "theme-provider.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "themeprovider()"
     },
     {
@@ -2664,8 +2664,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_theme_provider_usetheme",
-      "community": 31,
-      "community_name": "theme-provider.tsx",
+      "community": 13,
+      "community_name": "AnalyzerResults.tsx",
       "norm_label": "usetheme()"
     },
     {
@@ -2956,8 +2956,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_icons_ban_icon",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "ban-icon.tsx"
     },
     {
@@ -2969,8 +2969,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_icons_ban_icon_svgprops",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "svgprops"
     },
     {
@@ -2980,8 +2980,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_tiptap_icons_ban_icon_banicon",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "banicon"
     },
     {
@@ -2992,7 +2992,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_blockquote_icon",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "blockquote-icon.tsx"
     },
     {
@@ -3005,7 +3005,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_blockquote_icon_svgprops",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "svgprops"
     },
     {
@@ -3016,7 +3016,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_blockquote_icon_blockquoteicon",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "blockquoteicon"
     },
     {
@@ -3096,8 +3096,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_icons_check_icon",
-      "community": 10,
-      "community_name": "button/index.tsx",
+      "community": 47,
+      "community_name": "dropdown-menu/dropdown-menu.tsx",
       "norm_label": "check-icon.tsx"
     },
     {
@@ -3109,8 +3109,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_icons_check_icon_svgprops",
-      "community": 10,
-      "community_name": "button/index.tsx",
+      "community": 47,
+      "community_name": "dropdown-menu/dropdown-menu.tsx",
       "norm_label": "svgprops"
     },
     {
@@ -3120,8 +3120,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_tiptap_icons_check_icon_checkicon",
-      "community": 10,
-      "community_name": "button/index.tsx",
+      "community": 47,
+      "community_name": "dropdown-menu/dropdown-menu.tsx",
       "norm_label": "checkicon"
     },
     {
@@ -3131,8 +3131,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_icons_chevron_down_icon",
-      "community": 39,
-      "community_name": "chevron-down-icon.tsx",
+      "community": 2,
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "chevron-down-icon.tsx"
     },
     {
@@ -3144,8 +3144,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_icons_chevron_down_icon_svgprops",
-      "community": 39,
-      "community_name": "chevron-down-icon.tsx",
+      "community": 2,
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "svgprops"
     },
     {
@@ -3155,8 +3155,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_tiptap_icons_chevron_down_icon_chevrondownicon",
-      "community": 39,
-      "community_name": "chevron-down-icon.tsx",
+      "community": 2,
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "chevrondownicon"
     },
     {
@@ -3166,8 +3166,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_icons_chevron_up_icon",
-      "community": 39,
-      "community_name": "chevron-down-icon.tsx",
+      "community": 2,
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "chevron-up-icon.tsx"
     },
     {
@@ -3179,8 +3179,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_icons_chevron_up_icon_svgprops",
-      "community": 39,
-      "community_name": "chevron-down-icon.tsx",
+      "community": 2,
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "svgprops"
     },
     {
@@ -3190,8 +3190,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_components_tiptap_icons_chevron_up_icon_chevronupicon",
-      "community": 39,
-      "community_name": "chevron-down-icon.tsx",
+      "community": 2,
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "chevronupicon"
     },
     {
@@ -3237,7 +3237,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_code_block_icon",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "code-block-icon.tsx"
     },
     {
@@ -3250,7 +3250,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_code_block_icon_svgprops",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "svgprops"
     },
     {
@@ -3261,7 +3261,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_code_block_icon_codeblockicon",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "codeblockicon"
     },
     {
@@ -3621,8 +3621,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_icons_highlighter_icon",
-      "community": 6,
-      "community_name": "use-color-highlight.ts",
+      "community": 18,
+      "community_name": "simple-editor.tsx",
       "norm_label": "highlighter-icon.tsx"
     },
     {
@@ -3634,8 +3634,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_icons_highlighter_icon_svgprops",
-      "community": 6,
-      "community_name": "use-color-highlight.ts",
+      "community": 18,
+      "community_name": "simple-editor.tsx",
       "norm_label": "svgprops"
     },
     {
@@ -3645,8 +3645,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_tiptap_icons_highlighter_icon_highlightericon",
-      "community": 6,
-      "community_name": "use-color-highlight.ts",
+      "community": 18,
+      "community_name": "simple-editor.tsx",
       "norm_label": "highlightericon"
     },
     {
@@ -3657,7 +3657,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_image_plus_icon",
       "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community_name": "use-image-upload.ts",
       "norm_label": "image-plus-icon.tsx"
     },
     {
@@ -3670,7 +3670,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_image_plus_icon_svgprops",
       "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community_name": "use-image-upload.ts",
       "norm_label": "svgprops"
     },
     {
@@ -3681,7 +3681,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_image_plus_icon_imageplusicon",
       "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community_name": "use-image-upload.ts",
       "norm_label": "imageplusicon"
     },
     {
@@ -3762,7 +3762,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_icon",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "list-icon.tsx"
     },
     {
@@ -3775,7 +3775,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_icon_svgprops",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "svgprops"
     },
     {
@@ -3786,7 +3786,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_icon_listicon",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listicon"
     },
     {
@@ -3797,7 +3797,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_ordered_icon",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "list-ordered-icon.tsx"
     },
     {
@@ -3810,7 +3810,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_ordered_icon_svgprops",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "svgprops"
     },
     {
@@ -3821,7 +3821,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_ordered_icon_listorderedicon",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listorderedicon"
     },
     {
@@ -3832,7 +3832,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_todo_icon",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "list-todo-icon.tsx"
     },
     {
@@ -3845,7 +3845,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_todo_icon_svgprops",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "svgprops"
     },
     {
@@ -3856,7 +3856,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_todo_icon_listtodoicon",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listtodoicon"
     },
     {
@@ -3902,7 +3902,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_redo2_icon",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "redo2-icon.tsx"
     },
     {
@@ -3915,7 +3915,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_redo2_icon_svgprops",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "svgprops"
     },
     {
@@ -3926,7 +3926,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_redo2_icon_redo2icon",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "redo2icon"
     },
     {
@@ -4182,7 +4182,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_undo2_icon",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "undo2-icon.tsx"
     },
     {
@@ -4195,7 +4195,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_undo2_icon_svgprops",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "svgprops"
     },
     {
@@ -4206,7 +4206,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_undo2_icon_undo2icon",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "undo2icon"
     },
     {
@@ -4596,8 +4596,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_badge_badge",
-      "community": 6,
-      "community_name": "use-color-highlight.ts",
+      "community": 59,
+      "community_name": "parseShortcutKeys",
       "norm_label": "badge/badge.tsx"
     },
     {
@@ -4609,8 +4609,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_badge_badge_badgeprops",
-      "community": 6,
-      "community_name": "use-color-highlight.ts",
+      "community": 59,
+      "community_name": "parseShortcutKeys",
       "norm_label": "badgeprops"
     },
     {
@@ -4620,8 +4620,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_badge_badge_badge",
-      "community": 6,
-      "community_name": "use-color-highlight.ts",
+      "community": 59,
+      "community_name": "parseShortcutKeys",
       "norm_label": "badge"
     },
     {
@@ -4631,8 +4631,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_badge_index",
-      "community": 6,
-      "community_name": "use-color-highlight.ts",
+      "community": 59,
+      "community_name": "parseShortcutKeys",
       "norm_label": "badge/index.tsx"
     },
     {
@@ -4642,8 +4642,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_group_button_group",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 97,
+      "community_name": "button-group/button-group.tsx",
       "norm_label": "button-group/button-group.tsx"
     },
     {
@@ -4653,8 +4653,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_group_button_group_buttongroupvariants",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 97,
+      "community_name": "button-group/button-group.tsx",
       "norm_label": "buttongroupvariants"
     },
     {
@@ -4665,8 +4665,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_group_button_group_buttongroup",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 97,
+      "community_name": "button-group/button-group.tsx",
       "norm_label": "buttongroup()"
     },
     {
@@ -4677,8 +4677,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_group_button_group_buttongrouptext",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 97,
+      "community_name": "button-group/button-group.tsx",
       "norm_label": "buttongrouptext()"
     },
     {
@@ -4689,8 +4689,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_group_button_group_buttongroupseparator",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 97,
+      "community_name": "button-group/button-group.tsx",
       "norm_label": "buttongroupseparator()"
     },
     {
@@ -4700,8 +4700,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_group_index",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 97,
+      "community_name": "button-group/button-group.tsx",
       "norm_label": "button-group/index.tsx"
     },
     {
@@ -4712,7 +4712,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_button",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "button/button.tsx"
     },
     {
@@ -4725,7 +4725,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_button_buttonstyle",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "buttonstyle"
     },
     {
@@ -4738,7 +4738,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_button_buttonvariant",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "buttonvariant"
     },
     {
@@ -4751,7 +4751,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_button_buttonsize",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "buttonsize"
     },
     {
@@ -4763,8 +4763,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_button_buttonprops",
-      "community": 59,
-      "community_name": "parseShortcutKeys",
+      "community": 10,
+      "community_name": "button/button.tsx",
       "norm_label": "buttonprops"
     },
     {
@@ -4776,7 +4776,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_button_shortcutdisplay",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "shortcutdisplay()"
     },
     {
@@ -4797,8 +4797,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_index",
-      "community": 10,
-      "community_name": "button/index.tsx",
+      "community": 59,
+      "community_name": "parseShortcutKeys",
       "norm_label": "button/index.tsx"
     },
     {
@@ -4808,8 +4808,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_card_card",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "card/card.tsx"
     },
     {
@@ -4819,8 +4819,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_card_card_card",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "card"
     },
     {
@@ -4830,8 +4830,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_card_card_cardheader",
-      "community": 7,
-      "community_name": "search-and-replace.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "cardheader"
     },
     {
@@ -4841,8 +4841,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_card_card_cardbody",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "cardbody"
     },
     {
@@ -4852,8 +4852,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_card_card_carditemgroup",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "carditemgroup"
     },
     {
@@ -4863,8 +4863,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_card_card_cardgrouplabel",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "cardgrouplabel"
     },
     {
@@ -4874,8 +4874,8 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_card_card_cardfooter",
-      "community": 7,
-      "community_name": "search-and-replace.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "cardfooter"
     },
     {
@@ -4885,8 +4885,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_card_index",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "card/index.tsx"
     },
     {
@@ -4896,8 +4896,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu",
-      "community": 2,
-      "community_name": "cn",
+      "community": 47,
+      "community_name": "dropdown-menu/dropdown-menu.tsx",
       "norm_label": "dropdown-menu/dropdown-menu.tsx"
     },
     {
@@ -4909,7 +4909,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenu",
       "community": 2,
-      "community_name": "cn",
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "dropdownmenu()"
     },
     {
@@ -4920,8 +4920,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenuportal",
-      "community": 2,
-      "community_name": "cn",
+      "community": 47,
+      "community_name": "dropdown-menu/dropdown-menu.tsx",
       "norm_label": "dropdownmenuportal()"
     },
     {
@@ -4933,7 +4933,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenutrigger",
       "community": 2,
-      "community_name": "cn",
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "dropdownmenutrigger()"
     },
     {
@@ -4945,7 +4945,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenucontent",
       "community": 2,
-      "community_name": "cn",
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "dropdownmenucontent()"
     },
     {
@@ -4957,7 +4957,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenugroup",
       "community": 2,
-      "community_name": "cn",
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "dropdownmenugroup()"
     },
     {
@@ -4969,7 +4969,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenuitem",
       "community": 2,
-      "community_name": "cn",
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "dropdownmenuitem()"
     },
     {
@@ -4980,8 +4980,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenucheckboxitem",
-      "community": 2,
-      "community_name": "cn",
+      "community": 47,
+      "community_name": "dropdown-menu/dropdown-menu.tsx",
       "norm_label": "dropdownmenucheckboxitem()"
     },
     {
@@ -4992,8 +4992,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenuradiogroup",
-      "community": 2,
-      "community_name": "cn",
+      "community": 47,
+      "community_name": "dropdown-menu/dropdown-menu.tsx",
       "norm_label": "dropdownmenuradiogroup()"
     },
     {
@@ -5004,8 +5004,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenuradioitem",
-      "community": 2,
-      "community_name": "cn",
+      "community": 47,
+      "community_name": "dropdown-menu/dropdown-menu.tsx",
       "norm_label": "dropdownmenuradioitem()"
     },
     {
@@ -5016,8 +5016,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenulabel",
-      "community": 2,
-      "community_name": "cn",
+      "community": 47,
+      "community_name": "dropdown-menu/dropdown-menu.tsx",
       "norm_label": "dropdownmenulabel()"
     },
     {
@@ -5028,8 +5028,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenuseparator",
-      "community": 2,
-      "community_name": "cn",
+      "community": 47,
+      "community_name": "dropdown-menu/dropdown-menu.tsx",
       "norm_label": "dropdownmenuseparator()"
     },
     {
@@ -5040,8 +5040,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenushortcut",
-      "community": 2,
-      "community_name": "cn",
+      "community": 47,
+      "community_name": "dropdown-menu/dropdown-menu.tsx",
       "norm_label": "dropdownmenushortcut()"
     },
     {
@@ -5052,8 +5052,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenusub",
-      "community": 2,
-      "community_name": "cn",
+      "community": 47,
+      "community_name": "dropdown-menu/dropdown-menu.tsx",
       "norm_label": "dropdownmenusub()"
     },
     {
@@ -5064,8 +5064,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenusubtrigger",
-      "community": 2,
-      "community_name": "cn",
+      "community": 47,
+      "community_name": "dropdown-menu/dropdown-menu.tsx",
       "norm_label": "dropdownmenusubtrigger()"
     },
     {
@@ -5076,8 +5076,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenusubcontent",
-      "community": 2,
-      "community_name": "cn",
+      "community": 47,
+      "community_name": "dropdown-menu/dropdown-menu.tsx",
       "norm_label": "dropdownmenusubcontent()"
     },
     {
@@ -5088,7 +5088,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_index",
       "community": 2,
-      "community_name": "cn",
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "dropdown-menu/index.tsx"
     },
     {
@@ -5098,8 +5098,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_input_group_index",
-      "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community": 7,
+      "community_name": "search-and-replace.tsx",
       "norm_label": "input-group/index.tsx"
     },
     {
@@ -5110,7 +5110,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_input_group_input_group",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "input-group/input-group.tsx"
     },
     {
@@ -5122,7 +5122,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_input_group_input_group_inputgroup",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "inputgroup()"
     },
     {
@@ -5133,7 +5133,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_input_group_input_group_inputgroupaddonvariants",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "inputgroupaddonvariants"
     },
     {
@@ -5145,7 +5145,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_input_group_input_group_inputgroupaddon",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "inputgroupaddon()"
     },
     {
@@ -5156,7 +5156,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_input_group_input_group_inputgroupbuttonvariants",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "inputgroupbuttonvariants"
     },
     {
@@ -5168,7 +5168,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_input_group_input_group_inputgroupbutton",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "inputgroupbutton()"
     },
     {
@@ -5180,7 +5180,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_input_group_input_group_inputgrouptext",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "inputgrouptext()"
     },
     {
@@ -5192,7 +5192,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_input_group_input_group_inputgroupinput",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "inputgroupinput()"
     },
     {
@@ -5204,7 +5204,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_input_group_input_group_inputgrouptextarea",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "inputgrouptextarea()"
     },
     {
@@ -5215,7 +5215,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_input_index",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "input/index.tsx"
     },
     {
@@ -5226,7 +5226,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_input_input",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "input/input.tsx"
     },
     {
@@ -5238,7 +5238,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_input_input_input",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "input()"
     },
     {
@@ -5306,8 +5306,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_separator_index",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 97,
+      "community_name": "button-group/button-group.tsx",
       "norm_label": "separator/index.tsx"
     },
     {
@@ -5317,8 +5317,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_separator_separator",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 97,
+      "community_name": "button-group/button-group.tsx",
       "norm_label": "separator/separator.tsx"
     },
     {
@@ -5330,8 +5330,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_separator_separator_orientation",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 97,
+      "community_name": "button-group/button-group.tsx",
       "norm_label": "orientation"
     },
     {
@@ -5342,8 +5342,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_separator_separator_separator",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 97,
+      "community_name": "button-group/button-group.tsx",
       "norm_label": "separator()"
     },
     {
@@ -5400,8 +5400,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_switch_index",
-      "community": 7,
-      "community_name": "search-and-replace.tsx",
+      "community": 4,
+      "community_name": "cn",
       "norm_label": "switch/index.tsx"
     },
     {
@@ -5411,8 +5411,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_switch_switch",
-      "community": 7,
-      "community_name": "search-and-replace.tsx",
+      "community": 4,
+      "community_name": "cn",
       "norm_label": "switch/switch.tsx"
     },
     {
@@ -5423,8 +5423,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_switch_switch_switch",
-      "community": 7,
-      "community_name": "search-and-replace.tsx",
+      "community": 4,
+      "community_name": "cn",
       "norm_label": "switch()"
     },
     {
@@ -5435,7 +5435,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_textarea_index",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "textarea/index.tsx"
     },
     {
@@ -5446,7 +5446,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_textarea_textarea",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "textarea/textarea.tsx"
     },
     {
@@ -5458,7 +5458,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_textarea_textarea_textarea",
       "community": 4,
-      "community_name": "input-group/input-group.tsx",
+      "community_name": "cn",
       "norm_label": "textarea()"
     },
     {
@@ -5562,7 +5562,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_tooltip_index",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "tooltip/index.tsx"
     },
     {
@@ -5573,7 +5573,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_tooltip_tooltip",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "tooltip/tooltip.tsx"
     },
     {
@@ -5586,7 +5586,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_tooltip_tooltip_tooltipproviderprops",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "tooltipproviderprops"
     },
     {
@@ -5599,7 +5599,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_tooltip_tooltip_tooltiptriggerprops",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "tooltiptriggerprops"
     },
     {
@@ -5612,7 +5612,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_tooltip_tooltip_tooltipcontentprops",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "tooltipcontentprops"
     },
     {
@@ -5625,7 +5625,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_tooltip_tooltip_tooltipcontextvalue",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "tooltipcontextvalue"
     },
     {
@@ -5637,7 +5637,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_tooltip_tooltip_usetooltip",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "usetooltip()"
     },
     {
@@ -5648,7 +5648,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_tooltip_tooltip_tooltipcontext",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "tooltipcontext"
     },
     {
@@ -5660,7 +5660,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_tooltip_tooltip_usetooltipcontext",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "usetooltipcontext()"
     },
     {
@@ -5672,7 +5672,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_tooltip_tooltip_tooltip",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "tooltip()"
     },
     {
@@ -5683,7 +5683,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_tooltip_tooltip_tooltiptrigger",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "tooltiptrigger"
     },
     {
@@ -5694,7 +5694,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_tooltip_tooltip_tooltipcontent",
       "community": 10,
-      "community_name": "button/index.tsx",
+      "community_name": "button/button.tsx",
       "norm_label": "tooltipcontent"
     },
     {
@@ -5763,7 +5763,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_blockquote_button_use_blockquote",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "use-blockquote.ts"
     },
     {
@@ -5799,7 +5799,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_blockquote_button_use_blockquote_cantoggleblockquote",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "cantoggleblockquote()"
     },
     {
@@ -5811,7 +5811,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_blockquote_button_use_blockquote_toggleblockquote",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "toggleblockquote()"
     },
     {
@@ -5823,7 +5823,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_blockquote_button_use_blockquote_shouldshowbutton",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "shouldshowbutton()"
     },
     {
@@ -5835,7 +5835,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_blockquote_button_use_blockquote_useblockquote",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "useblockquote()"
     },
     {
@@ -5904,7 +5904,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_code_block_button_use_code_block",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "use-code-block.ts"
     },
     {
@@ -5940,7 +5940,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_code_block_button_use_code_block_cantoggle",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "cantoggle()"
     },
     {
@@ -5952,7 +5952,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_code_block_button_use_code_block_togglecodeblock",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "togglecodeblock()"
     },
     {
@@ -5964,7 +5964,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_code_block_button_use_code_block_shouldshowbutton",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "shouldshowbutton()"
     },
     {
@@ -5976,7 +5976,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_code_block_button_use_code_block_usecodeblock",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "usecodeblock()"
     },
     {
@@ -6079,8 +6079,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_color_highlight_button_use_color_highlight_highlightcolor",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "highlightcolor"
     },
     {
@@ -6117,8 +6117,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_color_highlight_button_use_color_highlight_pickhighlightcolorsbyvalue",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "pickhighlightcolorsbyvalue()"
     },
     {
@@ -6200,8 +6200,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_color_highlight_popover_color_highlight_popover",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "color-highlight-popover.tsx"
     },
     {
@@ -6213,8 +6213,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_color_highlight_popover_color_highlight_popover_colorhighlightpopovercontentprops",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "colorhighlightpopovercontentprops"
     },
     {
@@ -6226,8 +6226,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_color_highlight_popover_color_highlight_popover_colorhighlightpopoverprops",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "colorhighlightpopoverprops"
     },
     {
@@ -6237,8 +6237,8 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_color_highlight_popover_color_highlight_popover_colorhighlightpopoverbutton",
-      "community": 18,
-      "community_name": "simple-editor.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "colorhighlightpopoverbutton"
     },
     {
@@ -6261,8 +6261,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_color_highlight_popover_color_highlight_popover_colorhighlightpopover",
-      "community": 18,
-      "community_name": "simple-editor.tsx",
+      "community": 42,
+      "community_name": "color-highlight-popover.tsx",
       "norm_label": "colorhighlightpopover()"
     },
     {
@@ -6319,8 +6319,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_heading_button_heading_button_headingbutton",
-      "community": 59,
-      "community_name": "parseShortcutKeys",
+      "community": 2,
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "headingbutton"
     },
     {
@@ -6426,7 +6426,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_heading_button_use_heading_toggleheading",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "toggleheading()"
     },
     {
@@ -6461,7 +6461,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_heading_dropdown_menu_heading_dropdown_menu",
       "community": 2,
-      "community_name": "cn",
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "heading-dropdown-menu.tsx"
     },
     {
@@ -6474,7 +6474,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_heading_dropdown_menu_heading_dropdown_menu_headingdropdownmenuprops",
       "community": 2,
-      "community_name": "cn",
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "headingdropdownmenuprops"
     },
     {
@@ -6485,7 +6485,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_heading_dropdown_menu_heading_dropdown_menu_headingdropdownmenu",
       "community": 2,
-      "community_name": "cn",
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "headingdropdownmenu"
     },
     {
@@ -6496,7 +6496,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_heading_dropdown_menu_index",
       "community": 2,
-      "community_name": "cn",
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "heading-dropdown-menu/index.tsx"
     },
     {
@@ -6520,7 +6520,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_heading_dropdown_menu_use_heading_dropdown_menu_useheadingdropdownmenuconfig",
       "community": 2,
-      "community_name": "cn",
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "useheadingdropdownmenuconfig"
     },
     {
@@ -6554,8 +6554,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_image_upload_button",
-      "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community": 59,
+      "community_name": "parseShortcutKeys",
       "norm_label": "image-upload-button.tsx"
     },
     {
@@ -6567,8 +6567,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_image_upload_button_iconprops",
-      "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community": 59,
+      "community_name": "parseShortcutKeys",
       "norm_label": "iconprops"
     },
     {
@@ -6580,8 +6580,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_image_upload_button_iconcomponent",
-      "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community": 59,
+      "community_name": "parseShortcutKeys",
       "norm_label": "iconcomponent"
     },
     {
@@ -6593,8 +6593,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_image_upload_button_imageuploadbuttonprops",
-      "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community": 59,
+      "community_name": "parseShortcutKeys",
       "norm_label": "imageuploadbuttonprops"
     },
     {
@@ -6616,8 +6616,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_image_upload_button_imageuploadbutton",
-      "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community": 59,
+      "community_name": "parseShortcutKeys",
       "norm_label": "imageuploadbutton"
     },
     {
@@ -6627,8 +6627,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_index",
-      "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community": 59,
+      "community_name": "parseShortcutKeys",
       "norm_label": "image-upload-button/index.tsx"
     },
     {
@@ -6639,7 +6639,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_use_image_upload",
       "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community_name": "use-image-upload.ts",
       "norm_label": "use-image-upload.ts"
     },
     {
@@ -6649,8 +6649,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_use_image_upload_image_upload_shortcut_key",
-      "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community": 59,
+      "community_name": "parseShortcutKeys",
       "norm_label": "image_upload_shortcut_key"
     },
     {
@@ -6662,8 +6662,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_use_image_upload_useimageuploadconfig",
-      "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community": 59,
+      "community_name": "parseShortcutKeys",
       "norm_label": "useimageuploadconfig"
     },
     {
@@ -6675,7 +6675,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_use_image_upload_caninsertimage",
       "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community_name": "use-image-upload.ts",
       "norm_label": "caninsertimage()"
     },
     {
@@ -6687,7 +6687,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_use_image_upload_isimageactive",
       "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community_name": "use-image-upload.ts",
       "norm_label": "isimageactive()"
     },
     {
@@ -6699,7 +6699,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_use_image_upload_insertimage",
       "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community_name": "use-image-upload.ts",
       "norm_label": "insertimage()"
     },
     {
@@ -6711,7 +6711,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_use_image_upload_shouldshowbutton",
       "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community_name": "use-image-upload.ts",
       "norm_label": "shouldshowbutton()"
     },
     {
@@ -6723,7 +6723,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_use_image_upload_useimageupload",
       "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community_name": "use-image-upload.ts",
       "norm_label": "useimageupload()"
     },
     {
@@ -6793,8 +6793,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_link_popover_link_popover_linkmain",
-      "community": 28,
-      "community_name": "link-popover.tsx",
+      "community": 40,
+      "community_name": "use-image-upload.ts",
       "norm_label": "linkmain()"
     },
     {
@@ -6937,7 +6937,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_index",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "list-button/index.tsx"
     },
     {
@@ -6948,7 +6948,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_list_button",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "list-button.tsx"
     },
     {
@@ -6961,7 +6961,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_list_button_listbuttonprops",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listbuttonprops"
     },
     {
@@ -6984,7 +6984,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_list_button_listbutton",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listbutton"
     },
     {
@@ -6994,7 +6994,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list",
-      "community": 8,
+      "community": 5,
       "community_name": "use-list.ts",
       "norm_label": "use-list.ts"
     },
@@ -7008,7 +7008,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_listtype",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listtype"
     },
     {
@@ -7021,7 +7021,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_uselistconfig",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "uselistconfig"
     },
     {
@@ -7032,7 +7032,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_listicons",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listicons"
     },
     {
@@ -7042,7 +7042,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_listlabels",
-      "community": 8,
+      "community": 5,
       "community_name": "use-list.ts",
       "norm_label": "listlabels"
     },
@@ -7054,7 +7054,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_list_shortcut_keys",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "list_shortcut_keys"
     },
     {
@@ -7065,7 +7065,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_cantogglelist",
-      "community": 8,
+      "community": 5,
       "community_name": "use-list.ts",
       "norm_label": "cantogglelist()"
     },
@@ -7078,7 +7078,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_islistactive",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "islistactive()"
     },
     {
@@ -7090,7 +7090,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_togglelist",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "togglelist()"
     },
     {
@@ -7101,7 +7101,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_shouldshowbutton",
-      "community": 8,
+      "community": 5,
       "community_name": "use-list.ts",
       "norm_label": "shouldshowbutton()"
     },
@@ -7113,7 +7113,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_uselist",
-      "community": 8,
+      "community": 5,
       "community_name": "use-list.ts",
       "norm_label": "uselist()"
     },
@@ -7124,8 +7124,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_index",
-      "community": 5,
-      "community_name": "useTiptapEditor",
+      "community": 2,
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "list-dropdown-menu/index.tsx"
     },
     {
@@ -7135,8 +7135,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_list_dropdown_menu",
-      "community": 5,
-      "community_name": "useTiptapEditor",
+      "community": 2,
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "list-dropdown-menu.tsx"
     },
     {
@@ -7148,8 +7148,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_list_dropdown_menu_listdropdownmenuprops",
-      "community": 5,
-      "community_name": "useTiptapEditor",
+      "community": 2,
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "listdropdownmenuprops"
     },
     {
@@ -7160,7 +7160,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_list_dropdown_menu_listdropdownmenuimpl",
-      "community": 5,
+      "community": 9,
       "community_name": "useTiptapEditor",
       "norm_label": "listdropdownmenuimpl()"
     },
@@ -7171,8 +7171,8 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_list_dropdown_menu_listdropdownmenu",
-      "community": 18,
-      "community_name": "simple-editor.tsx",
+      "community": 2,
+      "community_name": "list-dropdown-menu.tsx",
       "norm_label": "listdropdownmenu"
     },
     {
@@ -7183,7 +7183,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "use-list-dropdown-menu.ts"
     },
     {
@@ -7196,7 +7196,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_uselistdropdownmenuconfig",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "uselistdropdownmenuconfig"
     },
     {
@@ -7209,7 +7209,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_listoption",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listoption"
     },
     {
@@ -7220,7 +7220,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_listoptions",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listoptions"
     },
     {
@@ -7232,7 +7232,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_cantoggleanylist",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "cantoggleanylist()"
     },
     {
@@ -7244,7 +7244,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_isanylistactive",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "isanylistactive()"
     },
     {
@@ -7256,7 +7256,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_getfilteredlistoptions",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "getfilteredlistoptions()"
     },
     {
@@ -7268,7 +7268,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_shouldshowlistdropdown",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "shouldshowlistdropdown()"
     },
     {
@@ -7280,7 +7280,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_getactivelisttype",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "getactivelisttype()"
     },
     {
@@ -7292,7 +7292,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_uselistdropdownmenu",
       "community": 5,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "uselistdropdownmenu()"
     },
     {
@@ -7904,8 +7904,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_text_align_button_text_align_button_textalignshortcutbadge",
-      "community": 25,
-      "community_name": "use-text-align.ts",
+      "community": 59,
+      "community_name": "parseShortcutKeys",
       "norm_label": "textalignshortcutbadge()"
     },
     {
@@ -8069,7 +8069,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_index",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "undo-redo-button/index.tsx"
     },
     {
@@ -8080,7 +8080,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_undo_redo_button",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "undo-redo-button.tsx"
     },
     {
@@ -8093,7 +8093,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_undo_redo_button_undoredobuttonprops",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "undoredobuttonprops"
     },
     {
@@ -8105,7 +8105,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_undo_redo_button_historyshortcutbadge",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "historyshortcutbadge()"
     },
     {
@@ -8116,7 +8116,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_undo_redo_button_undoredobutton",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "undoredobutton"
     },
     {
@@ -8127,7 +8127,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_use_undo_redo",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "use-undo-redo.ts"
     },
     {
@@ -8140,7 +8140,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_use_undo_redo_undoredoaction",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "undoredoaction"
     },
     {
@@ -8153,7 +8153,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_use_undo_redo_useundoredoconfig",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "useundoredoconfig"
     },
     {
@@ -8164,7 +8164,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_use_undo_redo_undo_redo_shortcut_keys",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "undo_redo_shortcut_keys"
     },
     {
@@ -8175,7 +8175,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_use_undo_redo_historyactionlabels",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "historyactionlabels"
     },
     {
@@ -8186,7 +8186,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_use_undo_redo_historyicons",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "historyicons"
     },
     {
@@ -8198,7 +8198,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_use_undo_redo_canexecuteundoredoaction",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "canexecuteundoredoaction()"
     },
     {
@@ -8210,7 +8210,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_use_undo_redo_executeundoredoaction",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "executeundoredoaction()"
     },
     {
@@ -8222,7 +8222,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_use_undo_redo_shouldshowbutton",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "shouldshowbutton()"
     },
     {
@@ -8234,7 +8234,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_undo_redo_button_use_undo_redo_useundoredo",
       "community": 9,
-      "community_name": "isNodeTypeSelected",
+      "community_name": "useTiptapEditor",
       "norm_label": "useundoredo()"
     },
     {
@@ -8700,7 +8700,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_button",
-      "community": 37,
+      "community": 31,
       "community_name": "ui/button.tsx",
       "norm_label": "ui/button.tsx"
     },
@@ -8711,8 +8711,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_ui_button_buttonvariants",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "buttonvariants"
     },
     {
@@ -8723,7 +8723,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_button_button",
-      "community": 37,
+      "community": 31,
       "community_name": "ui/button.tsx",
       "norm_label": "button()"
     },
@@ -8734,8 +8734,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_calendar",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "calendar.tsx"
     },
     {
@@ -8746,8 +8746,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_calendar_calendar",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "calendar()"
     },
     {
@@ -8758,8 +8758,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_calendar_calendardaybutton",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 32,
+      "community_name": "react",
       "norm_label": "calendardaybutton()"
     },
     {
@@ -8865,7 +8865,7 @@
       "_origin": "ast",
       "id": "src_components_ui_chart",
       "community": 68,
-      "community_name": "chart.tsx",
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "chart.tsx"
     },
     {
@@ -8876,7 +8876,7 @@
       "_origin": "ast",
       "id": "src_components_ui_chart_themes",
       "community": 68,
-      "community_name": "chart.tsx",
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "themes"
     },
     {
@@ -8887,7 +8887,7 @@
       "_origin": "ast",
       "id": "src_components_ui_chart_initial_dimension",
       "community": 68,
-      "community_name": "chart.tsx",
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "initial_dimension"
     },
     {
@@ -8900,7 +8900,7 @@
       "_origin": "ast",
       "id": "src_components_ui_chart_tooltipnametype",
       "community": 68,
-      "community_name": "chart.tsx",
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "tooltipnametype"
     },
     {
@@ -8913,7 +8913,7 @@
       "_origin": "ast",
       "id": "src_components_ui_chart_chartconfig",
       "community": 68,
-      "community_name": "chart.tsx",
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "chartconfig"
     },
     {
@@ -8926,7 +8926,7 @@
       "_origin": "ast",
       "id": "src_components_ui_chart_chartcontextprops",
       "community": 68,
-      "community_name": "chart.tsx",
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "chartcontextprops"
     },
     {
@@ -8937,7 +8937,7 @@
       "_origin": "ast",
       "id": "src_components_ui_chart_chartcontext",
       "community": 68,
-      "community_name": "chart.tsx",
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "chartcontext"
     },
     {
@@ -8949,7 +8949,7 @@
       "_origin": "ast",
       "id": "src_components_ui_chart_usechart",
       "community": 68,
-      "community_name": "chart.tsx",
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "usechart()"
     },
     {
@@ -8961,7 +8961,7 @@
       "_origin": "ast",
       "id": "src_components_ui_chart_chartcontainer",
       "community": 68,
-      "community_name": "chart.tsx",
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "chartcontainer()"
     },
     {
@@ -8973,7 +8973,7 @@
       "_origin": "ast",
       "id": "src_components_ui_chart_chartstyle",
       "community": 68,
-      "community_name": "chart.tsx",
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "chartstyle()"
     },
     {
@@ -8985,7 +8985,7 @@
       "_origin": "ast",
       "id": "src_components_ui_chart_charttooltipcontent",
       "community": 68,
-      "community_name": "chart.tsx",
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "charttooltipcontent()"
     },
     {
@@ -8997,7 +8997,7 @@
       "_origin": "ast",
       "id": "src_components_ui_chart_chartlegendcontent",
       "community": 68,
-      "community_name": "chart.tsx",
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "chartlegendcontent()"
     },
     {
@@ -9009,7 +9009,7 @@
       "_origin": "ast",
       "id": "src_components_ui_chart_getpayloadconfigfrompayload",
       "community": 68,
-      "community_name": "chart.tsx",
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "getpayloadconfigfrompayload()"
     },
     {
@@ -9019,8 +9019,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_checkbox",
-      "community": 34,
-      "community_name": "Instruments.tsx",
+      "community": 26,
+      "community_name": "QuizEditor.tsx",
       "norm_label": "checkbox.tsx"
     },
     {
@@ -9031,8 +9031,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_checkbox_checkbox",
-      "community": 34,
-      "community_name": "Instruments.tsx",
+      "community": 26,
+      "community_name": "QuizEditor.tsx",
       "norm_label": "checkbox()"
     },
     {
@@ -9198,7 +9198,7 @@
       "_origin": "ast",
       "id": "src_components_ui_dialog",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "dialog.tsx"
     },
     {
@@ -9210,7 +9210,7 @@
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialog",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "dialog()"
     },
     {
@@ -9222,7 +9222,7 @@
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogtrigger",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "dialogtrigger()"
     },
     {
@@ -9234,7 +9234,7 @@
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogportal",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "dialogportal()"
     },
     {
@@ -9246,7 +9246,7 @@
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogclose",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "dialogclose()"
     },
     {
@@ -9258,7 +9258,7 @@
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogoverlay",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "dialogoverlay()"
     },
     {
@@ -9270,7 +9270,7 @@
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogcontent",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "dialogcontent()"
     },
     {
@@ -9282,7 +9282,7 @@
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogheader",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "dialogheader()"
     },
     {
@@ -9294,7 +9294,7 @@
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogfooter",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "dialogfooter()"
     },
     {
@@ -9306,7 +9306,7 @@
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogtitle",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "dialogtitle()"
     },
     {
@@ -9318,7 +9318,7 @@
       "_origin": "ast",
       "id": "src_components_ui_dialog_dialogdescription",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "dialogdescription()"
     },
     {
@@ -9519,8 +9519,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_field",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 53,
+      "community_name": "field.tsx",
       "norm_label": "field.tsx"
     },
     {
@@ -9531,8 +9531,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_field_fieldset",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 53,
+      "community_name": "field.tsx",
       "norm_label": "fieldset()"
     },
     {
@@ -9543,8 +9543,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_field_fieldlegend",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 53,
+      "community_name": "field.tsx",
       "norm_label": "fieldlegend()"
     },
     {
@@ -9555,8 +9555,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_field_fieldgroup",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 53,
+      "community_name": "field.tsx",
       "norm_label": "fieldgroup()"
     },
     {
@@ -9566,8 +9566,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "src_components_ui_field_fieldvariants",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 53,
+      "community_name": "field.tsx",
       "norm_label": "fieldvariants"
     },
     {
@@ -9578,8 +9578,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_field_field",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 53,
+      "community_name": "field.tsx",
       "norm_label": "field()"
     },
     {
@@ -9590,8 +9590,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_field_fieldcontent",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 53,
+      "community_name": "field.tsx",
       "norm_label": "fieldcontent()"
     },
     {
@@ -9602,8 +9602,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_field_fieldlabel",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 53,
+      "community_name": "field.tsx",
       "norm_label": "fieldlabel()"
     },
     {
@@ -9614,8 +9614,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_field_fieldtitle",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 53,
+      "community_name": "field.tsx",
       "norm_label": "fieldtitle()"
     },
     {
@@ -9626,8 +9626,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_field_fielddescription",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 53,
+      "community_name": "field.tsx",
       "norm_label": "fielddescription()"
     },
     {
@@ -9638,8 +9638,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_field_fieldseparator",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 53,
+      "community_name": "field.tsx",
       "norm_label": "fieldseparator()"
     },
     {
@@ -9650,8 +9650,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_field_fielderror",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 53,
+      "community_name": "field.tsx",
       "norm_label": "fielderror()"
     },
     {
@@ -9767,7 +9767,7 @@
       "_origin": "ast",
       "id": "src_components_ui_input",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "ui/input.tsx"
     },
     {
@@ -9779,7 +9779,7 @@
       "_origin": "ast",
       "id": "src_components_ui_input_input",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "input()"
     },
     {
@@ -9871,8 +9871,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_item_itemcontent",
-      "community": 34,
-      "community_name": "Instruments.tsx",
+      "community": 33,
+      "community_name": "ClassroomInstructorView.tsx",
       "norm_label": "itemcontent()"
     },
     {
@@ -9907,7 +9907,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_item_itemactions",
-      "community": 34,
+      "community": 61,
       "community_name": "Instruments.tsx",
       "norm_label": "itemactions()"
     },
@@ -9942,8 +9942,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_label",
-      "community": 34,
-      "community_name": "Instruments.tsx",
+      "community": 53,
+      "community_name": "field.tsx",
       "norm_label": "label.tsx"
     },
     {
@@ -9954,8 +9954,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_label_label",
-      "community": 34,
-      "community_name": "Instruments.tsx",
+      "community": 53,
+      "community_name": "field.tsx",
       "norm_label": "label()"
     },
     {
@@ -10023,8 +10023,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_message_scroller",
-      "community": 15,
-      "community_name": "command.tsx",
+      "community": 107,
+      "community_name": "message-scroller.tsx",
       "norm_label": "message-scroller.tsx"
     },
     {
@@ -10035,8 +10035,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_message_scroller_messagescrollerprovider",
-      "community": 15,
-      "community_name": "command.tsx",
+      "community": 107,
+      "community_name": "message-scroller.tsx",
       "norm_label": "messagescrollerprovider()"
     },
     {
@@ -10047,8 +10047,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_message_scroller_messagescroller",
-      "community": 15,
-      "community_name": "command.tsx",
+      "community": 107,
+      "community_name": "message-scroller.tsx",
       "norm_label": "messagescroller()"
     },
     {
@@ -10059,8 +10059,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_message_scroller_messagescrollerviewport",
-      "community": 15,
-      "community_name": "command.tsx",
+      "community": 107,
+      "community_name": "message-scroller.tsx",
       "norm_label": "messagescrollerviewport()"
     },
     {
@@ -10071,8 +10071,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_message_scroller_messagescrollercontent",
-      "community": 15,
-      "community_name": "command.tsx",
+      "community": 107,
+      "community_name": "message-scroller.tsx",
       "norm_label": "messagescrollercontent()"
     },
     {
@@ -10083,8 +10083,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_message_scroller_messagescrolleritem",
-      "community": 15,
-      "community_name": "command.tsx",
+      "community": 107,
+      "community_name": "message-scroller.tsx",
       "norm_label": "messagescrolleritem()"
     },
     {
@@ -10095,8 +10095,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_message_scroller_messagescrollerbutton",
-      "community": 15,
-      "community_name": "command.tsx",
+      "community": 107,
+      "community_name": "message-scroller.tsx",
       "norm_label": "messagescrollerbutton()"
     },
     {
@@ -10272,8 +10272,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_progress",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 62,
+      "community_name": "Dashboard.tsx",
       "norm_label": "progress.tsx"
     },
     {
@@ -10284,8 +10284,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_progress_progress",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 62,
+      "community_name": "Dashboard.tsx",
       "norm_label": "progress()"
     },
     {
@@ -10296,8 +10296,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_progress_progresstrack",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 62,
+      "community_name": "Dashboard.tsx",
       "norm_label": "progresstrack()"
     },
     {
@@ -10308,8 +10308,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_progress_progressindicator",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 62,
+      "community_name": "Dashboard.tsx",
       "norm_label": "progressindicator()"
     },
     {
@@ -10320,8 +10320,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_progress_progresslabel",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 62,
+      "community_name": "Dashboard.tsx",
       "norm_label": "progresslabel()"
     },
     {
@@ -10332,8 +10332,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_progress_progressvalue",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 62,
+      "community_name": "Dashboard.tsx",
       "norm_label": "progressvalue()"
     },
     {
@@ -10652,8 +10652,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_sidebar_usesidebar",
-      "community": 22,
-      "community_name": "UserSidebar.tsx",
+      "community": 51,
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "usesidebar()"
     },
     {
@@ -10665,7 +10665,7 @@
       "_origin": "ast",
       "id": "src_components_ui_sidebar_getsidebarstate",
       "community": 32,
-      "community_name": "main.tsx",
+      "community_name": "react",
       "norm_label": "getsidebarstate()"
     },
     {
@@ -10677,7 +10677,7 @@
       "_origin": "ast",
       "id": "src_components_ui_sidebar_sidebarprovider",
       "community": 32,
-      "community_name": "main.tsx",
+      "community_name": "react",
       "norm_label": "sidebarprovider()"
     },
     {
@@ -10700,8 +10700,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_sidebar_sidebartrigger",
-      "community": 22,
-      "community_name": "UserSidebar.tsx",
+      "community": 51,
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "sidebartrigger()"
     },
     {
@@ -10712,8 +10712,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_sidebar_sidebarrail",
-      "community": 22,
-      "community_name": "UserSidebar.tsx",
+      "community": 51,
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "sidebarrail()"
     },
     {
@@ -10867,8 +10867,8 @@
       "source_location": "L491",
       "_origin": "ast",
       "id": "src_components_ui_sidebar_sidebarmenubuttonvariants",
-      "community": 22,
-      "community_name": "UserSidebar.tsx",
+      "community": 14,
+      "community_name": "sidebar.tsx",
       "norm_label": "sidebarmenubuttonvariants"
     },
     {
@@ -10879,8 +10879,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_sidebar_sidebarmenubutton",
-      "community": 22,
-      "community_name": "UserSidebar.tsx",
+      "community": 14,
+      "community_name": "sidebar.tsx",
       "norm_label": "sidebarmenubutton()"
     },
     {
@@ -10915,8 +10915,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_sidebar_sidebarmenuskeleton",
-      "community": 68,
-      "community_name": "chart.tsx",
+      "community": 32,
+      "community_name": "react",
       "norm_label": "sidebarmenuskeleton()"
     },
     {
@@ -10962,8 +10962,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_skeleton",
-      "community": 14,
-      "community_name": "sidebar.tsx",
+      "community": 22,
+      "community_name": "UserSidebar.tsx",
       "norm_label": "skeleton.tsx"
     },
     {
@@ -10974,8 +10974,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_skeleton_skeleton",
-      "community": 14,
-      "community_name": "sidebar.tsx",
+      "community": 22,
+      "community_name": "UserSidebar.tsx",
       "norm_label": "skeleton()"
     },
     {
@@ -10985,8 +10985,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_switch",
-      "community": 21,
-      "community_name": "Permissions.tsx",
+      "community": 26,
+      "community_name": "QuizEditor.tsx",
       "norm_label": "ui/switch.tsx"
     },
     {
@@ -10997,8 +10997,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_switch_switch",
-      "community": 21,
-      "community_name": "Permissions.tsx",
+      "community": 26,
+      "community_name": "QuizEditor.tsx",
       "norm_label": "switch()"
     },
     {
@@ -11009,7 +11009,7 @@
       "_origin": "ast",
       "id": "src_components_ui_table",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "table.tsx"
     },
     {
@@ -11021,7 +11021,7 @@
       "_origin": "ast",
       "id": "src_components_ui_table_table",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "table()"
     },
     {
@@ -11033,7 +11033,7 @@
       "_origin": "ast",
       "id": "src_components_ui_table_tableheader",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "tableheader()"
     },
     {
@@ -11045,7 +11045,7 @@
       "_origin": "ast",
       "id": "src_components_ui_table_tablebody",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "tablebody()"
     },
     {
@@ -11057,7 +11057,7 @@
       "_origin": "ast",
       "id": "src_components_ui_table_tablefooter",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "tablefooter()"
     },
     {
@@ -11069,7 +11069,7 @@
       "_origin": "ast",
       "id": "src_components_ui_table_tablerow",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "tablerow()"
     },
     {
@@ -11081,7 +11081,7 @@
       "_origin": "ast",
       "id": "src_components_ui_table_tablehead",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "tablehead()"
     },
     {
@@ -11093,7 +11093,7 @@
       "_origin": "ast",
       "id": "src_components_ui_table_tablecell",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "tablecell()"
     },
     {
@@ -11105,7 +11105,7 @@
       "_origin": "ast",
       "id": "src_components_ui_table_tablecaption",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "tablecaption()"
     },
     {
@@ -11115,8 +11115,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_tabs",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "tabs.tsx"
     },
     {
@@ -11127,8 +11127,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_tabs_tabs",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "tabs()"
     },
     {
@@ -11138,8 +11138,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_components_ui_tabs_tabslistvariants",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "tabslistvariants"
     },
     {
@@ -11150,8 +11150,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_tabs_tabslist",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "tabslist()"
     },
     {
@@ -11162,8 +11162,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_tabs_tabstrigger",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "tabstrigger()"
     },
     {
@@ -11174,8 +11174,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_tabs_tabscontent",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "tabscontent()"
     },
     {
@@ -11185,7 +11185,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_textarea",
-      "community": 34,
+      "community": 61,
       "community_name": "Instruments.tsx",
       "norm_label": "ui/textarea.tsx"
     },
@@ -11197,7 +11197,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_textarea_textarea",
-      "community": 34,
+      "community": 61,
       "community_name": "Instruments.tsx",
       "norm_label": "textarea()"
     },
@@ -11208,8 +11208,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_toast",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "toast.tsx"
     },
     {
@@ -11220,8 +11220,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_toast_toast",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "toast"
     },
     {
@@ -11232,8 +11232,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_toast_toastprovider",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "toastprovider()"
     },
     {
@@ -11244,8 +11244,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_toast_toastportal",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "toastportal()"
     },
     {
@@ -11256,8 +11256,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_toast_toastviewport",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "toastviewport()"
     },
     {
@@ -11268,8 +11268,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_toast_toastcontent",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "toastcontent()"
     },
     {
@@ -11280,8 +11280,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_toast_toasttitle",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "toasttitle()"
     },
     {
@@ -11292,8 +11292,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_toast_toastdescription",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "toastdescription()"
     },
     {
@@ -11304,8 +11304,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_toast_toastaction",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "toastaction()"
     },
     {
@@ -11316,8 +11316,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_toast_toastclose",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "toastclose()"
     },
     {
@@ -11328,8 +11328,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_toast_toasticon",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "toasticon()"
     },
     {
@@ -11340,8 +11340,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_toast_toastlist",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "toastlist()"
     },
     {
@@ -11352,8 +11352,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_toast_toaster",
-      "community": 32,
-      "community_name": "main.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "toaster()"
     },
     {
@@ -11375,8 +11375,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_ui_tooltip_tooltipprovider",
-      "community": 32,
-      "community_name": "main.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "tooltipprovider()"
     },
     {
@@ -11422,8 +11422,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_const_coremodules",
-      "community": 36,
-      "community_name": "ModuleCardTemplate.tsx",
+      "community": 35,
+      "community_name": "router.tsx",
       "norm_label": "coremodules.ts"
     },
     {
@@ -11433,8 +11433,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_const_coremodules_coremodules",
-      "community": 36,
-      "community_name": "ModuleCardTemplate.tsx",
+      "community": 35,
+      "community_name": "router.tsx",
       "norm_label": "coremodules"
     },
     {
@@ -11444,7 +11444,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_const_criterion",
-      "community": 34,
+      "community": 61,
       "community_name": "Instruments.tsx",
       "norm_label": "criterion.ts"
     },
@@ -11457,7 +11457,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_criterion_wcaglevel",
-      "community": 34,
+      "community": 61,
       "community_name": "Instruments.tsx",
       "norm_label": "wcaglevel"
     },
@@ -11470,7 +11470,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_criterion_wcagprinciple",
-      "community": 34,
+      "community": 61,
       "community_name": "Instruments.tsx",
       "norm_label": "wcagprinciple"
     },
@@ -11483,7 +11483,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_criterion_wcagtechnique",
-      "community": 34,
+      "community": 61,
       "community_name": "Instruments.tsx",
       "norm_label": "wcagtechnique"
     },
@@ -11496,7 +11496,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_criterion_wcagcriterion",
-      "community": 34,
+      "community": 61,
       "community_name": "Instruments.tsx",
       "norm_label": "wcagcriterion"
     },
@@ -11509,7 +11509,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_criterion_wcagguideline",
-      "community": 34,
+      "community": 61,
       "community_name": "Instruments.tsx",
       "norm_label": "wcagguideline"
     },
@@ -11520,7 +11520,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "src_const_criterion_wcagguidelines",
-      "community": 34,
+      "community": 61,
       "community_name": "Instruments.tsx",
       "norm_label": "wcagguidelines"
     },
@@ -11531,7 +11531,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "src_const_criterion_wcagcriteria",
-      "community": 34,
+      "community": 61,
       "community_name": "Instruments.tsx",
       "norm_label": "wcagcriteria"
     },
@@ -11556,7 +11556,7 @@
       "_origin": "ast",
       "id": "src_const_data_role",
       "community": 51,
-      "community_name": "useIsMobile",
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "role"
     },
     {
@@ -11602,7 +11602,7 @@
       "_origin": "ast",
       "id": "src_const_data_instructors",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "instructors"
     },
     {
@@ -11612,8 +11612,8 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "src_const_data_classrooms",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "classrooms"
     },
     {
@@ -11623,8 +11623,8 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "src_const_data_modules",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "modules"
     },
     {
@@ -11645,8 +11645,8 @@
       "source_location": "L513",
       "_origin": "ast",
       "id": "src_const_data_quizzes",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "quizzes"
     },
     {
@@ -11667,8 +11667,8 @@
       "source_location": "L775",
       "_origin": "ast",
       "id": "src_const_data_analyzerresults",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 21,
+      "community_name": "Permissions.tsx",
       "norm_label": "analyzerresults"
     },
     {
@@ -11689,8 +11689,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_const_materialsprops",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "materialsprops.ts"
     },
     {
@@ -11702,8 +11702,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_materialsprops_wcagprinciple",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "wcagprinciple"
     },
     {
@@ -11713,8 +11713,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_const_materialsprops_wcag_principles_data",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "wcag_principles_data"
     },
     {
@@ -11726,8 +11726,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_materialsprops_moduleprops",
-      "community": 34,
-      "community_name": "Instruments.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "moduleprops"
     },
     {
@@ -11739,8 +11739,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_materialsprops_coremodulesprops",
-      "community": 36,
-      "community_name": "ModuleCardTemplate.tsx",
+      "community": 35,
+      "community_name": "router.tsx",
       "norm_label": "coremodulesprops"
     },
     {
@@ -11752,8 +11752,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_materialsprops_coretopicsprops",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "coretopicsprops"
     },
     {
@@ -11765,8 +11765,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_materialsprops_corelessonsprops",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "corelessonsprops"
     },
     {
@@ -11791,8 +11791,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_materialsprops_questionelement",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "questionelement"
     },
     {
@@ -11804,8 +11804,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_materialsprops_quizpage",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "quizpage"
     },
     {
@@ -11830,8 +11830,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_materialsprops_quizprops",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "quizprops"
     },
     {
@@ -11843,8 +11843,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_materialsprops_classroomprops",
-      "community": 34,
-      "community_name": "Instruments.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "classroomprops"
     },
     {
@@ -11856,8 +11856,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_materialsprops_submission",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "submission"
     },
     {
@@ -11882,8 +11882,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_materialsprops_quizsubmissionprops",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "quizsubmissionprops"
     },
     {
@@ -11895,8 +11895,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_materialsprops_result",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "result"
     },
     {
@@ -11908,8 +11908,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_const_materialsprops_analyzerresultitem",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "analyzerresultitem"
     },
     {
@@ -11933,7 +11933,7 @@
       "_origin": "ast",
       "id": "src_const_navigation",
       "community": 51,
-      "community_name": "useIsMobile",
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "navigation.ts"
     },
     {
@@ -11943,8 +11943,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_const_navigation_publicnav",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 51,
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "publicnav"
     },
     {
@@ -11955,7 +11955,7 @@
       "_origin": "ast",
       "id": "src_const_navigation_learnernav",
       "community": 51,
-      "community_name": "useIsMobile",
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "learnernav"
     },
     {
@@ -11966,7 +11966,7 @@
       "_origin": "ast",
       "id": "src_const_navigation_instructornav",
       "community": 51,
-      "community_name": "useIsMobile",
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "instructornav"
     },
     {
@@ -11977,7 +11977,7 @@
       "_origin": "ast",
       "id": "src_const_navigation_schooladminnav",
       "community": 51,
-      "community_name": "useIsMobile",
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "schooladminnav"
     },
     {
@@ -12022,8 +12022,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_features_modulereadonly_modulereadonly",
-      "community": 25,
-      "community_name": "use-text-align.ts",
+      "community": 36,
+      "community_name": "ModuleCardTemplate.tsx",
       "norm_label": "modulereadonly()"
     },
     {
@@ -12033,8 +12033,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_features_quizform",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "quizform.tsx"
     },
     {
@@ -12044,8 +12044,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_features_quizform_survey_themes_map",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "survey_themes_map"
     },
     {
@@ -12056,8 +12056,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_features_quizform_getquizstoragekey",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "getquizstoragekey()"
     },
     {
@@ -12068,8 +12068,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_features_quizform_clearquizprogress",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "clearquizprogress()"
     },
     {
@@ -12081,8 +12081,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_features_quizform_quizformprops",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "quizformprops"
     },
     {
@@ -12093,8 +12093,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_features_quizform_quizform",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 41,
+      "community_name": "materialsProps.ts",
       "norm_label": "quizform()"
     },
     {
@@ -12151,7 +12151,7 @@
       "_origin": "ast",
       "id": "src_features_instructor_moduleeditor",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "moduleeditor.tsx"
     },
     {
@@ -12174,7 +12174,7 @@
       "_origin": "ast",
       "id": "src_features_instructor_newclassroomdialog",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "newclassroomdialog.tsx"
     },
     {
@@ -12185,8 +12185,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_features_instructor_newclassroomdialog_newclassroomdialog",
-      "community": 37,
-      "community_name": "ui/button.tsx",
+      "community": 34,
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "newclassroomdialog()"
     },
     {
@@ -12253,8 +12253,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_features_instructor_quizhelper_getquizjson",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "getquizjson()"
     },
     {
@@ -12409,8 +12409,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_features_instructor_quizhelper_getquiztotalquestions",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "getquiztotalquestions()"
     },
     {
@@ -12421,8 +12421,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_features_instructor_quizhelper_getquiztotalpoints",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "getquiztotalpoints()"
     },
     {
@@ -12491,8 +12491,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_hooks_use_composed_ref",
-      "community": 38,
-      "community_name": "toolbar.tsx",
+      "community": 7,
+      "community_name": "search-and-replace.tsx",
       "norm_label": "use-composed-ref.ts"
     },
     {
@@ -12504,8 +12504,8 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_hooks_use_composed_ref_userref",
-      "community": 38,
-      "community_name": "toolbar.tsx",
+      "community": 7,
+      "community_name": "search-and-replace.tsx",
       "norm_label": "userref"
     },
     {
@@ -12516,8 +12516,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_hooks_use_composed_ref_updateref",
-      "community": 38,
-      "community_name": "toolbar.tsx",
+      "community": 7,
+      "community_name": "search-and-replace.tsx",
       "norm_label": "updateref()"
     },
     {
@@ -12528,8 +12528,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_hooks_use_composed_ref_usecomposedref",
-      "community": 38,
-      "community_name": "toolbar.tsx",
+      "community": 7,
+      "community_name": "search-and-replace.tsx",
       "norm_label": "usecomposedref()"
     },
     {
@@ -12672,7 +12672,7 @@
       "_origin": "ast",
       "id": "src_hooks_use_is_breakpoint",
       "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community_name": "use-image-upload.ts",
       "norm_label": "use-is-breakpoint.ts"
     },
     {
@@ -12685,7 +12685,7 @@
       "_origin": "ast",
       "id": "src_hooks_use_is_breakpoint_breakpointmode",
       "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community_name": "use-image-upload.ts",
       "norm_label": "breakpointmode"
     },
     {
@@ -12697,7 +12697,7 @@
       "_origin": "ast",
       "id": "src_hooks_use_is_breakpoint_useisbreakpoint",
       "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community_name": "use-image-upload.ts",
       "norm_label": "useisbreakpoint()"
     },
     {
@@ -12756,7 +12756,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_hooks_use_mobile",
-      "community": 51,
+      "community": 46,
       "community_name": "useIsMobile",
       "norm_label": "use-mobile.ts"
     },
@@ -12768,7 +12768,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_hooks_use_mobile_subscribe",
-      "community": 51,
+      "community": 46,
       "community_name": "useIsMobile",
       "norm_label": "subscribe()"
     },
@@ -12780,7 +12780,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_hooks_use_mobile_getsnapshot",
-      "community": 51,
+      "community": 46,
       "community_name": "useIsMobile",
       "norm_label": "getsnapshot()"
     },
@@ -12792,7 +12792,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_hooks_use_mobile_getserversnapshot",
-      "community": 51,
+      "community": 46,
       "community_name": "useIsMobile",
       "norm_label": "getserversnapshot()"
     },
@@ -12804,7 +12804,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_hooks_use_mobile_useismobile",
-      "community": 51,
+      "community": 46,
       "community_name": "useIsMobile",
       "norm_label": "useismobile()"
     },
@@ -12924,7 +12924,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_hooks_use_tiptap_editor",
-      "community": 5,
+      "community": 9,
       "community_name": "useTiptapEditor",
       "norm_label": "use-tiptap-editor.ts"
     },
@@ -12936,7 +12936,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_hooks_use_tiptap_editor_getactivepageeditor",
-      "community": 5,
+      "community": 9,
       "community_name": "useTiptapEditor",
       "norm_label": "getactivepageeditor()"
     },
@@ -12948,7 +12948,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_hooks_use_tiptap_editor_usetiptapeditor",
-      "community": 5,
+      "community": 9,
       "community_name": "useTiptapEditor",
       "norm_label": "usetiptapeditor()"
     },
@@ -13055,7 +13055,7 @@
       "_origin": "ast",
       "id": "src_layout_protectedlayout",
       "community": 51,
-      "community_name": "useIsMobile",
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "protectedlayout.tsx"
     },
     {
@@ -13066,7 +13066,7 @@
       "_origin": "ast",
       "id": "src_layout_protectedlayout_linksbyrole",
       "community": 51,
-      "community_name": "useIsMobile",
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "linksbyrole"
     },
     {
@@ -13077,7 +13077,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_layout_protectedlayout_protectedlayout",
-      "community": 51,
+      "community": 46,
       "community_name": "useIsMobile",
       "norm_label": "protectedlayout()"
     },
@@ -13179,7 +13179,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_tiptap_utils_cn",
-      "community": 2,
+      "community": 4,
       "community_name": "cn",
       "norm_label": "cn()"
     },
@@ -13240,7 +13240,7 @@
       "_origin": "ast",
       "id": "src_lib_tiptap_utils_isnodeinschema",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "isnodeinschema()"
     },
     {
@@ -13264,7 +13264,7 @@
       "_origin": "ast",
       "id": "src_lib_tiptap_utils_isvalidposition",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "isvalidposition()"
     },
     {
@@ -13286,8 +13286,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_tiptap_utils_isextensionavailable",
-      "community": 40,
-      "community_name": "image-upload-button.tsx",
+      "community": 25,
+      "community_name": "use-text-align.ts",
       "norm_label": "isextensionavailable()"
     },
     {
@@ -13311,7 +13311,7 @@
       "_origin": "ast",
       "id": "src_lib_tiptap_utils_findnodeposition",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "findnodeposition()"
     },
     {
@@ -13322,7 +13322,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_lib_tiptap_utils_isnodetypeselected",
-      "community": 9,
+      "community": 8,
       "community_name": "isNodeTypeSelected",
       "norm_label": "isnodetypeselected()"
     },
@@ -13335,7 +13335,7 @@
       "_origin": "ast",
       "id": "src_lib_tiptap_utils_selectionwithinconvertibletypes",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "selectionwithinconvertibletypes()"
     },
     {
@@ -13457,7 +13457,7 @@
       "_origin": "ast",
       "id": "src_lib_tiptap_utils_getselectedblocknodes",
       "community": 8,
-      "community_name": "use-list.ts",
+      "community_name": "isNodeTypeSelected",
       "norm_label": "getselectedblocknodes()"
     },
     {
@@ -13478,8 +13478,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_utils",
-      "community": 27,
-      "community_name": "Analyzer.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "utils.ts"
     },
     {
@@ -13489,8 +13489,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_main",
-      "community": 32,
-      "community_name": "main.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "main.tsx"
     },
     {
@@ -13615,7 +13615,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_instructor_analyzerlogsinstructor",
-      "community": 37,
+      "community": 31,
       "community_name": "ui/button.tsx",
       "norm_label": "analyzerlogsinstructor.tsx"
     },
@@ -13627,8 +13627,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_instructor_analyzerlogsinstructor_analyzerlogsinstructor",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "analyzerlogsinstructor()"
     },
     {
@@ -13638,7 +13638,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_instructor_classroominstructor",
-      "community": 37,
+      "community": 31,
       "community_name": "ui/button.tsx",
       "norm_label": "classroominstructor.tsx"
     },
@@ -13650,7 +13650,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_instructor_classroominstructor_classroominstructor",
-      "community": 37,
+      "community": 31,
       "community_name": "ui/button.tsx",
       "norm_label": "classroominstructor()"
     },
@@ -13743,7 +13743,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_instructor_modulesinstructor",
-      "community": 37,
+      "community": 31,
       "community_name": "ui/button.tsx",
       "norm_label": "modulesinstructor.tsx"
     },
@@ -13755,8 +13755,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_instructor_modulesinstructor_modulesinstructor",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "modulesinstructor()"
     },
     {
@@ -13766,7 +13766,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_instructor_quizzesinstructor",
-      "community": 37,
+      "community": 31,
       "community_name": "ui/button.tsx",
       "norm_label": "quizzesinstructor.tsx"
     },
@@ -13778,8 +13778,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_instructor_quizzesinstructor_quizzesinstructor",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "quizzesinstructor()"
     },
     {
@@ -13789,8 +13789,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_instructor_quizzesinstructorview",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "quizzesinstructorview.tsx"
     },
     {
@@ -13813,8 +13813,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_instructor_quizzesinstructorview_dashboardtab",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "dashboardtab()"
     },
     {
@@ -13825,8 +13825,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_instructor_quizzesinstructorview_submissionstab",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "submissionstab()"
     },
     {
@@ -13837,8 +13837,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_instructor_quizzesinstructorview_previewtab",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "previewtab()"
     },
     {
@@ -13951,8 +13951,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_learner_classroom",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "classroom.tsx"
     },
     {
@@ -13962,8 +13962,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_pages_learner_classroom_classroommodules",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "classroommodules"
     },
     {
@@ -13973,8 +13973,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_pages_learner_classroom_classroomquizzes",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "classroomquizzes"
     },
     {
@@ -13985,8 +13985,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_learner_classroom_classroom",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "classroom()"
     },
     {
@@ -13997,7 +13997,7 @@
       "_origin": "ast",
       "id": "src_pages_learner_coremodulesview",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "coremodulesview.tsx"
     },
     {
@@ -14008,7 +14008,7 @@
       "_origin": "ast",
       "id": "src_pages_learner_coremodulesview_mockmoduleprogress",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "mockmoduleprogress"
     },
     {
@@ -14031,8 +14031,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_learner_coremodulesview_earnedbagdes",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 62,
+      "community_name": "Dashboard.tsx",
       "norm_label": "earnedbagdes()"
     },
     {
@@ -14044,7 +14044,7 @@
       "_origin": "ast",
       "id": "src_pages_learner_coremodulesview_editbutton",
       "community": 34,
-      "community_name": "Instruments.tsx",
+      "community_name": "CoreModulesView.tsx",
       "norm_label": "editbutton()"
     },
     {
@@ -14054,8 +14054,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_learner_dashboard",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 62,
+      "community_name": "Dashboard.tsx",
       "norm_label": "dashboard.tsx"
     },
     {
@@ -14065,8 +14065,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_pages_learner_dashboard_progress",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 62,
+      "community_name": "Dashboard.tsx",
       "norm_label": "progress"
     },
     {
@@ -14077,8 +14077,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_learner_dashboard_dashboard",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 62,
+      "community_name": "Dashboard.tsx",
       "norm_label": "dashboard()"
     },
     {
@@ -14088,8 +14088,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_learner_learnerquizview",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "learnerquizview.tsx"
     },
     {
@@ -14100,8 +14100,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_learner_learnerquizview_mockstartattemptserverrequest",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "mockstartattemptserverrequest()"
     },
     {
@@ -14112,8 +14112,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_learner_learnerquizview_learnerquizview",
-      "community": 26,
-      "community_name": "QuizEditor.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "learnerquizview()"
     },
     {
@@ -14123,8 +14123,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_learner_modules",
-      "community": 36,
-      "community_name": "ModuleCardTemplate.tsx",
+      "community": 35,
+      "community_name": "router.tsx",
       "norm_label": "modules.tsx"
     },
     {
@@ -14134,8 +14134,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_pages_learner_modules_mock_module_progress",
-      "community": 36,
-      "community_name": "ModuleCardTemplate.tsx",
+      "community": 35,
+      "community_name": "router.tsx",
       "norm_label": "mock_module_progress"
     },
     {
@@ -14158,8 +14158,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_learner_modules_coremodulecardtemplate",
-      "community": 36,
-      "community_name": "ModuleCardTemplate.tsx",
+      "community": 35,
+      "community_name": "router.tsx",
       "norm_label": "coremodulecardtemplate()"
     },
     {
@@ -14170,8 +14170,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_learner_modules_continuelearningcard",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 62,
+      "community_name": "Dashboard.tsx",
       "norm_label": "continuelearningcard()"
     },
     {
@@ -14181,8 +14181,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_learner_quizzes",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "quizzes.tsx"
     },
     {
@@ -14193,8 +14193,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_learner_quizzes_quizzes",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "quizzes()"
     },
     {
@@ -14204,8 +14204,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_public_loginpage",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "loginpage.tsx"
     },
     {
@@ -14216,8 +14216,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_public_loginpage_loginpage",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 31,
+      "community_name": "ui/button.tsx",
       "norm_label": "loginpage()"
     },
     {
@@ -14228,7 +14228,7 @@
       "_origin": "ast",
       "id": "src_pages_schooladmin_analyzerlogsschooladmin",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "analyzerlogsschooladmin.tsx"
     },
     {
@@ -14241,7 +14241,7 @@
       "_origin": "ast",
       "id": "src_pages_schooladmin_analyzerlogsschooladmin_classlogitem",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "classlogitem"
     },
     {
@@ -14252,7 +14252,7 @@
       "_origin": "ast",
       "id": "src_pages_schooladmin_analyzerlogsschooladmin_classlogs",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "classlogs"
     },
     {
@@ -14263,7 +14263,7 @@
       "_origin": "ast",
       "id": "src_pages_schooladmin_analyzerlogsschooladmin_chartdata",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "chartdata"
     },
     {
@@ -14274,7 +14274,7 @@
       "_origin": "ast",
       "id": "src_pages_schooladmin_analyzerlogsschooladmin_principlesdata",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "principlesdata"
     },
     {
@@ -14296,20 +14296,53 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_schooladmin_dashboardschooladmin",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "dashboardschooladmin.tsx"
+    },
+    {
+      "label": "chartData",
+      "file_type": "code",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "src_pages_schooladmin_dashboardschooladmin_chartdata",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
+      "norm_label": "chartdata"
+    },
+    {
+      "label": "principlesData",
+      "file_type": "code",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L45",
+      "_origin": "ast",
+      "id": "src_pages_schooladmin_dashboardschooladmin_principlesdata",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
+      "norm_label": "principlesdata"
+    },
+    {
+      "label": "recentActivityLogs",
+      "file_type": "code",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "src_pages_schooladmin_dashboardschooladmin_recentactivitylogs",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
+      "norm_label": "recentactivitylogs"
     },
     {
       "label": "DashboardSchoolAdmin()",
       "file_type": "code",
       "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
-      "source_location": "L1",
+      "source_location": "L83",
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_schooladmin_dashboardschooladmin_dashboardschooladmin",
-      "community": 35,
-      "community_name": "router.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "dashboardschooladmin()"
     },
     {
@@ -14320,7 +14353,7 @@
       "_origin": "ast",
       "id": "src_pages_schooladmin_instructormaterials",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "instructormaterials.tsx"
     },
     {
@@ -14342,8 +14375,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_schooladmin_instructormaterialsview",
-      "community": 33,
-      "community_name": "ClassroomInstructorView.tsx",
+      "community": 39,
+      "community_name": "QuizzesInstructorView.tsx",
       "norm_label": "instructormaterialsview.tsx"
     },
     {
@@ -14365,7 +14398,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_schooladmin_instruments",
-      "community": 34,
+      "community": 61,
       "community_name": "Instruments.tsx",
       "norm_label": "instruments.tsx"
     },
@@ -14377,7 +14410,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_schooladmin_instruments_instruments",
-      "community": 51,
+      "community": 46,
       "community_name": "useIsMobile",
       "norm_label": "instruments()"
     },
@@ -14389,7 +14422,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_schooladmin_instruments_browseguidelinescontent",
-      "community": 34,
+      "community": 61,
       "community_name": "Instruments.tsx",
       "norm_label": "browseguidelinescontent()"
     },
@@ -14401,7 +14434,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_schooladmin_instruments_editcriteriondialog",
-      "community": 34,
+      "community": 61,
       "community_name": "Instruments.tsx",
       "norm_label": "editcriteriondialog()"
     },
@@ -14412,8 +14445,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_pages_schooladmin_learningmaterials",
-      "community": 36,
-      "community_name": "ModuleCardTemplate.tsx",
+      "community": 35,
+      "community_name": "router.tsx",
       "norm_label": "learningmaterials.tsx"
     },
     {
@@ -14424,8 +14457,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_pages_schooladmin_learningmaterials_learningmaterials",
-      "community": 36,
-      "community_name": "ModuleCardTemplate.tsx",
+      "community": 35,
+      "community_name": "router.tsx",
       "norm_label": "learningmaterials()"
     },
     {
@@ -14494,7 +14527,7 @@
       "_origin": "ast",
       "id": "src_pages_schooladmin_users",
       "community": 37,
-      "community_name": "ui/button.tsx",
+      "community_name": "Users.tsx",
       "norm_label": "users.tsx"
     },
     {
@@ -14506,7 +14539,7 @@
       "_origin": "ast",
       "id": "src_pages_schooladmin_users_users",
       "community": 51,
-      "community_name": "useIsMobile",
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "users()"
     },
     {
@@ -14527,8 +14560,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_router_router",
-      "community": 32,
-      "community_name": "main.tsx",
+      "community": 68,
+      "community_name": "DashboardSchoolAdmin.tsx",
       "norm_label": "router"
     },
     {
@@ -14631,8 +14664,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_services_tanstack_auth_useinvalidatekeys",
-      "community": 22,
-      "community_name": "UserSidebar.tsx",
+      "community": 51,
+      "community_name": "ProtectedLayout.tsx",
       "norm_label": "useinvalidatekeys()"
     },
     {
@@ -18798,6 +18831,18 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
+      "target": "src_components_common_pagetemplate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/pages/schoolAdmin/InstructorMaterials.tsx",
       "source_location": "L3",
       "weight": 1.0,
@@ -19043,6 +19088,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_pages_schooladmin_analyzerlogsschooladmin",
+      "target": "src_components_common_pagetemplate_headertemplate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
       "target": "src_components_common_pagetemplate_headertemplate",
       "confidence_score": 1.0
     },
@@ -36724,6 +36781,18 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
+      "target": "src_components_ui_badge",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/pages/schoolAdmin/InstructorMaterials.tsx",
       "source_location": "L15",
       "weight": 1.0,
@@ -36873,6 +36942,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_pages_schooladmin_analyzerlogsschooladmin",
+      "target": "src_components_ui_badge_badge",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
       "target": "src_components_ui_badge_badge",
       "confidence_score": 1.0
     },
@@ -37444,6 +37525,18 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
+      "target": "src_components_ui_button",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/pages/schoolAdmin/InstructorMaterials.tsx",
       "source_location": "L16",
       "weight": 1.0,
@@ -37996,6 +38089,18 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
+      "target": "src_components_ui_button_button",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/pages/schoolAdmin/InstructorMaterials.tsx",
       "source_location": "L16",
       "weight": 1.0,
@@ -38323,6 +38428,18 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
+      "target": "src_components_ui_card",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/pages/schoolAdmin/InstructorMaterials.tsx",
       "source_location": "L5",
       "weight": 1.0,
@@ -38527,6 +38644,18 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
+      "target": "src_components_ui_card_card",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/pages/schoolAdmin/InstructorMaterials.tsx",
       "source_location": "L5",
       "weight": 1.0,
@@ -38671,6 +38800,18 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
+      "target": "src_components_ui_card_cardheader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/pages/schoolAdmin/Instruments.tsx",
       "source_location": "L4",
       "weight": 1.0,
@@ -38779,6 +38920,18 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
+      "target": "src_components_ui_card_cardtitle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/pages/schoolAdmin/Instruments.tsx",
       "source_location": "L4",
       "weight": 1.0,
@@ -38844,6 +38997,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_pages_schooladmin_analyzerlogsschooladmin",
+      "target": "src_components_ui_card_carddescription",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
       "target": "src_components_ui_card_carddescription",
       "confidence_score": 1.0
     },
@@ -38964,6 +39129,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_pages_schooladmin_analyzerlogsschooladmin",
+      "target": "src_components_ui_card_cardcontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
       "target": "src_components_ui_card_cardcontent",
       "confidence_score": 1.0
     },
@@ -39148,6 +39325,18 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
+      "target": "src_components_ui_chart",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -39156,6 +39345,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_pages_schooladmin_analyzerlogsschooladmin",
+      "target": "src_components_ui_chart_chartconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
       "target": "src_components_ui_chart_chartconfig",
       "confidence_score": 1.0
     },
@@ -39196,6 +39397,18 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
+      "target": "src_components_ui_chart_chartcontainer",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -39216,6 +39429,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_pages_schooladmin_analyzerlogsschooladmin",
+      "target": "src_components_ui_chart_charttooltipcontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
       "target": "src_components_ui_chart_charttooltipcontent",
       "confidence_score": 1.0
     },
@@ -44522,6 +44747,18 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
+      "target": "src_components_ui_toast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/pages/schoolAdmin/Permissions.tsx",
       "source_location": "L8",
       "weight": 1.0,
@@ -44563,6 +44800,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_pages_schooladmin_analyzerlogsschooladmin",
+      "target": "src_components_ui_toast_toast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
       "target": "src_components_ui_toast_toast",
       "confidence_score": 1.0
     },
@@ -50331,11 +50580,44 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
-      "source_location": "L1",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
+      "target": "src_pages_schooladmin_dashboardschooladmin_chartdata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L83",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_pages_schooladmin_dashboardschooladmin",
       "target": "src_pages_schooladmin_dashboardschooladmin_dashboardschooladmin",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L45",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
+      "target": "src_pages_schooladmin_dashboardschooladmin_principlesdata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/pages/schoolAdmin/DashboardSchoolAdmin.tsx",
+      "source_location": "L52",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_pages_schooladmin_dashboardschooladmin",
+      "target": "src_pages_schooladmin_dashboardschooladmin_recentactivitylogs",
       "confidence_score": 1.0
     },
     {

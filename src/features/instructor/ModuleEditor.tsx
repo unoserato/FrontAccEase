@@ -29,7 +29,7 @@ import {
   Send,
   X,
 } from "lucide-react"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { useHotkeys } from "react-hotkeys-hook"
 import { cn } from "cn"
@@ -65,7 +65,9 @@ export default function ModuleEditor() {
   )
   const [isSaving, setIsSaving] = useState(false)
 
-  useEffect(() => {
+  const [prevModule, setPrevModule] = useState(existingModule)
+  if (existingModule !== prevModule) {
+    setPrevModule(existingModule)
     if (existingModule) {
       setTitle(existingModule.name)
       setContent(existingModule.content)
@@ -75,7 +77,7 @@ export default function ModuleEditor() {
       if (existingModule.classrooms)
         setSelectedClassrooms(existingModule.classrooms)
     }
-  }, [existingModule])
+  }
 
   const availableTags = WCAG_PRINCIPLES_DATA[selectedPrinciple] || []
 
@@ -166,7 +168,7 @@ export default function ModuleEditor() {
                 onChange={(event) => setTitle(event.target.value)}
                 placeholder="Untitled Module"
                 aria-label="Module title"
-                className="xs:max-w-[260px] xs:text-base h-9 max-w-[180px] min-w-0 flex-1 border-transparent bg-transparent px-2 text-sm font-semibold tracking-tight shadow-none transition-colors hover:border-border focus-visible:border-ring focus-visible:bg-background sm:max-w-md sm:text-lg"
+                className="xs:max-w-65 xs:text-base h-9 max-w-45 min-w-0 flex-1 border-transparent bg-transparent px-2 text-sm font-semibold tracking-tight shadow-none transition-colors hover:border-border focus-visible:border-ring focus-visible:bg-background sm:max-w-md sm:text-lg"
               />
 
               {/* Status Pill Badge */}
@@ -203,7 +205,7 @@ export default function ModuleEditor() {
                 )}
               />
 
-              <DialogContent className="flex max-h-[90vh] w-[calc(100vw-2rem)] flex-col overflow-hidden p-5 sm:max-w-lg sm:p-6">
+              <DialogContent style={{ maxHeight: "90vh", width: "calc(100vw - 2rem)" }} className="flex flex-col overflow-hidden p-5 sm:max-w-lg sm:p-6">
                 <DialogHeader>
                   <DialogTitle className="text-lg font-bold sm:text-xl">
                     Save Module
@@ -297,7 +299,7 @@ export default function ModuleEditor() {
                             key={tag}
                             className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground"
                           >
-                            <span className="max-w-[180px] truncate">
+                            <span className="max-w-45 truncate">
                               {tag}
                             </span>
                             <button
@@ -390,7 +392,7 @@ export default function ModuleEditor() {
                                 <span className="truncate text-xs font-medium sm:text-sm">
                                   {cls.name}
                                 </span>
-                                <span className="text-[11px] text-muted-foreground">
+                                <span className="text-xs text-muted-foreground">
                                   Code: {cls.classroomCode}
                                 </span>
                               </div>
@@ -415,7 +417,7 @@ export default function ModuleEditor() {
                               key={id}
                               className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground"
                             >
-                              <span className="max-w-[120px] truncate">
+                              <span className="max-w-30 truncate">
                                 {match?.name ?? id}
                               </span>
                               <button

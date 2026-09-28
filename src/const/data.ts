@@ -20,7 +20,7 @@ export interface UserProps {
 export const user: UserProps = {
   id: "0223-2127",
   name: "John Mark Boragay",
-  role: "admin",
+  role: "learner",
   img: "",
 }
 
@@ -232,7 +232,7 @@ export const modules: ModuleProps[] = [
     createdAt: "Aug 31 2026 17:00:00 GMT+0800",
     principle: "Perceivable",
     tags: ["1.1.1 Non-Text Content"],
-    classrooms: ["1"],
+    classrooms: ["1", "2", "3", "4"],
     created_by: "inst-1",
   },
   {
@@ -977,5 +977,69 @@ export default function AnalogClock({
   );
 }`,
     },
+  },
+]
+
+export interface ClassLogItem {
+  id: string
+  scans: number
+  className: string
+  code: string
+  enrolled: number
+  passRate: string
+  flaggedCount: number
+  avgDuration: string
+}
+
+export const instructorClassLogs: ClassLogItem[] = [
+  {
+    id: "1",
+    scans: 100,
+    className: "ITEP 306 - UI / UX and Cross Platform Technologies",
+    code: "ITEP-306",
+    enrolled: 42,
+    passRate: "82.4%",
+    flaggedCount: 35,
+    avgDuration: "9.8s",
+  },
+  {
+    id: "2",
+    scans: 120,
+    className: "WCAG 101 - Web Accessibility Fundamentals",
+    code: "WCAG-101",
+    enrolled: 38,
+    passRate: "76.5%",
+    flaggedCount: 52,
+    avgDuration: "10.4s",
+  },
+  {
+    id: "3",
+    scans: 85,
+    className: "UIUX 202 - Inclusive UI/UX Engineering",
+    code: "UIUX-202",
+    enrolled: 45,
+    passRate: "88.1%",
+    flaggedCount: 22,
+    avgDuration: "11.2s",
+  },
+  {
+    id: "4",
+    scans: 115,
+    className: "CS 401 - Advanced Web Accessibility Auditing",
+    code: "CS-401",
+    enrolled: 29,
+    passRate: "71.0%",
+    flaggedCount: 64,
+    avgDuration: "10.1s",
+  },
+  {
+    id: "5",
+    scans: 100,
+    className: "ITEP 308 - Assistive Technology Integration",
+    code: "ITEP-308",
+    enrolled: 50,
+    passRate: "79.8%",
+    flaggedCount: 32,
+    avgDuration: "10.6s",
   },
 ]

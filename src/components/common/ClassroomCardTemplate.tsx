@@ -6,19 +6,15 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu"
-import { Button } from "../ui/button"
-import { Archive, EllipsisVertical, Pencil, Trash, Users } from "lucide-react"
 import { useState } from "react"
 import { Badge } from "../ui/badge"
 import DeleteArchiveDialog, {
   type ActionType,
 } from "../instructor/DeleteArchiveDialog"
+import { useNavigate } from "react-router-dom"
+import EditorDropdown from "./EditorDropdown"
+import { useUser } from "@/services/tanstack/auth"
+import { Users } from "lucide-react"
 
 export default function ClassroomCardTemplate({
   classroom,
@@ -26,10 +22,16 @@ export default function ClassroomCardTemplate({
   classroom: ClassroomProps
 }) {
   const [action, setAction] = useState<ActionType>(null)
+  const navigate = useNavigate()
+  const { data: user } = useUser()
+  const isEditor = user?.role == "instructor"
 
   return (
     <>
-      <Card className="group relative flex min-h-52 w-full cursor-pointer flex-col justify-between overflow-hidden p-0 sm:min-h-56">
+      <Card
+        onClick={() => navigate(`/instructor/classroom/${classroom.id}`)}
+        className="group relative flex min-h-52 w-full cursor-pointer flex-col justify-between overflow-hidden p-0 sm:min-h-56"
+      >
         {/* Google Classroom Header Banner */}
         <CardHeader className="relative bg-foreground p-4 pr-12 text-background sm:p-5">
           <div className="space-y-1 pr-6">
@@ -41,48 +43,10 @@ export default function ClassroomCardTemplate({
             </CardDescription>
           </div>
 
-          <div
-            className="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                onClick={(e) => e.stopPropagation()}
-                render={
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="size-8 text-background hover:bg-background/20 hover:text-background"
-                    aria-label="Classroom actions"
-                  >
-                    <EllipsisVertical className="size-4" />
-                  </Button>
-                }
-              />
-
-              <DropdownMenuContent
-                onClick={(e) => e.stopPropagation()}
-                align="end"
-              >
-                <DropdownMenuItem onClick={() => setAction("edit")}>
-                  <Pencil className="mr-2 h-4 w-4" />
-                  Edit
-                </DropdownMenuItem>
-
-                <DropdownMenuItem onClick={() => setAction("archive")}>
-                  <Archive className="mr-2 h-4 w-4" />
-                  Archive
-                </DropdownMenuItem>
-
-                <DropdownMenuItem
-                  variant="destructive"
-                  onClick={() => setAction("delete")}
-                >
-                  <Trash className="mr-2 h-4 w-4" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
+            {isEditor && (
+              <EditorDropdown setAction={(value) => setAction(value)} />
+            )}
           </div>
         </CardHeader>
 
@@ -97,14 +61,14 @@ export default function ClassroomCardTemplate({
                 {classroom.learners.length}{" "}
                 {classroom.learners.length === 1 ? "Learner" : "Learners"}
               </p>
-              <p className="text-[10px] text-muted-foreground sm:text-xs">
+              <p className="text-xs text-muted-foreground sm:text-xs">
                 Enrolled
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-[10px] sm:text-xs">
+            <Badge variant="outline" className="text-xs sm:text-xs">
               Active
             </Badge>
           </div>

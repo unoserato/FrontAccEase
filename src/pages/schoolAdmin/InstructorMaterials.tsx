@@ -56,7 +56,7 @@ export default function InstructorMaterials() {
 
       <Card className="overflow-hidden">
         <div className="w-full overflow-x-auto">
-          <Table className="min-w-[650px]">
+          <Table className="min-w-162.5">
             <TableHeader>
               <TableRow className="bg-muted/40 hover:bg-muted/40">
                 <TableHead className="whitespace-nowrap pl-4">Name</TableHead>
@@ -102,7 +102,7 @@ export default function InstructorMaterials() {
                             <span className="font-semibold text-foreground block group-hover:underline">
                               {instructor.name}
                             </span>
-                            <Badge variant="secondary" className="capitalize text-[10px] py-0 px-1.5 mt-0.5">
+                            <Badge variant="secondary" className="capitalize text-xs py-0 px-1.5 mt-0.5">
                               {instructor.role}
                             </Badge>
                           </div>

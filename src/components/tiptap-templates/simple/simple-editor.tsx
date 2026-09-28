@@ -293,10 +293,17 @@ export function SimpleEditor({
     }
   }, [editor, initialContent])
 
-  // eslint-disable-next-line react-hooks/refs
+   
+  const [toolbarHeight, setToolbarHeight] = useState(0)
+  useEffect(() => {
+    if (toolbarRef.current) {
+      setToolbarHeight(toolbarRef.current.getBoundingClientRect().height)
+    }
+  }, [])
+
   const rect = useCursorVisibility({
     editor,
-    overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
+    overlayHeight: toolbarHeight,
   })
 
   useEffect(() => {

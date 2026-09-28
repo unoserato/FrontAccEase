@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react"
+import { useMemo, useState } from "react"
 import { useParams, Link } from "react-router-dom"
 import { useHotkeys } from "react-hotkeys-hook"
 import { format } from "date-fns"
@@ -315,7 +315,9 @@ export default function QuizEditor() {
   const activePage = quizJson.pages[validPageIndex]
 
   // Sync if editing existing quiz
-  useEffect(() => {
+  const [prevQuiz, setPrevQuiz] = useState(existingQuiz)
+  if (existingQuiz !== prevQuiz) {
+    setPrevQuiz(existingQuiz)
     if (existingQuiz) {
       setQuizJson(getQuizJson(existingQuiz))
       if (existingQuiz.author) setCreatedBy(existingQuiz.author)
@@ -338,7 +340,7 @@ export default function QuizEditor() {
         }
       }
     }
-  }, [existingQuiz])
+  }
 
   useUnmount({ when: !!quizJson.title })
 
@@ -497,7 +499,7 @@ export default function QuizEditor() {
                     setQuizJson({ ...quizJson, description: e.target.value })
                   }
                   placeholder="Provide description or instructions for students..."
-                  className="min-h-[70px] text-sm text-foreground focus-visible:ring-1"
+                  className="min-h-17.5 text-sm text-foreground focus-visible:ring-1"
                 />
               </div>
 
@@ -562,7 +564,7 @@ export default function QuizEditor() {
                     <SelectTrigger
                       id="theme-select"
                       size="sm"
-                      className="h-7 w-[120px] text-xs"
+                      className="h-7 w-30 text-xs"
                     >
                       <SelectValue placeholder="Theme" />
                     </SelectTrigger>
@@ -601,7 +603,7 @@ export default function QuizEditor() {
                 >
                   <span
                     className={cn(
-                      "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold",
+                      "flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold",
                       isActive
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted text-muted-foreground group-hover:bg-muted/80"
@@ -609,7 +611,7 @@ export default function QuizEditor() {
                   >
                     {pIdx + 1}
                   </span>
-                  <span className="max-w-[140px] truncate sm:max-w-[200px]">
+                  <span className="max-w-35 truncate sm:max-w-50">
                     {page.title || `Section ${pIdx + 1}`}
                   </span>
                 </button>
@@ -1137,7 +1139,7 @@ export default function QuizEditor() {
 
       {/* Save Quiz Dialog copied & adapted from ModuleEditor.tsx */}
       <Dialog open={isSaveDialogOpen} onOpenChange={setIsSaveDialogOpen}>
-        <DialogContent className="flex max-h-[90vh] w-[calc(100vw-2rem)] flex-col overflow-hidden p-5 sm:max-w-lg sm:p-6">
+        <DialogContent style={{ maxHeight: "90vh", width: "calc(100vw - 2rem)" }} className="flex flex-col overflow-hidden p-5 sm:max-w-lg sm:p-6">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold sm:text-xl">
               Save Quiz Assessment
@@ -1345,7 +1347,7 @@ export default function QuizEditor() {
                       key={tag}
                       className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground"
                     >
-                      <span className="max-w-[180px] truncate">{tag}</span>
+                      <span className="max-w-45 truncate">{tag}</span>
                       <button
                         type="button"
                         onClick={() => handleToggleTag(tag)}
@@ -1424,7 +1426,7 @@ export default function QuizEditor() {
                           <span className="truncate text-xs font-medium sm:text-sm">
                             {cls.name}
                           </span>
-                          <span className="text-[11px] text-muted-foreground">
+                          <span className="text-xs text-muted-foreground">
                             Code: {cls.classroomCode}
                           </span>
                         </div>
@@ -1449,7 +1451,7 @@ export default function QuizEditor() {
                         key={id}
                         className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground"
                       >
-                        <span className="max-w-[120px] truncate">
+                        <span className="max-w-30 truncate">
                           {match?.name ?? id}
                         </span>
                         <button

@@ -60,7 +60,7 @@ export default function DeleteArchiveDialog({
         if (!open) setAction(null)
       }}
     >
-      <DialogContent showCloseButton={false}>
+      <DialogContent showCloseButton={false} className={"max-w-lg"}>
         <DialogHeader>
           <DialogTitle className="capitalize">
             {action === "archive"

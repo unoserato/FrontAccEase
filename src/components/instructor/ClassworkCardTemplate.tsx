@@ -149,7 +149,7 @@ export default function ClassworkCardTemplate({
                           ) : (
                             <Badge
                               variant="outline"
-                              className="text-[11px] font-normal text-muted-foreground"
+                              className="text-xs font-normal text-muted-foreground"
                             >
                               Needs Grading
                             </Badge>

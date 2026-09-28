@@ -10,24 +10,33 @@ import Typography from "@tiptap/extension-typography"
 import { Selection } from "@tiptap/extensions"
 import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
-import { ArrowLeft, Calendar, FileText } from "lucide-react"
-import { useEffect } from "react"
+import { ArrowLeft, Calendar, FileText, GraduationCap } from "lucide-react"
+import { useEffect, useMemo } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import { modules } from "@/const/data"
+import { modules, classrooms } from "@/const/data"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { getDateString } from "@/hooks/date-to-string"
+import { useUser } from "@/services/tanstack/auth"
 
 export default function ModuleReadOnly() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { data: user } = useUser()
+  const isEditor = user?.role === "instructor"
 
   function handleBack() {
-    navigate(-1)
+    navigate("../..", { relative: "path" })
   }
 
   const targetDoc = modules.find((doc) => String(doc.id) === String(id))
+
+  const assignedClassrooms = useMemo(() => {
+    return (targetDoc?.classrooms ?? [])
+      .map((cId) => classrooms.find((c) => String(c.id) === String(cId)))
+      .filter(Boolean)
+  }, [targetDoc?.classrooms])
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -39,7 +48,7 @@ export default function ModuleReadOnly() {
         autocapitalize: "off",
         "aria-label": "Read-only module content area.",
         class:
-          "prose dark:prose-invert max-w-none focus:outline-none min-h-[450px] leading-relaxed text-foreground",
+          "prose dark:prose-invert max-w-none focus:outline-none min-h-112.5 leading-relaxed text-foreground",
       },
     },
     extensions: [
@@ -86,10 +95,13 @@ export default function ModuleReadOnly() {
 
   if (!targetDoc) {
     return (
-      <div className="mx-auto my-auto flex min-h-[70vh] items-center justify-center p-4">
+      <div
+        style={{ minHeight: "70vh" }}
+        className="mx-auto my-auto flex items-center justify-center p-4"
+      >
         <Card className="max-w-md p-8 text-center shadow-sm">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-            <FileText className="h-6 w-6 text-muted-foreground" />
+          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-muted">
+            <FileText className="size-6 text-muted-foreground" />
           </div>
           <h2 className="text-lg font-bold text-foreground">
             Module Not Found
@@ -98,7 +110,7 @@ export default function ModuleReadOnly() {
             The requested module could not be found or may have been deleted.
           </p>
           <Button onClick={handleBack} variant="outline" className="mt-6 gap-2">
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="size-4" />
             Back to Modules
           </Button>
         </Card>
@@ -115,15 +127,15 @@ export default function ModuleReadOnly() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={handleBack}
+              onClick={() => handleBack()}
               title="Back"
               aria-label="Back"
-              className="shrink-0"
+              className="shrink-0 cursor-pointer"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="size-4" />
             </Button>
             <div className="flex min-w-0 items-center gap-2.5">
-              <span className="shrink-0 bg-foreground px-1.5 py-0.5 text-[9px] font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
+              <span className="shrink-0 bg-foreground px-1.5 py-0.5 text-xs font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
                 {targetDoc.principle}
               </span>
               <h1 className="truncate text-sm font-semibold text-foreground sm:text-base">
@@ -153,12 +165,39 @@ export default function ModuleReadOnly() {
               {targetDoc.name}
             </h1>
 
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5">
-                <Calendar className="h-3.5 w-3.5" />
+                <Calendar className="size-3.5" />
                 Created {getDateString(targetDoc.createdAt)}
               </span>
             </div>
+
+            {/* Assigned Classrooms (Visible for Editors only) */}
+            {isEditor && (
+              <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+                <span className="flex items-center gap-1.5 font-medium text-muted-foreground">
+                  <GraduationCap className="size-3.5 text-primary" />
+                  Assigned Classrooms:
+                </span>
+                {assignedClassrooms.length > 0 ? (
+                  assignedClassrooms.map((c) => {
+                    if (!c) return null
+                    return (
+                      <Badge key={c.id} variant="outline" className="text-xs">
+                        {c.classroomCode} • {c.name}
+                      </Badge>
+                    )
+                  })
+                ) : (
+                  <Badge
+                    variant="secondary"
+                    className="text-xs text-muted-foreground"
+                  >
+                    No classrooms assigned
+                  </Badge>
+                )}
+              </div>
+            )}
           </header>
 
           <EditorContent editor={editor} />

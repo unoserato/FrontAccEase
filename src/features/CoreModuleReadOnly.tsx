@@ -84,7 +84,7 @@ export default function CoreModuleReadOnly() {
 
   if (!targetLesson) {
     return (
-      <div className="mx-auto my-auto flex min-h-[70vh] items-center justify-center p-4">
+      <div style={{ minHeight: "70vh" }} className="mx-auto my-auto flex items-center justify-center p-4">
         <Card className="max-w-md p-8 text-center shadow-sm">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
             <FileText className="h-6 w-6 text-muted-foreground" />
@@ -121,7 +121,7 @@ export default function CoreModuleReadOnly() {
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <div className="flex min-w-0 items-center gap-2.5">
-              <span className="shrink-0 bg-foreground px-1.5 py-0.5 text-[9px] font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
+              <span className="shrink-0 bg-foreground px-1.5 py-0.5 text-xs font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
                 {targetPrinciple?.principle}
               </span>
               <h1 className="truncate text-sm font-semibold text-foreground sm:text-base">

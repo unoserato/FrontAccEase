@@ -21,14 +21,12 @@ export default function QuizSubmissionsCardTemplate({
 }: QuizSubmissionsCardTemplateProps) {
   const computedPoints = getQuizTotalPoints(quiz)
   const totalPoints = computedPoints > 0 ? computedPoints : 50
-  const quizClassroomIds = quiz.classrooms ?? []
-
   const assignedClassrooms = useMemo(
     () =>
-      quizClassroomIds
+      (quiz.classrooms ?? [])
         .map((cId) => classrooms.find((c) => String(c.id) === String(cId)))
         .filter(Boolean),
-    [quizClassroomIds]
+    [quiz.classrooms]
   )
 
   const matchingSubmissions = useMemo(
@@ -165,7 +163,7 @@ export default function QuizSubmissionsCardTemplate({
                             <p className="font-semibold text-foreground">
                               {learner.name}
                             </p>
-                            <p className="text-[11px] text-muted-foreground">
+                            <p className="text-xs text-muted-foreground">
                               {isSubmitted
                                 ? `Submitted: ${submission?.submittedAt || "Recently"}`
                                 : "No submission yet"}

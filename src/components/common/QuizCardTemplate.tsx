@@ -2,14 +2,6 @@ import type { QuizProps } from "@/const/materialsProps"
 import { classrooms, quizSubmissions } from "@/const/data"
 import { Card } from "../ui/card"
 import { Badge } from "../ui/badge"
-import { Archive, EllipsisVertical, Pencil, Trash } from "lucide-react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu"
-import { Button } from "../ui/button"
 import { useState } from "react"
 import DeleteArchiveDialog, {
   type ActionType,
@@ -17,18 +9,20 @@ import DeleteArchiveDialog, {
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { getQuizTotalPoints } from "@/features/instructor/quizHelper"
+import { useUser } from "@/services/tanstack/auth"
+import EditorDropdown from "./EditorDropdown"
+import { useNavigate } from "react-router-dom"
 
 export type QuizCardTemplateProps = {
   quiz: QuizProps
-  isEditor?: boolean
 }
 
-export default function QuizCardTemplate({
-  quiz,
-  isEditor,
-}: QuizCardTemplateProps) {
+export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
   const [action, setAction] = useState<ActionType>(null)
+  const { data: user } = useUser()
+  const isEditor = user?.role == "instructor"
   const isMobile = useIsMobile()
+  const navigate = useNavigate()
 
   // Calculate dynamic submissions over total learners in assigned classrooms
   const matchingSubmissions = quizSubmissions.filter(
@@ -88,49 +82,12 @@ export default function QuizCardTemplate({
     Math.max(0, Math.round((submissionsCount / (totalLearners || 1)) * 100))
   )
 
-  const actionsDropdown = isEditor && (
-    <div onClick={(e) => e.stopPropagation()} className="shrink-0">
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          onClick={(e) => e.stopPropagation()}
-          render={
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-8 text-muted-foreground hover:text-foreground"
-              aria-label="Quiz actions"
-            >
-              <EllipsisVertical className="size-4" />
-            </Button>
-          }
-        />
-
-        <DropdownMenuContent onClick={(e) => e.stopPropagation()} align="end">
-          <DropdownMenuItem onClick={() => setAction("edit")}>
-            <Pencil className="mr-2 h-4 w-4" />
-            Edit
-          </DropdownMenuItem>
-
-          <DropdownMenuItem onClick={() => setAction("archive")}>
-            <Archive className="mr-2 h-4 w-4" />
-            Archive
-          </DropdownMenuItem>
-
-          <DropdownMenuItem
-            variant="destructive"
-            onClick={() => setAction("delete")}
-          >
-            <Trash className="mr-2 h-4 w-4" />
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  )
-
   return (
     <>
-      <Card className="group relative flex w-full cursor-pointer flex-col justify-between overflow-hidden p-4 transition-all hover:shadow-sm sm:p-5">
+      <Card
+        onClick={() => navigate(`/instructor/quizzes/${quiz.id}`)}
+        className="group relative flex w-full cursor-pointer flex-col justify-between overflow-hidden p-4 transition-all hover:shadow-sm sm:p-5"
+      >
         {/* Top Bar / Dropdown in Top Right Corner */}
         <div className="flex items-center justify-between">
           <Badge
@@ -148,7 +105,9 @@ export default function QuizCardTemplate({
           </Badge>
 
           <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
-            {actionsDropdown}
+            {isEditor && (
+              <EditorDropdown setAction={(value) => setAction(value)} />
+            )}
           </div>
         </div>
 
@@ -157,7 +116,8 @@ export default function QuizCardTemplate({
           /* Mobile Stacked View */
           <div className="mt-3 space-y-4 pr-6">
             <div>
-              <h3 className="text-base font-bold text-foreground">
+              <Badge>{quiz.principle}</Badge>
+              <h3 className="mt-2 text-base font-bold text-foreground">
                 {quiz.name}
               </h3>
               <p className="text-xs font-medium text-muted-foreground">
@@ -223,7 +183,8 @@ export default function QuizCardTemplate({
           <div className="mt-3 flex items-center justify-between gap-6 pr-8">
             {/* Title & Author */}
             <div className="min-w-0 flex-1 space-y-1">
-              <h3 className="truncate text-base font-bold text-foreground lg:text-lg">
+              <Badge>{quiz.principle}</Badge>
+              <h3 className="mt-2 truncate text-base font-bold text-foreground lg:text-lg">
                 {quiz.name}
               </h3>
               <p className="text-xs font-medium text-muted-foreground">

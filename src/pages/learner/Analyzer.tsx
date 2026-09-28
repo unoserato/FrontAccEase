@@ -225,7 +225,7 @@ export default function Analyzer() {
                     >
                       <div className="flex items-center gap-2">
                         <Cpu className="size-4 shrink-0 text-primary" />
-                        <span className="max-w-[130px] truncate sm:max-w-none">
+                        <span className="max-w-32.5 truncate sm:max-w-none">
                           {activeModelObj.label}
                         </span>
                       </div>
@@ -269,12 +269,12 @@ export default function Analyzer() {
                                 {m.label}
                               </span>
                               {m.badge && (
-                                <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-bold text-muted-foreground">
+                                <span className="rounded bg-muted px-1.5 py-0.5 text-xs font-bold text-muted-foreground">
                                   {m.badge}
                                 </span>
                               )}
                             </div>
-                            <p className="text-[11px] leading-relaxed text-muted-foreground">
+                            <p className="text-xs leading-relaxed text-muted-foreground">
                               {m.description}
                             </p>
                           </div>

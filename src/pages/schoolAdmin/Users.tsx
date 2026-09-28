@@ -218,7 +218,7 @@ export default function Users() {
         {/* User Table Card */}
         <Card className="overflow-hidden">
           <div className="w-full overflow-x-auto">
-            <Table className="min-w-[650px]">
+            <Table className="min-w-162.5">
               <TableHeader>
                 <TableRow className="bg-muted/40 hover:bg-muted/40">
                   <TableHead className="w-12 pl-4">

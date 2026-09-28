@@ -60,7 +60,7 @@ export default function HeaderTemplate({
         </div>
         {hasCta &&
           (!isMobile ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 sm:flex-wrap lg:flex-nowrap">
               {cta!.map((btn, index) => (
                 <div key={index} className="flex items-center">
                   {btn}

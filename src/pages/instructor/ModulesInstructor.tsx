@@ -6,7 +6,7 @@ import TooltipButtonTemplate from "@/components/common/TooltipButtonTemplate"
 import GridListButtonGroupTemplate from "@/components/common/GridListButtonGroupTemplate"
 import { buttonVariants } from "@/components/ui/button"
 import { modules } from "@/const/data"
-import { Archive, Filter, Plus } from "lucide-react"
+import { Archive, Plus } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 
@@ -49,12 +49,6 @@ export default function ModulesInstructor() {
           />
         </div>
         <div className="flex shrink-0 items-center justify-end gap-2">
-          <TooltipButtonTemplate
-            triggerTextIcon={<Filter />}
-            triggerVariant="outline"
-            content="Filter"
-            onClick={() => alert("Filter")}
-          />
           <TooltipButtonTemplate
             triggerTextIcon={<Archive />}
             triggerVariant="outline"

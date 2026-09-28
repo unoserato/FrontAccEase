@@ -23,6 +23,7 @@ export default function ProtectedLayout({
   // const { data: user, isLoading } = useUser()
 
   const isMobile = useIsMobile()
+  console.log(allowedRoles)
 
   // if (isLoading) {
   //   return <UserSkeleton />
@@ -32,7 +33,7 @@ export default function ProtectedLayout({
   //   return <Unauthorized />
   // }
 
-  // const userRole = user.role
+  // const userRole: Role = user.role
 
   // const isPermitted = Array.isArray(allowedRoles)
   //   ? allowedRoles.includes(userRole)
@@ -42,12 +43,11 @@ export default function ProtectedLayout({
   //   return <Forbidden />
   // }
 
-  // const links = linksByRole[user.role]
+  // const links = linksByRole[userRole]
 
   // temporary routing
   const { pathname } = useLocation()
   const path = pathname.split("/")[1]
-  console.log(path, allowedRoles)
   const role = path as Role
   const links = linksByRole[role]
 

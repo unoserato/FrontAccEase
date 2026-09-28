@@ -63,7 +63,7 @@ export function CoreModuleCardTemplate({
       {/* Top right watermark icon */}
       {Icon && (
         <div className="pointer-events-none absolute top-3 right-3 text-muted-foreground/10 transition-transform duration-300 select-none group-hover:scale-105">
-          <Icon className="h-28 w-28 stroke-[1.25]" />
+          <Icon className="h-28 w-28 stroke-1" />
         </div>
       )}
 
@@ -110,7 +110,7 @@ export function ContinueLearningCard() {
     <Card className="cursor-pointer invert transition-all hover:opacity-95">
       <CardHeader>
         <div className="flex gap-2">
-          <div className="w-fit max-w-[calc(100%-2.5rem)] truncate bg-foreground px-1.5 py-0.5 text-[9px] font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
+          <div style={{ maxWidth: "calc(100% - 2.5rem)" }} className="w-fit truncate bg-foreground px-1.5 py-0.5 text-xs font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
             <p className="truncate">{coreModules[0].principle}</p>
           </div>
         </div>

@@ -8,80 +8,49 @@ import {
 } from "../ui/card"
 import { getDateString } from "@/hooks/date-to-string"
 import { Badge } from "../ui/badge"
-import { Archive, EllipsisVertical, Pencil, Trash } from "lucide-react"
 import { Label } from "../ui/label"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu"
-import { Button } from "../ui/button"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import DeleteArchiveDialog, {
   type ActionType,
 } from "../instructor/DeleteArchiveDialog"
+import { useUser } from "@/services/tanstack/auth"
+import EditorDropdown from "./EditorDropdown"
+import { useNavigate } from "react-router-dom"
+import { classrooms } from "@/const/data"
+import { GraduationCap } from "lucide-react"
 
 export type ModuleCardTemplateProps = {
   module: ModuleProps
   view?: "grid" | "list"
-  isEditor?: boolean
 }
 
 export default function ModuleCardTemplate({
   module,
   view = "grid",
-  isEditor = false,
 }: ModuleCardTemplateProps) {
   const [action, setAction] = useState<ActionType>(null)
+  const { data: user } = useUser()
+  const navigate = useNavigate()
+  const isEditor = user?.role === "instructor"
 
-  const actionsDropdown = isEditor && (
-    <div onClick={(e) => e.stopPropagation()} className="shrink-0">
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          onClick={(e) => e.stopPropagation()}
-          render={
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-8 text-muted-foreground hover:text-foreground"
-              aria-label="Module actions"
-            >
-              <EllipsisVertical className="size-4" />
-            </Button>
-          }
-        />
-
-        <DropdownMenuContent onClick={(e) => e.stopPropagation()} align="end">
-          <DropdownMenuItem onClick={() => setAction("edit")}>
-            <Pencil className="mr-2 h-4 w-4" />
-            Edit
-          </DropdownMenuItem>
-
-          <DropdownMenuItem onClick={() => setAction("archive")}>
-            <Archive className="mr-2 h-4 w-4" />
-            Archive
-          </DropdownMenuItem>
-
-          <DropdownMenuItem
-            variant="destructive"
-            onClick={() => setAction("delete")}
-          >
-            <Trash className="mr-2 h-4 w-4" />
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  )
+  const assignedClassrooms = useMemo(() => {
+    return (module.classrooms ?? [])
+      .map((cId) => classrooms.find((c) => String(c.id) === String(cId)))
+      .filter(Boolean)
+  }, [module.classrooms])
 
   if (view === "list") {
     return (
       <>
-        <div className="group relative flex w-full cursor-pointer flex-col justify-between gap-2.5 rounded-xl border border-border bg-card p-3 transition-all hover:shadow-sm sm:flex-row sm:items-center sm:gap-4 sm:p-4">
+        <div
+          onClick={() => {
+            navigate(`/instructor/modules/${module.id}`)
+          }}
+          className="group relative flex w-full cursor-pointer flex-col justify-between gap-2.5 rounded-xl border border-border bg-card p-3 transition-all hover:shadow-sm sm:flex-row sm:items-center sm:gap-4 sm:p-4"
+        >
           {/* Main Info */}
           <div className="flex min-w-0 flex-1 flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-4">
-            <div className="w-fit max-w-full shrink-0 truncate bg-foreground px-1.5 py-0.5 text-[9px] font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
+            <div className="w-fit max-w-full shrink-0 truncate bg-foreground px-1.5 py-0.5 text-xs font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
               <p className="truncate">{module.principle}</p>
             </div>
             <div className="min-w-0 flex-1 pr-8 sm:pr-0">
@@ -89,44 +58,59 @@ export default function ModuleCardTemplate({
                 {module.name}
               </h3>
             </div>
+
+            {/* Assigned Classrooms (Visible for Editors only) */}
+            {isEditor && (
+              <div className="flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground">
+                <GraduationCap className="size-3.5 shrink-0" />
+                <span className="max-w-40 truncate">
+                  {assignedClassrooms.length > 0
+                    ? assignedClassrooms
+                        .map((c) => c?.classroomCode || c?.name)
+                        .join(", ")
+                    : "No classrooms"}
+                </span>
+              </div>
+            )}
+
             {/* Tags */}
             <div className="flex shrink-0 items-center gap-1.5 overflow-hidden">
               {module.tags.slice(0, 2).map((tag, i) => (
                 <Badge
                   key={i}
                   variant="secondary"
-                  className="max-w-[140px] sm:max-w-[200px]"
+                  className="max-w-35 sm:max-w-50"
                 >
                   <span className="truncate">{tag.trim()}</span>
                 </Badge>
               ))}
               {module.tags.length > 2 && (
-                <Badge
-                  variant="secondary"
-                  className="shrink-0 px-1.5 text-[10px]"
-                >
+                <Badge variant="secondary" className="shrink-0 px-1.5 text-xs">
                   +{module.tags.length - 2}
                 </Badge>
               )}
             </div>
           </div>
+
           {/* Meta & Actions */}
           <div className="flex shrink-0 items-center justify-between gap-3 border-t border-border pt-1.5 sm:border-t-0 sm:pt-0">
             <div className="text-left sm:text-right">
               <Label
                 htmlFor={`created_at_${module.id}`}
-                className="block text-[9px] text-muted-foreground sm:text-xs"
+                className="block text-xs text-muted-foreground sm:text-xs"
               >
                 Created at
               </Label>
               <p
-                className="text-[9px] font-medium text-foreground sm:text-xs"
+                className="text-xs font-medium text-foreground sm:text-xs"
                 id={`created_at_${module.id}`}
               >
                 {getDateString(module.createdAt)}
               </p>
             </div>
-            {actionsDropdown}
+            {isEditor && (
+              <EditorDropdown setAction={(value) => setAction(value)} />
+            )}
           </div>
         </div>
 
@@ -141,14 +125,24 @@ export default function ModuleCardTemplate({
 
   return (
     <>
-      <Card className="group relative flex aspect-3/4 min-h-48 w-full cursor-pointer flex-col justify-between overflow-hidden p-0 transition-all hover:shadow-md sm:aspect-3/4">
+      <Card
+        onClick={() => {
+          navigate(`/instructor/modules/${module.id}`)
+        }}
+        className="group relative flex aspect-3/4 min-h-48 w-full cursor-pointer flex-col justify-between overflow-hidden p-0 transition-all hover:shadow-md sm:aspect-3/4"
+      >
         <CardHeader className="p-3.5 pb-1.5 sm:p-5 sm:pb-3">
           <div className="flex items-start justify-between gap-2">
-            <div className="w-fit max-w-[calc(100%-2.5rem)] truncate bg-foreground px-1.5 py-0.5 text-[9px] font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
+            <div
+              style={{ maxWidth: "calc(100% - 2.5rem)" }}
+              className="w-fit truncate bg-foreground px-1.5 py-0.5 text-xs font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs"
+            >
               <p className="truncate">{module.principle}</p>
             </div>
             <div className="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5">
-              {actionsDropdown}
+              {isEditor && (
+                <EditorDropdown setAction={(value) => setAction(value)} />
+              )}
             </div>
           </div>
 
@@ -157,13 +151,27 @@ export default function ModuleCardTemplate({
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="flex flex-1 flex-col justify-end p-3 pt-0 pb-1.5 sm:p-5 sm:pt-0 sm:pb-3">
+        <CardContent className="flex flex-1 flex-col justify-end gap-2 p-3 pt-0 pb-1.5 sm:p-5 sm:pt-0 sm:pb-3">
+          {/* Assigned Classrooms (Visible for Editors only) */}
+          {isEditor && (
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <GraduationCap className="size-3.5 shrink-0" />
+              <span className="truncate">
+                {assignedClassrooms.length > 0
+                  ? assignedClassrooms
+                      .map((c) => c?.classroomCode || c?.name)
+                      .join(", ")
+                  : "No classrooms"}
+              </span>
+            </div>
+          )}
+
           <div className="flex w-full min-w-0 flex-wrap items-center gap-1.5">
             {module.tags.slice(0, 2).map((tag, i) => (
               <Badge
                 key={i}
                 variant="secondary"
-                className="max-w-[130px] px-2 py-0.5 text-[10px] font-normal sm:max-w-[180px] sm:text-xs"
+                className="max-w-32.5 px-2 py-0.5 text-xs font-normal sm:max-w-45 sm:text-xs"
               >
                 <span className="truncate">{tag.trim()}</span>
               </Badge>
@@ -172,7 +180,7 @@ export default function ModuleCardTemplate({
             {module.tags.length > 2 && (
               <Badge
                 variant="secondary"
-                className="shrink-0 px-1.5 py-0.5 text-[10px] font-medium"
+                className="shrink-0 px-1.5 py-0.5 text-xs font-medium"
               >
                 +{module.tags.length - 2}
               </Badge>
@@ -184,12 +192,12 @@ export default function ModuleCardTemplate({
           <div className="min-w-0 flex-1">
             <Label
               htmlFor={`created_at_${module.id}`}
-              className="block truncate text-[9px] text-muted-foreground sm:text-xs"
+              className="block truncate text-xs text-muted-foreground sm:text-xs"
             >
               Created at
             </Label>
             <p
-              className="truncate text-[9px] font-medium text-foreground sm:text-xs"
+              className="truncate text-xs font-medium text-foreground sm:text-xs"
               id={`created_at_${module.id}`}
             >
               {getDateString(module.createdAt)}

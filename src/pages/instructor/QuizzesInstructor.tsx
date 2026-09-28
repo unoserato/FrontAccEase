@@ -4,7 +4,7 @@ import SearchTemplate from "@/components/common/SearchTemplate"
 import TooltipButtonTemplate from "@/components/common/TooltipButtonTemplate"
 import { buttonVariants } from "@/components/ui/button"
 import { quizzes } from "@/const/data"
-import { Archive, Filter, Plus } from "lucide-react"
+import { Archive, FileQuestion, Filter } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 
@@ -32,7 +32,7 @@ export default function QuizzesInstructor() {
             key="new-quiz"
             className={`${buttonVariants({ variant: "default" })} w-full justify-start`}
           >
-            <Plus />
+            <FileQuestion />
             New Quiz
           </Link>,
         ]}
@@ -73,7 +73,7 @@ export default function QuizzesInstructor() {
           </span>
         </Link> */}
         {filteredQuizzes.map((quiz) => (
-          <QuizCardTemplate quiz={quiz} key={quiz.id} />
+          <QuizCardTemplate quiz={quiz} />
         ))}
       </div>
     </section>

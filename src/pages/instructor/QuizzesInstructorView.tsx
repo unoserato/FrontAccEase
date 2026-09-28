@@ -7,6 +7,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -36,6 +37,8 @@ import {
   HelpCircle,
   Tag,
   Layers,
+  GraduationCap,
+  ChevronRight,
 } from "lucide-react"
 
 import QuizForm from "@/features/QuizForm"
@@ -72,7 +75,7 @@ export default function QuizzesInstructorView() {
     )
   }
 
-  const isEditor = user && user.role == "instructor" ? true : false
+  const isEditor = user && user.role === "instructor"
   const cta = [
     isEditor && (
       <Link
@@ -80,12 +83,12 @@ export default function QuizzesInstructorView() {
         to={`/instructor/quizzes/edit/${quiz.id}`}
         className={buttonVariants({ variant: "outline" })}
       >
-        <Pencil className="h-4 w-4" />
+        <Pencil className="size-4" />
         Edit Quiz
       </Link>
     ),
     <Button key="export" onClick={() => alert("Export quiz results")}>
-      <FileText className="h-4 w-4" />
+      <FileText className="size-4" />
       Export Data
     </Button>,
   ]
@@ -95,7 +98,7 @@ export default function QuizzesInstructorView() {
       <HeaderTemplate
         backTo="-1"
         title={quiz.name}
-        subtitle={`Author: ${quiz.author || "You"} • Principle: ${quiz.principle || "General"}`}
+        subtitle={quiz.author || "You"}
         cta={cta}
       />
 
@@ -104,7 +107,7 @@ export default function QuizzesInstructorView() {
         onValueChange={(val) => handleTabChange(String(val))}
         className="w-full"
       >
-        <div className="sticky top-0 z-40 w-fit border-b border-border/80 bg-background/95 py-1 backdrop-blur-md">
+        <div className="w-fit border-b border-border/80 bg-background/95 py-1 backdrop-blur-md">
           <TabsList variant="line" className="w-full justify-start gap-4">
             <TabsTrigger value="dashboard" className="text-xs sm:text-sm">
               Dashboard & Details
@@ -187,7 +190,6 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
       : (quiz.passingRate ?? 92)
 
   const quizStatus = quiz.status || "Open"
-  const quizAuthor = quiz.author || "You"
   const dueDate = quiz.dueDate || "Aug 27, 2026"
   const quizJson = getQuizJson(quiz)
   const computedQuestions = getQuizTotalQuestions(quiz)
@@ -200,108 +202,91 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
     Math.max(0, Math.round((submissionsCount / (totalSubmissions || 1)) * 100))
   )
 
+  const KPI = [
+    {
+      title: "Passing Rate",
+      icon: Award,
+      value: `${passingRate}%`,
+      footerDesc: "75% passing threshold",
+    },
+    {
+      title: "Avg. Score",
+      icon: BarChart3,
+      value: `${avgScore}%`,
+      footerDesc: `Out of ${totalPoints} total points`,
+    },
+    {
+      title: "Submissions",
+      icon: Users,
+      value: `${submissionsCount}/${totalSubmissions}`,
+      footerDesc: `${progressPercent}% completion rate`,
+    },
+    {
+      title: "Questions & Time",
+      icon: HelpCircle,
+      value: `${questionsCount} Qs`,
+      footerDesc: `${timeLimit} mins time limit`,
+    },
+  ]
+
   return (
-    <div className="w-full space-y-6 sm:space-y-8">
-      {/* Metrics Summary Grid */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="p-3.5 pb-1 sm:p-5 sm:pb-2">
-            <CardDescription className="text-xs font-medium">
-              Passing Rate
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-3.5 pt-0 sm:p-5 sm:pt-0">
-            <div className="flex items-center gap-2">
-              <Award className="h-5 w-5 text-muted-foreground" />
-              <p className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-                {passingRate}%
+    <div className="w-full space-y-6">
+      {/* Row 1: The 4 Core Domain Pillar KPI Metric Cards (Standard Dashboard Layout) */}
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {KPI.map((kpi) => (
+          <Card key={kpi.title}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                {kpi.title}
+              </CardTitle>
+              <CardAction>
+                <kpi.icon className="size-4" />
+              </CardAction>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
+                {kpi.value}
               </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="p-3.5 pb-1 sm:p-5 sm:pb-2">
-            <CardDescription className="text-xs font-medium">
-              Avg. Score
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-3.5 pt-0 sm:p-5 sm:pt-0">
-            <div className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5 text-muted-foreground" />
-              <p className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-                {avgScore}%
+              <p className="mt-1 text-xs text-muted-foreground">
+                {kpi.footerDesc}
               </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="p-3.5 pb-1 sm:p-5 sm:pb-2">
-            <CardDescription className="text-xs font-medium">
-              Submissions Rate
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-3.5 pt-0 sm:p-5 sm:pt-0">
-            <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-muted-foreground" />
-              <p className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-                {submissionsCount}/{totalSubmissions}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="p-3.5 pb-1 sm:p-5 sm:pb-2">
-            <CardDescription className="text-xs font-medium">
-              Questions & Time
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-3.5 pt-0 sm:p-5 sm:pt-0">
-            <div className="flex items-center gap-2">
-              <HelpCircle className="h-5 w-5 text-muted-foreground" />
-              <p className="text-xl font-bold tracking-tight text-foreground sm:text-2xl lg:text-3xl">
-                {questionsCount} Qs ({timeLimit}m)
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       {/* Detailed Quiz Card Information */}
-      <Card className="overflow-hidden border bg-card shadow-sm">
-        <CardHeader className="border-b bg-muted/30 p-4 sm:p-6">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5">
-              <Badge
-                variant="secondary"
-                className={cn(
-                  "rounded-full border-0 px-3 py-1 text-xs font-semibold",
-                  quizStatus === "Open"
-                    ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300"
-                    : quizStatus === "Closed"
-                      ? "bg-rose-100 text-rose-800 dark:bg-rose-950/80 dark:text-rose-300"
-                      : "bg-muted text-muted-foreground"
-                )}
-              >
-                {quizStatus}
-              </Badge>
+      <Card className="p-6">
+        <CardHeader className="flex flex-col gap-2 p-0 pb-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2.5">
+            <Badge
+              variant="secondary"
+              className={cn(
+                "rounded-full px-3 py-1 text-xs font-semibold",
+                quizStatus === "Open"
+                  ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300"
+                  : quizStatus === "Closed"
+                    ? "bg-rose-100 text-rose-800 dark:bg-rose-950/80 dark:text-rose-300"
+                    : "bg-muted text-muted-foreground"
+              )}
+            >
+              {quizStatus}
+            </Badge>
+            <div>
               <CardTitle className="text-lg font-bold text-foreground sm:text-xl">
                 {quiz.name}
               </CardTitle>
+              <CardDescription className="text-xs text-muted-foreground">
+                Created on {quiz.createdAt}
+              </CardDescription>
             </div>
-            <CardDescription className="text-xs sm:text-sm">
-              Author:{" "}
-              <span className="font-semibold text-foreground">
-                {quizAuthor}
-              </span>{" "}
-              • Created: {quiz.createdAt}
-            </CardDescription>
           </div>
+          <Badge variant="outline" className="w-fit text-xs font-medium">
+            {quiz.principle || "General Principle"}
+          </Badge>
         </CardHeader>
 
-        <CardContent className="space-y-6 p-4 sm:p-6">
+        <CardContent className="space-y-6 p-0">
           {/* Submissions Progress Bar */}
           <div className="space-y-2 rounded-xl border border-border/80 bg-muted/20 p-4">
             <div className="flex items-center justify-between text-xs font-medium">
@@ -319,95 +304,129 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
             </div>
           </div>
 
-          {/* Details Grid */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="flex items-center gap-3 rounded-lg border p-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                <Layers className="h-4 w-4" />
+          {/* Details Specifications Grid */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/30 p-3.5">
+              <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <Layers className="size-4" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-xs font-medium text-muted-foreground">
                   WCAG Principle
                 </p>
-                <p className="text-sm font-semibold text-foreground">
+                <p className="truncate text-sm font-semibold text-foreground">
                   {quiz.principle || "Perceivable"}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 rounded-lg border p-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                <Calendar className="h-4 w-4" />
+            <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/30 p-3.5">
+              <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <Calendar className="size-4" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-xs font-medium text-muted-foreground">
                   Due Date
                 </p>
-                <p className="text-sm font-semibold text-foreground">
+                <p className="truncate text-sm font-semibold text-foreground">
                   {dueDate}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 rounded-lg border p-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                <Users className="h-4 w-4" />
+            <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/30 p-3.5">
+              <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <Clock className="size-4" />
               </div>
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">
-                  Classrooms
-                </p>
-                <p className="max-w-[200px] truncate text-sm font-semibold text-foreground">
-                  {assignedClassrooms.length > 0
-                    ? assignedClassrooms
-                        .map((c) => c?.classroomCode || c?.name)
-                        .join(", ")
-                    : "No classrooms assigned"}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 rounded-lg border p-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                <Clock className="h-4 w-4" />
-              </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-xs font-medium text-muted-foreground">
                   Time Limit
                 </p>
-                <p className="text-sm font-semibold text-foreground">
+                <p className="truncate text-sm font-semibold text-foreground">
                   {timeLimit} Minutes
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 rounded-lg border p-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                <HelpCircle className="h-4 w-4" />
+            <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/30 p-3.5">
+              <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <Award className="size-4" />
               </div>
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">
-                  Total Questions
-                </p>
-                <p className="text-sm font-semibold text-foreground">
-                  {questionsCount} Questions
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 rounded-lg border p-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                <Award className="h-4 w-4" />
-              </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-xs font-medium text-muted-foreground">
                   Total Points
                 </p>
-                <p className="text-sm font-semibold text-foreground">
-                  {totalPoints} Points
+                <p className="truncate text-sm font-semibold text-foreground">
+                  {totalPoints} Points ({questionsCount} Qs)
                 </p>
               </div>
             </div>
+          </div>
+
+          <Separator />
+
+          {/* Assigned Classrooms List */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-semibold text-foreground">
+                  Assigned Classrooms
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Student cohorts currently assigned this assessment
+                </p>
+              </div>
+              <Badge variant="secondary" className="text-xs font-medium">
+                {assignedClassrooms.length}{" "}
+                {assignedClassrooms.length === 1 ? "Classroom" : "Classrooms"}
+              </Badge>
+            </div>
+
+            {assignedClassrooms.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-border/80 p-6 text-center text-xs text-muted-foreground">
+                No classrooms are assigned to this quiz yet.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {assignedClassrooms.map((classroom) => {
+                  if (!classroom) return null
+                  return (
+                    <div
+                      key={classroom.id}
+                      className="flex items-center justify-between rounded-xl border border-border/60 bg-muted/30 p-3.5 transition-colors hover:bg-muted/50"
+                    >
+                      <div className="flex min-w-0 items-center gap-3">
+                        <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                          <GraduationCap className="size-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="truncate text-sm font-semibold text-foreground">
+                              {classroom.name}
+                            </span>
+                            <Badge variant="outline" className="text-xs">
+                              {classroom.classroomCode}
+                            </Badge>
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            {classroom.learners?.length || 0} enrolled students
+                            • Join Code: {classroom.joinCode}
+                          </p>
+                        </div>
+                      </div>
+
+                      <Link
+                        to={`/instructor/classroom/${classroom.id}`}
+                        className="shrink-0 pl-2 text-muted-foreground hover:text-foreground"
+                        title="View classroom"
+                      >
+                        <ChevronRight className="size-4" />
+                      </Link>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </div>
 
           <Separator />
@@ -418,13 +437,17 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
               Target Success Criteria / Tags
             </p>
             <div className="flex flex-wrap gap-2">
+              <Badge>
+                <Tag className="mr-1 size-3" />
+                {quiz.principle}
+              </Badge>
               {tags.map((tag, idx) => (
                 <Badge
                   key={idx}
                   variant="outline"
                   className="gap-1.5 px-3 py-1 text-xs"
                 >
-                  <Tag className="h-3 w-3" />
+                  <Tag className="size-3" />
                   {tag.trim()}
                 </Badge>
               ))}
@@ -435,6 +458,7 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
     </div>
   )
 }
+
 function SubmissionsTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
   const assignedClassrooms = useMemo(
     () =>
@@ -473,7 +497,7 @@ function PreviewTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
 
   return (
     <div className="mx-auto max-w-4xl space-y-4 py-4">
-      <Card className="border bg-background p-4 shadow-sm sm:p-6">
+      <Card className="p-6">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b pb-4">
           <div>
             <h2 className="text-lg font-bold text-foreground">
@@ -490,7 +514,7 @@ function PreviewTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
               variant="outline"
               size="sm"
               onClick={handleResetPreview}
-              className="gap-1.5 text-xs shadow-xs"
+              className="cursor-pointer gap-1.5 text-xs shadow-xs"
             >
               <RotateCcw className="size-3.5" />
               <span>Reset Quiz Preview</span>
@@ -503,7 +527,7 @@ function PreviewTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
         </div>
 
         {/* Render QuizForm component */}
-        <div className="survey-preview-wrapper min-h-[400px] rounded-lg border bg-card p-2 sm:p-4">
+        <div className="survey-preview-wrapper min-h-100 rounded-lg border bg-card p-2 sm:p-4">
           <QuizForm key={previewKey} quiz={quiz} />
         </div>
       </Card>

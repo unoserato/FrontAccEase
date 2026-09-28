@@ -1,6 +1,7 @@
 import {
   Book,
   BotMessageSquare,
+  FileQuestion,
   Files,
   FileSearch2,
   FileText,
@@ -8,12 +9,13 @@ import {
   ShieldCheck,
   Users,
 } from "lucide-react"
-import { SiGoogleclassroom, SiQuizlet } from "react-icons/si"
+import { SiGoogleclassroom } from "react-icons/si"
 
 export const publicNav = [
-  { name: "Learner", href: "/learner" },
-  { name: "Instructor", href: "/instructor" },
-  { name: "Admin", href: "/admin" },
+  { name: "Features", href: "/features" },
+  { name: "How It Works", href: "/how-it-works" },
+  { name: "Accessibility", href: "/accessibility" },
+  { name: "About", href: "/about" },
 ]
 
 export const learnerNav = [
@@ -28,7 +30,7 @@ export const learnerNav = [
 export const instructorNav = [
   { name: "Dashboard", href: "/instructor/dashboard", icon: LayoutDashboard },
   { name: "Modules", href: "/instructor/modules", icon: Book },
-  { name: "Quizzes", href: "/instructor/quizzes", icon: SiQuizlet },
+  { name: "Quizzes", href: "/instructor/quizzes", icon: FileQuestion },
   { name: "Classroom", href: "/instructor/classroom", icon: SiGoogleclassroom },
   { name: "Analyzer Logs", href: "/instructor/logs", icon: FileText },
 ]

@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Plus } from "lucide-react"
+import { SiGoogleclassroom } from "react-icons/si"
 
 export default function NewClassroomDialog() {
   const [open, setOpen] = useState(false)
@@ -44,13 +44,13 @@ export default function NewClassroomDialog() {
       <DialogTrigger
         render={
           <Button>
-            <Plus className="mr-2 h-4 w-4" />
+            <SiGoogleclassroom className="mr-2 h-4 w-4" />
             New Classroom
           </Button>
         }
       />
 
-      <DialogContent>
+      <DialogContent className={"max-w-xl"}>
         <form onSubmit={handleSubmit} className="space-y-4">
           <DialogHeader>
             <DialogTitle>New Classroom</DialogTitle>

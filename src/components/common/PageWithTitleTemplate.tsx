@@ -155,7 +155,7 @@ export default function PageWithTitleTemplate({
           to={btn.href}
           className={cn(
             buttonVariants({ variant, size }),
-            "gap-2 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
+            "gap-2 transition-all duration-300 ease-out",
             btn.disabled && "pointer-events-none opacity-50"
           )}
         >
@@ -171,7 +171,7 @@ export default function PageWithTitleTemplate({
         variant={variant}
         size={size}
         disabled={btn.disabled}
-        className="gap-2 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+        className="gap-2 transition-all duration-300 ease-out"
       >
         {content}
       </Button>
@@ -200,12 +200,12 @@ export default function PageWithTitleTemplate({
                       {item.href ? (
                         <Link
                           to={item.href}
-                          className="max-w-[140px] truncate transition-colors hover:text-foreground"
+                          className="max-w-35 truncate transition-colors hover:text-foreground"
                         >
                           {item.label}
                         </Link>
                       ) : (
-                        <span className="max-w-[160px] truncate font-medium text-foreground">
+                        <span className="max-w-40 truncate font-medium text-foreground">
                           {item.label}
                         </span>
                       )}
@@ -298,7 +298,7 @@ export default function PageWithTitleTemplate({
                   aria-selected={currentStatusTab === "active"}
                   onClick={() => handleStatusTabChange("active")}
                   className={cn(
-                    "inline-flex cursor-pointer items-center justify-center rounded-lg px-3.5 py-1 text-xs font-semibold whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] outline-none select-none focus-visible:ring-2 focus-visible:ring-ring sm:text-sm",
+                    "inline-flex cursor-pointer items-center justify-center rounded-lg px-3.5 py-1 text-xs font-semibold whitespace-nowrap transition-all duration-300 ease-out outline-none select-none focus-visible:ring-2 focus-visible:ring-ring sm:text-sm",
                     currentStatusTab === "active"
                       ? "bg-background font-semibold text-foreground shadow-sm"
                       : "text-muted-foreground/80 hover:text-foreground"
@@ -312,7 +312,7 @@ export default function PageWithTitleTemplate({
                   aria-selected={currentStatusTab === "archived"}
                   onClick={() => handleStatusTabChange("archived")}
                   className={cn(
-                    "inline-flex cursor-pointer items-center justify-center rounded-lg px-3.5 py-1 text-xs font-semibold whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] outline-none select-none focus-visible:ring-2 focus-visible:ring-ring sm:text-sm",
+                    "inline-flex cursor-pointer items-center justify-center rounded-lg px-3.5 py-1 text-xs font-semibold whitespace-nowrap transition-all duration-300 ease-out outline-none select-none focus-visible:ring-2 focus-visible:ring-ring sm:text-sm",
                     currentStatusTab === "archived"
                       ? "bg-background font-semibold text-foreground shadow-sm"
                       : "text-muted-foreground/80 hover:text-foreground"
@@ -353,7 +353,7 @@ export default function PageWithTitleTemplate({
                       aria-pressed={currentViewMode === "grid"}
                       onClick={() => handleViewModeChange("grid")}
                       className={cn(
-                        "inline-flex size-7 cursor-pointer items-center justify-center rounded-lg text-xs transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] outline-none select-none",
+                        "inline-flex size-7 cursor-pointer items-center justify-center rounded-lg text-xs transition-all duration-300 ease-out outline-none select-none",
                         currentViewMode === "grid"
                           ? "bg-background font-medium text-foreground shadow-sm"
                           : "text-muted-foreground/80 hover:text-foreground"
@@ -367,7 +367,7 @@ export default function PageWithTitleTemplate({
                       aria-pressed={currentViewMode === "list"}
                       onClick={() => handleViewModeChange("list")}
                       className={cn(
-                        "inline-flex size-7 cursor-pointer items-center justify-center rounded-lg text-xs transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] outline-none select-none",
+                        "inline-flex size-7 cursor-pointer items-center justify-center rounded-lg text-xs transition-all duration-300 ease-out outline-none select-none",
                         currentViewMode === "list"
                           ? "bg-background font-medium text-foreground shadow-sm"
                           : "text-muted-foreground/80 hover:text-foreground"
@@ -403,7 +403,7 @@ export default function PageWithTitleTemplate({
               render={
                 <Button
                   size="icon"
-                  className="flex size-13 items-center justify-center rounded-full border border-primary/20 bg-primary p-0 text-primary-foreground shadow-2xl shadow-primary/40 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-primary/90 active:scale-95"
+                  className="flex size-13 items-center justify-center rounded-full border border-primary/20 bg-primary p-0 text-primary-foreground shadow-2xl shadow-primary/40 transition-transform duration-300 ease-out hover:bg-primary/90 active:scale-95"
                   aria-label="Actions menu"
                 >
                   <Plus className="size-6 shrink-0" />
@@ -416,7 +416,7 @@ export default function PageWithTitleTemplate({
               sideOffset={12}
               className="flex w-56 flex-col gap-1 rounded-xl border border-border bg-popover p-2 text-popover-foreground shadow-2xl"
             >
-              <div className="mb-1 border-b border-border/50 px-2.5 py-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+              <div className="mb-1 border-b border-border/50 px-2.5 py-1 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                 Actions
               </div>
               {cta.map((btn, index) => {

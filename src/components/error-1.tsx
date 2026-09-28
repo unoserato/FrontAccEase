@@ -26,7 +26,7 @@ function GradientCode({ code }: { code: string }) {
   return (
     <svg
       viewBox="0 0 800 300"
-      className="w-full max-w-[20rem] select-none sm:max-w-md"
+      className="w-full max-w-80 select-none sm:max-w-md"
       aria-hidden="true"
     >
       <text

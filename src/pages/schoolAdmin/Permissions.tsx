@@ -504,7 +504,7 @@ export default function Permissions() {
 
       {/* User Overrides Dialog (max-w-lg) */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-lg sm:max-w-lg max-h-[85vh] flex flex-col p-6 gap-4">
+        <DialogContent style={{ maxHeight: "85vh" }} className="max-w-lg sm:max-w-lg flex flex-col p-6 gap-4">
           <DialogHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
               <DialogTitle className="text-lg font-bold">
@@ -559,7 +559,7 @@ export default function Permissions() {
                     >
                       <Avatar size="sm" className="mr-2 size-6">
                         <AvatarImage src={user.img} alt={user.name} />
-                        <AvatarFallback className="text-[10px]">{getInitials(user.name)}</AvatarFallback>
+                        <AvatarFallback className="text-xs">{getInitials(user.name)}</AvatarFallback>
                       </Avatar>
                       <span className="truncate text-xs font-medium">{user.name}</span>
                     </DropdownMenuItem>
@@ -616,7 +616,7 @@ export default function Permissions() {
                                 <span className="font-medium text-foreground text-sm">
                                   {user.name}
                                 </span>
-                                <Badge variant="secondary" className="capitalize text-[10px] py-0 px-1.5">
+                                <Badge variant="secondary" className="capitalize text-xs py-0 px-1.5">
                                   {user.role}
                                 </Badge>
                               </div>
@@ -644,7 +644,7 @@ export default function Permissions() {
                       </div>
 
                       <AccordionContent className="pt-2 pb-3 space-y-2">
-                        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                           Permission Toggles
                         </p>
                         {userPerms.map((perm) => (
