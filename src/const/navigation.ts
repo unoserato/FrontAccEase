@@ -14,17 +14,18 @@ import { SiGoogleclassroom } from "react-icons/si"
 export const publicNav = [
   { name: "Features", href: "/features" },
   { name: "How It Works", href: "/how-it-works" },
+  { name: "Pricing", href: "/pricing" },
   { name: "Accessibility", href: "/accessibility" },
   { name: "About", href: "/about" },
 ]
 
 export const learnerNav = [
-  { name: "Dashboard", href: "/learner/dashboard", icon: LayoutDashboard },
-  { name: "Modules", href: "/learner/modules", icon: Book },
-  // { name: "Quizzes", href: "/learner/quizzes", icon: SiQuizlet },
-  { name: "Classroom", href: "/learner/classroom", icon: SiGoogleclassroom },
-  { name: "Chat", href: "/learner/chat", icon: BotMessageSquare },
-  { name: "Analyzer", href: "/learner/analyzer", icon: FileSearch2 },
+  { name: "Dashboard", href: "/student/dashboard", icon: LayoutDashboard },
+  { name: "Modules", href: "/student/modules", icon: Book },
+  // { name: "Quizzes", href: "/student/quizzes", icon: SiQuizlet },
+  { name: "Classroom", href: "/student/classroom", icon: SiGoogleclassroom },
+  { name: "Chat", href: "/student/chat", icon: BotMessageSquare },
+  { name: "Analyzer", href: "/student/analyzer", icon: FileSearch2 },
 ]
 
 export const instructorNav = [

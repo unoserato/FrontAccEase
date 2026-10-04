@@ -3,8 +3,22 @@ import { initialChatMessages } from "@/const/data"
 import type { ChatMessage } from "@/const/materialsProps"
 import { ArrowUp, Copy, Check, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const MAX_WORDS = 200
+
+const models = [
+  { value: null, label: "Select a model" },
+  { value: "gpt-3.5", label: "GPT-3.5" },
+  { value: "gpt-4", label: "GPT-4" },
+]
 
 export default function Chat() {
   const [messages, setMessages] = useState<ChatMessage[]>(initialChatMessages)
@@ -199,36 +213,48 @@ export default function Chat() {
             className="w-full resize-none border-0 bg-transparent p-1 text-sm text-foreground placeholder:text-muted-foreground/60 focus:ring-0 focus:outline-none disabled:opacity-50"
             rows={2}
           />
-          <div className="flex items-center justify-between pt-2">
-            <div className="flex items-center gap-3">
-              {/* Word Count Indicator */}
-              <span
-                className={cn(
-                  "text-xs font-medium transition-colors",
-                  isOverWordLimit
-                    ? "font-bold text-destructive"
-                    : "text-muted-foreground/70"
-                )}
-              >
-                {wordCount} / {MAX_WORDS} words
-              </span>
+          <div className="flex items-center justify-end gap-3 pt-2">
+            <Select items={models}>
+              <SelectTrigger className={"w-full max-w-48"}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {models.map((model) => (
+                    <SelectItem key={model.value} value={model.value}>
+                      {model.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {/* Word Count Indicator */}
+            <span
+              className={cn(
+                "text-xs font-medium transition-colors",
+                isOverWordLimit
+                  ? "font-bold text-destructive"
+                  : "text-muted-foreground/70"
+              )}
+            >
+              {wordCount} / {MAX_WORDS} words
+            </span>
 
-              <button
-                type="button"
-                onClick={handleSend}
-                disabled={!input.trim() || isOverWordLimit || isTyping}
-                className={cn(
-                  "flex h-9 w-9 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-                  input.trim() && !isOverWordLimit && !isTyping
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                    : "cursor-not-allowed bg-muted-foreground/20 text-muted-foreground opacity-50"
-                )}
-                title="Send Message"
-                aria-label="Send Message"
-              >
-                <ArrowUp className="h-5 w-5" aria-hidden="true" />
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={handleSend}
+              disabled={!input.trim() || isOverWordLimit || isTyping}
+              className={cn(
+                "flex h-9 w-9 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+                input.trim() && !isOverWordLimit && !isTyping
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                  : "cursor-not-allowed bg-muted-foreground/20 text-muted-foreground opacity-50"
+              )}
+              title="Send Message"
+              aria-label="Send Message"
+            >
+              <ArrowUp className="h-5 w-5" aria-hidden="true" />
+            </button>
           </div>
         </div>
       </div>

@@ -110,7 +110,10 @@ export function ContinueLearningCard() {
     <Card className="cursor-pointer invert transition-all hover:opacity-95">
       <CardHeader>
         <div className="flex gap-2">
-          <div style={{ maxWidth: "calc(100% - 2.5rem)" }} className="w-fit truncate bg-foreground px-1.5 py-0.5 text-xs font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
+          <div
+            style={{ maxWidth: "calc(100% - 2.5rem)" }}
+            className="w-fit truncate bg-foreground px-1.5 py-0.5 text-xs font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs"
+          >
             <p className="truncate">{coreModules[0].principle}</p>
           </div>
         </div>

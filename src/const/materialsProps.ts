@@ -260,4 +260,3 @@ export interface ChatMessage {
   }
   createdAt?: string
 }
-

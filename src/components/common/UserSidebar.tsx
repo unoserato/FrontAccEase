@@ -14,28 +14,45 @@ import { Logo } from "./Logo"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import { NavLink, useNavigate } from "react-router-dom"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { useInvalidateKeys } from "@/services/tanstack/auth"
-// import { Button } from "../ui/button"
+import { useRemoveQueries } from "@/services/tanstack/auth"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { ModeToggle } from "../modeToggle"
 import ToolTipTemplate from "./TooltipButtonTemplate"
 import { Button } from "../ui/button"
+import { useMutation } from "@tanstack/react-query"
+import { logoutAPI } from "@/services/api/authAPI"
+import { toast } from "../ui/toast"
+import { type UserProps } from "@/const/userProps"
 
 interface UserSidebarProps {
   links: { name: string; href: string; icon: any }[]
-  name: string
+  user?: UserProps
 }
 
-export default function UserSidebar({ links, name }: UserSidebarProps) {
+export default function UserSidebar({ links, user }: UserSidebarProps) {
   const { open, setOpen, openMobile, setOpenMobile } = useSidebar()
-  const invalidate = useInvalidateKeys()
   const isMobile = useIsMobile()
   const navigate = useNavigate()
+  const removeQueries = useRemoveQueries()
+
+  const { mutate } = useMutation({
+    mutationFn: logoutAPI,
+    onSuccess: () => {
+      navigate("/login", { replace: true })
+      removeQueries(["user"])
+    },
+    onError: (err: any) => {
+      toast.add({
+        title: "Error",
+        description: err.response.data.detail || "Error logging out",
+        type: "destructive",
+      })
+    },
+  })
 
   async function handleLogout() {
-    navigate("/")
-    invalidate(["user"])
+    mutate()
   }
 
   return (
@@ -148,13 +165,17 @@ export default function UserSidebar({ links, name }: UserSidebarProps) {
         >
           <Avatar>
             <AvatarImage
-              src="https://github.com/shadcn.png"
+              src={
+                user?.user.profile_picture != null
+                  ? user?.user.profile_picture
+                  : ""
+              }
               alt="@shadcn"
               className="grayscale"
             />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <p className="shrink-0 capitalize">{name}</p>
+          <p className="shrink-0 capitalize">{user?.user.name}</p>
         </NavLink>
 
         <div className="flex">

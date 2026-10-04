@@ -7,6 +7,7 @@ import ContactPage from "@/pages/public/ContactPage"
 import FeaturesPage from "@/pages/public/FeaturesPage"
 import HowItWorksPage from "@/pages/public/HowItWorksPage"
 import LandingPage from "@/pages/public/LandingPage"
+import PricingPage from "@/pages/public/PricingPage"
 import PrivacyPage from "@/pages/public/PrivacyPage"
 import SignUpPage from "@/pages/public/SignUpPage"
 import TermsPage from "@/pages/public/TermsPage"
@@ -17,6 +18,7 @@ export const publicRoute = (
     <Route index element={<LandingPage />} />
     <Route path="features" element={<FeaturesPage />} />
     <Route path="how-it-works" element={<HowItWorksPage />} />
+    <Route path="pricing" element={<PricingPage />} />
     <Route path="accessibility" element={<AccessibilityPage />} />
     <Route path="about" element={<AboutPage />} />
     <Route path="contact" element={<ContactPage />} />

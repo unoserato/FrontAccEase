@@ -12,9 +12,11 @@ import {
 import { Menu, ArrowRight, ShieldCheck } from "lucide-react"
 import { publicNav } from "@/const/navigation"
 import { Logo } from "../common/Logo"
+import { useMe } from "@/services/tanstack/auth"
 
 export default function PublicNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { data: user } = useMe()
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/80 bg-background/95 backdrop-blur-md transition-colors">
@@ -70,21 +72,30 @@ export default function PublicNavbar() {
         <div className="flex items-center gap-2 sm:gap-3">
           <ModeToggle />
 
-          <div className="hidden sm:flex sm:items-center sm:gap-2">
+          {user ? (
             <Link
-              to="/login"
-              className={buttonVariants({ variant: "ghost", size: "sm" })}
+              to={`/${user.role}`}
+              className={buttonVariants({ variant: "default" })}
             >
-              Log In
+              Dashboard
             </Link>
-            <Link
-              to="/signup"
-              className={buttonVariants({ variant: "default", size: "sm" })}
-            >
-              <span>Get Started</span>
-              <ArrowRight className="size-3.5" aria-hidden="true" />
-            </Link>
-          </div>
+          ) : (
+            <div className="hidden sm:flex sm:items-center sm:gap-2">
+              <Link
+                to="/login"
+                className={buttonVariants({ variant: "ghost", size: "sm" })}
+              >
+                Log In
+              </Link>
+              <Link
+                to="/signup"
+                className={buttonVariants({ variant: "default", size: "sm" })}
+              >
+                <span>Get Started</span>
+                <ArrowRight className="size-3.5" aria-hidden="true" />
+              </Link>
+            </div>
+          )}
 
           {/* Mobile Menu Trigger */}
           <div className="flex md:hidden">

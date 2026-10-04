@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import type { ReactNode } from "react"
 import { RiHome5Fill } from "react-icons/ri"
 
@@ -58,9 +58,9 @@ function PillButton({ label, icon, href, onClick }: ErrorOneAction) {
 
   if (href) {
     return (
-      <Button render={<a href={href} />} className={cls}>
+      <a href={href} className={buttonVariants({ variant: "default" }) + cls}>
         {content}
-      </Button>
+      </a>
     )
   }
 

@@ -30,11 +30,14 @@ import {
   X,
 } from "lucide-react"
 import { useMemo, useState } from "react"
-import { Link, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { useHotkeys } from "react-hotkeys-hook"
 import { cn } from "cn"
 import SearchTemplate from "@/components/common/SearchTemplate"
 import { useUnmount } from "@/hooks/useUnmount"
+import { useMutation } from "@tanstack/react-query"
+import { createModuleAPI } from "@/services/api/materialsAPI"
+import { toast } from "@/components/ui/toast"
 
 const MODULES_PATH = "/instructor/modules"
 
@@ -44,6 +47,7 @@ export default function ModuleEditor() {
     () => (id ? modules.find((doc) => String(doc.id) === String(id)) : null),
     [id]
   )
+  const navigate = useNavigate()
 
   const [title, setTitle] = useState(
     existingModule ? existingModule.name : "Untitled Module"
@@ -126,22 +130,48 @@ export default function ModuleEditor() {
     )
   }
 
-  function handleSave() {
-    setIsSaving(true)
-    const payload = {
-      title,
-      content,
-      principle: selectedPrinciple,
-      tags: selectedTags,
-      classrooms: selectedClassrooms,
-      status: isPublish ? "published" : "draft",
-    }
-    console.log("Saved module document:", payload)
-
-    setTimeout(() => {
+  const { mutate: saveModule } = useMutation({
+    mutationFn: createModuleAPI,
+    onSuccess: async () => {
+      toast.add({
+        type: "success",
+        title: "Module saved",
+        description: "Your module has been saved successfully.",
+      })
       setIsSaving(false)
       setDialogOpen(false)
-    }, 400)
+      setTimeout(() => {
+        navigate(-1)
+      }, 1000)
+    },
+    onError: (err: any) => {
+      console.error("Error saving module:", err)
+      setIsSaving(false)
+      toast.add({
+        type: "error",
+        title: "Error saving module",
+        description: "An error occurred while saving the module.",
+      })
+    },
+  })
+
+  function handleSave() {
+    setIsSaving(true)
+    saveModule({ title, principle: selectedPrinciple, content })
+    // const payload = {
+    //   title,
+    //   content,
+    //   principle: selectedPrinciple,
+    //   tags: selectedTags,
+    //   classrooms: selectedClassrooms,
+    //   status: isPublish ? "published" : "draft",
+    // }
+    // console.log("Saved module document:", payload)
+
+    // setTimeout(() => {
+    //   setIsSaving(false)
+    //   setDialogOpen(false)
+    // }, 400)
   }
 
   return (
@@ -205,7 +235,10 @@ export default function ModuleEditor() {
                 )}
               />
 
-              <DialogContent style={{ maxHeight: "90vh", width: "calc(100vw - 2rem)" }} className="flex flex-col overflow-hidden p-5 sm:max-w-lg sm:p-6">
+              <DialogContent
+                style={{ maxHeight: "90vh", width: "calc(100vw - 2rem)" }}
+                className="flex flex-col overflow-hidden p-5 sm:max-w-lg sm:p-6"
+              >
                 <DialogHeader>
                   <DialogTitle className="text-lg font-bold sm:text-xl">
                     Save Module
@@ -299,9 +332,7 @@ export default function ModuleEditor() {
                             key={tag}
                             className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground"
                           >
-                            <span className="max-w-45 truncate">
-                              {tag}
-                            </span>
+                            <span className="max-w-45 truncate">{tag}</span>
                             <button
                               type="button"
                               onClick={() => handleToggleTag(tag)}

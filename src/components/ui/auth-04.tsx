@@ -6,11 +6,12 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Link, useNavigate } from "react-router-dom"
 import { loginAPI } from "@/services/api/authAPI"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { Field, FieldError, FieldGroup, FieldLabel } from "./field"
 import { Spinner } from "./spinner"
+import { useRemoveQueries, useSetQueryData } from "@/services/tanstack/auth"
 
-// interface LoginFormProps {
+//useSetQueryData interface LoginFormProps {
 //   onGoogleLogin?: () => void
 //   onLogin?: (email: string, password: string, remember: boolean) => void
 //   onForgotPassword?: () => void
@@ -23,17 +24,18 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
+  const remove = useRemoveQueries()
+  const setQueryData = useSetQueryData()
 
   const { mutate, isPending } = useMutation({
     mutationFn: loginAPI,
     onSuccess: (data: any) => {
-      queryClient.setQueryData(["user"], data.user)
-      queryClient.invalidateQueries({ queryKey: ["user"] })
+      remove(["user"])
+      setQueryData(["user"], data.user)
 
       switch (data.role) {
-        case "user":
-          navigate("/learner", { replace: true })
+        case "student":
+          navigate("/student", { replace: true })
           break
         case "instructor":
           navigate("/instructor", { replace: true })
@@ -44,7 +46,7 @@ export default function LoginPage() {
       }
     },
     onError: (err: any) => {
-      setError(err.message)
+      setError(err.response.data.detail || "Error logging in")
     },
   })
 

@@ -11,6 +11,7 @@ import {
 import SectionHeader from "@/components/public/SectionHeader"
 import { HeroInterfacePreview } from "@/components/public/InterfaceMockups"
 import PourExplorer from "@/components/public/PourExplorer"
+import PricingBlock from "@/components/public/PricingBlock"
 import {
   BookOpen,
   CheckCircle2,
@@ -739,7 +740,18 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 8. FINAL CTA BANNER */}
+      {/* 8. PRICING PLANS */}
+      <section className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
+        <SectionHeader
+          badge="Transparent Plans"
+          title="Simple Pricing for Solo Learners &amp; Classrooms"
+          subtitle="Choose the plan that fits your study pace or institutional classroom needs. Every plan includes core WCAG verification."
+        />
+
+        <PricingBlock showDetailedLink={true} />
+      </section>
+
+      {/* 9. FINAL CTA BANNER */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative space-y-6 overflow-hidden rounded-3xl border border-primary/20 bg-primary/5 p-8 text-center sm:p-12 lg:p-16">
           <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm">

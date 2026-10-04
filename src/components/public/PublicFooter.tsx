@@ -56,6 +56,14 @@ export default function PublicFooter() {
               </li>
               <li>
                 <Link
+                  to="/pricing"
+                  className="transition-colors hover:text-foreground focus-visible:outline-primary"
+                >
+                  Pricing Plans
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/accessibility"
                   className="transition-colors hover:text-foreground focus-visible:outline-primary"
                 >

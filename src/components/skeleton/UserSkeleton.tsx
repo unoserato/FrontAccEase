@@ -1,21 +1,21 @@
 import { Skeleton } from "../ui/skeleton"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "../ui/sidebar"
-import { Logo } from "../common/Logo"
-import { Avatar } from "../ui/avatar"
+// import {
+//   Sidebar,
+//   SidebarContent,
+//   SidebarFooter,
+//   SidebarGroup,
+//   SidebarHeader,
+//   SidebarMenu,
+//   SidebarMenuButton,
+//   SidebarMenuItem,
+// } from "../ui/sidebar"
+// import { Logo } from "../common/Logo"
+// import { Avatar } from "../ui/avatar"
 
 export default function UserSkeleton() {
   return (
-    <div className="flex h-screen w-screen">
-      <Sidebar side="left" collapsible="icon" className="pointer-events-none">
+    <div className="flex h-screen w-full">
+      {/* <Sidebar side="left" collapsible="icon" className="pointer-events-none">
         <SidebarHeader className="overflow-hidden">
           <div className="flex items-center gap-2">
             <Logo className="h-8 w-8 shrink-0" />
@@ -43,7 +43,7 @@ export default function UserSkeleton() {
             <Skeleton className="aspect-square h-full" />
           </div>
         </SidebarFooter>
-      </Sidebar>
+      </Sidebar> */}
       <div className="h-fit w-full space-y-6 p-8">
         <Skeleton className="h-10 w-xs" />
         <div className="flex w-full gap-6">

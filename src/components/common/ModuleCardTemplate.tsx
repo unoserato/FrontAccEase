@@ -13,11 +13,11 @@ import { useMemo, useState } from "react"
 import DeleteArchiveDialog, {
   type ActionType,
 } from "../instructor/DeleteArchiveDialog"
-import { useUser } from "@/services/tanstack/auth"
 import EditorDropdown from "./EditorDropdown"
 import { useNavigate } from "react-router-dom"
 import { classrooms } from "@/const/data"
 import { GraduationCap } from "lucide-react"
+import { useMe } from "@/services/tanstack/auth"
 
 export type ModuleCardTemplateProps = {
   module: ModuleProps
@@ -29,7 +29,7 @@ export default function ModuleCardTemplate({
   view = "grid",
 }: ModuleCardTemplateProps) {
   const [action, setAction] = useState<ActionType>(null)
-  const { data: user } = useUser()
+  const { data: user } = useMe()
   const navigate = useNavigate()
   const isEditor = user?.role === "instructor"
 
