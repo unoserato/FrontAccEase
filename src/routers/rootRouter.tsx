@@ -6,14 +6,14 @@ import {
   RouterProvider,
 } from "react-router-dom"
 import RootLayout from "@/layout/RootLayout"
-import ErrorBoundary from "../pages/errors/ErrorBoundary"
 
 import { publicRoute } from "./publicRoute"
-import { schoolAdminRoute } from "./schoolAdminRoute"
-import NotFound from "@/pages/errors/NotFound"
 import { lazy } from "react"
 
 import ProtectedLayout from "@/layout/ProtectedLayout"
+
+const ErrorBoundary = lazy(() => import("../pages/errors/ErrorBoundary"))
+const NotFound = lazy(() => import("@/pages/errors/NotFound"))
 
 const CoreModuleReadOnly = lazy(() => import("@/features/CoreModuleReadOnly"))
 const ModuleReadOnly = lazy(() => import("@/features/ModuleReadOnly"))
@@ -59,6 +59,26 @@ const QuizzesInstructor = lazy(
 const QuizzesInstructorView = lazy(
   () => import("@/pages/instructor/QuizzesInstructorView")
 )
+
+// school admin pages
+const AnalyzerLogsSchoolAdmin = lazy(
+  () => import("@/pages/schoolAdmin/AnalyzerLogsSchoolAdmin")
+)
+const DashboardSchoolAdmin = lazy(
+  () => import("@/pages/schoolAdmin/DashboardSchoolAdmin")
+)
+const InstructorMaterials = lazy(
+  () => import("@/pages/schoolAdmin/InstructorMaterials")
+)
+const InstructorMaterialsView = lazy(
+  () => import("@/pages/schoolAdmin/InstructorMaterialsView")
+)
+const Instruments = lazy(() => import("@/pages/schoolAdmin/Instruments"))
+const LearningMaterials = lazy(
+  () => import("@/pages/schoolAdmin/LearningMaterials")
+)
+const Permissions = lazy(() => import("@/pages/schoolAdmin/Permissions"))
+const Users = lazy(() => import("@/pages/schoolAdmin/Users"))
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -133,7 +153,41 @@ const router = createBrowserRouter(
       />
 
       {/* SCHOOL ADMIN */}
-      {schoolAdminRoute}
+      <Route path="admin" element={<ProtectedLayout allowedRoles="admin" />}>
+        <Route index element={<Navigate to="dashboard" />} />
+        <Route path="dashboard" element={<DashboardSchoolAdmin />} />
+        <Route path="learning-materials" element={<LearningMaterials />} />
+        <Route
+          path="learning-materials/:principleId"
+          element={<CoreModulesView />}
+        />
+        <Route path="instructor-materials" element={<InstructorMaterials />} />
+        <Route
+          path="instructor-materials/:id"
+          element={<InstructorMaterialsView />}
+        />
+        <Route
+          path="instructor-materials/:id/classroom/:id"
+          element={<ClassroomInstructorView />}
+        />
+        <Route
+          path="instructor-materials/:id/modules/:id"
+          element={<ModuleReadOnly />}
+        />
+        <Route
+          path="instructor-materials/:id/quizzes/:id"
+          element={<QuizzesInstructorView />}
+        />
+        <Route path="instruments" element={<Instruments />} />
+        <Route path="instruments/:guidelineId" element={<Instruments />} />
+        <Route path="users" element={<Users />} />
+        <Route path="logs" element={<AnalyzerLogsSchoolAdmin />} />
+        <Route
+          path="logs/classroom/:id"
+          element={<AnalyzerLogsClassroomView />}
+        />
+        <Route path="permissions" element={<Permissions />} />
+      </Route>
 
       {/* ERRORS */}
       <Route path="*" element={<NotFound />} />
