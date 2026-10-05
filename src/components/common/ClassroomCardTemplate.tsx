@@ -13,7 +13,7 @@ import DeleteArchiveDialog, {
 } from "../instructor/DeleteArchiveDialog"
 import { useNavigate } from "react-router-dom"
 import EditorDropdown from "./EditorDropdown"
-import { useUser } from "@/services/tanstack/auth"
+import { useMe } from "@/services/tanstack/auth"
 import { Users } from "lucide-react"
 
 export default function ClassroomCardTemplate({
@@ -23,7 +23,7 @@ export default function ClassroomCardTemplate({
 }) {
   const [action, setAction] = useState<ActionType>(null)
   const navigate = useNavigate()
-  const { data: user } = useUser()
+  const { data: user } = useMe()
   const isEditor = user?.role == "instructor"
 
   return (

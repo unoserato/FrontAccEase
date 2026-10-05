@@ -6,7 +6,6 @@ export default function RootLayout() {
   useEffect(() => {
     // Window scroll reset
     window.scrollTo(0, 0)
-
     // Optional: if you have a scrollable root/main container (e.g. inside an app layout)
     const mainContainer = document.querySelector("main")
     if (mainContainer) {

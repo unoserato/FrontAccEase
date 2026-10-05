@@ -14,21 +14,23 @@ import TermsPage from "@/pages/public/TermsPage"
 import { Route } from "react-router-dom"
 
 export const publicRoute = (
-  <Route element={<PublicLayout />}>
-    <Route index element={<LandingPage />} />
-    <Route path="features" element={<FeaturesPage />} />
-    <Route path="how-it-works" element={<HowItWorksPage />} />
-    <Route path="pricing" element={<PricingPage />} />
-    <Route path="accessibility" element={<AccessibilityPage />} />
-    <Route path="about" element={<AboutPage />} />
-    <Route path="contact" element={<ContactPage />} />
-    <Route path="privacy" element={<PrivacyPage />} />
-    <Route path="terms" element={<TermsPage />} />
-    <Route
-      path="accessibility-statement"
-      element={<AccessibilityStatementPage />}
-    />
+  <>
+    <Route element={<PublicLayout />}>
+      <Route index element={<LandingPage />} />
+      <Route path="features" element={<FeaturesPage />} />
+      <Route path="how-it-works" element={<HowItWorksPage />} />
+      <Route path="pricing" element={<PricingPage />} />
+      <Route path="accessibility" element={<AccessibilityPage />} />
+      <Route path="about" element={<AboutPage />} />
+      <Route path="contact" element={<ContactPage />} />
+      <Route path="privacy" element={<PrivacyPage />} />
+      <Route path="terms" element={<TermsPage />} />
+      <Route
+        path="accessibility-statement"
+        element={<AccessibilityStatementPage />}
+      />
+    </Route>
     <Route path="login" element={<LoginPage />} />
     <Route path="signup" element={<SignUpPage />} />
-  </Route>
+  </>
 )

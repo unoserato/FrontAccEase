@@ -5,7 +5,6 @@ import type {
   QuizProps,
   QuizSubmissionProps,
   AnalyzerResultItem,
-  ChatMessage,
 } from "./materialsProps"
 
 export type Role = "learner" | "instructor" | "admin"
@@ -921,61 +920,6 @@ export const analyzerResults: AnalyzerResultItem[] = [
           },
         },
       ] as any,
-    },
-  },
-]
-
-export const initialChatMessages: ChatMessage[] = [
-  {
-    id: "msg-1",
-    sender: "user",
-    text: "Hey ARIA! Write me a script for building an Analog Clock.",
-    createdAt: "10:42 AM",
-  },
-  {
-    id: "msg-2",
-    sender: "assistant",
-    text: "Sure. Here is a Typescript code block for your Analog Clock project. It is built using React, and uses the local time for London, England as standard. Let me know if you would like to make any refinements to the code.",
-    createdAt: "10:42 AM",
-    codeSnippet: {
-      language: "typescript",
-      code: `import React, { useState, useEffect } from "react";
-import { defineProperties } from "figma:react";
-
-export default function AnalogClock({
-  updateInterval = 1000,
-  secondHandColor = "red",
-  minuteHandColor = "black",
-  hourHandColor = "black",
-}) {
-  const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
-
-  useEffect(() => {
-    const updateClock = () => {
-      // Get London's local time using en-GB format
-      const londonTimeString = new Date().toLocaleTimeString("en-GB", {
-        timeZone: "Europe/London",
-        hour12: false
-      });
-      const [hoursStr, minutesStr, secondsStr] = londonTimeString.split(":");
-      setTime({
-        hours: parseInt(hoursStr, 10),
-        minutes: parseInt(minutesStr, 10),
-        seconds: parseInt(secondsStr, 10)
-      });
-    };
-
-    updateClock();
-    const interval = setInterval(updateClock, updateInterval);
-    return () => clearInterval(interval);
-  }, [updateInterval]);
-
-  return (
-    <div className="analog-clock">
-      {/* Clock rendering logic */}
-    </div>
-  );
-}`,
     },
   },
 ]

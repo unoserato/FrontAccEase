@@ -42,10 +42,10 @@ import {
 } from "lucide-react"
 
 import QuizForm from "@/features/QuizForm"
-import { useUser } from "@/services/tanstack/auth"
+import { useMe } from "@/services/tanstack/auth"
 
 export default function QuizzesInstructorView() {
-  const { data: user } = useUser()
+  const { data: user } = useMe()
   const { id } = useParams<{ id: string }>()
   const [searchParams, setSearchParams] = useSearchParams()
 

@@ -183,65 +183,83 @@ export interface QuizSubmissionProps {
   submittedAt?: string
 }
 
+export interface PrincipleIssue {
+  wcag: string
+  level?: string
+  message: string
+  severity?: "critical" | "serious" | "moderate" | "minor" | string
+  status?: string
+  count?: number
+  element?: string
+  selector?: string
+  identifier?: string
+  examples?: Array<{
+    element?: string
+    selector?: string
+    identifier?: string
+  }>
+}
+
+export interface PrinciplePassed {
+  wcag: string
+  level?: string
+  element?: string
+  selector?: string
+  message: string
+  status?: string
+  severity?: string | null
+}
+
+export interface PrincipleSummaryCount {
+  name: string
+  count: number
+}
+
+export interface PrincipleData {
+  score: number
+  summary?: PrincipleSummaryCount[] | {
+    critical_count?: number
+    failed_count?: number
+    manual_review_count?: number
+    minor_count?: number
+    moderate_count?: number
+    passed_count?: number
+    serious_count?: number
+  }
+  issues: PrincipleIssue[]
+  passed?: PrinciplePassed[]
+  manual_review?: any[]
+}
+
+export interface PrincipleItem {
+  name: string
+  data: PrincipleData
+}
+
+export interface PrincipleScoreItem {
+  principle: string
+  score: number
+}
+
+export interface ResultSummaryItem {
+  name: string
+  count: number
+}
+
 export interface Result {
-  overall_score: number
-  principle_scores: [
-    {
-      principle: string
-      score: number
-    },
-  ]
-  principles: [
-    {
-      name: string
-      data: {
-        score: number
-        issues: [
-          {
-            wcag: string
-            message: string
-            level?: string
-            selector?: string
-            element?: string
-          },
-        ]
-        manual_review: [
-          {
-            wcag: string
-            level: string
-            element: string
-            selector: string
-            message: string
-          },
-        ]
-        passed: [
-          {
-            wcag: string
-            level: string
-            element: string
-            selector: string
-            message: string
-          },
-        ]
-        summary: {
-          critical_count: number
-          failed_count: number
-          manual_review_count: number
-          minor_count: number
-          moderate_count: number
-          passed_count: number
-          serious_count: number
-        }
-      }
-    },
-  ]
-  summary: [
-    {
-      name: string
-      count: number
-    },
-  ]
   url: string
+  overall_score: number
+  principles: PrincipleItem[]
+  summary?: ResultSummaryItem[] | {
+    critical_count?: number
+    failed_count?: number
+    manual_review_count?: number
+    minor_count?: number
+    moderate_count?: number
+    passed_count?: number
+    serious_count?: number
+  }
+  principle_scores?: PrincipleScoreItem[]
 }
 
 export interface AnalyzerResultItem {
@@ -251,12 +269,6 @@ export interface AnalyzerResultItem {
 }
 
 export interface ChatMessage {
-  id: string
   sender: "user" | "assistant"
   text: string
-  codeSnippet?: {
-    language: string
-    code: string
-  }
-  createdAt?: string
 }

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { analyzerResults } from "@/const/data"
+import type { AnalyzerResultItem, Result } from "@/const/materialsProps"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -22,10 +23,14 @@ import {
   Cpu,
   Globe,
   History,
+  Loader2,
   Puzzle,
   Search,
+  Sparkles,
   WrenchIcon,
 } from "lucide-react"
+import { useMutation } from "@tanstack/react-query"
+import { analyzerAPI } from "@/services/api/materialsAPI"
 
 const steps = [
   { name: "Analyze", icon: Search },
@@ -50,44 +55,107 @@ const models = [
   },
 ]
 
+function formatScanDate(dateStr?: string): string {
+  if (dateStr) return dateStr
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date())
+}
+
+function generateScanId(): string {
+  return `${Date.now()}`
+}
+
+function isValidUrl(input: string): boolean {
+  if (!input || typeof input !== "string") return false
+
+  const trimmed = input.trim()
+  const urlToTest = /^https?:\/\//i.test(trimmed)
+    ? trimmed
+    : `https://${trimmed}`
+
+  try {
+    const parsed = new URL(urlToTest)
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return false
+    }
+    const hostname = parsed.hostname
+    return /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/.test(hostname)
+  } catch {
+    return false
+  }
+}
+
 export default function Analyzer() {
   const navigate = useNavigate()
   const [domain, setDomain] = useState("")
-  const [selectedModel, setSelectedModel] = useState("qwenV2.5P0.6b")
+  const [selectedModel, setSelectedModel] = useState("GeminiV3.5Flas")
   const [openPopover, setOpenPopover] = useState(false)
   const [error, setError] = useState("")
+
+  // Scan history initialized from sessionStorage, fallback to sample analyzerResults
+  const [scanHistory, setScanHistory] = useState<AnalyzerResultItem[]>(() => {
+    try {
+      const saved = sessionStorage.getItem("frontaccease_recent_scans")
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed
+      }
+    } catch (e) {
+      console.error("Failed to load recent scans from session storage", e)
+    }
+    return analyzerResults
+  })
 
   const activeModelObj =
     models.find((m) => m.value === selectedModel) || models[0]
 
-  function isValidUrl(input: string): boolean {
-    if (!input || typeof input !== "string") return false
-
-    const trimmed = input.trim()
-
-    // 1. Prepend https:// if the user typed a naked domain (e.g., "google.com")
-    const urlToTest = /^https?:\/\//i.test(trimmed)
-      ? trimmed
-      : `https://${trimmed}`
-
-    try {
-      // 2. Parse using the browser's native URL parser
-      const parsed = new URL(urlToTest)
-
-      // 3. Ensure the protocol is http or https
-      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-        return false
+  // Mutation for analyzing a URL using analyzerAPI
+  const { mutate, isPending } = useMutation({
+    mutationFn: (targetUrl: string) => analyzerAPI(targetUrl),
+    onSuccess: (data: Result) => {
+      setError("")
+      const newId = generateScanId()
+      const newScanItem: AnalyzerResultItem = {
+        id: newId,
+        scannerId: `scan-${newId}`,
+        data: data,
       }
 
-      // 4. Validate hostname has a valid extension (e.g. .com, .net, .edu.ph)
-      const hostname = parsed.hostname
-      const hasValidTld = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/.test(hostname)
+      const updatedHistory = [newScanItem, ...scanHistory.filter((item) => item.id !== newId)]
+      setScanHistory(updatedHistory)
 
-      return hasValidTld
-    } catch {
-      return false
-    }
-  }
+      try {
+        sessionStorage.setItem(
+          "frontaccease_recent_scans",
+          JSON.stringify(updatedHistory)
+        )
+        sessionStorage.setItem(
+          `frontaccease_analyzer_result_${newId}`,
+          JSON.stringify(data)
+        )
+        sessionStorage.setItem(
+          "frontaccease_latest_analyzer_result",
+          JSON.stringify(data)
+        )
+      } catch (e) {
+        console.error("Failed to save scan result to session storage", e)
+      }
+
+      navigate(`/student/analyzer/${newId}`, {
+        state: { result: data, scanId: newId },
+      })
+    },
+    onError: (err: unknown) => {
+      const msg =
+        err instanceof Error
+          ? err.message
+          : "Failed to analyze URL. Please check the domain and try again."
+      setError(msg)
+    },
+  })
 
   function handleSubmit() {
     if (!selectedModel) {
@@ -95,12 +163,17 @@ export default function Analyzer() {
       return
     }
     if (!isValidUrl(domain)) {
-      setError("Please enter a valid domain or URL.")
+      setError("Please enter a valid domain or URL (e.g. attendex.online).")
       return
     }
 
+    const cleanInput = domain.trim()
+    const fullUrl = /^https?:\/\//i.test(cleanInput)
+      ? cleanInput
+      : `https://${cleanInput}`
+
     setError("")
-    navigate("/learner/analyzer/1")
+    mutate(fullUrl)
   }
 
   const firstStep = steps[0]
@@ -114,6 +187,7 @@ export default function Analyzer() {
           stroke="currentColor"
           strokeWidth="1.5"
           fill="none"
+          aria-hidden="true"
         >
           <defs>
             <marker
@@ -146,7 +220,7 @@ export default function Analyzer() {
 
         <Card
           key={firstStep.name}
-          className="z-10 flex w-24 items-center justify-center shadow-sm sm:w-28"
+          className="z-10 flex w-24 items-center justify-center shadow-xs sm:w-28"
         >
           <CardContent className="flex flex-col items-center gap-2 p-4 text-xs font-semibold sm:text-sm">
             <div className="rounded-full bg-foreground p-2.5 text-background shadow-xs">
@@ -160,7 +234,7 @@ export default function Analyzer() {
           {steps.slice(1, 3).map((step) => (
             <Card
               key={step.name}
-              className="flex w-24 items-center justify-center shadow-sm sm:w-28"
+              className="flex w-24 items-center justify-center shadow-xs sm:w-28"
             >
               <CardContent className="flex flex-col items-center gap-2 p-4 text-xs font-semibold sm:text-sm">
                 <div className="rounded-full bg-foreground p-2.5 text-background shadow-xs">
@@ -175,16 +249,16 @@ export default function Analyzer() {
 
       {/* Header Section */}
       <div className="mx-auto max-w-2xl space-y-3 text-center">
-        <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl md:text-5xl">
+        <h1 className="font-heading text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl md:text-5xl">
           Let's Analyze your Page
         </h1>
         <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm md:text-base">
-          Audit any public URL for WCAG 2.1 AA compliance, including DOM
-          hierarchy, contrast ratios, and keyboard navigation.
+          Audit any public URL for WCAG 2.1 &amp; 2.2 Level AA/AAA compliance,
+          DOM semantic hierarchy, contrast ratios, and screen reader readiness.
         </p>
       </div>
 
-      {/* Main Responsive URL Analyzer Card */}
+      {/* Main Responsive URL Analyzer Input Box */}
       <div className="mx-auto w-full max-w-3xl">
         <Field className="w-full">
           <div className="flex flex-col gap-3 rounded-2xl border border-border/80 bg-card p-2.5 shadow-md sm:p-3 md:flex-row md:items-center">
@@ -196,6 +270,7 @@ export default function Analyzer() {
               </span>
               <input
                 type="text"
+                disabled={isPending}
                 placeholder="attendex.online"
                 value={domain}
                 onChange={(e) => {
@@ -206,10 +281,11 @@ export default function Analyzer() {
                   if (error) setError("")
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSubmit()
+                  if (e.key === "Enter" && !isPending) handleSubmit()
                 }}
-                className="h-11 w-full bg-transparent px-3 text-xs font-semibold text-foreground outline-none placeholder:text-muted-foreground/50 sm:text-sm"
+                className="h-11 w-full bg-transparent px-3 text-xs font-semibold text-foreground outline-none placeholder:text-muted-foreground/50 disabled:opacity-50 sm:text-sm"
                 aria-invalid={!!error}
+                aria-label="URL to inspect for WCAG compliance"
               />
             </div>
 
@@ -221,11 +297,12 @@ export default function Analyzer() {
                   render={
                     <Button
                       variant="outline"
+                      disabled={isPending}
                       className="h-11 flex-1 justify-between gap-2 rounded-xl border-input/80 px-3.5 text-xs font-semibold sm:flex-none sm:text-sm"
                     >
                       <div className="flex items-center gap-2">
                         <Cpu className="size-4 shrink-0 text-primary" />
-                        <span className="max-w-32.5 truncate sm:max-w-none">
+                        <span className="max-w-32 truncate sm:max-w-none">
                           {activeModelObj.label}
                         </span>
                       </div>
@@ -288,17 +365,36 @@ export default function Analyzer() {
                 </PopoverContent>
               </Popover>
 
-              {/* Scan Button */}
+              {/* Scan Button with Live Mutation State */}
               <Button
                 size="lg"
                 onClick={handleSubmit}
+                disabled={isPending || !domain.trim()}
                 className="h-11 shrink-0 rounded-xl px-5 text-xs font-bold sm:text-sm"
               >
-                <span>Scan</span>
-                <ArrowRight className="ml-1 size-4" />
+                {isPending ? (
+                  <>
+                    <Loader2 className="mr-1.5 size-4 animate-spin" />
+                    <span>Analyzing...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Scan</span>
+                    <ArrowRight className="ml-1 size-4" />
+                  </>
+                )}
               </Button>
             </div>
           </div>
+
+          {isPending && (
+            <div className="mt-2.5 flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/5 p-2 text-xs font-medium text-foreground">
+              <Sparkles className="size-4 animate-pulse text-primary" />
+              <span>
+                Evaluating WCAG 2.1 Level AA &amp; AAA rules on &ldquo;{domain}&rdquo;...
+              </span>
+            </div>
+          )}
 
           {error && (
             <FieldError className="mt-2 text-xs font-semibold">
@@ -319,7 +415,7 @@ export default function Analyzer() {
         </div>
 
         <div className="flex justify-center">
-          <Link to="/learner/analyzer/extension">
+          <Link to="/student/analyzer/extension">
             <Button
               variant="secondary"
               size="lg"
@@ -332,39 +428,44 @@ export default function Analyzer() {
         </div>
       </div>
 
-      {/* Scan History Section (No Cards Used) */}
+      {/* Scan History Section */}
       <div className="mx-auto w-full max-w-4xl space-y-4 pt-6">
         <div className="flex items-center justify-between border-b border-border/60 pb-3">
           <div className="flex items-center gap-2">
             <History className="size-5 text-primary" />
             <h2 className="text-base font-bold text-foreground sm:text-lg">
-              Recent Audits & History
+              Recent Audits &amp; History
             </h2>
           </div>
           <span className="text-xs font-bold text-muted-foreground">
-            {analyzerResults.length} Scans Recorded
+            {scanHistory.length} Scans Recorded
           </span>
         </div>
 
-        {analyzerResults.length > 0 ? (
+        {scanHistory.length > 0 ? (
           <div className="divide-y divide-border/40 overflow-hidden rounded-2xl border border-border/60 bg-muted/10">
-            {analyzerResults.map((item) => {
+            {scanHistory.map((item) => {
               const targetUrl =
-                (item as any).url || item.data?.url || "https://attendex.online"
+                item.data?.url || "https://attendex.online"
               const urlClean = targetUrl.replace(/^https?:\/\//, "")
               const score = item.data?.overall_score ?? 82
-              const criticalCount =
-                item.data?.summary?.find((s) => s.name === "critical")?.count ??
-                2
-              const seriousCount =
-                item.data?.summary?.find((s) => s.name === "serious")?.count ??
-                2
-              const totalViolations = criticalCount + seriousCount
+
+              // Calculate violations across summary or principles
+              const totalViolations = Array.isArray(item.data?.summary)
+                ? (item.data.summary.find((s) => s.name === "critical")?.count ?? 0) +
+                  (item.data.summary.find((s) => s.name === "serious")?.count ?? 0) +
+                  (item.data.summary.find((s) => s.name === "moderate")?.count ?? 0)
+                : 4
+
+              // Determine score color
+              const isHigh = score >= 90
+              const isMedium = score >= 70 && score < 90
 
               return (
                 <Link
                   key={item.id}
-                  to={`/learner/analyzer/${item.id}`}
+                  to={`/student/analyzer/${item.id}`}
+                  state={{ result: item.data, scanId: item.id }}
                   className="group flex flex-col gap-3 p-4 transition-colors hover:bg-muted/50 sm:flex-row sm:items-center sm:justify-between"
                 >
                   {/* Left: Domain & Meta */}
@@ -378,7 +479,7 @@ export default function Analyzer() {
                       </p>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <Clock className="size-3 shrink-0" />
-                        <span>August 27, 2026</span>
+                        <span>{formatScanDate()}</span>
                         <span>•</span>
                         <span>{totalViolations} Violations Detected</span>
                       </div>
@@ -390,7 +491,13 @@ export default function Analyzer() {
                     <div className="flex items-center gap-2">
                       <Badge
                         variant="secondary"
-                        className="rounded-lg bg-amber-500/10 px-2.5 py-1 text-xs font-bold text-amber-600 dark:text-amber-400"
+                        className={`rounded-lg px-2.5 py-1 text-xs font-bold ${
+                          isHigh
+                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                            : isMedium
+                              ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                              : "bg-rose-500/10 text-rose-600 dark:text-rose-400"
+                        }`}
                       >
                         Score: {score}/100
                       </Badge>

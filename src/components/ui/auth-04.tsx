@@ -10,13 +10,7 @@ import { useMutation } from "@tanstack/react-query"
 import { Field, FieldError, FieldGroup, FieldLabel } from "./field"
 import { Spinner } from "./spinner"
 import { useRemoveQueries, useSetQueryData } from "@/services/tanstack/auth"
-
-//useSetQueryData interface LoginFormProps {
-//   onGoogleLogin?: () => void
-//   onLogin?: (email: string, password: string, remember: boolean) => void
-//   onForgotPassword?: () => void
-//   onCreateAccount?: () => void
-// }
+import { Logo } from "../common/Logo"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -71,7 +65,14 @@ export default function LoginPage() {
 
         <div className="flex flex-1 items-center justify-center px-6 py-12 sm:px-12">
           <div className="w-full max-w-md space-y-8">
-            <div className="space-y-1">
+            <div className="w-full space-y-1">
+              <Link
+                to="/"
+                className="h-fit w-fit"
+                aria-label="FrontAccEase Home"
+              >
+                <Logo className="" size={100} />
+              </Link>
               <h2 className="text-3xl font-bold tracking-tight text-foreground">
                 Welcome back
               </h2>
@@ -158,7 +159,7 @@ export default function LoginPage() {
               New here?{" "}
               <Link
                 type="button"
-                to=""
+                to="/signup"
                 className={buttonVariants({ variant: "link" })}
               >
                 Create a free account

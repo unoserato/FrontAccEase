@@ -18,12 +18,12 @@ import { modules, classrooms } from "@/const/data"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { getDateString } from "@/hooks/date-to-string"
-import { useUser } from "@/services/tanstack/auth"
+import { useMe } from "@/services/tanstack/auth"
 
 export default function ModuleReadOnly() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { data: user } = useUser()
+  const { data: user } = useMe()
   const isEditor = user?.role === "instructor"
 
   function handleBack() {

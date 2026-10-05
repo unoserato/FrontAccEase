@@ -9,9 +9,9 @@ import DeleteArchiveDialog, {
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { getQuizTotalPoints } from "@/features/instructor/quizHelper"
-import { useUser } from "@/services/tanstack/auth"
 import EditorDropdown from "./EditorDropdown"
 import { useNavigate } from "react-router-dom"
+import { useMe } from "@/services/tanstack/auth"
 
 export type QuizCardTemplateProps = {
   quiz: QuizProps
@@ -19,7 +19,7 @@ export type QuizCardTemplateProps = {
 
 export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
   const [action, setAction] = useState<ActionType>(null)
-  const { data: user } = useUser()
+  const { data: user } = useMe()
   const isEditor = user?.role == "instructor"
   const isMobile = useIsMobile()
   const navigate = useNavigate()

@@ -1,75 +1,150 @@
 import { useState, useRef, useEffect } from "react"
-import { initialChatMessages } from "@/const/data"
 import type { ChatMessage } from "@/const/materialsProps"
-import { ArrowUp, Copy, Check, Loader2 } from "lucide-react"
-import { cn } from "@/lib/utils"
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+  ArrowUp,
+  BotMessageSquare,
+  Check,
+  Copy,
+  SquarePen,
+  Code2,
+  Terminal,
+  Sparkles,
+  HelpCircle,
+} from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { useMutation } from "@tanstack/react-query"
+import { chatAPI } from "@/services/api/materialsAPI"
+import { RichText } from "@/components/learner/RichText"
 
 const MAX_WORDS = 200
+const WORD_WARNING_THRESHOLD = 150
+const SESSION_STORAGE_KEY = "frontaccease_learner_chat_session"
 
-const models = [
-  { value: null, label: "Select a model" },
-  { value: "gpt-3.5", label: "GPT-3.5" },
-  { value: "gpt-4", label: "GPT-4" },
+const STARTER_PROMPTS = [
+  {
+    title: "Keyboard Focus Trapping",
+    criterion: "WCAG 2.1.2",
+    prompt:
+      "How do I ensure a custom modal dialog traps keyboard focus and releases it on escape (WCAG 2.1.2)?",
+    icon: Terminal,
+  },
+  {
+    title: "ARIA Landmark Roles",
+    criterion: "WCAG 1.3.1 & 4.1.2",
+    prompt:
+      "What are the essential ARIA landmark roles and how do I properly structure them in a React layout?",
+    icon: Code2,
+  },
+  {
+    title: "Color Contrast Ratio",
+    criterion: "WCAG 1.4.3 & 1.4.6",
+    prompt:
+      "How do I calculate and resolve text color contrast failures to meet both WCAG Level AA and AAA?",
+    icon: Sparkles,
+  },
+  {
+    title: "aria-label vs aria-labelledby",
+    criterion: "WCAG 4.1.2",
+    prompt:
+      "What is the difference between aria-label, aria-labelledby, and aria-describedby with code examples?",
+    icon: HelpCircle,
+  },
 ]
 
 export default function Chat() {
-  const [messages, setMessages] = useState<ChatMessage[]>(initialChatMessages)
+  // Initialize messages from sessionStorage
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    try {
+      const saved = sessionStorage.getItem(SESSION_STORAGE_KEY)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed)) return parsed
+      }
+    } catch (e) {
+      console.error("Failed to load chat messages from session:", e)
+    }
+    return []
+  })
+
   const [input, setInput] = useState("")
-  const [isTyping, setIsTyping] = useState(false)
-  const [copiedCodeId, setCopiedCodeId] = useState<string | null>(null)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const isFirstRender = useRef(true)
 
   const wordCount = input.trim() ? input.trim().split(/\s+/).length : 0
   const isOverWordLimit = wordCount > MAX_WORDS
+  const showWordCount = wordCount >= WORD_WARNING_THRESHOLD
+  const canSend = input.trim().length > 0 && !isOverWordLimit
+  const isEmpty = messages.length === 0
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+  // Persist messages to sessionStorage
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(messages))
+    } catch (e) {
+      console.error("Failed to save chat messages to session:", e)
+    }
+  }, [messages])
+
+  // Mutation for sending messages to the chat API
+  const { mutate, isPending } = useMutation({
+    mutationFn: chatAPI,
+    onSuccess: (data: any) => {
+      setMessages((prev) => [
+        ...prev,
+        { sender: "assistant", text: data.reply },
+      ])
+    },
+    onError: (err: unknown) => {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Failed to connect to Aria AI service."
+      const assistantError: ChatMessage = {
+        sender: "assistant",
+        text: `Error: ${errorMessage}. Please check your connection or try again.`,
+      }
+      setMessages((prev) => [...prev, assistantError])
+    },
+  })
 
   useEffect(() => {
-    scrollToBottom()
-  }, [messages, isTyping])
+    if (messages.length === 0) return
+    const container = messagesContainerRef.current
+    if (!container) return
 
-  const handleSend = () => {
-    if (!input.trim() || isOverWordLimit || isTyping) return
+    const behavior: ScrollBehavior = isFirstRender.current
+      ? "instant"
+      : "smooth"
+    isFirstRender.current = false
 
-    const currentPrompt = input.trim()
-    const userMsg: ChatMessage = {
-      id: `msg-${Date.now()}`,
+    const frameId = requestAnimationFrame(() => {
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior,
+      })
+    })
+
+    return () => cancelAnimationFrame(frameId)
+  }, [messages, isPending])
+
+  const handleSend = (overrideText?: string) => {
+    const textToSend = (overrideText ?? input).trim()
+    if (!textToSend || isOverWordLimit || isPending) return
+
+    const userMessage: ChatMessage = {
       sender: "user",
-      text: currentPrompt,
-      createdAt: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      text: textToSend,
     }
 
-    setMessages((prev) => [...prev, userMsg])
-    setInput("")
-    setIsTyping(true)
+    setMessages((prev) => [...prev, userMessage])
+    if (!overrideText) {
+      setInput("")
+    }
 
-    // Simulated assistant response with typing indicator
-    setTimeout(() => {
-      const assistantMsg: ChatMessage = {
-        id: `msg-reply-${Date.now()}`,
-        sender: "assistant",
-        text: `Here is a response regarding your inquiry: "${currentPrompt}". Let me know if you need further details or code examples.`,
-        createdAt: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      }
-      setMessages((prev) => [...prev, assistantMsg])
-      setIsTyping(false)
-    }, 800)
+    mutate(textToSend)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -79,269 +154,264 @@ export default function Chat() {
     }
   }
 
-  const copyCode = (code: string, id: string) => {
-    navigator.clipboard.writeText(code)
-    setCopiedCodeId(id)
-    setTimeout(() => setCopiedCodeId(null), 2000)
+  const handleClearChat = () => {
+    setMessages([])
+    isFirstRender.current = true
+    try {
+      sessionStorage.removeItem(SESSION_STORAGE_KEY)
+    } catch (e) {
+      console.error("Failed to clear chat session:", e)
+    }
+    textareaRef.current?.focus()
   }
 
+  const handleCopy = async (text: string, index: number) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopiedIndex(index)
+      setTimeout(() => setCopiedIndex(null), 2000)
+    } catch (e) {
+      console.error("Failed to copy message:", e)
+    }
+  }
+
+  const composer = (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        handleSend()
+      }}
+      className={cn(
+        "flex items-end gap-2 rounded-3xl border border-input bg-card p-2 pl-5 shadow-sm transition duration-200",
+        "focus-within:border-ring focus-within:shadow-md",
+        isOverWordLimit && "border-destructive focus-within:border-destructive"
+      )}
+    >
+      <label htmlFor="chat-textarea" className="sr-only">
+        Message Aria (maximum {MAX_WORDS} words)
+      </label>
+      <textarea
+        ref={textareaRef}
+        id="chat-textarea"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={handleKeyDown}
+        disabled={isPending}
+        aria-invalid={isOverWordLimit}
+        aria-describedby="chat-composer-hint"
+        placeholder="Ask Aria about accessibility"
+        rows={1}
+        className="f-center field-sizing-content max-h-52 min-h-10 flex-1 resize-none bg-transparent py-2 text-base leading-relaxed text-foreground outline-none placeholder:text-muted-foreground disabled:opacity-60"
+      />
+      <div className="flex shrink-0 items-center gap-2 pb-0.5">
+        {showWordCount && (
+          <span
+            className={cn(
+              "text-xs tabular-nums",
+              isOverWordLimit
+                ? "font-medium text-destructive"
+                : "text-muted-foreground"
+            )}
+          >
+            {wordCount}/{MAX_WORDS}
+            <span className="sr-only"> words</span>
+          </span>
+        )}
+        <Button
+          type="submit"
+          size="icon-lg"
+          disabled={!canSend || isPending}
+          aria-label="Send message"
+          className="rounded-full"
+        >
+          <ArrowUp className="size-5" strokeWidth={2.25} aria-hidden="true" />
+        </Button>
+      </div>
+    </form>
+  )
+
+  const composerHint = (
+    <p
+      id="chat-composer-hint"
+      className="px-4 text-center text-xs leading-relaxed text-muted-foreground"
+    >
+      {isOverWordLimit
+        ? `Your message is over the ${MAX_WORDS}-word limit. Shorten it to send.`
+        : "Aria can make mistakes, so verify against the WCAG spec. This chat is saved only for this browser tab."}
+    </p>
+  )
+
   return (
-    <div className="flex h-full w-full flex-col justify-between bg-background p-4 font-sans sm:p-6">
-      {/* Messages Scroll Area with Live Region for Screen Readers */}
-      <div
-        role="log"
-        aria-live="polite"
-        aria-label="Chat messages history"
-        className="flex-1 space-y-6 overflow-y-auto pr-2"
-      >
-        {messages.map((msg) => (
-          <div key={msg.id} className="w-full">
-            {msg.sender === "user" ? (
-              <div className="flex justify-end">
-                <div className="max-w-7/10 rounded-2xl border border-border bg-muted/40 px-5 py-3 text-sm break-words whitespace-pre-wrap text-foreground shadow-2xs">
-                  {msg.text}
-                </div>
-              </div>
-            ) : (
-              <div className="flex max-w-9/10 items-start space-x-3">
-                {/* Assistant Bot Icon */}
-                <div
-                  className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-foreground font-bold text-background"
-                  aria-hidden="true"
-                >
-                  <svg
-                    className="h-4 w-4 fill-current"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M12 2a3 3 0 0 1 3 3v1h1a3 3 0 0 1 3 3v1h1a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-1v1a3 3 0 0 1-3 3h-1v1a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3v-1H5a3 3 0 0 1-3-3v-1H1a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h1V8a3 3 0 0 1 3-3h1V5a3 3 0 0 1 3-3h3zm0 2.5H9a1.5 1.5 0 0 0-1.5 1.5v1h9V6A1.5 1.5 0 0 0 15 4.5h-3zM5 8.5A1.5 1.5 0 0 0 3.5 10v4A1.5 1.5 0 0 0 5 15.5h14a1.5 1.5 0 0 0 1.5-1.5v-4A1.5 1.5 0 0 0 19 8.5H5z" />
-                  </svg>
-                </div>
+    <div className="relative flex h-full min-h-0 w-full flex-col overflow-hidden bg-background">
+      {!isEmpty && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={handleClearChat}
+          disabled={isPending}
+          className="absolute top-3 right-3 z-10 bg-background/80 text-muted-foreground backdrop-blur-sm hover:text-foreground sm:top-4 sm:right-4"
+        >
+          <SquarePen strokeWidth={1.75} aria-hidden="true" />
+          New chat
+        </Button>
+      )}
 
-                <div className="min-w-0 flex-1 space-y-4">
-                  <p className="text-sm leading-relaxed break-words whitespace-pre-wrap text-foreground/90">
-                    {msg.text}
-                  </p>
+      {isEmpty ? (
+        /* Empty state: centered greeting with composer, like ChatGPT / Gemini */
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+          <section
+            aria-labelledby="chat-welcome-title"
+            className="m-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-10 sm:px-6"
+          >
+            <div className="flex flex-col items-center gap-3 text-center">
+              <h1
+                id="chat-welcome-title"
+                className="font-heading text-3xl font-semibold tracking-tight text-balance text-foreground sm:text-4xl"
+              >
+                How can I help you build accessibly?
+              </h1>
+              <p className="max-w-md text-base text-pretty text-muted-foreground">
+                Ask about WCAG criteria, ARIA patterns, or paste code for a
+                review.
+              </p>
+            </div>
 
-                  {/* Code Snippet Card */}
-                  {msg.codeSnippet && (
-                    <div className="group relative overflow-hidden rounded-2xl border border-border/80 bg-muted/30 p-4 font-mono text-sm text-foreground shadow-2xs">
-                      <div className="mb-2 flex items-center justify-between border-b border-border/40 pb-2">
-                        <span className="text-xs font-semibold text-muted-foreground uppercase">
-                          {msg.codeSnippet.language || "Code"}
+            <div className="flex flex-col gap-3">
+              {composer}
+              {composerHint}
+            </div>
+
+            <ul
+              aria-label="Suggested questions"
+              className="grid grid-cols-1 gap-2 sm:grid-cols-2"
+            >
+              {STARTER_PROMPTS.map((item) => {
+                const Icon = item.icon
+                return (
+                  <li key={item.title}>
+                    <button
+                      type="button"
+                      onClick={() => handleSend(item.prompt)}
+                      disabled={isPending}
+                      title={item.prompt}
+                      className="group flex h-full w-full items-start gap-3 rounded-2xl border border-border px-4 py-3 text-left transition-colors outline-none hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-99 disabled:opacity-50"
+                    >
+                      <Icon
+                        className="mt-0.5 size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary"
+                        strokeWidth={1.75}
+                        aria-hidden="true"
+                      />
+                      <span className="flex min-w-0 flex-col gap-0.5">
+                        <span className="text-sm font-medium text-foreground">
+                          {item.title}
                         </span>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            copyCode(msg.codeSnippet!.code, msg.id)
-                          }
-                          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-                          aria-label="Copy code to clipboard"
-                        >
-                          {copiedCodeId === msg.id ? (
-                            <>
-                              <Check
-                                className="size-3.5 text-emerald-500"
-                                aria-hidden="true"
-                              />
-                              <span className="text-emerald-500">Copied!</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="size-3.5" aria-hidden="true" />
-                              <span>Copy</span>
-                            </>
-                          )}
-                        </button>
+                        <span className="text-xs text-muted-foreground">
+                          {item.criterion}
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          </section>
+        </div>
+      ) : (
+        <>
+          {/* Conversation */}
+          <div
+            ref={messagesContainerRef}
+            role="log"
+            aria-live="polite"
+            aria-label="Conversation with Aria"
+            className="min-h-0 flex-1 overflow-y-auto"
+          >
+            <ol className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 pt-16 pb-8 sm:px-6">
+              {messages.map((msg, i) =>
+                msg.sender === "user" ? (
+                  <li
+                    key={i}
+                    className="flex animate-in justify-end duration-300 fade-in slide-in-from-bottom-2 motion-reduce:animate-none"
+                  >
+                    <span className="sr-only">You said:</span>
+                    <p className="max-w-xl rounded-3xl bg-muted px-5 py-2.5 text-base leading-relaxed break-words whitespace-pre-wrap text-foreground">
+                      {msg.text}
+                    </p>
+                  </li>
+                ) : (
+                  <li
+                    key={i}
+                    className="group flex animate-in items-start gap-4 duration-300 fade-in slide-in-from-bottom-2 motion-reduce:animate-none"
+                  >
+                    <div
+                      className="flex size-8 shrink-0 items-center justify-center rounded-full border border-border bg-background text-primary"
+                      aria-hidden="true"
+                    >
+                      <BotMessageSquare className="size-4" strokeWidth={1.75} />
+                    </div>
+                    <div className="flex min-w-0 flex-1 flex-col gap-2 pt-1">
+                      <span className="sr-only">Aria said:</span>
+                      <div className="text-base leading-7 wrap-break-word whitespace-pre-wrap text-foreground">
+                        <RichText content={msg.text} />
                       </div>
-
-                      <div className="space-y-1 overflow-x-auto">
-                        {msg.codeSnippet.code.split("\n").map((line, idx) => (
-                          <div key={idx} className="flex items-start">
-                            <span className="w-8 shrink-0 pr-4 text-right text-xs text-muted-foreground/60 select-none">
-                              {idx + 1}
-                            </span>
-                            <span className="flex-1 wrap-break-word whitespace-pre">
-                              <RenderSyntaxHighlightedLine line={line} />
-                            </span>
-                          </div>
-                        ))}
+                      <div className="-ml-2 flex items-center opacity-100 transition-opacity sm:opacity-0 sm:group-focus-within:opacity-100 sm:group-hover:opacity-100">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => handleCopy(msg.text, i)}
+                          aria-label={
+                            copiedIndex === i ? "Copied" : "Copy response"
+                          }
+                          className="text-muted-foreground hover:text-foreground"
+                        >
+                          {copiedIndex === i ? (
+                            <Check strokeWidth={2} aria-hidden="true" />
+                          ) : (
+                            <Copy strokeWidth={1.75} aria-hidden="true" />
+                          )}
+                        </Button>
                       </div>
                     </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-
-        {/* Typing Indicator */}
-        {isTyping && (
-          <div className="flex items-center space-x-3 text-muted-foreground">
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-foreground text-background">
-              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-            </div>
-            <p className="text-xs text-muted-foreground italic">
-              Assistant is thinking...
-            </p>
-          </div>
-        )}
-
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input Box Bar */}
-      <div className="mt-4 pt-2">
-        <div
-          className={cn(
-            "relative flex min-h-30 flex-col justify-between rounded-3xl border border-border bg-card p-4 shadow-2xs transition-colors",
-            "focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/20",
-            isOverWordLimit &&
-              "border-destructive focus-within:border-destructive focus-within:ring-destructive/20"
-          )}
-        >
-          <label htmlFor="chat-textarea" className="sr-only">
-            Type your message (maximum 200 words)
-          </label>
-          <textarea
-            id="chat-textarea"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            disabled={isTyping}
-            placeholder="What would you like to know? (LIMIT 200 WORDS)"
-            className="w-full resize-none border-0 bg-transparent p-1 text-sm text-foreground placeholder:text-muted-foreground/60 focus:ring-0 focus:outline-none disabled:opacity-50"
-            rows={2}
-          />
-          <div className="flex items-center justify-end gap-3 pt-2">
-            <Select items={models}>
-              <SelectTrigger className={"w-full max-w-48"}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {models.map((model) => (
-                    <SelectItem key={model.value} value={model.value}>
-                      {model.label}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            {/* Word Count Indicator */}
-            <span
-              className={cn(
-                "text-xs font-medium transition-colors",
-                isOverWordLimit
-                  ? "font-bold text-destructive"
-                  : "text-muted-foreground/70"
-              )}
-            >
-              {wordCount} / {MAX_WORDS} words
-            </span>
-
-            <button
-              type="button"
-              onClick={handleSend}
-              disabled={!input.trim() || isOverWordLimit || isTyping}
-              className={cn(
-                "flex h-9 w-9 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-                input.trim() && !isOverWordLimit && !isTyping
-                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                  : "cursor-not-allowed bg-muted-foreground/20 text-muted-foreground opacity-50"
-              )}
-              title="Send Message"
-              aria-label="Send Message"
-            >
-              <ArrowUp className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function RenderSyntaxHighlightedLine({ line }: { line: string }) {
-  if (line.trim().startsWith("//")) {
-    return <span className="text-muted-foreground/70 italic">{line}</span>
-  }
-
-  const parts = line.split(
-    /(".*?"|'.*?'|\b(?:import|from|export|default|function|const|let|var|return|new)\b)/g
-  )
-
-  return (
-    <>
-      {parts.map((part, i) => {
-        if (!part) return null
-        if (
-          [
-            "import",
-            "from",
-            "export",
-            "default",
-            "function",
-            "const",
-            "let",
-            "var",
-            "return",
-            "new",
-          ].includes(part)
-        ) {
-          return (
-            <span
-              key={i}
-              className="font-semibold text-amber-600 dark:text-amber-400"
-            >
-              {part}
-            </span>
-          )
-        }
-        if (part.startsWith('"') || part.startsWith("'")) {
-          return (
-            <span key={i} className="text-emerald-600 dark:text-emerald-400">
-              {part}
-            </span>
-          )
-        }
-        if (
-          [
-            "useState",
-            "useEffect",
-            "toLocaleTimeString",
-            "parseInt",
-            "split",
-          ].some((fn) => part.includes(fn))
-        ) {
-          const subParts = part.split(
-            /\b(useState|useEffect|toLocaleTimeString|parseInt|split)\b/g
-          )
-          return (
-            <span key={i}>
-              {subParts.map((sub, j) =>
-                [
-                  "useState",
-                  "useEffect",
-                  "toLocaleTimeString",
-                  "parseInt",
-                  "split",
-                ].includes(sub) ? (
-                  <span
-                    key={j}
-                    className="font-semibold text-pink-600 dark:text-pink-400"
-                  >
-                    {sub}
-                  </span>
-                ) : (
-                  sub
+                  </li>
                 )
               )}
-            </span>
-          )
-        }
-        return <span key={i}>{part}</span>
-      })}
-    </>
+
+              {isPending && (
+                <li className="flex items-start gap-4" role="status">
+                  <div
+                    className="flex size-8 shrink-0 items-center justify-center rounded-full border border-border bg-background text-primary"
+                    aria-hidden="true"
+                  >
+                    <BotMessageSquare
+                      className="size-4 motion-safe:animate-pulse"
+                      strokeWidth={1.75}
+                    />
+                  </div>
+                  <div
+                    className="flex h-8 items-center gap-1.5"
+                    aria-hidden="true"
+                  >
+                    <span className="size-2 rounded-full bg-muted-foreground/70 motion-safe:animate-pulse" />
+                    <span className="size-2 rounded-full bg-muted-foreground/70 delay-150 motion-safe:animate-pulse" />
+                    <span className="size-2 rounded-full bg-muted-foreground/70 delay-300 motion-safe:animate-pulse" />
+                  </div>
+                  <span className="sr-only">Aria is writing a reply</span>
+                </li>
+              )}
+            </ol>
+          </div>
+
+          {/* Pinned composer */}
+          <div className="shrink-0 bg-linear-to-t from-background from-70% to-transparent">
+            <div className="mx-auto flex w-full max-w-3xl flex-col gap-2 px-4 pt-2 pb-4 sm:px-6">
+              {composer}
+              {composerHint}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
   )
 }

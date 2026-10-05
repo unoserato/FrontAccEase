@@ -150,6 +150,6 @@
     cursor: pointer;
   }
   html {
-    @apply font-sans;
+    @apply scroll-smooth font-sans;
   }
 }

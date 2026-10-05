@@ -1,17 +1,10 @@
-const api = import.meta.env.VITE_API_URL
+import { api } from "../axios"
 
 export async function getModulesAPI(): Promise<
   { title: string; principle: string; content: object }[]
 > {
-  const response = await fetch(`${api}/helper/get-all-module`)
-
-  if (!response.ok) {
-    const errorData = await response.json()
-    throw new Error(errorData.detail || "Error fetching modules")
-  }
-
-  const data = await response.json()
-  return data.data
+  const response = await api.get("/helper/get-all-module")
+  return response.data?.data || response.data
 }
 
 export async function createModuleAPI(module: {
@@ -19,16 +12,19 @@ export async function createModuleAPI(module: {
   principle: string
   content: object
 }) {
-  const response = await fetch(`${api}/helper/create-module`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(module),
-  })
-
-  if (!response.ok) {
-    const errorData = await response.json()
-    throw new Error(errorData.detail || "Error creating module")
-  }
-
-  return response.json()
+  const response = await api.post("/helper/create-module", module)
+  return response.data
 }
+
+export async function chatAPI(msg: string) {
+  const response = await api.post("/chat/chat", { msg: msg })
+  return response.data
+}
+
+export async function analyzerAPI(url: string | { url: string }) {
+  const payload = typeof url === "string" ? { url } : url
+  const response = await api.post("/accessibility/analyze", payload)
+  return response.data?.data || response.data
+}
+
+export const analyzeAPI = analyzerAPI

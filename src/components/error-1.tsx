@@ -1,13 +1,5 @@
-import { Button, buttonVariants } from "@/components/ui/button"
-import type { ReactNode } from "react"
-import { RiHome5Fill } from "react-icons/ri"
-
-export interface ErrorOneAction {
-  label: string
-  icon?: ReactNode
-  href?: string
-  onClick?: () => void
-}
+import { buttonVariants } from "@/components/ui/button"
+import { HomeIcon, LogIn } from "lucide-react"
 
 export interface ErrorOneProps {
   /** The HTTP error code to display prominently, e.g. "404" */
@@ -17,7 +9,6 @@ export interface ErrorOneProps {
   /** Supporting description copy */
   description?: string
   /** Primary call-to-action */
-  action?: ErrorOneAction
 }
 
 // ─── Sub-components ─────────────────────────────────────────────────────────
@@ -45,37 +36,10 @@ function GradientCode({ code }: { code: string }) {
   )
 }
 
-function PillButton({ label, icon, href, onClick }: ErrorOneAction) {
-  const cls =
-    "h-10  px-6 text-sm font-semibold transition-opacity hover:opacity-90 mt-4 "
-
-  const content = (
-    <>
-      <span>{label}</span>
-      {icon}
-    </>
-  )
-
-  if (href) {
-    return (
-      <a href={href} className={buttonVariants({ variant: "default" }) + cls}>
-        {content}
-      </a>
-    )
-  }
-
-  return (
-    <Button className={cls} onClick={onClick} type="button">
-      {content}
-    </Button>
-  )
-}
-
 export function ErrorOne({
   code = "404",
   title = "No, no, that's right.",
   description = "This is a 404 page. And this page exists, no matter what anyone says.",
-  action = defaultErrorOneAction,
 }: ErrorOneProps) {
   return (
     <main className="theme-injected relative flex min-h-screen items-center justify-center bg-background px-6 py-16 text-foreground">
@@ -109,16 +73,22 @@ export function ErrorOne({
             {description}
           </p>
         </div>
-        <PillButton {...action} />
+        <div className="flex items-center gap-4 border pt-4">
+          {code == "401" ? (
+            <a href="/login" className={buttonVariants({ variant: "default" })}>
+              Log in
+              <LogIn />
+            </a>
+          ) : (
+            <a href="/" className={buttonVariants({ variant: "default" })}>
+              Go to Home Page
+              <HomeIcon />
+            </a>
+          )}
+        </div>
       </section>
     </main>
   )
-}
-
-const defaultErrorOneAction: ErrorOneAction = {
-  label: "Go Back Home",
-  href: "/",
-  icon: <RiHome5Fill className="ml-1.5 text-base" aria-hidden="true" />,
 }
 
 export default ErrorOne

@@ -11,6 +11,8 @@ import {
   Zap,
   ShieldCheck,
   FileSearch,
+  BarChart3,
+  BotMessageSquare,
 } from "lucide-react"
 
 interface PricingBlockProps {
@@ -36,8 +38,8 @@ export default function PricingBlock({
       badge: "Forever Free",
       description:
         audience === "solo"
-          ? "Ideal for students and curious developers exploring accessibility basics."
-          : "Trial access for individual educators to test the scanning engine.",
+          ? "For individual IT students and developers exploring core web accessibility."
+          : "Trial access for individual educators to evaluate the diagnostic scanning engine.",
       price: {
         monthly: 0,
         yearly: 0,
@@ -47,13 +49,30 @@ export default function PricingBlock({
       scansDetail:
         audience === "solo"
           ? "15 standard DOM audits refreshed every 30 days"
-          : "Solo trial account (team pooling unavailable)",
+          : "Solo evaluation license (team pooling disabled)",
+      coreTrioFeatures: [
+        {
+          label: "Aria Analyzer",
+          detail: "Single URL scan & DOM inspector",
+          icon: FileSearch,
+        },
+        {
+          label: "Mastery Analytics",
+          detail: "Individual principle progress overview",
+          icon: BarChart3,
+        },
+        {
+          label: "Aria Assistant",
+          detail: "5 interactive WCAG queries / day",
+          icon: BotMessageSquare,
+        },
+      ],
       features: [
         "15 Live page scans / month",
-        "WCAG 2.1 Level A & AA basic checks",
-        "3 Core POUR learning modules",
-        "Single-page DOM inspector",
+        "WCAG 2.1 Level A & AA basic rules",
+        "3 Core POUR interactive modules",
         "Basic issue severity breakdown",
+        "Local DOM contrast inspector",
         "Community forum support",
       ],
       ctaText: "Start For Free",
@@ -67,8 +86,8 @@ export default function PricingBlock({
       badge: "Student & Solo Pro",
       description:
         audience === "solo"
-          ? "Essential for IT students, capstone projects, and freelance engineers."
-          : "Structured tier for project squads and small research labs.",
+          ? "Essential for CS students, capstone teams, and freelance frontend engineers."
+          : "Structured tier for project squads, teaching labs, and course sections.",
       price: {
         monthly: 12,
         yearly: 9,
@@ -77,18 +96,35 @@ export default function PricingBlock({
         audience === "solo" ? "100 Scans / month" : "150 Scans / user / mo",
       scansDetail:
         audience === "solo"
-          ? "100 high-speed scans for ongoing development"
-          : "150 pooled scans per seat with team quota sharing",
+          ? "100 high-speed automated scans for active development"
+          : "150 pooled scans per seat with shared lab quotas",
+      coreTrioFeatures: [
+        {
+          label: "Aria Analyzer",
+          detail: "Fast AST scanner + Chrome Extension MV3",
+          icon: FileSearch,
+        },
+        {
+          label: "Mastery Analytics",
+          detail: "POUR radar gauges & milestone badges",
+          icon: BarChart3,
+        },
+        {
+          label: "Aria Assistant",
+          detail: "Fast AST AI remediation (50 queries/day)",
+          icon: BotMessageSquare,
+        },
+      ],
       features: [
         audience === "solo"
           ? "100 Automated scans / month"
           : "150 Pooled scans / seat / month",
-        "Full WCAG 2.1 & 2.2 Level AA suite",
+        "Full WCAG 2.1 & 2.2 Level AA rule suite",
         "All 12+ POUR interactive modules",
         "Fast AST AI code remediation (Qwen 2.5)",
         "Downloadable PDF & JSON audit reports",
-        "Aria Assistant tutor (50 queries / day)",
-        "Color contrast & visual simulation tools",
+        "Vision simulation & contrast calculator",
+        "Priority email ticket support",
       ],
       ctaText: "Get Started with Plus",
       ctaLink: "/signup?plan=plus",
@@ -101,8 +137,8 @@ export default function PricingBlock({
       badge: "Most Popular",
       description:
         audience === "solo"
-          ? "For senior developers, consultants, and power accessibility advocates."
-          : "For educators managing multiple class sections, departments, and cohorts.",
+          ? "For senior engineers, accessibility auditors, and power creators."
+          : "For university professors and faculty managing multiple cohorts and labs.",
       price: {
         monthly: 29,
         yearly: 24,
@@ -113,17 +149,33 @@ export default function PricingBlock({
         audience === "solo"
           ? "500 multimodal scans + batch analysis"
           : "750 pooled scans / user with 2x rollover allowance",
+      coreTrioFeatures: [
+        {
+          label: "Aria Analyzer",
+          detail: "Batch URL scanner (20 URLs) + local server audit",
+          icon: FileSearch,
+        },
+        {
+          label: "Mastery Analytics",
+          detail: "Cohort principle telemetry & at-risk alerts",
+          icon: BarChart3,
+        },
+        {
+          label: "Aria Assistant",
+          detail: "Dual AI (Gemini Flash + Qwen 2.5) unlimited",
+          icon: BotMessageSquare,
+        },
+      ],
       features: [
         audience === "solo"
           ? "500 Multimodal scans / month"
-          : "750 Pooled scans / seat / month (with rollover)",
+          : "750 Pooled scans / seat / month (with 2x rollover)",
         "Dual AI Remediation (Gemini Flash + Qwen 2.5)",
         "Batch URL scanning (up to 20 URLs at once)",
-        "Classroom & student cohort analytics",
-        "Interactive Quiz and Module authoring studio",
-        "Principle-by-principle mastery telemetry",
+        "Interactive Quiz & Module Authoring Studio",
+        "Cohort principle telemetry & at-risk alerts",
         "Exportable academic gradebook & audit logs",
-        "Priority email & triage support",
+        "Priority email triage & onboarding guide",
       ],
       ctaText: "Start Free 14-Day Trial",
       ctaLink: "/signup?plan=premium",
@@ -136,7 +188,7 @@ export default function PricingBlock({
       badge: "Campus & Enterprise",
       description:
         audience === "solo"
-          ? "For university faculty and enterprise organizations requiring high volume."
+          ? "For university faculty leadership and enterprise accessibility operations."
           : "Campus-wide accessibility education, LMS integration, and administrative controls.",
       price: {
         monthly: "Custom",
@@ -144,18 +196,35 @@ export default function PricingBlock({
       },
       scansBadge: "Unlimited / High-Volume",
       scansDetail:
-        "5,000+ pooled monthly scans with custom per-department allocations",
+        "50,000+ pooled monthly scans with custom sub-department allocations",
+      coreTrioFeatures: [
+        {
+          label: "Aria Analyzer",
+          detail: "Full-domain crawl & Chrome extension fleet",
+          icon: FileSearch,
+        },
+        {
+          label: "Mastery Analytics",
+          detail: "Campus-wide LMS grade sync & compliance SLA",
+          icon: BarChart3,
+        },
+        {
+          label: "Aria Assistant",
+          detail: "Enterprise fine-tuned AI with syllabus context",
+          icon: BotMessageSquare,
+        },
+      ],
       features: [
         "Unlimited or customized scan quotas",
         "LMS Integration (Canvas, Blackboard, Moodle LTI 1.3)",
-        "Single Sign-On (SAML, Okta, Google Workspace)",
-        "Unlimited instructor & student accounts",
+        "Single Sign-On (SAML, Okta, Azure AD, Google)",
+        "Unlimited student & faculty account seats",
         "Automated grading sync & custom rubrics",
         "FERPA, ADA Section 508 & WCAG SLA compliance",
-        "Dedicated accessibility architect & onboarding",
-        "Custom institutional billing (PO / Wire / Net 30)",
+        "Dedicated accessibility architect & live training",
+        "Custom billing options (PO / Wire / Net 30)",
       ],
-      ctaText: "Contact Sales & Pilots",
+      ctaText: "Contact Institutional Sales",
       ctaLink: "/contact?subject=institutional",
       ctaVariant: "outline" as const,
       highlighted: false,
@@ -164,32 +233,42 @@ export default function PricingBlock({
 
   return (
     <div className={`space-y-10 ${className}`}>
-      {/* Controls: Audience Selector & Billing Switcher */}
+      {/* =========================================================================
+          CONTROLS: AUDIENCE SELECTOR & BILLING SWITCHER (WATERMELON UI CONTROL BLOCK)
+          ========================================================================= */}
       <div className="flex flex-col items-center justify-center gap-6 sm:flex-row sm:justify-between">
-        {/* Audience Segment Pill Switcher */}
-        <div className="inline-flex rounded-xl border border-border bg-muted/50 p-1">
+        {/* Audience Segment Switcher */}
+        <div
+          role="tablist"
+          aria-label="Select audience perspective"
+          className="inline-flex rounded-2xl border border-border bg-muted/50 p-1.5 shadow-xs"
+        >
           <button
             type="button"
+            role="tab"
+            aria-selected={audience === "solo"}
             onClick={() => setAudience("solo")}
-            className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition-all sm:text-sm ${
+            className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold transition-all sm:text-sm ${
               audience === "solo"
                 ? "bg-background text-foreground shadow-xs"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <User className="size-3.5" />
-            <span>Solo &amp; Students</span>
+            <User className="size-4" aria-hidden="true" />
+            <span>Solo &amp; Freelancers</span>
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={audience === "organization"}
             onClick={() => setAudience("organization")}
-            className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition-all sm:text-sm ${
+            className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold transition-all sm:text-sm ${
               audience === "organization"
                 ? "bg-background text-foreground shadow-xs"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <Building2 className="size-3.5" />
+            <Building2 className="size-4" aria-hidden="true" />
             <span>Classrooms &amp; Organizations</span>
           </button>
         </div>
@@ -229,7 +308,7 @@ export default function PricingBlock({
             <span>Annual</span>
             <Badge
               variant="secondary"
-              className="border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0.5 text-xs font-bold text-emerald-600 dark:text-emerald-400"
+              className="border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-xs font-bold text-emerald-600 dark:text-emerald-400"
             >
               Save 20%
             </Badge>
@@ -237,7 +316,9 @@ export default function PricingBlock({
         </div>
       </div>
 
-      {/* Pricing Cards Grid */}
+      {/* =========================================================================
+          PRICING CARDS GRID (WATERMELON UI HIGH-TIER CARDS)
+          ========================================================================= */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {plans.map((plan) => {
           const isNumeric = typeof plan.price.yearly === "number"
@@ -250,24 +331,24 @@ export default function PricingBlock({
           return (
             <div
               key={plan.id}
-              className={`relative flex flex-col justify-between rounded-2xl border transition-all duration-200 ${
+              className={`relative flex flex-col justify-between rounded-3xl border transition-all duration-200 ${
                 plan.highlighted
-                  ? "border-primary bg-card shadow-lg ring-1 ring-primary/20 hover:shadow-xl dark:bg-card/90"
+                  ? "border-primary bg-card shadow-xl ring-1 ring-primary/25 hover:shadow-2xl dark:bg-card/95"
                   : "border-border bg-card/60 hover:border-border/80 hover:bg-card hover:shadow-sm"
-              } p-6`}
+              } p-6 sm:p-7`}
             >
               {/* Highlight Badge */}
               {plan.highlighted && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground shadow-sm">
-                    <Sparkles className="size-3" />
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-1 text-xs font-semibold text-primary-foreground shadow-sm">
+                    <Sparkles className="size-3.5" aria-hidden="true" />
                     {plan.badge}
                   </span>
                 </div>
               )}
 
-              {/* Plan Header */}
-              <div className="space-y-4">
+              {/* Card Body */}
+              <div className="space-y-5">
                 <div className="flex items-center justify-between">
                   <h3 className="font-heading text-xl font-bold text-foreground">
                     {plan.name}
@@ -304,16 +385,16 @@ export default function PricingBlock({
                   <p className="mt-1 text-xs text-muted-foreground">
                     {isNumeric && Number(displayPrice) > 0
                       ? isYearly
-                        ? "Billed annually ($" + Number(displayPrice) * 12 + "/yr)"
+                        ? "Billed annually ($" + Number(displayPrice) * 12 + "/user/yr)"
                         : "Billed monthly"
                       : isNumeric
                       ? "Free forever, no credit card required"
-                      : "Tailored to your campus or enterprise scale"}
+                      : "Tailored to your campus enrollment scale"}
                   </p>
                 </div>
 
                 {/* Key Scan Allowance Highlight Pill */}
-                <div className="space-y-1.5 rounded-xl border border-primary/15 bg-primary/5 p-3">
+                <div className="space-y-1.5 rounded-2xl border border-primary/20 bg-primary/5 p-3.5">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-primary">
                     <FileSearch className="size-3.5" />
                     <span>Scan Allowance:</span>
@@ -326,11 +407,32 @@ export default function PricingBlock({
                   </p>
                 </div>
 
+                {/* Core Trio Capabilities Mini-Matrix */}
+                <div className="space-y-2 rounded-2xl border border-border bg-muted/30 p-3">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Core Trio Inclusions:
+                  </span>
+                  <div className="space-y-1.5 text-xs">
+                    {plan.coreTrioFeatures.map((trio, tIdx) => {
+                      const TrioIcon = trio.icon
+                      return (
+                        <div key={tIdx} className="flex items-start gap-2 text-foreground">
+                          <TrioIcon className="size-3.5 shrink-0 text-primary mt-0.5" />
+                          <div>
+                            <span className="font-semibold">{trio.label}: </span>
+                            <span className="text-muted-foreground">{trio.detail}</span>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+
                 {/* Feature List */}
-                <div className="space-y-2.5 pt-2">
-                  <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-                    What's included:
-                  </p>
+                <div className="space-y-2.5 pt-1">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Plan Specifications:
+                  </span>
                   <ul className="space-y-2 text-xs" role="list">
                     {plan.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-2">
@@ -360,26 +462,28 @@ export default function PricingBlock({
         })}
       </div>
 
-      {/* Organization Scan Pooling Explainer Banner */}
-      <div className="rounded-2xl border border-border bg-muted/40 p-5 sm:p-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-start gap-3.5">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+      {/* =========================================================================
+          ORGANIZATION SCAN POOLING EXPLAINER (WATERMELON UI CALLOUT BANNER)
+          ========================================================================= */}
+      <div className="rounded-3xl border border-border bg-muted/40 p-6 sm:p-8 shadow-xs">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-4">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
               <Zap className="size-5" />
             </div>
             <div className="space-y-1">
               <h4 className="font-heading text-sm font-bold text-foreground sm:text-base">
-                How Do Scan Allowances Work for Organizations?
+                How Does Scan Pooling Work for Classrooms &amp; Organizations?
               </h4>
               <p className="max-w-2xl text-xs text-muted-foreground leading-relaxed sm:text-sm">
-                In classrooms and teams, monthly scans are pooled across all active seats. For instance, a classroom of 30 students on Plus gets{" "}
-                <strong className="text-foreground">4,500 total scans/month</strong> shared across lab assignments with instructor oversight.
+                In classrooms and engineering teams, monthly scans are pooled into a single unified shared quota. For example, a classroom of 30 students on Plus gets{" "}
+                <strong className="text-foreground font-semibold">4,500 total scans/month</strong> shared across all lab assignments with instructor telemetry oversight.
               </p>
             </div>
           </div>
 
           <div className="flex shrink-0 items-center gap-2">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
               <ShieldCheck className="size-4 text-emerald-600 dark:text-emerald-400" />
               <span>WCAG 2.1 &amp; 2.2 AA Verified</span>
             </div>
@@ -391,7 +495,7 @@ export default function PricingBlock({
       {showDetailedLink && (
         <div className="flex flex-col items-center justify-center gap-2 pt-2 text-center">
           <p className="text-xs text-muted-foreground sm:text-sm">
-            Need a detailed feature breakdown, custom seat calculation, or academic procurement details?
+            Need a granular feature-by-feature matrix, dynamic seat quota calculator, or academic procurement details?
           </p>
           <Link
             to="/pricing"
