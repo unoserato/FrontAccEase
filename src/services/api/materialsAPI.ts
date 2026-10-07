@@ -1,18 +1,32 @@
+import type { ClassroomProps, ModuleProps } from "@/const/props/materialProps"
 import { api } from "../axios"
 
-export async function getModulesAPI(): Promise<
-  { title: string; principle: string; content: object }[]
-> {
+export async function getModulesAPI(): Promise<ModuleProps[]> {
   const response = await api.get("/helper/get-all-module")
-  return response.data?.data || response.data
+  return response.data.data
 }
 
 export async function createModuleAPI(module: {
   title: string
   principle: string
   content: object
+  classroom_id: string[]
 }) {
-  const response = await api.post("/helper/create-module", module)
+  const response = await api.post("/instructor/create-module", module)
+  return response.data
+}
+
+export async function createClassroomAPI(classroom: {
+  name: string
+  classroom_description: string
+  classroom_code: string
+}) {
+  const response = await api.post("/instructor/create-classroom", classroom)
+  return response.data
+}
+
+export async function arhiveModuleAPI(id: string) {
+  const response = await api.post(`/instructor/archive-module/${id}`)
   return response.data
 }
 
@@ -27,4 +41,12 @@ export async function analyzerAPI(url: string | { url: string }) {
   return response.data?.data || response.data
 }
 
-export const analyzeAPI = analyzerAPI
+export async function getClassroomAPI(): Promise<ClassroomProps[]> {
+  const response = await api.get("/helper/get-classroom")
+  return response.data
+}
+
+export async function getEnrolledLearners(id: string) {
+  const response = await api.get(`/helper/get-enrolled-learer/${id}`)
+  return response.data
+}

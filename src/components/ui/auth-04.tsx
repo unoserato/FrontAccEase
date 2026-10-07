@@ -28,8 +28,8 @@ export default function LoginPage() {
       setQueryData(["user"], data.user)
 
       switch (data.role) {
-        case "student":
-          navigate("/student", { replace: true })
+        case "learner":
+          navigate("/learner", { replace: true })
           break
         case "instructor":
           navigate("/instructor", { replace: true })
@@ -68,10 +68,10 @@ export default function LoginPage() {
             <div className="w-full space-y-1">
               <Link
                 to="/"
-                className="h-fit w-fit"
+                className="flex w-fit"
                 aria-label="FrontAccEase Home"
               >
-                <Logo className="" size={100} />
+                <Logo size={100} />
               </Link>
               <h2 className="text-3xl font-bold tracking-tight text-foreground">
                 Welcome back
@@ -99,7 +99,7 @@ export default function LoginPage() {
                     placeholder="you@gmail.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-10 border-transparent bg-muted ring-0 focus-visible:border-primary/50 focus-visible:ring-primary/20"
+                    className="h-10"
                   />
                 </Field>
                 <Field>
@@ -123,7 +123,7 @@ export default function LoginPage() {
                       placeholder="••••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="h-10 overflow-hidden border-transparent bg-muted ring-0 focus-visible:border-primary/50 focus-visible:ring-primary/20"
+                      className="h-10"
                     />
                     <button
                       className={

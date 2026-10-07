@@ -2,18 +2,19 @@ import ClassroomCardTemplate from "@/components/common/ClassroomCardTemplate"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import SearchTemplate from "@/components/common/SearchTemplate"
 import TooltipButtonTemplate from "@/components/common/TooltipButtonTemplate"
-import { classrooms } from "@/const/data"
 import NewClassroomDialog from "@/features/instructor/NewClassroomDialog"
+import { useClassrooms } from "@/services/tanstack/materials"
 import { Archive } from "lucide-react"
 import { useState } from "react"
 
 export default function ClassroomInstructor() {
   const [search, setSearch] = useState("")
+  const { data: classrooms } = useClassrooms()
 
   const filteredClassrooms = classrooms.filter((c) =>
     search.trim().length > 0
       ? c.name.toLowerCase().includes(search.toLowerCase()) ||
-        c.classroomCode.toLowerCase().includes(search.toLowerCase())
+        c.classroom_code.toLowerCase().includes(search.toLowerCase())
       : true
   )
 

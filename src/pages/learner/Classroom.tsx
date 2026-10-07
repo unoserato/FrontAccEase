@@ -12,15 +12,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import {
-  classrooms,
-  modules,
-  quizzes,
-  quizSubmissions,
-  user,
-} from "@/const/data"
+import { classrooms, quizzes, quizSubmissions, user } from "@/const/data"
 import { AlertTriangle, BookOpen, FileQuestion, LogOut } from "lucide-react"
 import { Link } from "react-router-dom"
+import { useModules } from "@/services/tanstack/materials"
 
 const myClassroom =
   classrooms.find((classroom) =>
@@ -28,10 +23,6 @@ const myClassroom =
       (learnerId) => learnerId === "1234-1234" || learnerId === user.id
     )
   ) || classrooms[0]
-
-const classroomModules = modules.filter((m) =>
-  m.classrooms?.includes(myClassroom.id)
-)
 
 const classroomQuizzes = quizzes.filter((q) =>
   q.classrooms?.includes(myClassroom.id)
@@ -47,6 +38,7 @@ export default function Classroom() {
   const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false)
   const [isLeaving, setIsLeaving] = useState(false)
   const [hasLeft, setHasLeft] = useState(false)
+  const { data: modules } = useModules()
 
   const handleConfirmLeave = () => {
     setIsLeaving(true)
@@ -56,6 +48,10 @@ export default function Classroom() {
       setHasLeft(true)
     }, 600)
   }
+
+  const classroomModules = modules.filter((m) =>
+    m.classroom_id?.includes(myClassroom.id)
+  )
 
   if (hasLeft) {
     return (

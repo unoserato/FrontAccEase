@@ -1,4 +1,4 @@
-import type { UserProps } from "@/const/userProps"
+import type { UserProps } from "@/const/props/userProps"
 import { api } from "../axios"
 
 export async function meAPI(): Promise<UserProps> {
@@ -11,6 +11,15 @@ export async function loginAPI(credentials: {
   password: string
 }) {
   const response = await api.post(`/auth/login`, credentials)
+  return response.data
+}
+
+export async function signupAPI(credentials: {
+  name: string
+  email: string
+  password: string
+}) {
+  const response = await api.post(`/auth/register`, credentials)
   return response.data
 }
 

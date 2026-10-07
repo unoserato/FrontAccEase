@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { classrooms, learners, modules, quizzes } from "@/const/data"
+import { classrooms, learners, quizzes } from "@/const/data"
 import { Link, useParams, useSearchParams } from "react-router-dom"
 import NotFound from "../errors/NotFound"
 import HeaderTemplate from "@/components/common/PageTemplate"
@@ -29,6 +29,7 @@ import ModuleCardTemplate from "@/components/common/ModuleCardTemplate"
 import QuizCardTemplate from "@/components/common/QuizCardTemplate"
 import { Badge } from "@/components/ui/badge"
 import copyText from "@/hooks/copy-text"
+import { useModules } from "@/services/tanstack/materials"
 
 export default function ClassroomInstructorView() {
   const { id } = useParams<{ id: string }>()
@@ -126,11 +127,13 @@ export default function ClassroomInstructorView() {
 }
 
 function Dashboard({ classroom }: { classroom: ClassroomProps }) {
+  const { data: modules } = useModules()
+
   // Filter modules and quizzes assigned to this classroom
   const classroomModules = modules.filter(
     (m) =>
-      m.classrooms?.includes(String(classroom.id)) ||
-      m.classrooms?.includes(classroom.id)
+      m.classroom_id?.includes(String(classroom.id)) ||
+      m.classroom_id?.includes(classroom.id)
   )
 
   const classroomQuizzes = quizzes.filter(

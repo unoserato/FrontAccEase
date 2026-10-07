@@ -10,18 +10,18 @@ import {
   DialogTitle,
 } from "../ui/dialog"
 import { Button } from "../ui/button"
-import type {
-  ClassroomProps,
-  ModuleProps,
-  QuizProps,
-} from "@/const/materialsProps"
+import type { ClassroomProps, ModuleProps } from "@/const/props/materialProps"
+import { useMutation } from "@tanstack/react-query"
+import { arhiveModuleAPI } from "@/services/api/materialsAPI"
+import { useInvalidateQueries } from "@/services/tanstack/auth"
+import { toast } from "../ui/toast"
 
 export type ActionType = "delete" | "archive" | "edit" | null
 
 interface Props {
   action: ActionType
   setAction: (value: ActionType) => void
-  item: ModuleProps | ClassroomProps | QuizProps
+  item: ModuleProps | ClassroomProps
   editUrl?: string
   itemType?: "module" | "classroom" | "quiz" | string
 }
@@ -34,6 +34,7 @@ export default function DeleteArchiveDialog({
   itemType: customItemType,
 }: Props) {
   const navigate = useNavigate()
+  const invalidateQuery = useInvalidateQueries()
 
   useEffect(() => {
     if (action === "edit") {
@@ -53,6 +54,22 @@ export default function DeleteArchiveDialog({
   const itemType = getItemTypeLabel()
   const isModalOpen = action === "archive" || action === "delete"
 
+  const { mutate: archiveModule } = useMutation({
+    mutationFn: arhiveModuleAPI,
+    onSuccess: () => {
+      toast.add({
+        type: "success",
+        title: "Module Archived",
+        description: "Successfully archived module",
+      })
+      invalidateQuery(["modules"])
+      setAction(null)
+    },
+  })
+
+  function handleArchiveModule() {
+    archiveModule(item.id)
+  }
   return (
     <Dialog
       open={isModalOpen}
@@ -88,8 +105,9 @@ export default function DeleteArchiveDialog({
           <Button
             variant={action === "delete" ? "destructive" : "default"}
             onClick={() => {
-              // perform action
-              setAction(null)
+              if (action == "archive" && itemType == "module") {
+                handleArchiveModule()
+              }
             }}
           >
             {action === "archive" ? "Archive" : "Delete"}

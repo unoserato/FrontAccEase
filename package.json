@@ -40,6 +40,7 @@
     "cmdk": "^1.1.1",
     "cn": "^0.3.0",
     "date-fns": "^4.4.0",
+    "input-otp": "^1.5.0",
     "lodash.throttle": "^4.1.1",
     "lucide-react": "^1.45.0",
     "react": "^19.2.8",
@@ -79,5 +80,8 @@
     "typescript": "~6",
     "typescript-eslint": "^8",
     "vite": "^8"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true
   }
 }

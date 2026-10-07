@@ -1,55 +1,104 @@
-import ModuleReadOnly from "@/features/ModuleReadOnly"
 import ProtectedLayout from "@/layout/ProtectedLayout"
-import AnalyzerLogsClassroomView from "@/pages/instructor/AnalyzerLogsClassroomView"
-import ClassroomInstructorView from "@/pages/instructor/ClassroomInstructorView"
-import QuizzesInstructorView from "@/pages/instructor/QuizzesInstructorView"
-import CoreModulesView from "@/pages/learner/CoreModulesView"
-import AnalyzerLogsSchoolAdmin from "@/pages/schoolAdmin/AnalyzerLogsSchoolAdmin"
-import DashboardSchoolAdmin from "@/pages/schoolAdmin/DashboardSchoolAdmin"
-import InstructorMaterials from "@/pages/schoolAdmin/InstructorMaterials"
-import InstructorMaterialsView from "@/pages/schoolAdmin/InstructorMaterialsView"
-import Instruments from "@/pages/schoolAdmin/Instruments"
-import LearningMaterials from "@/pages/schoolAdmin/LearningMaterials"
-import Permissions from "@/pages/schoolAdmin/Permissions"
-import Users from "@/pages/schoolAdmin/Users"
+import { lazy } from "react"
 import { Navigate, Route } from "react-router-dom"
+import DetailSkeleton from "@/components/skeleton/DetailSkeleton"
+import GridSkeleton from "@/components/skeleton/GridSkeleton"
+import PageSkeleton from "@/components/skeleton/PageSkeleton"
+import TableSkeleton from "@/components/skeleton/TableSkeleton"
+import { suspense } from "@/components/skeleton/suspense"
+
+const ModuleReadOnly = lazy(() => import("@/features/shared/ModuleReadOnly"))
+const AnalyzerLogsClassroomView = lazy(
+  () => import("@/pages/instructor/AnalyzerLogsClassroomView")
+)
+const ClassroomInstructorView = lazy(
+  () => import("@/pages/instructor/ClassroomInstructorView")
+)
+const QuizzesInstructorView = lazy(
+  () => import("@/pages/instructor/QuizzesInstructorView")
+)
+const CoreModulesView = lazy(
+  () => import("@/pages/learner/CoreModulesView")
+)
+const AnalyzerLogsSchoolAdmin = lazy(
+  () => import("@/pages/schooladmin/AnalyzerLogsSchoolAdmin")
+)
+const DashboardSchoolAdmin = lazy(
+  () => import("@/pages/schooladmin/DashboardSchoolAdmin")
+)
+const InstructorMaterials = lazy(
+  () => import("@/pages/schooladmin/InstructorMaterials")
+)
+const InstructorMaterialsView = lazy(
+  () => import("@/pages/schooladmin/InstructorMaterialsView")
+)
+const Instruments = lazy(() => import("@/pages/schooladmin/Instruments"))
+const LearningMaterials = lazy(
+  () => import("@/pages/schooladmin/LearningMaterials")
+)
+const Permissions = lazy(() => import("@/pages/schooladmin/Permissions"))
+const Users = lazy(() => import("@/pages/schooladmin/Users"))
 
 export const schoolAdminRoute = (
   <>
     <Route path="admin" element={<ProtectedLayout allowedRoles="admin" />}>
       <Route index element={<Navigate to="dashboard" />} />
-      <Route path="dashboard" element={<DashboardSchoolAdmin />} />
-      <Route path="learning-materials" element={<LearningMaterials />} />
+      <Route
+        path="dashboard"
+        element={suspense(<DashboardSchoolAdmin />, <PageSkeleton />)}
+      />
+      <Route
+        path="learning-materials"
+        element={suspense(<LearningMaterials />, <GridSkeleton />)}
+      />
       <Route
         path="learning-materials/:principleId"
-        element={<CoreModulesView />}
+        element={suspense(<CoreModulesView />, <GridSkeleton />)}
       />
-      <Route path="instructor-materials" element={<InstructorMaterials />} />
+      <Route
+        path="instructor-materials"
+        element={suspense(<InstructorMaterials />, <GridSkeleton />)}
+      />
       <Route
         path="instructor-materials/:id"
-        element={<InstructorMaterialsView />}
+        element={suspense(<InstructorMaterialsView />, <DetailSkeleton />)}
       />
       <Route
         path="instructor-materials/:id/classroom/:id"
-        element={<ClassroomInstructorView />}
+        element={suspense(<ClassroomInstructorView />, <DetailSkeleton />)}
       />
       <Route
         path="instructor-materials/:id/modules/:id"
-        element={<ModuleReadOnly />}
+        element={suspense(<ModuleReadOnly />, <DetailSkeleton />)}
       />
       <Route
         path="instructor-materials/:id/quizzes/:id"
-        element={<QuizzesInstructorView />}
+        element={suspense(<QuizzesInstructorView />, <TableSkeleton />)}
       />
-      <Route path="instruments" element={<Instruments />} />
-      <Route path="instruments/:guidelineId" element={<Instruments />} />
-      <Route path="users" element={<Users />} />
-      <Route path="logs" element={<AnalyzerLogsSchoolAdmin />} />
+      <Route
+        path="instruments"
+        element={suspense(<Instruments />, <TableSkeleton />)}
+      />
+      <Route
+        path="instruments/:guidelineId"
+        element={suspense(<Instruments />, <TableSkeleton />)}
+      />
+      <Route
+        path="users"
+        element={suspense(<Users />, <TableSkeleton />)}
+      />
+      <Route
+        path="logs"
+        element={suspense(<AnalyzerLogsSchoolAdmin />, <TableSkeleton />)}
+      />
       <Route
         path="logs/classroom/:id"
-        element={<AnalyzerLogsClassroomView />}
+        element={suspense(<AnalyzerLogsClassroomView />, <TableSkeleton />)}
       />
-      <Route path="permissions" element={<Permissions />} />
+      <Route
+        path="permissions"
+        element={suspense(<Permissions />, <TableSkeleton />)}
+      />
     </Route>
   </>
 )

@@ -12,8 +12,16 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
 import { SiGoogleclassroom } from "react-icons/si"
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
+import { useMutation } from "@tanstack/react-query"
+import { createClassroomAPI } from "@/services/api/materialsAPI"
+import { useInvalidateQueries } from "@/services/tanstack/auth"
 
 export default function NewClassroomDialog() {
   const [open, setOpen] = useState(false)
@@ -30,13 +38,27 @@ export default function NewClassroomDialog() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
+  const invalidateQueries = useInvalidateQueries()
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: createClassroomAPI,
+    onSuccess: () => {
+      invalidateQueries(["classroom"])
+      setOpen(false)
+    },
+  })
+
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
     console.log("Classroom payload:", formData)
 
-    setFormData({ name: "", code: "", description: "" })
-    setOpen(false)
+    const payload = {
+      name: formData.name,
+      classroom_description: formData.description,
+      classroom_code: formData.code,
+    }
+    mutate(payload)
   }
 
   return (
@@ -59,9 +81,9 @@ export default function NewClassroomDialog() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-3">
-            <div className="space-y-1.5">
-              <Label htmlFor="classroom-name">Name</Label>
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="classroom-name">Name</FieldLabel>
               <Input
                 id="classroom-name"
                 name="name"
@@ -70,10 +92,11 @@ export default function NewClassroomDialog() {
                 onChange={handleChange}
                 required
               />
-            </div>
+            </Field>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="classroom-code">Code</Label>
+            <Field>
+              <FieldLabel htmlFor="classroom-code">Classroom Code</FieldLabel>
+              <FieldDescription>This is not the join code</FieldDescription>
               <Input
                 id="classroom-code"
                 name="code"
@@ -82,10 +105,12 @@ export default function NewClassroomDialog() {
                 onChange={handleChange}
                 required
               />
-            </div>
+            </Field>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="classroom-description">Description</Label>
+            <Field>
+              <FieldLabel htmlFor="classroom-description">
+                Description
+              </FieldLabel>
               <Textarea
                 id="classroom-description"
                 name="description"
@@ -94,8 +119,8 @@ export default function NewClassroomDialog() {
                 value={formData.description}
                 onChange={handleChange}
               />
-            </div>
-          </div>
+            </Field>
+          </FieldGroup>
 
           <DialogFooter className="pt-2">
             <DialogClose
@@ -105,7 +130,9 @@ export default function NewClassroomDialog() {
                 </Button>
               }
             />
-            <Button type="submit">Create Classroom</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Creating Classroom..." : "Create Classroom"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

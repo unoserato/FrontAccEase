@@ -34,7 +34,7 @@ import { Field, FieldLabel } from "@/components/ui/field"
 import SearchTemplate from "@/components/common/SearchTemplate"
 
 // Features & Types
-import QuizForm from "@/features/QuizForm"
+import QuizForm from "@/features/shared/QuizForm"
 import {
   type QuizProps,
   type ClassroomProps,

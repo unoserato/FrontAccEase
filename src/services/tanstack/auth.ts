@@ -4,12 +4,13 @@ import {
   useQuery,
 } from "@tanstack/react-query"
 import { meAPI } from "../api/authAPI"
+import { staleTime } from "../axios"
 
 export function useCheckToken() {
   return useQuery({
     queryKey: ["user"],
     queryFn: meAPI,
-    staleTime: Infinity,
+    staleTime: staleTime,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     retry: false,
@@ -20,7 +21,7 @@ export function useMe() {
   return useSuspenseQuery({
     queryKey: ["user"],
     queryFn: meAPI,
-    staleTime: Infinity,
+    staleTime: staleTime,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     retry: false,

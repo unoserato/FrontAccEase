@@ -23,7 +23,7 @@ import { Button } from "../ui/button"
 import { useMutation } from "@tanstack/react-query"
 import { logoutAPI } from "@/services/api/authAPI"
 import { toast } from "../ui/toast"
-import { type UserProps } from "@/const/userProps"
+import { type UserProps } from "@/const/props/userProps"
 
 interface UserSidebarProps {
   links: { name: string; href: string; icon: any }[]

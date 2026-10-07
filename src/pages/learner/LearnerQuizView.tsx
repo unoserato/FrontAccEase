@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "@/components/ui/toast"
 import { quizzes } from "@/const/data"
-import QuizForm from "@/features/QuizForm"
+import QuizForm from "@/features/shared/QuizForm"
 import {
   getQuizJson,
   getQuizTotalQuestions,

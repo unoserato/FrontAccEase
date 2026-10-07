@@ -7,7 +7,9 @@ import ClassroomCardTemplate from "@/components/common/ClassroomCardTemplate"
 import SearchTemplate from "@/components/common/SearchTemplate"
 import GridListButtonGroupTemplate from "@/components/common/GridListButtonGroupTemplate"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { classrooms, instructors, modules, quizzes } from "@/const/data"
+import { quizzes } from "@/const/data"
+import { useClassrooms, useModules } from "@/services/tanstack/materials"
+import { useInstructors } from "@/services/tanstack/users"
 
 export default function InstructorMaterialsView() {
   const { id } = useParams<{ id: string }>()
@@ -16,19 +18,22 @@ export default function InstructorMaterialsView() {
   const [moduleSearch, setModuleSearch] = useState("")
   const [quizSearch, setQuizSearch] = useState("")
   const [gridView, setGridView] = useState(true)
+  const { data: modules } = useModules()
+  const { data: classrooms } = useClassrooms()
+  const { data: instructors } = useInstructors()
 
-  const instructor = instructors.find((i) => i.id === id)
+  const instructor = instructors.find((i) => i.user.id === id)
 
   // Filter classrooms for this instructor
   const instructorClassrooms = classrooms.filter((classroom) => {
-    if (id && classroom.created_by && classroom.created_by !== id) {
+    if (id && classroom.instructor && classroom.id !== id) {
       return false
     }
     if (classSearch.trim().length > 0) {
       const q = classSearch.toLowerCase()
       return (
         classroom.name.toLowerCase().includes(q) ||
-        classroom.classroomCode.toLowerCase().includes(q)
+        classroom.classroom_code.toLowerCase().includes(q)
       )
     }
     return true
@@ -55,7 +60,7 @@ export default function InstructorMaterialsView() {
       id &&
       quiz.created_by &&
       quiz.created_by !== id &&
-      quiz.author !== instructor?.name
+      quiz.author !== instructor?.user.name
     ) {
       return false
     }
@@ -72,9 +77,9 @@ export default function InstructorMaterialsView() {
   return (
     <section className="p-responsive space-y-4 sm:space-y-6">
       <HeaderTemplate
-        title={instructor ? instructor.name : "Instructor Materials"}
+        title={instructor ? instructor.user.name : "Instructor Materials"}
         subtitle={`Created classrooms, learning modules, and quizzes by ${
-          instructor ? instructor.name : "this instructor"
+          instructor ? instructor.user.name : "this instructor"
         }.`}
         backTo="-1"
       />

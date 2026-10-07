@@ -1,4 +1,3 @@
-import type { ClassroomProps } from "@/const/materialsProps"
 import {
   Card,
   CardContent,
@@ -15,6 +14,7 @@ import { useNavigate } from "react-router-dom"
 import EditorDropdown from "./EditorDropdown"
 import { useMe } from "@/services/tanstack/auth"
 import { Users } from "lucide-react"
+import type { ClassroomProps } from "@/const/props/materialProps"
 
 export default function ClassroomCardTemplate({
   classroom,
@@ -36,7 +36,7 @@ export default function ClassroomCardTemplate({
         <CardHeader className="relative bg-foreground p-4 pr-12 text-background sm:p-5">
           <div className="space-y-1 pr-6">
             <CardTitle className="line-clamp-1 text-base font-bold text-background capitalize sm:text-lg">
-              {classroom.classroomCode}
+              {classroom.classroom_code}
             </CardTitle>
             <CardDescription className="line-clamp-1 text-xs text-background/80 sm:text-sm">
               {classroom.name}
@@ -58,8 +58,8 @@ export default function ClassroomCardTemplate({
             </div>
             <div>
               <p className="text-xs font-semibold text-foreground sm:text-sm">
-                {classroom.learners.length}{" "}
-                {classroom.learners.length === 1 ? "Learner" : "Learners"}
+                {classroom.enrollment_count}{" "}
+                {classroom.enrollment_count === 1 ? "Learner" : "Learners"}
               </p>
               <p className="text-xs text-muted-foreground sm:text-xs">
                 Enrolled

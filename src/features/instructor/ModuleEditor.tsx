@@ -13,12 +13,6 @@ import {
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
-import { classrooms, modules } from "@/const/data"
-import {
-  type ClassroomProps,
-  type WCAGPrinciple,
-  WCAG_PRINCIPLES_DATA,
-} from "@/const/materialsProps"
 import {
   Check,
   ChevronLeft,
@@ -27,7 +21,6 @@ import {
   Lock,
   Save,
   Send,
-  X,
 } from "lucide-react"
 import { useMemo, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
@@ -38,14 +31,17 @@ import { useUnmount } from "@/hooks/useUnmount"
 import { useMutation } from "@tanstack/react-query"
 import { createModuleAPI } from "@/services/api/materialsAPI"
 import { toast } from "@/components/ui/toast"
+import { useClassrooms, useModules } from "@/services/tanstack/materials"
 
 const MODULES_PATH = "/instructor/modules"
 
 export default function ModuleEditor() {
   const { id } = useParams<{ id?: string }>()
+  const { data: modules } = useModules()
+  const { data: classrooms } = useClassrooms()
   const existingModule = useMemo(
-    () => (id ? modules.find((doc) => String(doc.id) === String(id)) : null),
-    [id]
+    () => (id ? modules?.find((doc) => String(doc.id) === String(id)) : null),
+    [id, modules]
   )
   const navigate = useNavigate()
 
@@ -59,13 +55,10 @@ export default function ModuleEditor() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedClassrooms, setSelectedClassrooms] = useState<string[]>(
-    existingModule?.classrooms ? existingModule.classrooms : []
+    existingModule?.classroom_id ? existingModule.classroom_id : []
   )
-  const [selectedPrinciple, setSelectedPrinciple] = useState<WCAGPrinciple>(
+  const [selectedPrinciple, setSelectedPrinciple] = useState(
     existingModule?.principle ? existingModule.principle : "Perceivable"
-  )
-  const [selectedTags, setSelectedTags] = useState<string[]>(
-    existingModule?.tags ? existingModule.tags : []
   )
   const [isSaving, setIsSaving] = useState(false)
 
@@ -77,13 +70,10 @@ export default function ModuleEditor() {
       setContent(existingModule.content)
       if (existingModule.principle)
         setSelectedPrinciple(existingModule.principle)
-      if (existingModule.tags) setSelectedTags(existingModule.tags)
-      if (existingModule.classrooms)
-        setSelectedClassrooms(existingModule.classrooms)
+      if (existingModule.classroom_id)
+        setSelectedClassrooms(existingModule.classroom_id)
     }
   }
-
-  const availableTags = WCAG_PRINCIPLES_DATA[selectedPrinciple] || []
 
   useUnmount({ when: !!content })
 
@@ -104,15 +94,15 @@ export default function ModuleEditor() {
     if (!searchQuery.trim()) return classrooms
     const q = searchQuery.toLowerCase()
     return classrooms.filter(
-      (c: ClassroomProps) =>
+      (c) =>
         c.name.toLowerCase().includes(q) ||
-        c.classroomCode.toLowerCase().includes(q)
+        c.classroom_code.toLowerCase().includes(q)
     )
-  }, [searchQuery])
+  }, [searchQuery, classrooms])
 
   function handleToggleAll(checked: boolean) {
     if (checked) {
-      setSelectedClassrooms(classrooms.map((c: ClassroomProps) => c.id))
+      setSelectedClassrooms(classrooms.map((c) => c.id))
     } else {
       setSelectedClassrooms([])
     }
@@ -121,12 +111,6 @@ export default function ModuleEditor() {
   function handleToggleClassroom(id: string) {
     setSelectedClassrooms((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    )
-  }
-
-  function handleToggleTag(tag: string) {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
     )
   }
 
@@ -157,21 +141,14 @@ export default function ModuleEditor() {
 
   function handleSave() {
     setIsSaving(true)
-    saveModule({ title, principle: selectedPrinciple, content })
-    // const payload = {
-    //   title,
-    //   content,
-    //   principle: selectedPrinciple,
-    //   tags: selectedTags,
-    //   classrooms: selectedClassrooms,
-    //   status: isPublish ? "published" : "draft",
-    // }
-    // console.log("Saved module document:", payload)
+    const payload = {
+      title: title,
+      principle: selectedPrinciple,
+      content: content,
+      classroom_id: selectedClassrooms,
+    }
 
-    // setTimeout(() => {
-    //   setIsSaving(false)
-    //   setDialogOpen(false)
-    // }, 400)
+    saveModule(payload)
   }
 
   return (
@@ -274,7 +251,6 @@ export default function ModuleEditor() {
                             className="h-8 text-xs font-medium"
                             onClick={() => {
                               setSelectedPrinciple(principle)
-                              setSelectedTags([])
                             }}
                           >
                             {principle}
@@ -283,8 +259,7 @@ export default function ModuleEditor() {
                       })}
                     </div>
                   </Field>
-
-                  {/* WCAG Tags / Success Criteria Selector (Filtered by Principle) */}
+                  {/* WCAG Tags / Success Criteria Selector (Filtered by Principle)
                   <Field className="flex flex-col gap-2">
                     <div className="flex items-center justify-between gap-2">
                       <FieldLabel className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
@@ -345,8 +320,7 @@ export default function ModuleEditor() {
                         ))}
                       </div>
                     )}
-                  </Field>
-
+                  </Field> */}
                   {/* Toggle: All Classrooms */}
                   <div className="flex items-center justify-between rounded-lg border bg-muted/30 p-3">
                     <div className="space-y-0.5 pr-2">
@@ -362,7 +336,6 @@ export default function ModuleEditor() {
                       onCheckedChange={handleToggleAll}
                     />
                   </div>
-
                   {/* Classroom Selector */}
                   <Field className="flex flex-col gap-2.5">
                     <div className="flex items-center justify-between gap-2">
@@ -403,7 +376,7 @@ export default function ModuleEditor() {
                           No matching classrooms found.
                         </div>
                       ) : (
-                        filteredClassrooms.map((cls: ClassroomProps) => {
+                        filteredClassrooms.map((cls) => {
                           const checked = selectedClassrooms.includes(cls.id)
                           return (
                             <label
@@ -424,7 +397,7 @@ export default function ModuleEditor() {
                                   {cls.name}
                                 </span>
                                 <span className="text-xs text-muted-foreground">
-                                  Code: {cls.classroomCode}
+                                  Code: {cls.classroom_code}
                                 </span>
                               </div>
                               {checked && (
@@ -437,7 +410,7 @@ export default function ModuleEditor() {
                     </div>
 
                     {/* Selected Tags Badge Container */}
-                    {selectedClassrooms.length > 0 && (
+                    {/* {selectedClassrooms.length > 0 && (
                       <div className="flex max-h-24 flex-wrap gap-1.5 overflow-y-auto rounded-md border bg-muted/20 p-2">
                         {selectedClassrooms.map((id) => {
                           const match = classrooms.find(
@@ -463,7 +436,7 @@ export default function ModuleEditor() {
                           )
                         })}
                       </div>
-                    )}
+                    )} */}
                   </Field>
                 </div>
 

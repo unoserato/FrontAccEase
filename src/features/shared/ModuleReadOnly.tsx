@@ -11,32 +11,27 @@ import { Selection } from "@tiptap/extensions"
 import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import { ArrowLeft, Calendar, FileText, GraduationCap } from "lucide-react"
-import { useEffect, useMemo } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import { modules, classrooms } from "@/const/data"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { getDateString } from "@/hooks/date-to-string"
 import { useMe } from "@/services/tanstack/auth"
+import { useModules } from "@/services/tanstack/materials"
+import { useEffect } from "react"
 
 export default function ModuleReadOnly() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { data: user } = useMe()
+  const { data: modules } = useModules()
   const isEditor = user?.role === "instructor"
 
   function handleBack() {
-    navigate("../..", { relative: "path" })
+    navigate(-1)
   }
 
-  const targetDoc = modules.find((doc) => String(doc.id) === String(id))
-
-  const assignedClassrooms = useMemo(() => {
-    return (targetDoc?.classrooms ?? [])
-      .map((cId) => classrooms.find((c) => String(c.id) === String(cId)))
-      .filter(Boolean)
-  }, [targetDoc?.classrooms])
+  const targetDoc = modules?.find((doc) => String(doc.id) === String(id))
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -154,11 +149,6 @@ export default function ModuleReadOnly() {
               <Badge variant="outline" className="text-xs font-semibold">
                 {targetDoc.principle}
               </Badge>
-              {targetDoc.tags?.map((tag, i) => (
-                <Badge key={i} variant="secondary" className="text-xs">
-                  {tag}
-                </Badge>
-              ))}
             </div>
 
             <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
@@ -168,7 +158,7 @@ export default function ModuleReadOnly() {
             <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <Calendar className="size-3.5" />
-                Created {getDateString(targetDoc.createdAt)}
+                Created {getDateString(targetDoc.created_at)}
               </span>
             </div>
 
@@ -179,7 +169,7 @@ export default function ModuleReadOnly() {
                   <GraduationCap className="size-3.5 text-primary" />
                   Assigned Classrooms:
                 </span>
-                {assignedClassrooms.length > 0 ? (
+                {/* {assignedClassrooms.length > 0 ? (
                   assignedClassrooms.map((c) => {
                     if (!c) return null
                     return (
@@ -195,7 +185,7 @@ export default function ModuleReadOnly() {
                   >
                     No classrooms assigned
                   </Badge>
-                )}
+                )} */}
               </div>
             )}
           </header>

@@ -1,17 +1,24 @@
-import LoginPage from "@/components/ui/auth-04"
+import AuthLayout from "@/layout/AuthLayout"
 import PublicLayout from "@/layout/PublicLayout"
-import AboutPage from "@/pages/public/AboutPage"
-import AccessibilityPage from "@/pages/public/AccessibilityPage"
-import AccessibilityStatementPage from "@/pages/public/AccessibilityStatementPage"
-import ContactPage from "@/pages/public/ContactPage"
-import FeaturesPage from "@/pages/public/FeaturesPage"
-import HowItWorksPage from "@/pages/public/HowItWorksPage"
-import LandingPage from "@/pages/public/LandingPage"
-import PricingPage from "@/pages/public/PricingPage"
-import PrivacyPage from "@/pages/public/PrivacyPage"
-import SignUpPage from "@/pages/public/SignUpPage"
-import TermsPage from "@/pages/public/TermsPage"
+import { lazy } from "react"
 import { Route } from "react-router-dom"
+
+const LoginPage = lazy(() => import("@/components/ui/auth-04"))
+const AboutPage = lazy(() => import("@/pages/public/AboutPage"))
+const AccessibilityPage = lazy(
+  () => import("@/pages/public/AccessibilityPage")
+)
+const AccessibilityStatementPage = lazy(
+  () => import("@/pages/public/AccessibilityStatementPage")
+)
+const ContactPage = lazy(() => import("@/pages/public/ContactPage"))
+const FeaturesPage = lazy(() => import("@/pages/public/FeaturesPage"))
+const HowItWorksPage = lazy(() => import("@/pages/public/HowItWorksPage"))
+const LandingPage = lazy(() => import("@/pages/public/LandingPage"))
+const PricingPage = lazy(() => import("@/pages/public/PricingPage"))
+const PrivacyPage = lazy(() => import("@/pages/public/PrivacyPage"))
+const SignUpPage = lazy(() => import("@/pages/public/SignUpPage"))
+const TermsPage = lazy(() => import("@/pages/public/TermsPage"))
 
 export const publicRoute = (
   <>
@@ -30,7 +37,9 @@ export const publicRoute = (
         element={<AccessibilityStatementPage />}
       />
     </Route>
-    <Route path="login" element={<LoginPage />} />
-    <Route path="signup" element={<SignUpPage />} />
+    <Route element={<AuthLayout />}>
+      <Route path="login" element={<LoginPage />} />
+      <Route path="signup" element={<SignUpPage />} />
+    </Route>
   </>
 )

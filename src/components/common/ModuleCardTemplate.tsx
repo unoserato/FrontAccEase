@@ -1,23 +1,14 @@
-import type { ModuleProps } from "@/const/materialsProps"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card"
+import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { getDateString } from "@/hooks/date-to-string"
-import { Badge } from "../ui/badge"
 import { Label } from "../ui/label"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import DeleteArchiveDialog, {
   type ActionType,
 } from "../instructor/DeleteArchiveDialog"
 import EditorDropdown from "./EditorDropdown"
 import { useNavigate } from "react-router-dom"
-import { classrooms } from "@/const/data"
-import { GraduationCap } from "lucide-react"
 import { useMe } from "@/services/tanstack/auth"
+import type { ModuleProps } from "@/const/props/materialProps"
 
 export type ModuleCardTemplateProps = {
   module: ModuleProps
@@ -32,12 +23,6 @@ export default function ModuleCardTemplate({
   const { data: user } = useMe()
   const navigate = useNavigate()
   const isEditor = user?.role === "instructor"
-
-  const assignedClassrooms = useMemo(() => {
-    return (module.classrooms ?? [])
-      .map((cId) => classrooms.find((c) => String(c.id) === String(cId)))
-      .filter(Boolean)
-  }, [module.classrooms])
 
   if (view === "list") {
     return (
@@ -58,38 +43,6 @@ export default function ModuleCardTemplate({
                 {module.name}
               </h3>
             </div>
-
-            {/* Assigned Classrooms (Visible for Editors only) */}
-            {isEditor && (
-              <div className="flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground">
-                <GraduationCap className="size-3.5 shrink-0" />
-                <span className="max-w-40 truncate">
-                  {assignedClassrooms.length > 0
-                    ? assignedClassrooms
-                        .map((c) => c?.classroomCode || c?.name)
-                        .join(", ")
-                    : "No classrooms"}
-                </span>
-              </div>
-            )}
-
-            {/* Tags */}
-            <div className="flex shrink-0 items-center gap-1.5 overflow-hidden">
-              {module.tags.slice(0, 2).map((tag, i) => (
-                <Badge
-                  key={i}
-                  variant="secondary"
-                  className="max-w-35 sm:max-w-50"
-                >
-                  <span className="truncate">{tag.trim()}</span>
-                </Badge>
-              ))}
-              {module.tags.length > 2 && (
-                <Badge variant="secondary" className="shrink-0 px-1.5 text-xs">
-                  +{module.tags.length - 2}
-                </Badge>
-              )}
-            </div>
           </div>
 
           {/* Meta & Actions */}
@@ -105,7 +58,7 @@ export default function ModuleCardTemplate({
                 className="text-xs font-medium text-foreground sm:text-xs"
                 id={`created_at_${module.id}`}
               >
-                {getDateString(module.createdAt)}
+                {getDateString(module.created_at)}
               </p>
             </div>
             {isEditor && (
@@ -114,11 +67,11 @@ export default function ModuleCardTemplate({
           </div>
         </div>
 
-        <DeleteArchiveDialog
+        {/* <DeleteArchiveDialog
           action={action}
           setAction={setAction}
           item={module}
-        />
+        /> */}
       </>
     )
   }
@@ -151,43 +104,6 @@ export default function ModuleCardTemplate({
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="flex flex-1 flex-col justify-end gap-2 p-3 pt-0 pb-1.5 sm:p-5 sm:pt-0 sm:pb-3">
-          {/* Assigned Classrooms (Visible for Editors only) */}
-          {isEditor && (
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <GraduationCap className="size-3.5 shrink-0" />
-              <span className="truncate">
-                {assignedClassrooms.length > 0
-                  ? assignedClassrooms
-                      .map((c) => c?.classroomCode || c?.name)
-                      .join(", ")
-                  : "No classrooms"}
-              </span>
-            </div>
-          )}
-
-          <div className="flex w-full min-w-0 flex-wrap items-center gap-1.5">
-            {module.tags.slice(0, 2).map((tag, i) => (
-              <Badge
-                key={i}
-                variant="secondary"
-                className="max-w-32.5 px-2 py-0.5 text-xs font-normal sm:max-w-45 sm:text-xs"
-              >
-                <span className="truncate">{tag.trim()}</span>
-              </Badge>
-            ))}
-
-            {module.tags.length > 2 && (
-              <Badge
-                variant="secondary"
-                className="shrink-0 px-1.5 py-0.5 text-xs font-medium"
-              >
-                +{module.tags.length - 2}
-              </Badge>
-            )}
-          </div>
-        </CardContent>
-
         <CardFooter className="flex items-center justify-between gap-1.5 border-t border-border p-3 pt-2 sm:p-5 sm:pt-3">
           <div className="min-w-0 flex-1">
             <Label
@@ -200,7 +116,7 @@ export default function ModuleCardTemplate({
               className="truncate text-xs font-medium text-foreground sm:text-xs"
               id={`created_at_${module.id}`}
             >
-              {getDateString(module.createdAt)}
+              {getDateString(module.created_at)}
             </p>
           </div>
         </CardFooter>

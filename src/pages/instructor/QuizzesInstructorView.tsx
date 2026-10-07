@@ -41,7 +41,7 @@ import {
   ChevronRight,
 } from "lucide-react"
 
-import QuizForm from "@/features/QuizForm"
+import QuizForm from "@/features/shared/QuizForm"
 import { useMe } from "@/services/tanstack/auth"
 
 export default function QuizzesInstructorView() {

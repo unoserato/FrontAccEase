@@ -3,9 +3,7 @@ import { classrooms, quizSubmissions } from "@/const/data"
 import { Card } from "../ui/card"
 import { Badge } from "../ui/badge"
 import { useState } from "react"
-import DeleteArchiveDialog, {
-  type ActionType,
-} from "../instructor/DeleteArchiveDialog"
+import { type ActionType } from "../instructor/DeleteArchiveDialog"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { getQuizTotalPoints } from "@/features/instructor/quizHelper"
@@ -23,6 +21,7 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
   const isEditor = user?.role == "instructor"
   const isMobile = useIsMobile()
   const navigate = useNavigate()
+  console.log(action)
 
   // Calculate dynamic submissions over total learners in assigned classrooms
   const matchingSubmissions = quizSubmissions.filter(
@@ -249,13 +248,13 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
         )}
       </Card>
 
-      <DeleteArchiveDialog
+      {/* <DeleteArchiveDialog
         action={action}
         setAction={setAction}
         item={quiz}
         editUrl={`/instructor/quizzes/edit/${quiz.id}`}
         itemType="quiz"
-      />
+      /> */}
     </>
   )
 }

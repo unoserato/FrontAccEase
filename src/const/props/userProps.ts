@@ -8,4 +8,4 @@ export interface UserProps {
   }
 }
 
-export type UserRole = "student" | "instructor" | "admin"
+export type UserRole = "learner" | "instructor" | "admin"

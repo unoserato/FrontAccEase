@@ -1,4 +1,6 @@
 "use client"
+import "/src/styles/_variables.scss"
+import "/src/styles/_keyframe-animations.scss"
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { EditorContent, EditorContext, useEditor } from "@tiptap/react"
@@ -293,7 +295,6 @@ export function SimpleEditor({
     }
   }, [editor, initialContent])
 
-   
   const [toolbarHeight, setToolbarHeight] = useState(0)
   useEffect(() => {
     if (toolbarRef.current) {

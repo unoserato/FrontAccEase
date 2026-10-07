@@ -1,4 +1,6 @@
+import { Suspense } from "react"
 import { Outlet } from "react-router-dom"
+import PageSkeleton from "@/components/skeleton/PageSkeleton"
 import PublicNavbar from "@/components/public/PublicNavbar"
 import PublicFooter from "@/components/public/PublicFooter"
 
@@ -22,7 +24,9 @@ export default function PublicLayout() {
         tabIndex={-1}
         className="flex-1 focus:outline-none"
       >
-        <Outlet />
+        <Suspense fallback={<PageSkeleton />}>
+          <Outlet />
+        </Suspense>
       </main>
 
       {/* Global Footer */}

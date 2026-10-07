@@ -1,18 +1,18 @@
 import UserHeader from "@/components/common/UserHeader"
 import UserSidebar from "@/components/common/UserSidebar"
 import UserSkeleton from "@/components/skeleton/UserSkeleton"
-// import UserSkeleton from "@/components/skeleton/UserSkeleton"
-import type { UserRole } from "@/const/userProps"
+import PageSkeleton from "@/components/skeleton/PageSkeleton"
+import type { UserRole } from "@/const/props/userProps"
 import { instructorNav, learnerNav, schoolAdminNav } from "@/const/navigation"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Suspense } from "react"
 import Forbidden from "@/pages/errors/Forbidden"
 import Unauthorized from "@/pages/errors/Unauthorized"
 import { Outlet } from "react-router-dom"
-import { useMe } from "@/services/tanstack/auth"
+import { useCheckToken } from "@/services/tanstack/auth"
 
 const linksByRole = {
-  student: learnerNav,
+  learner: learnerNav,
   instructor: instructorNav,
   admin: schoolAdminNav,
 }
@@ -23,7 +23,7 @@ export default function ProtectedLayout({
   allowedRoles: UserRole | UserRole[]
 }) {
   const isMobile = useIsMobile()
-  const { data: user, isLoading } = useMe()
+  const { data: user, isLoading } = useCheckToken()
 
   if (isLoading) {
     return <UserSkeleton />
@@ -52,7 +52,7 @@ export default function ProtectedLayout({
     >
       <UserSidebar links={links} user={user} />
       {isMobile && <UserHeader />}
-      <Suspense fallback={<UserSkeleton />}>
+      <Suspense fallback={<PageSkeleton />}>
         <main className="min-h-0 min-w-0 flex-1 overflow-y-auto bg-background">
           <Outlet />
         </main>
