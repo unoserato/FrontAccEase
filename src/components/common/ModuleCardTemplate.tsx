@@ -13,11 +13,13 @@ import type { ModuleProps } from "@/const/props/materialProps"
 export type ModuleCardTemplateProps = {
   module: ModuleProps
   view?: "grid" | "list"
+  href?: string
 }
 
 export default function ModuleCardTemplate({
   module,
   view = "grid",
+  href,
 }: ModuleCardTemplateProps) {
   const [action, setAction] = useState<ActionType>(null)
   const { data: user } = useMe()
@@ -29,7 +31,7 @@ export default function ModuleCardTemplate({
       <>
         <div
           onClick={() => {
-            navigate(`/instructor/modules/${module.id}`)
+            navigate(href || `/instructor/modules/${module.id}`)
           }}
           className="group relative flex w-full cursor-pointer flex-col justify-between gap-2.5 rounded-xl border border-border bg-card p-3 transition-all hover:shadow-sm sm:flex-row sm:items-center sm:gap-4 sm:p-4"
         >
@@ -80,7 +82,7 @@ export default function ModuleCardTemplate({
     <>
       <Card
         onClick={() => {
-          navigate(`/instructor/modules/${module.id}`)
+          navigate(href || `/instructor/modules/${module.id}`)
         }}
         className="group relative flex aspect-3/4 min-h-48 w-full cursor-pointer flex-col justify-between overflow-hidden p-0 transition-all hover:shadow-md sm:aspect-3/4"
       >

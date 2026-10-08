@@ -8,8 +8,11 @@ import SearchTemplate from "@/components/common/SearchTemplate"
 import GridListButtonGroupTemplate from "@/components/common/GridListButtonGroupTemplate"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { quizzes } from "@/const/data"
-import { useClassrooms, useModules } from "@/services/tanstack/materials"
-import { useInstructors } from "@/services/tanstack/users"
+import {
+  useInstructorMaterialsClassrooms,
+  useInstructorMaterialsList,
+  useInstructorMaterialsModules,
+} from "@/services/tanstack/materials"
 
 export default function InstructorMaterialsView() {
   const { id } = useParams<{ id: string }>()
@@ -18,41 +21,11 @@ export default function InstructorMaterialsView() {
   const [moduleSearch, setModuleSearch] = useState("")
   const [quizSearch, setQuizSearch] = useState("")
   const [gridView, setGridView] = useState(true)
-  const { data: modules } = useModules()
-  const { data: classrooms } = useClassrooms()
-  const { data: instructors } = useInstructors()
+  const { data: instructorMaterials } = useInstructorMaterialsList()
+  const { data: instructorClassrooms } = useInstructorMaterialsClassrooms(id!)
+  const { data: instructorModules } = useInstructorMaterialsModules(id!)
 
-  const instructor = instructors.find((i) => i.user.id === id)
-
-  // Filter classrooms for this instructor
-  const instructorClassrooms = classrooms.filter((classroom) => {
-    if (id && classroom.instructor && classroom.id !== id) {
-      return false
-    }
-    if (classSearch.trim().length > 0) {
-      const q = classSearch.toLowerCase()
-      return (
-        classroom.name.toLowerCase().includes(q) ||
-        classroom.classroom_code.toLowerCase().includes(q)
-      )
-    }
-    return true
-  })
-
-  // Filter modules for this instructor
-  const instructorModules = modules.filter((module) => {
-    if (id && module.created_by && module.created_by !== id) {
-      return false
-    }
-    if (moduleSearch.trim().length > 0) {
-      const q = moduleSearch.toLowerCase()
-      return (
-        module.name.toLowerCase().includes(q) ||
-        module.principle.toLowerCase().includes(q)
-      )
-    }
-    return true
-  })
+  const instructor = instructorMaterials.find((i) => i.user.id === id)
 
   // Filter quizzes for this instructor
   const instructorQuizzes = quizzes.filter((quiz) => {
@@ -153,24 +126,20 @@ export default function InstructorMaterialsView() {
           ) : gridView ? (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
               {instructorModules.map((module) => (
-                <div
-                  key={module.id}
-                  onClick={() => navigate(`./modules/${module.id}`)}
-                  className="cursor-pointer"
-                >
-                  <ModuleCardTemplate module={module} view="grid" />
+                <div key={module.id} className="cursor-pointer">
+                  <ModuleCardTemplate
+                    module={module}
+                    view="grid"
+                    href={`./modules/${module.id}`}
+                  />
                 </div>
               ))}
             </div>
           ) : (
             <div className="flex flex-col gap-2">
               {instructorModules.map((module) => (
-                <div
-                  key={module.id}
-                  onClick={() => navigate(`/admin/modules/${module.id}`)}
-                  className="cursor-pointer"
-                >
-                  <ModuleCardTemplate module={module} view="list" />
+                <div key={module.id} className="cursor-pointer">
+                  {/* <ModuleCardTemplate module={module} view="list" /> */}
                 </div>
               ))}
             </div>
@@ -196,11 +165,7 @@ export default function InstructorMaterialsView() {
           ) : (
             <div className="flex flex-col gap-3 sm:gap-4">
               {instructorQuizzes.map((quiz) => (
-                <div
-                  key={quiz.id}
-                  onClick={() => navigate(`./quizzes/${quiz.id}`)}
-                  className="cursor-pointer"
-                >
+                <div key={quiz.id} className="cursor-pointer">
                   <QuizCardTemplate quiz={quiz} />
                 </div>
               ))}

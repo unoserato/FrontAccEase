@@ -17,9 +17,7 @@ const ClassroomInstructorView = lazy(
 const QuizzesInstructorView = lazy(
   () => import("@/pages/instructor/QuizzesInstructorView")
 )
-const CoreModulesView = lazy(
-  () => import("@/pages/learner/CoreModulesView")
-)
+const CoreModulesView = lazy(() => import("@/pages/learner/CoreModulesView"))
 const AnalyzerLogsSchoolAdmin = lazy(
   () => import("@/pages/schooladmin/AnalyzerLogsSchoolAdmin")
 )
@@ -83,10 +81,7 @@ export const schoolAdminRoute = (
         path="instruments/:guidelineId"
         element={suspense(<Instruments />, <TableSkeleton />)}
       />
-      <Route
-        path="users"
-        element={suspense(<Users />, <TableSkeleton />)}
-      />
+      <Route path="users" element={suspense(<Users />, <TableSkeleton />)} />
       <Route
         path="logs"
         element={suspense(<AnalyzerLogsSchoolAdmin />, <TableSkeleton />)}

@@ -1,7 +1,6 @@
 import { useState } from "react"
-import { classrooms, learners, quizzes } from "@/const/data"
+import { learners, quizzes } from "@/const/data"
 import { Link, useParams, useSearchParams } from "react-router-dom"
-import NotFound from "../errors/NotFound"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -22,25 +21,19 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import type { ClassroomProps } from "@/const/materialsProps"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import ClassworkCardTemplate from "@/components/instructor/ClassworkCardTemplate"
 import ModuleCardTemplate from "@/components/common/ModuleCardTemplate"
 import QuizCardTemplate from "@/components/common/QuizCardTemplate"
 import { Badge } from "@/components/ui/badge"
 import copyText from "@/hooks/copy-text"
-import { useModules } from "@/services/tanstack/materials"
+import { useClassroomContentView } from "@/services/tanstack/materials"
+import type { ClassroomViewProps } from "@/const/props/materialProps"
 
 export default function ClassroomInstructorView() {
-  const { id } = useParams<{ id: string }>()
+  const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const [copied, setCopied] = useState(false)
-
-  const classroom = classrooms.find((c) => String(c.id) === String(id))
-
-  if (!classroom) {
-    return <NotFound />
-  }
+  const { data: classroom } = useClassroomContentView(id!)
 
   const tabParam = searchParams.get("tab")
   const activeTabValue =
@@ -58,20 +51,28 @@ export default function ClassroomInstructorView() {
     )
   }
 
+  console.log(classroom.modules.length)
+
   return (
     <section className="p-responsive w-full space-y-4 bg-background sm:space-y-6">
       <HeaderTemplate
         backTo="-1"
-        title={classroom.classroomCode}
-        subtitle={classroom.name}
+        title={classroom.classroom.name}
+        subtitle={classroom.classroom.classroom_description}
         cta={[
           <Button
             key="copy-code"
             variant="ghost"
             onClick={() =>
+              // copyText({
+              //   textToCopy: classroom.classroom.classroom_join_code,
+              //   setCopied,
+              // })
               copyText({
-                textToCopy: classroom.joinCode,
-                setCopied,
+                textToCopy: classroom.classroom.classroom_join_code,
+                setCopied(value) {
+                  setCopied(value)
+                },
               })
             }
             className="cursor-pointer text-xs sm:text-sm"
@@ -81,7 +82,7 @@ export default function ClassroomInstructorView() {
             ) : (
               <Copy className="mr-1.5 size-4 text-muted-foreground" />
             )}
-            <span>Join Code: {classroom.joinCode}</span>
+            <span>Join Code: {classroom.classroom.classroom_code}</span>
           </Button>,
           <Button key="export" onClick={() => alert("Export data")}>
             <FileText className="mr-1.5 size-4" />
@@ -114,7 +115,7 @@ export default function ClassroomInstructorView() {
         </TabsContent>
 
         <TabsContent value="classwork" className="mt-4 sm:mt-6">
-          <Classwork classroom={classroom} />
+          <Classwork />
         </TabsContent>
 
         <TabsContent value="people" className="mt-4 sm:mt-6">
@@ -126,23 +127,17 @@ export default function ClassroomInstructorView() {
   )
 }
 
-function Dashboard({ classroom }: { classroom: ClassroomProps }) {
-  const { data: modules } = useModules()
-
+function Dashboard({ classroom }: { classroom: ClassroomViewProps }) {
   // Filter modules and quizzes assigned to this classroom
-  const classroomModules = modules.filter(
-    (m) =>
-      m.classroom_id?.includes(String(classroom.id)) ||
-      m.classroom_id?.includes(classroom.id)
-  )
+  const classroomModules = classroom.modules
 
   const classroomQuizzes = quizzes.filter(
     (q) =>
-      q.classrooms?.includes(String(classroom.id)) ||
-      q.classrooms?.includes(classroom.id)
+      q.classrooms?.includes(String(classroom.classroom.id)) ||
+      q.classrooms?.includes(classroom.classroom.id)
   )
 
-  const totalScans = (classroom.learners.length || 0) * 24 + 18
+  const totalScans = classroom.learners.length
 
   const KPI = [
     {
@@ -205,7 +200,7 @@ function Dashboard({ classroom }: { classroom: ClassroomProps }) {
               Course Modules
             </h3>
             <p className="text-xs text-muted-foreground">
-              Learning modules assigned to {classroom.name}
+              Learning modules assigned to {classroom.classroom.name}
             </p>
           </div>
           <Link
@@ -238,7 +233,7 @@ function Dashboard({ classroom }: { classroom: ClassroomProps }) {
               Classroom Quizzes & Assessments
             </h3>
             <p className="text-xs text-muted-foreground">
-              Evaluations assigned to {classroom.name}
+              Evaluations assigned to {classroom.classroom.name}
             </p>
           </div>
           <Link
@@ -266,17 +261,16 @@ function Dashboard({ classroom }: { classroom: ClassroomProps }) {
   )
 }
 
-function Classwork({ classroom }: { classroom: ClassroomProps }) {
+function Classwork() {
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6 py-4 sm:py-6">
-      <ClassworkCardTemplate classroom={classroom} />
+      {/* <ClassworkCardTemplate classroom={classroom} /> */}
     </div>
   )
 }
 
-function People({ classroom }: { classroom: ClassroomProps }) {
-  const teacher = "Dr. Evelyn Reed"
-
+function People({ classroom }: { classroom: ClassroomViewProps }) {
+  const instructor = classroom.classroom.instructor.name
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6 py-4 sm:space-y-8 sm:py-6">
       <Card>
@@ -288,10 +282,10 @@ function People({ classroom }: { classroom: ClassroomProps }) {
         <CardContent className="flex items-center gap-3.5 px-4 pb-4 text-sm sm:px-5 sm:pb-5 sm:text-base">
           <Avatar className="size-9 border border-border sm:size-10">
             <AvatarImage src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" />
-            <AvatarFallback>{teacher[0]}</AvatarFallback>
+            <AvatarFallback>{instructor[0]}</AvatarFallback>
           </Avatar>
           <div>
-            <p className="font-semibold text-foreground">{teacher}</p>
+            <p className="font-semibold text-foreground">{instructor}</p>
             <p className="text-xs text-muted-foreground">Lead Instructor</p>
           </div>
         </CardContent>
@@ -313,7 +307,7 @@ function People({ classroom }: { classroom: ClassroomProps }) {
             </div>
           ) : (
             classroom.learners.map((learnerId, i) => {
-              const learner = learners.find((l) => l.id === learnerId)
+              const learner = learners.find((l) => l.id === learnerId.id)
               if (!learner) return null
 
               return (

@@ -1,4 +1,8 @@
-import type { ClassroomProps, ModuleProps } from "@/const/props/materialProps"
+import type {
+  ClassroomProps,
+  ClassroomViewProps,
+  ModuleProps,
+} from "@/const/props/materialProps"
 import { api } from "../axios"
 
 export async function getModulesAPI(): Promise<ModuleProps[]> {
@@ -47,6 +51,13 @@ export async function getClassroomAPI(): Promise<ClassroomProps[]> {
 }
 
 export async function getEnrolledLearners(id: string) {
-  const response = await api.get(`/helper/get-enrolled-learer/${id}`)
+  const response = await api.get(`/helper/get-enrolled-learner/${id}`)
+  return response.data
+}
+
+export async function getClassroomContentViewById(
+  id: string
+): Promise<ClassroomViewProps> {
+  const response = await api.get(`/helper/get-classroom-content/${id}`)
   return response.data
 }

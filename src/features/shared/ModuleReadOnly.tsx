@@ -17,21 +17,19 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { getDateString } from "@/hooks/date-to-string"
 import { useMe } from "@/services/tanstack/auth"
-import { useModules } from "@/services/tanstack/materials"
 import { useEffect } from "react"
+import { useModuleById } from "@/services/tanstack/materials"
 
 export default function ModuleReadOnly() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { data: user } = useMe()
-  const { data: modules } = useModules()
+  const { data: targetDoc } = useModuleById(id!)
   const isEditor = user?.role === "instructor"
 
   function handleBack() {
     navigate(-1)
   }
-
-  const targetDoc = modules?.find((doc) => String(doc.id) === String(id))
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -74,7 +72,7 @@ export default function ModuleReadOnly() {
 
   // Sync content dynamically when document finishes loading
   useEffect(() => {
-    if (editor && targetDoc?.content) {
+    if (editor && targetDoc.content) {
       try {
         const parsedContent =
           typeof targetDoc.content === "string"

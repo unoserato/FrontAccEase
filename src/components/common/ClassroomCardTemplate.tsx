@@ -29,7 +29,7 @@ export default function ClassroomCardTemplate({
   return (
     <>
       <Card
-        onClick={() => navigate(`/instructor/classroom/${classroom.id}`)}
+        onClick={() => navigate(`/${user.role}/classroom/${classroom.id}`)}
         className="group relative flex min-h-52 w-full cursor-pointer flex-col justify-between overflow-hidden p-0 sm:min-h-56"
       >
         {/* Google Classroom Header Banner */}

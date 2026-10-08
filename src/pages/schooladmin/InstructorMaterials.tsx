@@ -14,16 +14,17 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { classrooms, instructors, modules, quizzes } from "@/const/data"
 import { ChevronRight } from "lucide-react"
+import { useInstructorMaterialsList } from "@/services/tanstack/materials"
 
 export default function InstructorMaterials() {
   const [search, setSearch] = useState("")
+  const { data: instructorMaterials } = useInstructorMaterialsList()
   const navigate = useNavigate()
 
-  const filteredInstructors = instructors.filter((instructor) => {
+  const filteredInstructors = instructorMaterials.filter((instructor) => {
     if (search.trim().length > 0) {
-      return instructor.name.toLowerCase().includes(search.toLowerCase())
+      return instructor.user.name.toLowerCase().includes(search.toLowerCase())
     }
     return true
   })
@@ -59,33 +60,37 @@ export default function InstructorMaterials() {
           <Table className="min-w-162.5">
             <TableHeader>
               <TableRow className="bg-muted/40 hover:bg-muted/40">
-                <TableHead className="whitespace-nowrap pl-4">Name</TableHead>
-                <TableHead className="whitespace-nowrap text-center">Classrooms</TableHead>
-                <TableHead className="whitespace-nowrap text-center">Modules</TableHead>
-                <TableHead className="whitespace-nowrap text-center">Quizzes</TableHead>
-                <TableHead className="w-32 pr-4 text-right whitespace-nowrap">View Details</TableHead>
+                <TableHead className="pl-4 whitespace-nowrap">Name</TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  Classrooms
+                </TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  Modules
+                </TableHead>
+                <TableHead className="text-center whitespace-nowrap">
+                  Quizzes
+                </TableHead>
+                <TableHead className="w-32 pr-4 text-right whitespace-nowrap">
+                  View Details
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredInstructors.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={5}
+                    className="h-32 text-center text-muted-foreground"
+                  >
                     No instructors found.
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredInstructors.map((instructor) => {
-                  const classroomCount = classrooms.filter(
-                    (c) => c.created_by === instructor.id
-                  ).length
-                  const moduleCount = modules.filter(
-                    (m) => m.created_by === instructor.id
-                  ).length
-                  const quizCount = quizzes.filter(
-                    (q) =>
-                      q.created_by === instructor.id || q.author === instructor.name
-                  ).length
-
+                filteredInstructors.map((ins) => {
+                  const instructor = ins.user
+                  const classroomCount = instructor.classroom_count
+                  const moduleCount = instructor.module_count
+                  const quizCount = instructor.quiz_count
                   return (
                     <TableRow
                       key={instructor.id}
@@ -95,33 +100,41 @@ export default function InstructorMaterials() {
                       <TableCell className="pl-4 whitespace-nowrap">
                         <div className="flex items-center gap-3">
                           <Avatar size="sm">
-                            <AvatarImage src={instructor.img} alt={instructor.name} />
-                            <AvatarFallback>{getInitials(instructor.name)}</AvatarFallback>
+                            <AvatarImage
+                              src={instructor.profile_picture}
+                              alt={instructor.name}
+                            />
+                            <AvatarFallback>
+                              {getInitials(instructor.name)}
+                            </AvatarFallback>
                           </Avatar>
                           <div>
-                            <span className="font-semibold text-foreground block group-hover:underline">
+                            <span className="block font-semibold text-foreground group-hover:underline">
                               {instructor.name}
                             </span>
-                            <Badge variant="secondary" className="capitalize text-xs py-0 px-1.5 mt-0.5">
-                              {instructor.role}
+                            <Badge
+                              variant="secondary"
+                              className="mt-0.5 px-1.5 py-0 text-xs capitalize"
+                            >
+                              Instructor
                             </Badge>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="text-center font-bold text-foreground whitespace-nowrap">
+                      <TableCell className="text-center font-bold whitespace-nowrap text-foreground">
                         {classroomCount}
                       </TableCell>
-                      <TableCell className="text-center font-bold text-foreground whitespace-nowrap">
+                      <TableCell className="text-center font-bold whitespace-nowrap text-foreground">
                         {moduleCount}
                       </TableCell>
-                      <TableCell className="text-center font-bold text-foreground whitespace-nowrap">
+                      <TableCell className="text-center font-bold whitespace-nowrap text-foreground">
                         {quizCount}
                       </TableCell>
                       <TableCell className="pr-4 text-right whitespace-nowrap">
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="font-medium text-xs sm:text-sm text-foreground group-hover:text-primary"
+                          className="text-xs font-medium text-foreground group-hover:text-primary sm:text-sm"
                         >
                           View Details
                           <ChevronRight className="ml-1 h-4 w-4" />

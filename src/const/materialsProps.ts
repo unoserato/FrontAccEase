@@ -217,15 +217,17 @@ export interface PrincipleSummaryCount {
 
 export interface PrincipleData {
   score: number
-  summary?: PrincipleSummaryCount[] | {
-    critical_count?: number
-    failed_count?: number
-    manual_review_count?: number
-    minor_count?: number
-    moderate_count?: number
-    passed_count?: number
-    serious_count?: number
-  }
+  summary?:
+    | PrincipleSummaryCount[]
+    | {
+        critical_count?: number
+        failed_count?: number
+        manual_review_count?: number
+        minor_count?: number
+        moderate_count?: number
+        passed_count?: number
+        serious_count?: number
+      }
   issues: PrincipleIssue[]
   passed?: PrinciplePassed[]
   manual_review?: any[]
@@ -250,15 +252,17 @@ export interface Result {
   url: string
   overall_score: number
   principles: PrincipleItem[]
-  summary?: ResultSummaryItem[] | {
-    critical_count?: number
-    failed_count?: number
-    manual_review_count?: number
-    minor_count?: number
-    moderate_count?: number
-    passed_count?: number
-    serious_count?: number
-  }
+  summary?:
+    | ResultSummaryItem[]
+    | {
+        critical_count?: number
+        failed_count?: number
+        manual_review_count?: number
+        minor_count?: number
+        moderate_count?: number
+        passed_count?: number
+        serious_count?: number
+      }
   principle_scores?: PrincipleScoreItem[]
 }
 
