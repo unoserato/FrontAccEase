@@ -1,8 +1,9 @@
-import { useState, useMemo } from "react"
+import { useEffect, useState, useMemo, useRef } from "react"
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom"
 import { analyzerResults } from "@/const/data"
 import type {
   Result,
+  PrincipleItem,
   PrincipleIssue,
   PrinciplePassed,
 } from "@/const/materialsProps"
@@ -33,7 +34,7 @@ import {
   ShieldCheck,
 } from "lucide-react"
 import { useMutation } from "@tanstack/react-query"
-import { analyzerAPI } from "@/services/api/materialsAPI"
+import { analyzerAPI, sitemapAPI } from "@/services/api/materialsAPI"
 import SearchTemplate from "@/components/common/SearchTemplate"
 
 function capitalize(str: string): string {
@@ -48,7 +49,8 @@ function getSummaryCount(
   if (Array.isArray(summaryList)) {
     const item = summaryList.find(
       (s: { name?: string; count?: number }) =>
-        s.name?.toLowerCase() === name.toLowerCase()
+        s.name?.toLowerCase() === name.toLowerCase() ||
+        (name === "total_passed" && s.name?.toLowerCase() === "passed")
     )
     return item?.count ?? 0
   }
@@ -73,6 +75,59 @@ function getSeverityBadgeClass(severity?: string): string {
   return "border-blue-500/30 bg-blue-500/15 text-blue-700 dark:text-blue-400 font-bold"
 }
 
+interface ReportPage {
+  key: string
+  result: Result
+}
+
+function createOverallResult(pages: ReportPage[]): Result | null {
+  if (!pages.length) return null
+
+  const grouped = new Map<string, PrincipleItem>()
+  const summary = new Map<string, number>()
+  let scoreTotal = 0
+
+  for (const page of pages) {
+    scoreTotal += page.result.overall_score || 0
+    for (const item of Array.isArray(page.result.summary) ? page.result.summary : []) {
+      if (typeof item === "object" && "name" in item && "count" in item) {
+        summary.set(item.name, (summary.get(item.name) || 0) + item.count)
+      }
+    }
+    for (const principle of page.result.principles || []) {
+      const key = principle.name.toLowerCase()
+      const existing = grouped.get(key) || {
+        name: principle.name,
+        data: { score: 0, issues: [], passed: [], manual_review: [] },
+      }
+      existing.data.issues.push(...(principle.data.issues || []))
+      existing.data.passed?.push(...(principle.data.passed || []))
+      existing.data.manual_review?.push(...(principle.data.manual_review || []))
+      grouped.set(key, existing)
+    }
+  }
+
+  const principles = [...grouped.values()].map((principle) => {
+    const checked = principle.data.issues.length + (principle.data.passed?.length || 0) + (principle.data.manual_review?.length || 0)
+    return {
+      ...principle,
+      data: {
+        ...principle.data,
+        score: checked ? Math.round(((principle.data.passed?.length || 0) / checked) * 100) : 100,
+      },
+    }
+  })
+
+  const origin = new URL(pages[0].result.url).origin
+  return {
+    url: `${origin} (Overall)`,
+    overall_score: Math.round(scoreTotal / pages.length),
+    principles,
+    summary: [...summary.entries()].map(([name, count]) => ({ name, count })),
+    principle_scores: principles.map((principle) => ({ principle: principle.name, score: principle.data.score })),
+  }
+}
+
 export default function AnalyzerResults() {
   const { id } = useParams<{ id: string }>()
   const location = useLocation()
@@ -85,6 +140,11 @@ export default function AnalyzerResults() {
   const [selectedPrinciple, setSelectedPrinciple] = useState<string>("all")
   const [selectedSeverity, setSelectedSeverity] = useState<string>("all")
   const [copiedSummary, setCopiedSummary] = useState(false)
+  const [domainPages, setDomainPages] = useState<string[]>([])
+  const [isLoadingDomainPages, setIsLoadingDomainPages] = useState(false)
+  const [domainPagesError, setDomainPagesError] = useState("")
+  const [showAllDomainPages, setShowAllDomainPages] = useState(false)
+  const loadedSitemapOriginRef = useRef<string | null>(null)
 
   // Retrieve result from router state, sessionStorage, or mock data
   const [resultData, setResultData] = useState<Result | null>(() => {
@@ -113,12 +173,19 @@ export default function AnalyzerResults() {
     const record = analyzerResults.find((r) => String(r.id) === String(id))
     return record?.data || analyzerResults[0]?.data || null
   })
+  const [reportPages, setReportPages] = useState<ReportPage[]>(() =>
+    resultData ? [{ key: resultData.url, result: resultData }] : []
+  )
+  const [activeReportKey, setActiveReportKey] = useState(() => resultData?.url || "")
 
   // Re-scan mutation
   const rescanMutation = useMutation({
     mutationFn: (urlToRescan: string) => analyzerAPI(urlToRescan),
     onSuccess: (data: Result) => {
       setResultData(data)
+      setReportPages((pages) => pages.map((page) =>
+        page.key === activeReportKey ? { ...page, result: data } : page
+      ))
       try {
         if (id) {
           sessionStorage.setItem(
@@ -135,6 +202,98 @@ export default function AnalyzerResults() {
       }
     },
   })
+
+  const pageScanMutation = useMutation({
+    mutationFn: (urlToScan: string) => analyzerAPI(urlToScan),
+    onSuccess: (data: Result) => {
+      setReportPages((pages) => {
+        const existing = pages.find((page) => page.key === data.url)
+        return existing
+          ? pages.map((page) => page.key === data.url ? { ...page, result: data } : page)
+          : [...pages, { key: data.url, result: data }]
+      })
+      setActiveReportKey(data.url)
+      setResultData(data)
+    },
+  })
+
+  useEffect(() => {
+    if (!id || reportPages.length === 0) return
+    try {
+      sessionStorage.setItem(`frontaccease_domain_report_${id}`, JSON.stringify(reportPages))
+    } catch (error) {
+      console.error("Failed to save domain report", error)
+    }
+  }, [id, reportPages])
+
+  useEffect(() => {
+    const sourceUrl = reportPages[0]?.result.url || resultData?.url
+    if (!sourceUrl) return
+    let sourceOrigin: string
+    try {
+      sourceOrigin = new URL(sourceUrl).origin
+    } catch {
+      return
+    }
+    if (loadedSitemapOriginRef.current === sourceOrigin) return
+    loadedSitemapOriginRef.current = sourceOrigin
+    let cancelled = false
+
+    const loadDomainPages = async () => {
+      setIsLoadingDomainPages(true)
+      setDomainPagesError("")
+      setShowAllDomainPages(false)
+      try {
+        const currentUrl = new URL(sourceUrl)
+        currentUrl.hash = ""
+        const links = await sitemapAPI(sourceUrl)
+        if (cancelled) return
+        const uniqueSameDomainLinks = Array.from(
+          new Set(
+            links
+              .map((link) => {
+                try {
+                  const parsed = new URL(link)
+                  parsed.hash = ""
+                  return parsed.origin === sourceOrigin ? parsed.toString() : ""
+                } catch {
+                  return ""
+                }
+              })
+              .filter((link) => link && link !== currentUrl.toString())
+          )
+        ).sort()
+        setDomainPages(uniqueSameDomainLinks)
+      } catch {
+        if (!cancelled) {
+          setDomainPages([])
+          setDomainPagesError("No sitemap pages were found for this domain.")
+        }
+      } finally {
+        if (!cancelled) setIsLoadingDomainPages(false)
+      }
+    }
+
+    void loadDomainPages()
+    return () => {
+      cancelled = true
+    }
+  }, [reportPages, resultData?.url])
+
+  function selectReportTab(key: string) {
+    setActiveReportKey(key)
+    setActiveTab("issues")
+    setSearchQuery("")
+    setSelectedPrinciple("all")
+    setSelectedSeverity("all")
+    if (key === "overall") {
+      const overall = createOverallResult(reportPages)
+      if (overall) setResultData(overall)
+      return
+    }
+    const page = reportPages.find((item) => item.key === key)
+    if (page) setResultData(page.result)
+  }
 
   // Extract all issues across principles
   const allIssues = useMemo(() => {
@@ -267,7 +426,7 @@ export default function AnalyzerResults() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => navigate("/student/analyzer")}
+          onClick={() => navigate("/learner/analyzer")}
           className="flex w-fit items-center gap-2 text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="size-4" />
@@ -288,7 +447,7 @@ export default function AnalyzerResults() {
             </p>
           </div>
           <div className="flex justify-center gap-3 pt-2">
-            <Button onClick={() => navigate("/student/analyzer")}>
+            <Button onClick={() => navigate("/learner/analyzer")}>
               Run New Scan
             </Button>
           </div>
@@ -298,6 +457,7 @@ export default function AnalyzerResults() {
   }
 
   const overallScore = resultData.overall_score ?? 90
+  const isOverallReport = activeReportKey === "overall"
   const isScoreHigh = overallScore >= 90
   const isScoreMedium = overallScore >= 70 && overallScore < 90
 
@@ -309,6 +469,7 @@ export default function AnalyzerResults() {
   const totalViolations =
     criticalCount + seriousCount + moderateCount + minorCount
   const totalPassedCount = getSummaryCount(resultData.summary, "total_passed")
+  const visibleDomainPages = showAllDomainPages ? domainPages : domainPages.slice(0, 12)
 
   // Export JSON handler
   function handleExportJSON() {
@@ -353,7 +514,7 @@ ${allIssues
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
             <Link
-              to="/student/analyzer"
+              to="/learner/analyzer"
               className="inline-flex size-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               aria-label="Back to URL Analyzer"
             >
@@ -365,16 +526,23 @@ ${allIssues
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5 pl-10 text-xs text-muted-foreground sm:text-sm">
-            <a
-              href={resultData.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 font-semibold text-primary hover:underline"
-            >
-              <Globe className="size-3.5" />
-              <span>{resultData.url}</span>
-              <ArrowUpRight className="size-3" />
-            </a>
+            {isOverallReport ? (
+              <span className="inline-flex items-center gap-1.5 font-semibold text-primary">
+                <Globe className="size-3.5" />
+                <span>{reportPages.length} scanned pages</span>
+              </span>
+            ) : (
+              <a
+                href={resultData.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-semibold text-primary hover:underline"
+              >
+                <Globe className="size-3.5" />
+                <span>{resultData.url}</span>
+                <ArrowUpRight className="size-3" />
+              </a>
+            )}
             <span>•</span>
             <Badge variant="outline" className="text-xs">
               WCAG 2.1 Level AA/AAA
@@ -388,7 +556,7 @@ ${allIssues
             variant="outline"
             size="sm"
             onClick={() => rescanMutation.mutate(resultData.url)}
-            disabled={rescanMutation.isPending}
+            disabled={rescanMutation.isPending || isOverallReport}
             className="h-9 gap-1.5 text-xs font-semibold"
           >
             {rescanMutation.isPending ? (
@@ -425,6 +593,96 @@ ${allIssues
           </Button>
         </div>
       </div>
+
+      <Card className="border-border/70 bg-card shadow-xs">
+        <CardContent className="p-4">
+          <div className="mb-2 text-xs font-bold tracking-wide text-muted-foreground uppercase">Scanned pages</div>
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {reportPages.map((page) => {
+              const pathname = new URL(page.result.url).pathname
+              const label = pathname === "/" ? "Home" : pathname
+              const isActive = activeReportKey === page.key
+              return (
+                <Button
+                  key={page.key}
+                  type="button"
+                  variant={isActive ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => selectReportTab(page.key)}
+                  className="h-8 shrink-0 max-w-52 truncate text-xs"
+                  title={page.result.url}
+                >
+                  {label}
+                </Button>
+              )
+            })}
+            <Button
+              type="button"
+              variant={isOverallReport ? "default" : "outline"}
+              size="sm"
+              onClick={() => selectReportTab("overall")}
+              className="h-8 shrink-0 text-xs"
+            >
+              Overall
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-border/70 bg-card shadow-xs">
+        <CardHeader className="flex flex-row items-start justify-between gap-4 space-y-0 p-5 pb-3">
+          <div className="space-y-1">
+            <h2 className="flex items-center gap-2 text-base font-bold text-foreground">
+              <Globe className="size-4 text-primary" />
+              Scan more pages in this domain
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Pages are discovered from this website&apos;s sitemap. Each follow-up uses Fast Scan and is added as a tab above.
+            </p>
+          </div>
+          <Badge variant="outline" className="font-mono text-xs">
+            {isLoadingDomainPages ? "Finding pages…" : `${domainPages.length} pages`}
+          </Badge>
+        </CardHeader>
+        <CardContent className="space-y-3 p-5 pt-0">
+          {isLoadingDomainPages ? (
+            <div className="flex items-center gap-2 py-3 text-xs text-muted-foreground">
+              <Loader2 className="size-4 animate-spin" />
+              Checking the sitemap for same-domain pages…
+            </div>
+          ) : domainPages.length > 0 ? (
+            <>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {visibleDomainPages.map((pageUrl) => (
+                  <div key={pageUrl} className="flex min-w-0 items-center gap-2 rounded-lg border border-border/60 bg-muted/20 p-2">
+                    <span className="min-w-0 flex-1 truncate font-mono text-xs text-foreground" title={pageUrl}>
+                      {pageUrl.replace(/^https?:\/\//, "")}
+                    </span>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 shrink-0 px-2 text-xs"
+                      onClick={() => pageScanMutation.mutate(pageUrl)}
+                      disabled={pageScanMutation.isPending}
+                    >
+                      {pageScanMutation.isPending && pageScanMutation.variables === pageUrl ? <Loader2 className="size-3 animate-spin" /> : "Scan"}
+                    </Button>
+                  </div>
+                ))}
+              </div>
+              {domainPages.length > 12 && (
+                <Button variant="ghost" size="sm" onClick={() => setShowAllDomainPages((shown) => !shown)} className="text-xs">
+                  {showAllDomainPages ? "Show fewer pages" : `Show all ${domainPages.length} pages`}
+                </Button>
+              )}
+            </>
+          ) : (
+            <p className="py-2 text-xs text-muted-foreground">
+              {domainPagesError || "No additional same-domain pages are available."}
+            </p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Row 1: High-Level Metrics Grid */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">

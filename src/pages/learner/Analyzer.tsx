@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { useNavigate, Link } from "react-router-dom"
+import { useEffect, useRef, useState } from "react"
+import { useNavigate, Link, useLocation } from "react-router-dom"
 import { analyzerResults } from "@/const/data"
 import type { AnalyzerResultItem, Result } from "@/const/materialsProps"
 import { Badge } from "@/components/ui/badge"
@@ -24,13 +24,26 @@ import {
   Globe,
   History,
   Loader2,
-  Puzzle,
+  Radio,
   Search,
   Sparkles,
   WrenchIcon,
 } from "lucide-react"
 import { useMutation } from "@tanstack/react-query"
-import { analyzerAPI } from "@/services/api/materialsAPI"
+import { CreateMLCEngine, type MLCEngine } from "@mlc-ai/web-llm"
+import {
+  analyzerAPI,
+  createExtensionScanAPI,
+  getExtensionScanAPI,
+  webLLMTasksAPI,
+} from "@/services/api/materialsAPI"
+import {
+  compileWebLLMResults,
+  parseWebLLMResponse,
+  WEBLLM_MODELS,
+  type WebLLMEvaluation,
+  type WebLLMTaskBatch,
+} from "@/services/webLLM"
 
 const steps = [
   { name: "Analyze", icon: Search },
@@ -40,19 +53,12 @@ const steps = [
 
 const models = [
   {
-    label: "Qwen 2.5 0.6B",
-    value: "qwenV2.5P0.6b",
-    badge: "Fast & Light",
-    description:
-      "Ultra-fast lightweight model ideal for quick DOM hierarchy and semantic structure audits.",
+    label: "Fast Scan",
+    value: "fast",
+    badge: "Default",
+    description: "Runs FrontAccEase's fast server-side accessibility checks.",
   },
-  {
-    label: "Gemini 3.5 Flash",
-    value: "GeminiV3.5Flas",
-    badge: "Recommended",
-    description:
-      "Advanced multimodal AI optimized for deep WCAG 2.1 AA compliance, contrast, and screen reader verification.",
-  },
+  ...WEBLLM_MODELS,
 ]
 
 function formatScanDate(dateStr?: string): string {
@@ -90,10 +96,24 @@ function isValidUrl(input: string): boolean {
 
 export default function Analyzer() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [domain, setDomain] = useState("")
-  const [selectedModel, setSelectedModel] = useState("GeminiV3.5Flas")
+  const [selectedModel, setSelectedModel] = useState("fast")
   const [openPopover, setOpenPopover] = useState(false)
   const [error, setError] = useState("")
+  const [isWebLLMPending, setIsWebLLMPending] = useState(false)
+  const [modelProgress, setModelProgress] = useState(0)
+  const [modelProgressText, setModelProgressText] = useState("")
+  const [currentTask, setCurrentTask] = useState(0)
+  const [totalTasks, setTotalTasks] = useState(0)
+  const [extensionScanCode, setExtensionScanCode] = useState("")
+  const [extensionScanStatus, setExtensionScanStatus] = useState<
+    "idle" | "creating" | "pending" | "processing" | "completed" | "failed"
+  >("idle")
+  const [extensionModel, setExtensionModel] = useState<string>(WEBLLM_MODELS[2].value)
+  const engineRef = useRef<{ model: string; engine: MLCEngine } | null>(null)
+  const processedExtensionBatch = useRef(false)
+  const extensionPollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Scan history initialized from sessionStorage, fallback to sample analyzerResults
   const [scanHistory, setScanHistory] = useState<AnalyzerResultItem[]>(() => {
@@ -112,41 +132,33 @@ export default function Analyzer() {
   const activeModelObj =
     models.find((m) => m.value === selectedModel) || models[0]
 
+  function saveAndOpenResult(data: Result) {
+    setError("")
+    const newId = generateScanId()
+    const newScanItem: AnalyzerResultItem = {
+      id: newId,
+      scannerId: `scan-${newId}`,
+      data,
+    }
+    const updatedHistory = [newScanItem, ...scanHistory.filter((item) => item.id !== newId)]
+    setScanHistory(updatedHistory)
+
+    try {
+      sessionStorage.setItem("frontaccease_recent_scans", JSON.stringify(updatedHistory))
+      sessionStorage.setItem(`frontaccease_analyzer_result_${newId}`, JSON.stringify(data))
+      sessionStorage.setItem("frontaccease_latest_analyzer_result", JSON.stringify(data))
+    } catch (e) {
+      console.error("Failed to save scan result to session storage", e)
+    }
+
+    navigate(`/learner/analyzer/${newId}`, { state: { result: data, scanId: newId } })
+  }
+
   // Mutation for analyzing a URL using analyzerAPI
   const { mutate, isPending } = useMutation({
     mutationFn: (targetUrl: string) => analyzerAPI(targetUrl),
     onSuccess: (data: Result) => {
-      setError("")
-      const newId = generateScanId()
-      const newScanItem: AnalyzerResultItem = {
-        id: newId,
-        scannerId: `scan-${newId}`,
-        data: data,
-      }
-
-      const updatedHistory = [newScanItem, ...scanHistory.filter((item) => item.id !== newId)]
-      setScanHistory(updatedHistory)
-
-      try {
-        sessionStorage.setItem(
-          "frontaccease_recent_scans",
-          JSON.stringify(updatedHistory)
-        )
-        sessionStorage.setItem(
-          `frontaccease_analyzer_result_${newId}`,
-          JSON.stringify(data)
-        )
-        sessionStorage.setItem(
-          "frontaccease_latest_analyzer_result",
-          JSON.stringify(data)
-        )
-      } catch (e) {
-        console.error("Failed to save scan result to session storage", e)
-      }
-
-      navigate(`/student/analyzer/${newId}`, {
-        state: { result: data, scanId: newId },
-      })
+      saveAndOpenResult(data)
     },
     onError: (err: unknown) => {
       const msg =
@@ -156,6 +168,165 @@ export default function Analyzer() {
       setError(msg)
     },
   })
+
+  const isScanning = isPending || isWebLLMPending
+
+  async function runWebLLMScan(
+    targetUrl: string,
+    providedBatch?: WebLLMTaskBatch,
+    modelId = selectedModel,
+  ) {
+    setIsWebLLMPending(true)
+    setModelProgress(0)
+    setModelProgressText("Preparing WebLLM tasks...")
+    setCurrentTask(0)
+    setTotalTasks(0)
+
+    try {
+      const batch = providedBatch || (await webLLMTasksAPI(targetUrl))
+      if (!batch.tasks?.length) {
+        throw new Error("No WebLLM evaluation tasks were returned for this page.")
+      }
+
+      setTotalTasks(batch.tasks.length)
+      let engine = engineRef.current?.engine
+      if (!engine || engineRef.current?.model !== modelId) {
+        engine = await CreateMLCEngine(modelId, {
+          initProgressCallback: (progress) => {
+            setModelProgress(Math.round((progress.progress || 0) * 100))
+            setModelProgressText(progress.text || "Loading WebLLM model...")
+          },
+        })
+        engineRef.current = { model: modelId, engine }
+      }
+
+      setModelProgress(100)
+      setModelProgressText("Model ready. Evaluating accessibility tasks...")
+      const evaluations = new Map<string, WebLLMEvaluation>()
+      const systemPrompt =
+        (batch.system_prompt ? `${batch.system_prompt}\n\n` : "") +
+        'Do not generate a thinking process, analysis, or explanation before answering. Respond only with JSON: {"status":"Pass" | "Fail" | "Manual Review","reason":"..."}. Keep reason concise. Use Manual Review only when the supplied HTML and context are insufficient. Never return Pass with a reason that asks for manual review.'
+
+      for (let index = 0; index < batch.tasks.length; index += 1) {
+        const task = batch.tasks[index]
+        setCurrentTask(index + 1)
+        try {
+          const completion = await engine.chat.completions.create({
+            messages: [
+              { role: "system", content: systemPrompt },
+              {
+                role: "user",
+                content:
+                  task.evaluation_prompt ||
+                  `Evaluate this HTML for WCAG ${task.criterion.id}:\n\`\`\`html\n${task.target.html || ""}\n\`\`\``,
+              },
+            ],
+            temperature: 0.1,
+            ...(modelId.startsWith("Qwen3-")
+              ? { extra_body: { enable_thinking: false } }
+              : {}),
+          })
+          const rawResponse = completion.choices[0]?.message?.content || ""
+          evaluations.set(task.task_id, {
+            taskId: task.task_id,
+            ...parseWebLLMResponse(rawResponse),
+          })
+        } catch (taskError) {
+          evaluations.set(task.task_id, {
+            taskId: task.task_id,
+            status: "Manual Review",
+            reason: `WebLLM could not evaluate this task: ${taskError instanceof Error ? taskError.message : String(taskError)}`,
+          })
+        }
+      }
+
+      saveAndOpenResult(compileWebLLMResults(batch.tasks, evaluations, targetUrl))
+    } catch (scanError) {
+      setError(scanError instanceof Error ? scanError.message : "WebLLM scan failed. Please try again.")
+    } finally {
+      setIsWebLLMPending(false)
+    }
+  }
+
+  useEffect(() => {
+    const state = location.state as {
+      taskBatch?: WebLLMTaskBatch
+      targetUrl?: string
+      webLLMModel?: string
+    } | null
+    if (!state?.taskBatch || !state.targetUrl || processedExtensionBatch.current) return
+    processedExtensionBatch.current = true
+    void runWebLLMScan(state.targetUrl, state.taskBatch, state.webLLMModel || WEBLLM_MODELS[2].value)
+    // The batch is intentionally consumed once; rerunning it on render would duplicate a scan.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state])
+
+  useEffect(() => () => {
+    if (extensionPollTimeoutRef.current) clearTimeout(extensionPollTimeoutRef.current)
+  }, [])
+
+  useEffect(() => {
+    if (!extensionScanCode) return
+    let cancelled = false
+
+    const pollExtensionScan = async () => {
+      try {
+        const session = await getExtensionScanAPI(extensionScanCode)
+        if (cancelled) return
+
+        if (session.status === "completed") {
+          setExtensionScanStatus("completed")
+          if (session.scan_type === "llm" && session.task_batch) {
+            void runWebLLMScan(session.url || "", session.task_batch, extensionModel)
+            return
+          }
+          if (session.result) {
+            saveAndOpenResult(session.result)
+            return
+          }
+          setError("The extension scan completed without a report. Generate a new code and try again.")
+          return
+        }
+
+        if (session.status === "failed") {
+          setExtensionScanStatus("failed")
+          setError("The extension scan failed. Generate a new code and try again.")
+          return
+        }
+
+        setExtensionScanStatus(session.status === "processing" ? "processing" : "pending")
+      } catch (pollError) {
+        if (!cancelled) {
+          setExtensionScanStatus("failed")
+          setError(pollError instanceof Error ? pollError.message : "Could not retrieve the extension scan.")
+        }
+        return
+      }
+
+      if (!cancelled) extensionPollTimeoutRef.current = setTimeout(pollExtensionScan, 2000)
+    }
+
+    void pollExtensionScan()
+    return () => {
+      cancelled = true
+      if (extensionPollTimeoutRef.current) clearTimeout(extensionPollTimeoutRef.current)
+    }
+    // A submitted extension task batch is intentionally processed only once per scan code.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [extensionScanCode, extensionModel])
+
+  async function handleCreateExtensionScan() {
+    setError("")
+    setExtensionScanStatus("creating")
+    try {
+      const session = await createExtensionScanAPI()
+      setExtensionScanCode(session.code)
+      setExtensionScanStatus("pending")
+    } catch (createError) {
+      setExtensionScanStatus("failed")
+      setError(createError instanceof Error ? createError.message : "Could not create an extension scan code.")
+    }
+  }
 
   function handleSubmit() {
     if (!selectedModel) {
@@ -173,7 +344,11 @@ export default function Analyzer() {
       : `https://${cleanInput}`
 
     setError("")
-    mutate(fullUrl)
+    if (selectedModel === "fast") {
+      mutate(fullUrl)
+      return
+    }
+    void runWebLLMScan(fullUrl)
   }
 
   const firstStep = steps[0]
@@ -270,7 +445,7 @@ export default function Analyzer() {
               </span>
               <input
                 type="text"
-                disabled={isPending}
+                disabled={isScanning}
                 placeholder="attendex.online"
                 value={domain}
                 onChange={(e) => {
@@ -281,7 +456,7 @@ export default function Analyzer() {
                   if (error) setError("")
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && !isPending) handleSubmit()
+                  if (e.key === "Enter" && !isScanning) handleSubmit()
                 }}
                 className="h-11 w-full bg-transparent px-3 text-xs font-semibold text-foreground outline-none placeholder:text-muted-foreground/50 disabled:opacity-50 sm:text-sm"
                 aria-invalid={!!error}
@@ -297,7 +472,7 @@ export default function Analyzer() {
                   render={
                     <Button
                       variant="outline"
-                      disabled={isPending}
+                      disabled={isScanning}
                       className="h-11 flex-1 justify-between gap-2 rounded-xl border-input/80 px-3.5 text-xs font-semibold sm:flex-none sm:text-sm"
                     >
                       <div className="flex items-center gap-2">
@@ -369,10 +544,10 @@ export default function Analyzer() {
               <Button
                 size="lg"
                 onClick={handleSubmit}
-                disabled={isPending || !domain.trim()}
+                disabled={isScanning || !domain.trim()}
                 className="h-11 shrink-0 rounded-xl px-5 text-xs font-bold sm:text-sm"
               >
-                {isPending ? (
+                {isScanning ? (
                   <>
                     <Loader2 className="mr-1.5 size-4 animate-spin" />
                     <span>Analyzing...</span>
@@ -387,12 +562,22 @@ export default function Analyzer() {
             </div>
           </div>
 
-          {isPending && (
+          {isScanning && (
             <div className="mt-2.5 flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-primary/5 p-2 text-xs font-medium text-foreground">
               <Sparkles className="size-4 animate-pulse text-primary" />
-              <span>
-                Evaluating WCAG 2.1 Level AA &amp; AAA rules on &ldquo;{domain}&rdquo;...
-              </span>
+              <span>{isWebLLMPending ? modelProgressText || `Processing task ${currentTask} of ${totalTasks}...` : `Evaluating WCAG 2.1 Level AA & AAA rules on “${domain}”...`}</span>
+            </div>
+          )}
+
+          {isWebLLMPending && (
+            <div className="mt-2.5 space-y-1.5 text-xs text-muted-foreground">
+              <div className="flex justify-between font-medium">
+                <span>{currentTask ? `Processing task ${currentTask} of ${totalTasks}` : "Loading browser model"}</span>
+                <span>{modelProgress}%</span>
+              </div>
+              <div className="h-2 overflow-hidden rounded-full bg-muted">
+                <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${modelProgress}%` }} />
+              </div>
             </div>
           )}
 
@@ -404,29 +589,54 @@ export default function Analyzer() {
         </Field>
       </div>
 
-      {/* Alternative Extension CTA Section */}
-      <div className="mx-auto w-full max-w-2xl space-y-4 pt-2 text-center">
-        <div className="flex items-center gap-4">
-          <div className="h-px flex-1 bg-border/60" />
-          <span className="text-xs font-semibold text-muted-foreground">
-            OR
-          </span>
-          <div className="h-px flex-1 bg-border/60" />
-        </div>
+      <Card className="mx-auto w-full max-w-3xl border-primary/20 bg-card shadow-sm">
+        <CardContent className="space-y-4 p-5 sm:p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="space-y-1">
+              <h2 className="flex items-center gap-2 text-base font-bold text-foreground">
+                <Radio className="size-5 text-primary" />
+                Browser Extension Scan
+              </h2>
+              <p className="text-xs text-muted-foreground">
+                Generate a code, enter it in the FrontAccEase extension, then keep this page open while it sends the scan.
+              </p>
+            </div>
+            <Badge variant={extensionScanStatus === "failed" ? "destructive" : extensionScanStatus === "completed" ? "default" : "outline"} className="w-fit font-mono text-xs uppercase">
+              {extensionScanStatus.replace("_", " ")}
+            </Badge>
+          </div>
 
-        <div className="flex justify-center">
-          <Link to="/student/analyzer/extension">
-            <Button
-              variant="secondary"
-              size="lg"
-              className="h-11 cursor-pointer rounded-xl px-6 text-xs font-bold sm:text-sm"
-            >
-              <Puzzle className="mr-2 size-4 text-primary" />
-              Use Analyzer Web Extension
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="rounded-md border bg-muted/30 px-4 py-2 font-mono text-2xl font-bold tracking-widest">
+              {extensionScanCode || "------"}
+            </div>
+            <Button type="button" onClick={() => void handleCreateExtensionScan()} disabled={extensionScanStatus === "creating" || extensionScanStatus === "processing"}>
+              {extensionScanStatus === "creating" ? "Generating code…" : "Generate scan code"}
             </Button>
-          </Link>
-        </div>
-      </div>
+            <Button type="button" variant="outline" onClick={() => navigate("/learner/analyzer/extension")}>
+              Extension setup guide
+            </Button>
+            {extensionScanCode && extensionScanStatus === "pending" && (
+              <p className="text-xs text-muted-foreground">Enter this code in the extension, then choose Fast Scan or Use LLM.</p>
+            )}
+            {extensionScanStatus === "processing" && (
+              <p className="text-xs text-muted-foreground">The extension submitted the page. Preparing the report…</p>
+            )}
+            {extensionScanStatus === "completed" && (
+              <p className="text-xs text-emerald-600">Scan received. Opening the report…</p>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2 border-t border-border/60 pt-4 sm:flex-row sm:items-center">
+            <label htmlFor="extension-webllm-model" className="text-xs font-semibold text-muted-foreground">WebLLM model for extension tasks</label>
+            <select id="extension-webllm-model" value={extensionModel} onChange={(event) => setExtensionModel(event.target.value)} disabled={isWebLLMPending} className="h-9 rounded-lg border border-input bg-background px-3 text-xs font-medium sm:ml-auto">
+              {WEBLLM_MODELS.map((model) => (
+                <option key={model.value} value={model.value}>{model.label}{model.value === WEBLLM_MODELS[2].value ? " (Default)" : ""}</option>
+              ))}
+            </select>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Scan History Section */}
       <div className="mx-auto w-full max-w-4xl space-y-4 pt-6">
@@ -464,7 +674,7 @@ export default function Analyzer() {
               return (
                 <Link
                   key={item.id}
-                  to={`/student/analyzer/${item.id}`}
+                  to={`/learner/analyzer/${item.id}`}
                   state={{ result: item.data, scanId: item.id }}
                   className="group flex flex-col gap-3 p-4 transition-colors hover:bg-muted/50 sm:flex-row sm:items-center sm:justify-between"
                 >
