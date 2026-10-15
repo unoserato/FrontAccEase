@@ -7,32 +7,38 @@ import {
 } from "../ui/accordion"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { classrooms, learners, quizSubmissions } from "@/const/data"
-import type { QuizProps } from "@/const/materialsProps"
 import { Users, User, Clock, FileText } from "lucide-react"
-import { getQuizTotalPoints } from "@/features/instructor/quizHelper"
+import type {
+  ClassroomProps,
+  ClassroomViewProps,
+  QuizProps,
+} from "@/const/props/materialProps"
 
 export type QuizSubmissionsCardTemplateProps = {
   quiz: QuizProps
+  classrooms: ClassroomProps[]
+  learners_list: ClassroomViewProps
 }
 
 export default function QuizSubmissionsCardTemplate({
   quiz,
+  learners_list,
+  classrooms,
 }: QuizSubmissionsCardTemplateProps) {
-  const computedPoints = getQuizTotalPoints(quiz)
-  const totalPoints = computedPoints > 0 ? computedPoints : 50
   const assignedClassrooms = useMemo(
     () =>
       (quiz.classrooms ?? [])
         .map((cId) => classrooms.find((c) => String(c.id) === String(cId)))
         .filter(Boolean),
-    [quiz.classrooms]
+    [quiz.classrooms, classrooms]
   )
 
-  const matchingSubmissions = useMemo(
-    () => quizSubmissions.filter((s) => String(s.quizId) === String(quiz.id)),
-    [quiz.id]
-  )
+  const matchingSubmissions: Array<{
+    learnerId: string
+    score: number
+    submittedAt: string
+  }> = []
+  const totalPoints = quiz.total_points ?? 0
 
   const targetClassrooms =
     assignedClassrooms.length > 0 ? assignedClassrooms : classrooms.slice(0, 1)
@@ -61,13 +67,9 @@ export default function QuizSubmissionsCardTemplate({
       {targetClassrooms.map((classroom) => {
         if (!classroom) return null
 
-        const classroomLearners = classroom.learners
-          .map((lId) => learners.find((l) => String(l.id) === String(lId)))
-          .filter(Boolean)
+        const classroomLearners = learners_list.learners
 
-        const submittedCount = classroomLearners.filter((l) =>
-          matchingSubmissions.some((s) => String(s.learnerId) === String(l?.id))
-        ).length
+        const submittedCount = 0
 
         const isCompleted =
           classroomLearners.length > 0 &&
@@ -91,7 +93,7 @@ export default function QuizSubmissionsCardTemplate({
                       {classroom.name}
                     </h3>
                     <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <span>Code: {classroom.classroomCode}</span>
+                      <span>Code: {classroom.classroom_code}</span>
                       <span>•</span>
                       <span>{classroomLearners.length} Enrolled Learners</span>
                     </div>
@@ -154,7 +156,7 @@ export default function QuizSubmissionsCardTemplate({
                       >
                         <div className="flex items-center gap-3">
                           <Avatar className="size-8 border border-border text-xs font-semibold sm:size-9">
-                            <AvatarImage src={learner.img} />
+                            <AvatarImage src={learner.profile_picture} />
                             <AvatarFallback>
                               {initials || <User className="size-3.5" />}
                             </AvatarFallback>

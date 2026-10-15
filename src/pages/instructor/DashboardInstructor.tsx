@@ -11,7 +11,6 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import NewClassroomDialog from "@/features/instructor/NewClassroomDialog"
-import { classrooms, modules, quizzes } from "@/const/data"
 import {
   GraduationCap,
   Users,
@@ -21,13 +20,25 @@ import {
   Calendar,
   Book,
 } from "lucide-react"
+import {
+  useClassrooms,
+  useInstructorQuizzes,
+  useModules,
+} from "@/services/tanstack/materials"
+import { getDateString } from "@/hooks/date-to-string"
 
 export default function DashboardInstructor() {
   const navigate = useNavigate()
+  const { data: classrooms } = useClassrooms()
+  const { data: modules } = useModules()
+  const { data: quizzes } = useInstructorQuizzes()
 
   // Key pillar metrics
   const totalClassroomsCount = classrooms.length
-  const totalEnrolledLearners = 59
+  const totalEnrolledLearners = classrooms.reduce(
+    (sum, cl) => sum + cl.enrollment_count,
+    0
+  )
   const totalModulesCount = modules.length
   const activeQuizzes = quizzes.filter((q) => q.status === "Open" || !q.status)
   const recentModules = modules.slice(0, 4)
@@ -149,17 +160,17 @@ export default function DashboardInstructor() {
                   <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Calendar className="size-3" />
-                      Due: {quiz.dueDate || "No due date"}
+                      Due: {getDateString(quiz.due_date)}
                     </span>
                     <span>•</span>
-                    <span>{quiz.questionsCount || 4} questions</span>
+                    <span>{quiz.question_count} questions</span>
                   </div>
                 </div>
               </div>
 
               <div className="flex shrink-0 items-center gap-2 self-start sm:self-auto">
                 <Badge variant="secondary" className="text-xs font-semibold">
-                  {quiz.principle || "General"}
+                  {quiz.principle}
                 </Badge>
                 <Badge
                   variant="outline"
@@ -216,8 +227,7 @@ export default function DashboardInstructor() {
                         <span className="font-semibold">
                           {module.principle}
                         </span>{" "}
-                        • Assigned to {module.classrooms?.length || 1}{" "}
-                        classrooms
+                        • Assigned to {module.classroom_id?.length} classrooms
                       </p>
                     </div>
                   </div>

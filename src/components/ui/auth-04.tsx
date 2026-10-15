@@ -4,12 +4,12 @@ import { useState } from "react"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import { loginAPI } from "@/services/api/authAPI"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import type { UserProps } from "@/const/props/userProps"
 import { Field, FieldError, FieldGroup, FieldLabel } from "./field"
 import { Spinner } from "./spinner"
-import { useRemoveQueries, useSetQueryData } from "@/services/tanstack/auth"
 import { Logo } from "../common/Logo"
 
 export default function LoginPage() {
@@ -18,15 +18,23 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
-  const remove = useRemoveQueries()
-  const setQueryData = useSetQueryData()
+  const location = useLocation()
+  const queryClient = useQueryClient()
 
   const { mutate, isPending } = useMutation({
     mutationFn: loginAPI,
-    onSuccess: (data: any) => {
-      remove(["user"])
-      setQueryData(["user"], data.user)
+    onSuccess: (data: UserProps) => {
+      // 1. Immediately store authenticated user in TanStack Query cache
+      queryClient.setQueryData(["user"], data)
 
+      // 2. Redirect to previously attempted page if available
+      const from = (location.state as { from?: { pathname?: string } })?.from?.pathname
+      if (from) {
+        navigate(from, { replace: true })
+        return
+      }
+
+      // 3. Fallback to default role landing page
       switch (data.role) {
         case "learner":
           navigate("/learner", { replace: true })
@@ -37,10 +45,13 @@ export default function LoginPage() {
         case "admin":
           navigate("/admin", { replace: true })
           break
+        default:
+          navigate("/", { replace: true })
+          break
       }
     },
     onError: (err: any) => {
-      setError(err.response.data.detail || "Error logging in")
+      setError(err?.response?.data?.detail || "Error logging in")
     },
   })
 
@@ -126,9 +137,7 @@ export default function LoginPage() {
                       className="h-10"
                     />
                     <button
-                      className={
-                        "absolute top-0 right-0 z-10 h-full px-4 dark:text-background"
-                      }
+                      className={"absolute top-0 right-0 z-10 h-full px-4"}
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       aria-label="Toggle password visibility"

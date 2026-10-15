@@ -6,6 +6,7 @@ import GridSkeleton from "@/components/skeleton/GridSkeleton"
 import PageSkeleton from "@/components/skeleton/PageSkeleton"
 import TableSkeleton from "@/components/skeleton/TableSkeleton"
 import { suspense } from "@/components/skeleton/suspense"
+import ProtectedLayoutNoSidebar from "@/layout/ProtectedLayoutNoSidebar"
 
 const ModuleEditor = lazy(() => import("@/features/instructor/ModuleEditor"))
 const QuizEditor = lazy(() => import("@/features/instructor/QuizEditor"))
@@ -80,37 +81,39 @@ export const instructorRoute = (
       />
     </Route>
 
-    <Route
-      path="/instructor/logs/classroom/:id"
-      element={suspense(<AnalyzerLogsClassroomView />, <TableSkeleton />)}
-    />
-    <Route
-      path="/instructor/logs/:id"
-      element={suspense(<AnalyzerLogsClassroomView />, <TableSkeleton />)}
-    />
-    <Route
-      path="/instructor/modules/:id"
-      element={suspense(<ModuleReadOnly />, <DetailSkeleton />)}
-    />
-    <Route
-      path="/instructor/modules/new"
-      element={suspense(<ModuleEditor />, <PageSkeleton />)}
-    />
-    <Route
-      path="/instructor/modules/edit/:id"
-      element={suspense(<ModuleEditor />, <PageSkeleton />)}
-    />
-    <Route
-      path="/instructor/quizzes/new"
-      element={suspense(<QuizEditor />, <PageSkeleton />)}
-    />
-    <Route
-      path="/instructor/quizzes/edit/:id"
-      element={suspense(<QuizEditor />, <PageSkeleton />)}
-    />
-    <Route
-      path="/instructor/quizzes/:id"
-      element={suspense(<QuizzesInstructorView />, <TableSkeleton />)}
-    />
+    <Route element={<ProtectedLayoutNoSidebar allowedRoles={"instructor"} />}>
+      <Route
+        path="/instructor/logs/classroom/:id"
+        element={suspense(<AnalyzerLogsClassroomView />, <TableSkeleton />)}
+      />
+      <Route
+        path="/instructor/logs/:id"
+        element={suspense(<AnalyzerLogsClassroomView />, <TableSkeleton />)}
+      />
+      <Route
+        path="/instructor/modules/:id"
+        element={suspense(<ModuleReadOnly />, <DetailSkeleton />)}
+      />
+      <Route
+        path="/instructor/modules/new"
+        element={suspense(<ModuleEditor />, <PageSkeleton />)}
+      />
+      <Route
+        path="/instructor/modules/edit/:id"
+        element={suspense(<ModuleEditor />, <PageSkeleton />)}
+      />
+      <Route
+        path="/instructor/quizzes/new"
+        element={suspense(<QuizEditor />, <PageSkeleton />)}
+      />
+      <Route
+        path="/instructor/quizzes/edit/:id"
+        element={suspense(<QuizEditor />, <PageSkeleton />)}
+      />
+      <Route
+        path="/instructor/quizzes/:id"
+        element={suspense(<QuizzesInstructorView />, <TableSkeleton />)}
+      />
+    </Route>
   </>
 )

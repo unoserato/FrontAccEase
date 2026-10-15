@@ -1,5 +1,5 @@
 import { Brain, Code, Eye, Keyboard } from "lucide-react"
-import type { CoreModulesProps } from "./materialsProps"
+import type { CoreModulesProps } from "./props/materialProps"
 
 export const coreModules: CoreModulesProps[] = [
   {

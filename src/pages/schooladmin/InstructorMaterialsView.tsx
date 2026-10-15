@@ -7,11 +7,9 @@ import ClassroomCardTemplate from "@/components/common/ClassroomCardTemplate"
 import SearchTemplate from "@/components/common/SearchTemplate"
 import GridListButtonGroupTemplate from "@/components/common/GridListButtonGroupTemplate"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { quizzes } from "@/const/data"
 import {
-  useInstructorMaterialsClassrooms,
+  useClassroomContentView,
   useInstructorMaterialsList,
-  useInstructorMaterialsModules,
 } from "@/services/tanstack/materials"
 
 export default function InstructorMaterialsView() {
@@ -22,18 +20,19 @@ export default function InstructorMaterialsView() {
   const [quizSearch, setQuizSearch] = useState("")
   const [gridView, setGridView] = useState(true)
   const { data: instructorMaterials } = useInstructorMaterialsList()
-  const { data: instructorClassrooms } = useInstructorMaterialsClassrooms(id!)
-  const { data: instructorModules } = useInstructorMaterialsModules(id!)
+  const { data: contents } = useClassroomContentView(id!)
+  const instructorModules = contents.modules
+  const instructorClassrooms = [contents.classroom]
 
   const instructor = instructorMaterials.find((i) => i.user.id === id)
 
   // Filter quizzes for this instructor
-  const instructorQuizzes = quizzes.filter((quiz) => {
+  const instructorQuizzes = contents.quizzes.filter((quiz) => {
     if (
       id &&
       quiz.created_by &&
       quiz.created_by !== id &&
-      quiz.author !== instructor?.user.name
+      quiz.created_by !== instructor?.user.name
     ) {
       return false
     }

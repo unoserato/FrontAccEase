@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react"
 import { useParams, Link, useSearchParams } from "react-router-dom"
-import { quizzes, quizSubmissions, classrooms } from "@/const/data"
 import NotFound from "../errors/NotFound"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -16,12 +15,6 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
-import QuizSubmissionsCardTemplate from "@/components/instructor/QuizSubmissionsCardTemplate"
-import {
-  getQuizJson,
-  getQuizTotalQuestions,
-  getQuizTotalPoints,
-} from "@/features/instructor/quizHelper"
 
 // Icons
 import {
@@ -41,15 +34,24 @@ import {
   ChevronRight,
 } from "lucide-react"
 
-import QuizForm from "@/features/shared/QuizForm"
+import QuizForm from "@/features/instructor/QuizForm"
 import { useMe } from "@/services/tanstack/auth"
+import {
+  useClassrooms,
+  useInstructorQuizzes,
+} from "@/services/tanstack/materials"
+import type { ClassroomProps, QuizProps } from "@/const/props/materialProps"
+import { getDateString } from "@/hooks/date-to-string"
 
 export default function QuizzesInstructorView() {
   const { data: user } = useMe()
-  const { id } = useParams<{ id: string }>()
+  const { data: quizzes } = useInstructorQuizzes()
+  const { data: classrooms } = useClassrooms()
+
+  const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const quiz = quizzes.find((q) => String(q.id) === String(id))
+  const quiz = quizzes.find((q) => q.id === id)
 
   if (!quiz) {
     return <NotFound />
@@ -98,7 +100,7 @@ export default function QuizzesInstructorView() {
       <HeaderTemplate
         backTo="-1"
         title={quiz.name}
-        subtitle={quiz.author || "You"}
+        subtitle={quiz.created_by}
         cta={cta}
       />
 
@@ -122,11 +124,11 @@ export default function QuizzesInstructorView() {
         </div>
 
         <TabsContent value="dashboard" className="mt-4 sm:mt-6">
-          <DashboardTab quiz={quiz} />
+          <DashboardTab quiz={quiz} classrooms={classrooms} />
         </TabsContent>
 
         <TabsContent value="submissions" className="mt-4 sm:mt-6">
-          <SubmissionsTab quiz={quiz} />
+          <SubmissionsTab quiz={quiz} classrooms={classrooms} />
         </TabsContent>
 
         <TabsContent value="preview" className="mt-4 sm:mt-6">
@@ -138,63 +140,32 @@ export default function QuizzesInstructorView() {
   )
 }
 
-function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
-  const matchingSubmissions = useMemo(
-    () => quizSubmissions.filter((s) => String(s.quizId) === String(quiz.id)),
-    [quiz.id]
-  )
-
+function DashboardTab({
+  quiz,
+  classrooms,
+}: {
+  quiz: QuizProps
+  classrooms: ClassroomProps[]
+}) {
   const assignedClassrooms = useMemo(
     () =>
-      (quiz.classrooms ?? [])
-        .map((cId) => classrooms.find((c) => String(c.id) === String(cId)))
+      quiz.classrooms
+        .map((qc) => classrooms.find((c) => String(c.id) === String(qc)))
         .filter(Boolean),
-    [quiz.classrooms]
-  )
-
-  const assignedLearnerIds = useMemo(
-    () =>
-      Array.from(new Set(assignedClassrooms.flatMap((c) => c?.learners ?? []))),
-    [assignedClassrooms]
+    [quiz.classrooms, classrooms]
   )
 
   // Dynamic KPI Computations
-  const totalSubmissions =
-    assignedLearnerIds.length > 0
-      ? assignedLearnerIds.length
-      : (quiz.totalSubmissions ?? 59)
+  const totalSubmissions = 0
 
-  const submissionsCount =
-    matchingSubmissions.length > 0
-      ? matchingSubmissions.length
-      : (quiz.submissionsCount ?? 35)
+  const submissionsCount = 0
 
-  const avgScore =
-    matchingSubmissions.length > 0
-      ? Math.round(
-          matchingSubmissions.reduce((acc, s) => acc + (s.score ?? 0), 0) /
-            matchingSubmissions.length
-        )
-      : (quiz.avgScore ?? 84)
+  const avgScore = 0
 
-  const computedPoints = getQuizTotalPoints(quiz)
-  const totalPoints = computedPoints > 0 ? computedPoints : 50
-
-  const passingCount = matchingSubmissions.filter(
-    (s) => (s.score ?? 0) >= Math.round(totalPoints * 0.75)
-  ).length
-
-  const passingRate =
-    matchingSubmissions.length > 0
-      ? Math.round((passingCount / matchingSubmissions.length) * 100)
-      : (quiz.passingRate ?? 92)
+  const passingRate = 0
 
   const quizStatus = quiz.status || "Open"
-  const dueDate = quiz.dueDate || "Aug 27, 2026"
-  const quizJson = getQuizJson(quiz)
-  const computedQuestions = getQuizTotalQuestions(quiz)
-  const questionsCount = computedQuestions > 0 ? computedQuestions : 10
-  const timeLimit = quizJson.timeLimit ?? quiz.timeLimit ?? 20
+  const timeLimit = quiz.time_limit ?? 20
   const tags = quiz.tags ?? ["1.1.1 Non-Text Content"]
 
   const progressPercent = Math.min(
@@ -213,7 +184,7 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
       title: "Avg. Score",
       icon: BarChart3,
       value: `${avgScore}%`,
-      footerDesc: `Out of ${totalPoints} total points`,
+      footerDesc: `Out of ${quiz.total_points} total points`,
     },
     {
       title: "Submissions",
@@ -224,7 +195,7 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
     {
       title: "Questions & Time",
       icon: HelpCircle,
-      value: `${questionsCount} Qs`,
+      value: `${quiz.items} Qs`,
       footerDesc: `${timeLimit} mins time limit`,
     },
   ]
@@ -277,7 +248,7 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
                 {quiz.name}
               </CardTitle>
               <CardDescription className="text-xs text-muted-foreground">
-                Created on {quiz.createdAt}
+                Created on {getDateString(quiz.created_at)}
               </CardDescription>
             </div>
           </div>
@@ -329,7 +300,7 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
                   Due Date
                 </p>
                 <p className="truncate text-sm font-semibold text-foreground">
-                  {dueDate}
+                  {getDateString(quiz.due_date)}
                 </p>
               </div>
             </div>
@@ -357,7 +328,7 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
                   Total Points
                 </p>
                 <p className="truncate text-sm font-semibold text-foreground">
-                  {totalPoints} Points ({questionsCount} Qs)
+                  {quiz.total_points} Points ({quiz.items} Qs)
                 </p>
               </div>
             </div>
@@ -405,12 +376,12 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
                               {classroom.name}
                             </span>
                             <Badge variant="outline" className="text-xs">
-                              {classroom.classroomCode}
+                              {classroom.classroom_code}
                             </Badge>
                           </div>
                           <p className="text-xs text-muted-foreground">
-                            {classroom.learners?.length || 0} enrolled students
-                            • Join Code: {classroom.joinCode}
+                            {classroom.enrollment_count} enrolled students •
+                            Join Code: {classroom.classroom_join_code}
                           </p>
                         </div>
                       </div>
@@ -459,13 +430,19 @@ function DashboardTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
   )
 }
 
-function SubmissionsTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
+function SubmissionsTab({
+  quiz,
+  classrooms,
+}: {
+  quiz: QuizProps
+  classrooms: ClassroomProps[]
+}) {
   const assignedClassrooms = useMemo(
     () =>
       (quiz.classrooms ?? [])
         .map((cId) => classrooms.find((c) => String(c.id) === String(cId)))
         .filter(Boolean),
-    [quiz.classrooms]
+    [quiz.classrooms, classrooms]
   )
 
   const targetClassrooms =
@@ -483,12 +460,12 @@ function SubmissionsTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
         </span>
       </div>
 
-      <QuizSubmissionsCardTemplate quiz={quiz} />
+      {/* <QuizSubmissionsCardTemplate quiz={quiz} /> */}
     </div>
   )
 }
 
-function PreviewTab({ quiz }: { quiz: (typeof quizzes)[0] }) {
+function PreviewTab({ quiz }: { quiz: QuizProps }) {
   const [previewKey, setPreviewKey] = useState(0)
 
   const handleResetPreview = () => {

@@ -1,0 +1,38 @@
+{
+  "generated_at": "2026-10-15T17:22:08.760848+00:00",
+  "nodes": {
+    "src_pages_learner_analyzer_analyzer": {
+      "code_fingerprint": "77939cd73702568dcbb046e3ff7b1d76b76693d6e6e56248ea189ba1fb7d0d04",
+      "label": "Analyzer()",
+      "last": "2026-10-15T16:01:37.075836+00:00",
+      "provenance": [
+        {
+          "date": "2026-10-15T16:01:37.075836+00:00",
+          "outcome": "useful",
+          "q": "Add elapsed time in webLLM.ts"
+        }
+      ],
+      "score": 0.998708755,
+      "source_file": "src/pages/learner/Analyzer.tsx",
+      "status": "tentative",
+      "uses": 1
+    },
+    "src_services_webllm_compilewebllmresults": {
+      "code_fingerprint": "36b8c7b846806c50367e9f1814ed9d52ec3cd5093a703ea2d21fcb11d570f21e",
+      "label": "compileWebLLMResults()",
+      "last": "2026-10-15T16:01:37.075836+00:00",
+      "provenance": [
+        {
+          "date": "2026-10-15T16:01:37.075836+00:00",
+          "outcome": "useful",
+          "q": "Add elapsed time in webLLM.ts"
+        }
+      ],
+      "score": 0.998708755,
+      "source_file": "src/services/webLLM.ts",
+      "status": "tentative",
+      "uses": 1
+    }
+  },
+  "version": 1
+}

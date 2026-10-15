@@ -12,7 +12,6 @@ export function useCheckToken() {
     queryFn: meAPI,
     staleTime: staleTime,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
     retry: false,
   })
 }
@@ -31,9 +30,11 @@ export function useMe() {
 export function useInvalidateQueries() {
   const queryClient = useQueryClient()
 
-  return (keys: string[]) => {
+  return (keys: (string | number)[][]) => {
     keys.forEach((key) => {
-      queryClient.invalidateQueries({ queryKey: [key] })
+      queryClient.invalidateQueries({
+        queryKey: key,
+      })
     })
   }
 }
@@ -51,7 +52,10 @@ export function useRemoveQueries() {
 export function useSetQueryData() {
   const queryClient = useQueryClient()
 
-  return (key: string[], data: unknown) => {
-    queryClient.setQueryData([key], data)
+  return <TData = unknown>(
+    key: readonly unknown[],
+    data: TData | ((prev: TData | undefined) => TData | undefined)
+  ) => {
+    queryClient.setQueryData(key, data)
   }
 }

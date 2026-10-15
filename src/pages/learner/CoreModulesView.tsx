@@ -2,7 +2,7 @@ import { useState } from "react"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { coreModules } from "@/const/coreModules"
-import type { CoreTopicsProps } from "@/const/materialsProps"
+import type { CoreTopicsProps } from "@/const/props/materialProps"
 import { Link, useParams } from "react-router-dom"
 import NotFound from "../errors/NotFound"
 import {

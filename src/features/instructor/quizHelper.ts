@@ -3,73 +3,30 @@ import type {
   QuestionElement,
   QuizPage,
   QuizJson,
-  QuizProps,
-} from "@/const/materialsProps"
+} from "@/const/props/materialProps"
 
-export type { QuestionType, QuestionElement, QuizPage, QuizJson }
+// Scaffolding and read-only queries are role-agnostic and live in shared.
+export {
+  DEFAULT_QUIZ_JSON,
+  getQuizJson,
+  getQuizTotalQuestions,
+  getQuizTotalPoints,
+} from "@/features/shared/quizHelper"
 
-export const DEFAULT_QUIZ_JSON: QuizJson = {
-  title: "New Quiz Assessment",
-  description: "Objective evaluation on web accessibility and compliance.",
-  showQuestionNumbers: "on",
-  showProgressBar: true,
-  progressBarLocation: "top",
-  progressBarType: "questions",
-  progressBarShowPageNumbers: true,
-  progressBarShowNavigationText: true,
-  completedHtml:
-    "<div class='text-center p-6 space-y-3'><h3 class='text-xl font-bold'>Quiz Complete!</h3><p class='text-base'>You scored <b>{correctAnswers}</b> out of <b>{questionCount}</b> correct answers.</p></div>",
-  pages: [
-    {
-      name: "page1",
-      title: "Section 1: General Knowledge",
-      elements: [
-        {
-          type: "radiogroup",
-          name: "q_1",
-          title: "What does WCAG stand for?",
-          choices: [
-            "Web Content Accessibility Guidelines",
-            "World Code Accessibility Standards",
-            "Web Compliance and Guidance",
-            "Web Consortium Accessibility Group",
-          ],
-          correctAnswer: "Web Content Accessibility Guidelines",
-          isRequired: true,
-          points: 1,
-        },
-      ],
-    },
-  ],
-}
+export type {
+  QuestionType,
+  QuestionElement,
+  QuizPage,
+  QuizJson,
+} from "@/const/props/materialProps"
 
-export function getQuizJson(
-  quiz?: { name?: string; content?: any; quizContent?: QuizJson } | null
-): QuizJson {
-  if (!quiz) return DEFAULT_QUIZ_JSON
-  const targetContent = quiz.quizContent || quiz.content
-  if (
-    targetContent &&
-    typeof targetContent === "object" &&
-    "pages" in targetContent
-  ) {
-    return targetContent as QuizJson
-  }
-  if (typeof targetContent === "string") {
-    try {
-      const parsed = JSON.parse(targetContent)
-      if (parsed && typeof parsed === "object" && "pages" in parsed) {
-        return parsed as QuizJson
-      }
-    } catch {
-      // Ignore fallback on invalid json
-    }
-  }
-  return {
-    ...DEFAULT_QUIZ_JSON,
-    title: quiz.name || DEFAULT_QUIZ_JSON.title,
-  }
-}
+/**
+ * Instructor-only authoring mutations.
+ *
+ * Every function here is an immutable transform over the quiz definition being
+ * built in `QuizEditor`. Learners must not use these — they consume the
+ * published quiz through `@/features/learner/QuizTaker`.
+ */
 
 export function addPage(quizJson: QuizJson): QuizJson {
   const newPageNum = quizJson.pages.length + 1
@@ -391,26 +348,3 @@ export function deleteChoice(
   pages[pIdx] = { ...page, elements }
   return { ...quizJson, pages }
 }
-
-export function getQuizTotalQuestions(
-  quizOrJson?: QuizProps | QuizJson | null
-): number {
-  if (!quizOrJson) return 0
-  const json = getQuizJson(quizOrJson as any)
-  if (!json || !json.pages) return 0
-  return json.pages.reduce((acc, page) => acc + (page.elements?.length || 0), 0)
-}
-
-export function getQuizTotalPoints(
-  quizOrJson?: QuizProps | QuizJson | null
-): number {
-  if (!quizOrJson) return 0
-  const json = getQuizJson(quizOrJson as any)
-  if (!json || !json.pages) return 0
-  return json.pages.reduce((acc, page) => {
-    const pagePoints =
-      page.elements?.reduce((pAcc, elem) => pAcc + (elem.points ?? 1), 0) || 0
-    return acc + pagePoints
-  }, 0)
-}
-

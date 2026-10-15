@@ -7,8 +7,7 @@ import { instructorNav, learnerNav, schoolAdminNav } from "@/const/navigation"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Suspense } from "react"
 import Forbidden from "@/pages/errors/Forbidden"
-import Unauthorized from "@/pages/errors/Unauthorized"
-import { Outlet } from "react-router-dom"
+import { Outlet, Navigate, useLocation } from "react-router-dom"
 import { useCheckToken } from "@/services/tanstack/auth"
 
 const linksByRole = {
@@ -23,6 +22,7 @@ export default function ProtectedLayout({
   allowedRoles: UserRole | UserRole[]
 }) {
   const isMobile = useIsMobile()
+  const location = useLocation()
   const { data: user, isLoading } = useCheckToken()
 
   if (isLoading) {
@@ -30,15 +30,13 @@ export default function ProtectedLayout({
   }
 
   if (!user) {
-    return <Unauthorized />
+    return <Navigate to="/login" state={{ from: location }} replace />
   }
 
   const userRole = user.role as UserRole
   const isPermitted = Array.isArray(allowedRoles)
     ? allowedRoles.includes(userRole)
     : userRole === allowedRoles
-
-  console.log(user.role, isPermitted, allowedRoles)
 
   if (!isPermitted) {
     return <Forbidden />

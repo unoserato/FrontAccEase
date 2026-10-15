@@ -13,7 +13,6 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { EarnedBagdes } from "./CoreModulesView"
 import LearnerQuizCardTemplate from "@/components/common/LearnerQuizCardTemplate"
 import { coreModules } from "@/const/coreModules"
-import { classrooms, quizzes, user, analyzerResults } from "@/const/data"
 import {
   ArrowUpRight,
   ChevronRight,
@@ -24,6 +23,10 @@ import {
   ExternalLink,
 } from "lucide-react"
 import { SiGoogleclassroom } from "react-icons/si"
+import {
+  useClassroomContentView,
+  useClassrooms,
+} from "@/services/tanstack/materials"
 
 const principleMasteryData = [
   {
@@ -60,22 +63,13 @@ const principleMasteryData = [
 
 export default function Dashboard() {
   const navigate = useNavigate()
+  const { data: classrooms } = useClassrooms()
+  const { data: contents } = useClassroomContentView(classrooms[0]?.id)
 
-  // Find enrolled classroom
-  const myClassroom =
-    classrooms.find((classroom) =>
-      classroom.learners.some(
-        (learnerId) => learnerId === "1234-1234" || learnerId === user.id
-      )
-    ) || classrooms[0]
-
-  // Classroom active quizzes
-  const classroomQuizzes = quizzes.filter((q) =>
-    q.classrooms?.includes(myClassroom.id)
-  )
+  const myClassroom = classrooms[0]
+  const classroomQuizzes = contents.quizzes
 
   const activeLesson = coreModules[0].topics[0].lessons[0]
-  const latestScan = analyzerResults[0]
 
   const KPI = [
     {
@@ -87,19 +81,19 @@ export default function Dashboard() {
     {
       title: "Enrolled Class",
       icon: SiGoogleclassroom,
-      value: myClassroom.classroomCode,
+      value: myClassroom.classroom_code,
       footerDesc: myClassroom.name,
     },
     {
       title: "Due Quizzes",
       icon: FileQuestion,
-      value: quizzes.length,
+      value: classroomQuizzes.length,
       footerDesc: "Pending classroom quiz",
     },
     {
       title: "Analyzed Websites",
       icon: Globe,
-      value: analyzerResults.length,
+      value: 0,
       footerDesc: "Accessibility scans",
     },
   ]
@@ -305,7 +299,7 @@ export default function Dashboard() {
                   </CardTitle>
                 </div>
                 <Badge variant="secondary" className="text-xs font-semibold">
-                  Score: {latestScan.data.overall_score}%
+                  Score: 90%
                 </Badge>
               </div>
               <CardDescription className="text-xs text-muted-foreground">
@@ -318,7 +312,7 @@ export default function Dashboard() {
                 <div className="flex min-w-0 items-center gap-2">
                   <ExternalLink className="size-3.5 shrink-0 text-muted-foreground" />
                   <span className="truncate font-mono text-xs font-semibold text-foreground">
-                    {latestScan.data.url}
+                    attendex.online
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -343,7 +337,7 @@ export default function Dashboard() {
           </Card>
 
           {/* 3. Aria AI Assistant Quick Query */}
-          <Card className="space-y-3 border-primary/20 bg-gradient-to-br from-primary/5 via-transparent to-transparent p-5">
+          <Card className="space-y-3 border-primary/20 bg-linear-to-br from-primary/5 via-transparent to-transparent p-5">
             <div className="flex items-center gap-2 text-foreground">
               <div className="rounded-lg bg-primary/10 p-2 text-primary">
                 <MessageSquare className="size-4" />

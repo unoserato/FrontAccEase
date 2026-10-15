@@ -7,7 +7,7 @@ import { api } from "../axios"
 
 export async function getModulesAPI(): Promise<ModuleProps[]> {
   const response = await api.get("/helper/get-all-module")
-  return response.data.data
+  return response.data
 }
 
 export async function createModuleAPI(module: {
@@ -59,5 +59,15 @@ export async function getClassroomContentViewById(
   id: string
 ): Promise<ClassroomViewProps> {
   const response = await api.get(`/helper/get-classroom-content/${id}`)
+  return response.data
+}
+
+export async function createInstructorQuizAPI(payload: any) {
+  const response = await api.post(`/helper/create-quiz`, payload)
+  return response.data
+}
+
+export async function udpateInstructorQuizAPI(id: string, payload: any) {
+  const response = await api.put(`/helper/update-quiz/${id}`, payload)
   return response.data
 }

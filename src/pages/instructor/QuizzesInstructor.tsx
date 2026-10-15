@@ -3,13 +3,15 @@ import HeaderTemplate from "@/components/common/PageTemplate"
 import SearchTemplate from "@/components/common/SearchTemplate"
 import TooltipButtonTemplate from "@/components/common/TooltipButtonTemplate"
 import { buttonVariants } from "@/components/ui/button"
-import { quizzes } from "@/const/data"
 import { Archive, FileQuestion, Filter } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import { useInstructorQuizzes } from "@/services/tanstack/materials"
+import { Empty } from "@/components/ui/empty"
 
 export default function QuizzesInstructor() {
   const [search, setSearch] = useState("")
+  const { data: quizzes = [] } = useInstructorQuizzes()
 
   const filteredQuizzes = quizzes.filter((quiz) => {
     if (search.trim().length > 0) {
@@ -63,18 +65,11 @@ export default function QuizzesInstructor() {
       </div>
 
       <div className="flex flex-col gap-3 sm:gap-4">
-        {/* <Link
-          to="./new"
-          className="group flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-card/40 p-4 text-muted-foreground transition-all hover:border-primary/50 hover:bg-muted/30 hover:text-foreground"
-        >
-          <Plus className="h-4 w-4" />
-          <span className="text-xs font-medium sm:text-sm">
-            Create New Quiz
-          </span>
-        </Link> */}
-        {filteredQuizzes.map((quiz) => (
-          <QuizCardTemplate quiz={quiz} />
-        ))}
+        {filteredQuizzes.length == 0 ? (
+          <Empty className="aspect-video h-full w-full border">Hello</Empty>
+        ) : (
+          filteredQuizzes.map((quiz) => <QuizCardTemplate quiz={quiz} />)
+        )}
       </div>
     </section>
   )

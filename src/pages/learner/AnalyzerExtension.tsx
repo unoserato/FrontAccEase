@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -23,13 +23,22 @@ import {
   Loader2,
 } from "lucide-react"
 import { SiBrave, SiFirefox, SiGooglechrome, SiOpera } from "react-icons/si"
+import {
+  useCreateExtensionScan,
+  useExtensionScan,
+} from "@/services/tanstack/materials"
+import { WEBLLM_MODELS } from "@/services/webLLM"
 
 export default function AnalyzerExtension() {
   const navigate = useNavigate()
   const [pairingCode, setPairingCode] = useState<string | null>(null)
-  const [isGenerating, setIsGenerating] = useState(false)
   const [isCopied, setIsCopied] = useState(false)
-  const [selectedModel, setSelectedModel] = useState("qwen-0.6b")
+  const [connectionStatus, setConnectionStatus] = useState(
+    "Generate a code to begin"
+  )
+  const [selectedModel, setSelectedModel] = useState<string>(
+    WEBLLM_MODELS[2].value
+  )
 
   const supportedBrowsers = [
     { name: "Google Chrome", icon: SiGooglechrome },
@@ -39,24 +48,76 @@ export default function AnalyzerExtension() {
     { name: "Opera", icon: SiOpera },
   ]
 
-  function handleGenerateCode() {
-    setIsGenerating(true)
-    setTimeout(() => {
-      // Generate a random 6-character pairing code
-      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
-      let result = ""
-      for (let i = 0; i < 6; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length))
-      }
-      setPairingCode(result)
-      setIsGenerating(false)
-      setIsCopied(false)
+  const createScanMutation = useCreateExtensionScan()
 
-      toast.add({
-        title: "Pairing Code Generated",
-        description: `Code ${result} generated. Valid for 7 days.`,
-      })
-    }, 500)
+  const { data: extensionSession } = useExtensionScan(
+    pairingCode || undefined,
+    { enabled: !!pairingCode }
+  )
+
+  useEffect(() => {
+    if (!extensionSession) return
+
+    if (extensionSession.status === "completed") {
+      setConnectionStatus("Scan received. Opening results...")
+      if (extensionSession.scan_type === "llm" && extensionSession.task_batch) {
+        navigate("/learner/analyzer", {
+          state: {
+            taskBatch: extensionSession.task_batch,
+            targetUrl: extensionSession.url || "",
+            webLLMModel: selectedModel,
+          },
+        })
+        return
+      }
+      if (extensionSession.result) {
+        navigate(`/learner/analyzer/${Date.now()}`, {
+          state: {
+            result: extensionSession.result,
+            scanId: `extension-${Date.now()}`,
+          },
+        })
+        return
+      }
+      setConnectionStatus(
+        "The scan finished without a result. Generate a new code and try again."
+      )
+      return
+    }
+
+    if (extensionSession.status === "failed") {
+      setConnectionStatus(
+        "The extension scan failed. Generate a new code and try again."
+      )
+      return
+    }
+
+    setConnectionStatus(
+      extensionSession.status === "processing"
+        ? "Extension is processing the page..."
+        : "Waiting for the extension to submit a scan..."
+    )
+  }, [extensionSession, navigate, selectedModel])
+
+  function handleGenerateCode() {
+    createScanMutation.mutate(undefined, {
+      onSuccess: (session) => {
+        setPairingCode(session.code)
+        setConnectionStatus("Waiting for the extension to submit a scan...")
+        setIsCopied(false)
+        toast.add({
+          title: "Pairing Code Generated",
+          description: `Code ${session.code} is ready for the extension.`,
+        })
+      },
+      onError: (error) => {
+        toast.add({
+          title: "Could not generate a pairing code",
+          description:
+            error instanceof Error ? error.message : "Please try again.",
+        })
+      },
+    })
   }
 
   function handleCopyCode() {
@@ -258,10 +319,10 @@ export default function AnalyzerExtension() {
                 ) : (
                   <Button
                     onClick={handleGenerateCode}
-                    disabled={isGenerating}
+                    disabled={createScanMutation.isPending}
                     className="h-11 gap-2 rounded-xl bg-white px-6 text-xs font-bold text-zinc-950 shadow-md hover:bg-zinc-100 sm:text-sm"
                   >
-                    {isGenerating ? (
+                    {createScanMutation.isPending ? (
                       <>
                         <Loader2 className="size-4 animate-spin" />
                         <span>Generating...</span>
@@ -288,7 +349,7 @@ export default function AnalyzerExtension() {
                 </div>
                 <div className="flex items-center gap-1.5 font-medium">
                   <span className="animate-pulse font-mono">...</span>
-                  <span>Waiting for connection...</span>
+                  <span>{connectionStatus}</span>
                 </div>
               </div>
             </div>
@@ -314,7 +375,7 @@ export default function AnalyzerExtension() {
 
             <div className="max-w-sm space-y-1.5 pt-1">
               <label className="text-xs font-semibold text-muted-foreground">
-                Available Models
+                WebLLM Browser Model
               </label>
               <Select
                 value={selectedModel}
@@ -324,18 +385,16 @@ export default function AnalyzerExtension() {
                   <SelectValue placeholder="Select a model" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="qwen-0.6b" className="text-xs font-medium">
-                    qwen 0.6b (Recommended)
-                  </SelectItem>
-                  <SelectItem
-                    value="gemini-3.5"
-                    className="text-xs font-medium"
-                  >
-                    Gemini 3.5 Flash
-                  </SelectItem>
-                  <SelectItem value="llama-3.2" className="text-xs font-medium">
-                    Llama 3.2 1B Instruct
-                  </SelectItem>
+                  {WEBLLM_MODELS.map((model) => (
+                    <SelectItem
+                      key={model.value}
+                      value={model.value}
+                      className="text-xs font-medium"
+                    >
+                      {model.label}
+                      {model.value === WEBLLM_MODELS[2].value ? " (Default)" : ""}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

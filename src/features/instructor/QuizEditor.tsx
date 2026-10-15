@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react"
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link, useNavigate } from "react-router-dom"
 import { useHotkeys } from "react-hotkeys-hook"
-import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 
 // UI Components
@@ -10,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
-import { DatePicker } from "@/components/ui/date-picker"
+import { DateTimePicker } from "@/components/ui/date-time-picker"
 import { ModeToggle } from "@/components/modeToggle"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import {
@@ -32,15 +31,15 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { Field, FieldLabel } from "@/components/ui/field"
 import SearchTemplate from "@/components/common/SearchTemplate"
+import EmptyState from "@/components/common/EmptyState"
 
 // Features & Types
-import QuizForm from "@/features/shared/QuizForm"
+import QuizForm from "@/features/instructor/QuizForm"
 import {
   type QuizProps,
-  type ClassroomProps,
   type WCAGPrinciple,
   WCAG_PRINCIPLES_DATA,
-} from "@/const/materialsProps"
+} from "@/const/props/materialProps"
 
 // Icons
 import {
@@ -70,7 +69,6 @@ import {
 } from "lucide-react"
 
 // Constants & Data
-import { quizzes, classrooms } from "@/const/data"
 import { useUnmount } from "@/hooks/useUnmount"
 
 // Helpers
@@ -91,7 +89,28 @@ import {
   deleteChoice,
   type QuizJson,
   type QuestionType,
+  type QuestionElement,
 } from "./quizHelper"
+import {
+  useClassrooms,
+  useQuizAnswerById,
+  useQuizById,
+} from "@/services/tanstack/materials"
+import type { ClassroomProps } from "@/const/props/materialProps"
+import { useMutation } from "@tanstack/react-query"
+import {
+  createInstructorQuizAPI,
+  udpateInstructorQuizAPI,
+} from "@/services/api/materialsAPI"
+import { useInvalidateQueries } from "@/services/tanstack/auth"
+
+/**
+ * Maps a question's unique `name` to its correct answer.
+ *
+ * Instructor-only scoring data. It is kept out of the quiz definition itself so
+ * that the learner-facing payload never ships answers alongside questions.
+ */
+type AnswerKey = Record<string, QuestionElement["correctAnswer"]>
 
 const QUIZZES_PATH = "/instructor/quizzes"
 
@@ -127,30 +146,100 @@ const QUESTION_TYPE_OPTIONS: {
   },
 ]
 
+/**
+ * Returns a copy of the quiz definition with every `correctAnswer` stripped out.
+ *
+ * Answers live in the instructor-only `AnswerKey`; the quiz definition that gets
+ * published to classrooms must not carry them.
+ */
+function stripCorrectAnswers(quizJson: QuizJson): QuizJson {
+  return {
+    ...quizJson,
+    pages: quizJson.pages.map((page) => ({
+      ...page,
+      elements: (page.elements || []).map(
+        ({ correctAnswer: _answer, ...element }) => element
+      ),
+    })),
+  }
+}
+
+function stitchCorrectAnswer(
+  quizJson: QuizJson,
+  answerKey: AnswerKey
+): QuizJson {
+  return {
+    ...quizJson,
+    pages: quizJson.pages.map((page) => ({
+      ...page,
+      elements: (page.elements || []).map((element) => ({
+        ...element,
+        ...(Object.hasOwn(answerKey, element.name)
+          ? { correctAnswer: answerKey[element.name] }
+          : {}),
+      })),
+    })),
+  }
+}
+
 export default function QuizEditor() {
-  const { id } = useParams<{ id?: string }>()
-  const existingQuiz = useMemo(
-    () => (id ? quizzes.find((q) => String(q.id) === String(id)) : null),
-    [id]
+  const { id } = useParams()
+  const { data: existingQuiz } = useQuizById(id!)
+
+  const answerQuery = useQuizAnswerById(existingQuiz?.id)
+
+  if (id && !existingQuiz) {
+    return <EmptyState title="Quiz not found" />
+  }
+
+  if (existingQuiz && answerQuery.isPending) {
+    return <EmptyState title="Loading quiz answers…" role="status" />
+  }
+
+  if (existingQuiz && answerQuery.isError) {
+    return (
+      <EmptyState
+        title="Unable to load quiz answers"
+        description="Try again to load the correct answers before editing."
+        actions={
+          <Button onClick={() => answerQuery.refetch()}>Try again</Button>
+        }
+      />
+    )
+  }
+
+  return (
+    <QuizEditorContent
+      key={existingQuiz?.id ?? "new"}
+      existingQuiz={existingQuiz ?? null}
+      savedAnswerKey={answerQuery.data}
+    />
   )
+}
+
+function QuizEditorContent({
+  existingQuiz,
+  savedAnswerKey,
+}: {
+  existingQuiz: QuizProps | null
+  savedAnswerKey?: AnswerKey
+}) {
+  const { data: classrooms } = useClassrooms()
 
   const [activePageIndex, setActivePageIndex] = useState(0)
   const [createdBy, setCreatedBy] = useState("Instructor")
   const [hasTimeLimit, setHasTimeLimit] = useState<boolean>(() =>
-    Boolean(existingQuiz?.timeLimit)
+    Boolean(existingQuiz?.time_limit)
   )
   const [timeLimit, setTimeLimit] = useState<number>(
-    () => existingQuiz?.timeLimit || 30
+    () => existingQuiz?.time_limit || 0
   )
-  const [dueDate, setDueDate] = useState<Date | undefined>(() =>
-    existingQuiz?.dueDate ? new Date(existingQuiz.dueDate) : undefined
+  const [attemptCount, setAttemptCount] = useState<number>(
+    () => existingQuiz?.attempt_count || 3
   )
-  const [dueTime, setDueTime] = useState<string>(() =>
-    existingQuiz?.dueDate
-      ? format(new Date(existingQuiz.dueDate), "HH:mm")
-      : "23:59"
+  const [dueDate, setDueDate] = useState<Date>(() =>
+    existingQuiz?.due_date ? new Date(existingQuiz.due_date) : new Date()
   )
-  const [isSaving, setIsSaving] = useState(false)
   const [activeTab, setActiveTab] = useState<"editor" | "preview">("editor")
   const [previewKey, setPreviewKey] = useState(0)
   const [selectedTheme, setSelectedTheme] = useState<string>(
@@ -169,8 +258,11 @@ export default function QuizEditor() {
   )
 
   const [quizJson, setQuizJson] = useState<QuizJson>(() => {
-    return DEFAULT_QUIZ_JSON
+    return existingQuiz
+      ? stitchCorrectAnswer(getQuizJson(existingQuiz), savedAnswerKey ?? {})
+      : DEFAULT_QUIZ_JSON
   })
+  const savingError = ""
 
   const computedTotalQuestions = useMemo(() => {
     return quizJson.pages.reduce(
@@ -187,12 +279,28 @@ export default function QuizEditor() {
     }, 0)
   }, [quizJson])
 
+  const answerKey = useMemo(() => {
+    const key: AnswerKey = {}
+    for (const page of quizJson.pages) {
+      for (const q of page.elements || []) {
+        if (q.name) {
+          key[q.name] = q.correctAnswer
+        }
+      }
+    }
+    return key
+  }, [quizJson])
+
   // Safeguards ensuring users do not submit empty or invalid data
   const validationErrors = useMemo(() => {
     const errors: string[] = []
 
     if (!quizJson.title?.trim()) {
       errors.push("Quiz title cannot be empty.")
+    }
+
+    if (!dueDate) {
+      errors.push("Please set due date")
     }
 
     if (computedTotalQuestions === 0) {
@@ -224,12 +332,12 @@ export default function QuizEditor() {
     }
 
     // eslint-disable-next-line react-hooks/purity
-    if (dueDate && dueDate.getTime() < Date.now()) {
+    if (dueDate && dueDate.getTime() < Date.now() && !existingQuiz) {
       errors.push("Due date & time cannot be set in the past.")
     }
 
     return errors
-  }, [quizJson, computedTotalQuestions, dueDate])
+  }, [quizJson, computedTotalQuestions, dueDate, existingQuiz])
 
   const isPublish = selectedClassrooms.length > 0
   const isAllSelected =
@@ -243,9 +351,9 @@ export default function QuizEditor() {
     return classrooms.filter(
       (c: ClassroomProps) =>
         c.name.toLowerCase().includes(q) ||
-        c.classroomCode.toLowerCase().includes(q)
+        c.classroom_code.toLowerCase().includes(q)
     )
-  }, [searchQuery])
+  }, [searchQuery, classrooms])
 
   function handleToggleAll(checked: boolean) {
     if (checked) {
@@ -273,23 +381,25 @@ export default function QuizEditor() {
       timeLimit: hasTimeLimit ? timeLimit : undefined,
     }
     return {
-      id: id || "preview-quiz",
-      name: quizJson.title || "Quiz Preview",
-      createdAt: existingQuiz?.createdAt || new Date().toISOString(),
-      timeLimit: hasTimeLimit ? timeLimit : undefined,
-      dueDate: dueDate ? dueDate.toISOString() : undefined,
-      theme: selectedTheme,
+      id: existingQuiz?.id || "",
+      created_at: existingQuiz?.created_at || Date().toString(),
+      name: quizJson.title,
+      status: isPublish ? "Open" : "Draft",
       principle: selectedPrinciple,
       tags: selectedTags,
       classrooms: selectedClassrooms,
-      status: isPublish ? "Open" : "Draft",
-      questionsCount: computedTotalQuestions,
-      quizContent: updatedQuizJson,
-      content: updatedQuizJson,
-      author: createdBy,
+      question_count: computedTotalQuestions,
+      total_points: computedTotalPoints,
+      time_limit: hasTimeLimit ? timeLimit : undefined,
+      due_date: dueDate ? dueDate.toISOString() : Date(),
+      theme: selectedTheme,
+      quiz_json: updatedQuizJson,
+      created_by: createdBy,
+      attempt_count: attemptCount,
     }
   }, [
-    id,
+    existingQuiz?.id,
+    existingQuiz?.created_at,
     quizJson,
     hasTimeLimit,
     timeLimit,
@@ -300,8 +410,9 @@ export default function QuizEditor() {
     selectedClassrooms,
     isPublish,
     computedTotalQuestions,
-    existingQuiz,
+    computedTotalPoints,
     createdBy,
+    attemptCount,
   ])
 
   // Active question highlight state
@@ -314,66 +425,90 @@ export default function QuizEditor() {
   )
   const activePage = quizJson.pages[validPageIndex]
 
-  // Sync if editing existing quiz
   const [prevQuiz, setPrevQuiz] = useState(existingQuiz)
+
   if (existingQuiz !== prevQuiz) {
     setPrevQuiz(existingQuiz)
     if (existingQuiz) {
-      setQuizJson(getQuizJson(existingQuiz))
-      if (existingQuiz.author) setCreatedBy(existingQuiz.author)
+      setQuizJson(
+        stitchCorrectAnswer(getQuizJson(existingQuiz), savedAnswerKey ?? {})
+      )
+      if (existingQuiz.created_by) setCreatedBy(existingQuiz.created_by)
       if (existingQuiz.theme) setSelectedTheme(existingQuiz.theme)
       if (existingQuiz.principle) setSelectedPrinciple(existingQuiz.principle)
       if (existingQuiz.tags) setSelectedTags(existingQuiz.tags)
       if (existingQuiz.classrooms)
         setSelectedClassrooms(existingQuiz.classrooms)
-      if (existingQuiz.timeLimit !== undefined) {
+      if (existingQuiz.time_limit !== undefined) {
         setHasTimeLimit(true)
-        setTimeLimit(existingQuiz.timeLimit)
+        setTimeLimit(existingQuiz.time_limit)
       } else {
         setHasTimeLimit(false)
       }
-      if (existingQuiz.dueDate) {
-        const parsed = new Date(existingQuiz.dueDate)
+      if (existingQuiz.due_date) {
+        const parsed = new Date(existingQuiz.due_date)
         if (!isNaN(parsed.getTime())) {
           setDueDate(parsed)
-          setDueTime(format(parsed, "HH:mm"))
         }
       }
     }
   }
-
-  useUnmount({ when: !!quizJson.title })
 
   // Save action handler - opens Save Dialog
   const handleSave = () => {
     setIsSaveDialogOpen(true)
   }
 
+  const navigate = useNavigate()
+  const { mutate: createQuiz, isPending: isCreating } = useMutation({
+    mutationKey: ["instructor-quizzes"],
+    mutationFn: createInstructorQuizAPI,
+    onSuccess: () => {
+      navigate("/instructor/quizzes")
+      setIsSaveDialogOpen(false)
+    },
+  })
+
+  const invalidateQueries = useInvalidateQueries()
+  const { mutate: updateQuiz, isPending: isUpdating } = useMutation({
+    mutationKey: ["quiz", existingQuiz?.id],
+    mutationFn: ({ id, payload }: { id: string; payload: any }) =>
+      udpateInstructorQuizAPI(id, payload),
+    onSuccess: () => {
+      invalidateQueries([["quiz", existingQuiz!.id]])
+      navigate("/instructor/quizzes")
+      setIsSaveDialogOpen(false)
+    },
+    onError: () => {},
+  })
+
   // Confirm save execution
   const confirmSave = () => {
     if (validationErrors.length > 0) return
-    setIsSaving(true)
     const payload = {
-      id: id || `quiz-${Date.now()}`,
+      answer_key: answerKey,
       name: quizJson.title,
-      author: createdBy,
       status: isPublish ? "Open" : "Draft",
       principle: selectedPrinciple,
       tags: selectedTags,
       classrooms: selectedClassrooms,
-      questionsCount: computedTotalQuestions,
-      totalPoints: computedTotalPoints,
-      timeLimit: hasTimeLimit ? timeLimit : undefined,
-      dueDate: dueDate ? dueDate.toISOString() : undefined,
+      question_count: computedTotalQuestions,
+      total_points: computedTotalPoints,
+      time_limit: timeLimit,
+      due_date: dueDate ? dueDate.toISOString() : undefined,
       theme: selectedTheme,
-      quizJson,
+      quiz_json: stripCorrectAnswers(quizJson),
+      attempt_count: attemptCount,
     }
-    console.log("Saved quiz assessment:", payload)
 
-    setTimeout(() => {
-      setIsSaving(false)
-      setIsSaveDialogOpen(false)
-    }, 400)
+    if (existingQuiz) {
+      updateQuiz({
+        id: existingQuiz.id,
+        payload,
+      })
+    } else {
+      createQuiz(payload)
+    }
   }
 
   // Ctrl+S / Cmd+S Hotkey
@@ -386,11 +521,13 @@ export default function QuizEditor() {
     { enableOnFormTags: true }
   )
 
+  useUnmount({ when: !!quizJson.title || !isCreating || !isUpdating })
+
   return (
     <Tabs
       value={activeTab}
       onValueChange={(val: any) => setActiveTab(val)}
-      className="flex h-screen w-full flex-col overflow-hidden bg-muted/20 text-foreground"
+      className="flex h-full w-full flex-col overflow-hidden bg-muted/20 text-foreground"
     >
       {/* Top Navigation Header */}
       <header className="sticky top-0 z-40 shrink-0 border-b bg-background/95 backdrop-blur">
@@ -444,7 +581,7 @@ export default function QuizEditor() {
             <Button
               type="button"
               onClick={handleSave}
-              disabled={isSaving}
+              disabled={isCreating || isUpdating}
               variant={isPublish ? "default" : "secondary"}
               size="sm"
               className="gap-1.5 shadow-xs"
@@ -460,7 +597,7 @@ export default function QuizEditor() {
       {/* Main Content Workspace - Main Editor & Preview Tabs */}
       <TabsContent
         value="editor"
-        className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8"
+        className="h-full flex-1 overflow-y-auto p-4 sm:p-6 md:p-8"
       >
         <div className="mx-auto max-w-3xl space-y-6 pb-20">
           {/* Form Top Banner Card */}
@@ -580,6 +717,20 @@ export default function QuizEditor() {
                       </SelectGroup>
                     </SelectContent>
                   </Select>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <RotateCcw className="size-3.5 text-muted-foreground" />
+                  <label htmlFor="attempt-count" className="font-medium">
+                    Attempts:
+                  </label>
+                  <Input
+                    type={"number"}
+                    className="w-fit"
+                    placeholder="Default 3"
+                    value={attemptCount}
+                    onChange={(e) => setAttemptCount(Number(e.target.value))}
+                  />
                 </div>
               </div>
             </div>
@@ -1139,7 +1290,7 @@ export default function QuizEditor() {
 
       {/* Save Quiz Dialog copied & adapted from ModuleEditor.tsx */}
       <Dialog open={isSaveDialogOpen} onOpenChange={setIsSaveDialogOpen}>
-        <DialogContent style={{ maxHeight: "90vh", width: "calc(100vw - 2rem)" }} className="flex flex-col overflow-hidden p-5 sm:max-w-lg sm:p-6">
+        <DialogContent className="flex max-h-9/10 flex-col overflow-hidden p-5 sm:max-w-xl sm:p-6">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold sm:text-xl">
               Save Quiz Assessment
@@ -1159,6 +1310,7 @@ export default function QuizEditor() {
                   <span>Submission Safeguards - Please fix before saving:</span>
                 </div>
                 <ul className="mt-1.5 list-disc space-y-0.5 pl-5">
+                  {savingError}
                   {validationErrors.map((err, idx) => (
                     <li key={idx}>{err}</li>
                   ))}
@@ -1169,56 +1321,26 @@ export default function QuizEditor() {
             {/* Due Date & Time Picker */}
             <Field className="flex flex-col gap-2">
               <FieldLabel className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-                Due Date & Time
+                Due Date &amp; Time
               </FieldLabel>
               <div className="flex flex-wrap items-center gap-2">
-                <DatePicker
-                  date={dueDate}
-                  setDate={(date) => {
-                    if (!date) {
-                      setDueDate(undefined)
-                      return
-                    }
-                    const [hours, minutes] = dueTime.split(":").map(Number)
-                    const combined = new Date(date)
-                    combined.setHours(hours || 0, minutes || 0, 0, 0)
-                    setDueDate(combined)
-                  }}
+                <DateTimePicker
+                  value={dueDate}
+                  onChange={setDueDate}
                   placeholder="Pick a due date"
                   disabled={(date) =>
                     date < new Date(new Date().setHours(0, 0, 0, 0))
                   }
-                  className="h-9 w-full flex-1 text-xs sm:w-auto"
+                  className="h-9 flex-1 text-xs sm:w-auto"
                 />
-
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-medium text-muted-foreground">
-                    at
-                  </span>
-                  <Input
-                    type="time"
-                    value={dueTime}
-                    onChange={(e) => {
-                      const timeVal = e.target.value
-                      setDueTime(timeVal)
-                      if (dueDate) {
-                        const [hours, minutes] = timeVal.split(":").map(Number)
-                        const updated = new Date(dueDate)
-                        updated.setHours(hours || 0, minutes || 0, 0, 0)
-                        setDueDate(updated)
-                      }
-                    }}
-                    className="h-9 w-28 text-xs font-semibold"
-                  />
-                </div>
 
                 {dueDate && (
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon-sm"
-                    onClick={() => setDueDate(undefined)}
-                    title="Clear due date"
+                    onClick={() => setDueDate(new Date())}
+                    title="Reset due date to now"
                     className="text-muted-foreground hover:text-foreground"
                   >
                     <X className="size-4" />
@@ -1427,7 +1549,7 @@ export default function QuizEditor() {
                             {cls.name}
                           </span>
                           <span className="text-xs text-muted-foreground">
-                            Code: {cls.classroomCode}
+                            Code: {cls.classroom_code}
                           </span>
                         </div>
                         {checked && (
@@ -1492,12 +1614,18 @@ export default function QuizEditor() {
             <Button
               type="button"
               onClick={confirmSave}
-              disabled={isSaving || validationErrors.length > 0}
+              disabled={isUpdating || isCreating || validationErrors.length > 0}
               variant={isPublish ? "default" : "secondary"}
               className="w-full sm:w-auto"
             >
               <Save className="size-4" />
-              <span>{isPublish ? "Save & Publish" : "Save as Draft"}</span>
+              <span>
+                {isCreating || isUpdating
+                  ? "Saving..."
+                  : isPublish
+                    ? "Save & Publish"
+                    : "Save as Draft"}
+              </span>
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,15 +1,17 @@
-import type { QuizProps } from "@/const/materialsProps"
-import { classrooms, quizSubmissions } from "@/const/data"
 import { Card } from "../ui/card"
 import { Badge } from "../ui/badge"
 import { useState } from "react"
-import { type ActionType } from "../instructor/DeleteArchiveDialog"
+import DeleteArchiveDialog, {
+  type ActionType,
+} from "../instructor/DeleteArchiveDialog"
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { getQuizTotalPoints } from "@/features/instructor/quizHelper"
 import EditorDropdown from "./EditorDropdown"
 import { useNavigate } from "react-router-dom"
 import { useMe } from "@/services/tanstack/auth"
+import type { QuizProps } from "@/const/props/materialProps"
+import { useClassrooms } from "@/services/tanstack/materials"
+import { getDateString } from "@/hooks/date-to-string"
 
 export type QuizCardTemplateProps = {
   quiz: QuizProps
@@ -18,60 +20,31 @@ export type QuizCardTemplateProps = {
 export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
   const [action, setAction] = useState<ActionType>(null)
   const { data: user } = useMe()
+  const { data: classrooms } = useClassrooms()
   const isEditor = user?.role == "instructor"
   const isMobile = useIsMobile()
   const navigate = useNavigate()
   console.log(action)
-
-  // Calculate dynamic submissions over total learners in assigned classrooms
-  const matchingSubmissions = quizSubmissions.filter(
-    (s) => String(s.quizId) === String(quiz.id)
-  )
 
   const quizClassroomIds = quiz.classrooms ?? []
   const assignedClassrooms = quizClassroomIds
     .map((cId) => classrooms.find((c) => String(c.id) === String(cId)))
     .filter(Boolean)
 
-  const assignedLearnerIds = Array.from(
-    new Set(assignedClassrooms.flatMap((c) => c?.learners ?? []))
+  const totalLearners = assignedClassrooms.reduce(
+    (sum, item) => sum + item!.enrollment_count,
+    0
   )
+  const submissionsCount = 0
 
-  const totalLearners =
-    assignedLearnerIds.length > 0
-      ? assignedLearnerIds.length
-      : (quiz.totalSubmissions ?? 0)
+  const avgScore = 0
 
-  const submissionsCount =
-    matchingSubmissions.length > 0
-      ? matchingSubmissions.length
-      : (quiz.submissionsCount ?? 0)
+  const passingRate = 0
 
-  const computedPoints = getQuizTotalPoints(quiz)
-  const totalPoints = computedPoints > 0 ? computedPoints : 50
+  const dueDate = quiz.due_date
 
-  const avgScore =
-    matchingSubmissions.length > 0
-      ? Math.round(
-          (matchingSubmissions.reduce((acc, s) => acc + (s.score ?? 0), 0) /
-            matchingSubmissions.length /
-            totalPoints) *
-            100
-        )
-      : (quiz.avgScore ?? 84)
-
-  const passingCount = matchingSubmissions.filter(
-    (s) => (s.score ?? 0) >= Math.round(totalPoints * 0.75)
-  ).length
-
-  const passingRate =
-    matchingSubmissions.length > 0
-      ? Math.round((passingCount / matchingSubmissions.length) * 100)
-      : (quiz.passingRate ?? 92)
-
-  const quizStatus = quiz.status || "Open"
-  const quizAuthor = quiz.author || "You"
-  const dueDate = quiz.dueDate || "Aug 27, 2026"
+  const quizStatus = new Date(quiz.due_date) > new Date() ? "Open" : "Closed"
+  const quizAuthor = quiz.created_by
   const classroomsCount = quiz.classrooms?.length ?? 0
   const classroomsLabel =
     classroomsCount === 1 ? "1 Classroom" : `${classroomsCount} Classrooms`
@@ -165,7 +138,9 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
                 <p className="text-xs font-medium text-muted-foreground">
                   Due Date
                 </p>
-                <p className="text-xs font-bold text-foreground">{dueDate}</p>
+                <p className="text-xs font-bold text-foreground">
+                  {new Date(dueDate).toString()}
+                </p>
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground">
@@ -232,7 +207,7 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
                   Due Date
                 </p>
                 <p className="text-xs font-bold text-foreground sm:text-sm">
-                  {dueDate}
+                  {getDateString(dueDate)}
                 </p>
               </div>
               <div>
@@ -248,13 +223,13 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
         )}
       </Card>
 
-      {/* <DeleteArchiveDialog
+      <DeleteArchiveDialog
         action={action}
         setAction={setAction}
         item={quiz}
         editUrl={`/instructor/quizzes/edit/${quiz.id}`}
         itemType="quiz"
-      /> */}
+      />
     </>
   )
 }

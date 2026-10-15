@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { learners, quizzes } from "@/const/data"
 import { Link, useParams, useSearchParams } from "react-router-dom"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -27,7 +26,26 @@ import QuizCardTemplate from "@/components/common/QuizCardTemplate"
 import { Badge } from "@/components/ui/badge"
 import copyText from "@/hooks/copy-text"
 import { useClassroomContentView } from "@/services/tanstack/materials"
-import type { ClassroomViewProps } from "@/const/props/materialProps"
+import { DEFAULT_QUIZ_JSON } from "@/features/shared/quizHelper"
+import type { ClassroomViewProps, QuizProps } from "@/const/props/materialProps"
+
+function getMockClassroomQuizzes(classroomId: string): QuizProps[] {
+  return [
+    {
+      id: `mock-quiz-${classroomId}`,
+      name: "Accessibility Foundations Check",
+      principle: "Perceivable",
+      tags: ["Mock data"],
+      classrooms: [classroomId],
+      time_limit: 15,
+      due_date: "",
+      theme: "Default",
+      quiz_json: DEFAULT_QUIZ_JSON,
+      created_at: "",
+      attempt_count: 0,
+    },
+  ]
+}
 
 export default function ClassroomInstructorView() {
   const { id } = useParams()
@@ -50,8 +68,6 @@ export default function ClassroomInstructorView() {
       { replace: true }
     )
   }
-
-  console.log(classroom.modules.length)
 
   return (
     <section className="p-responsive w-full space-y-4 bg-background sm:space-y-6">
@@ -131,7 +147,9 @@ function Dashboard({ classroom }: { classroom: ClassroomViewProps }) {
   // Filter modules and quizzes assigned to this classroom
   const classroomModules = classroom.modules
 
-  const classroomQuizzes = quizzes.filter(
+  const classroomQuizzes = getMockClassroomQuizzes(
+    String(classroom.classroom.id)
+  ).filter(
     (q) =>
       q.classrooms?.includes(String(classroom.classroom.id)) ||
       q.classrooms?.includes(classroom.classroom.id)
@@ -306,18 +324,15 @@ function People({ classroom }: { classroom: ClassroomViewProps }) {
               No learners enrolled in this classroom.
             </div>
           ) : (
-            classroom.learners.map((learnerId, i) => {
-              const learner = learners.find((l) => l.id === learnerId.id)
-              if (!learner) return null
-
+            classroom.learners.map((learner) => {
               return (
                 <div
                   className="flex items-center justify-between p-3.5 text-xs transition-colors hover:bg-muted/30 sm:p-4 sm:text-sm"
-                  key={i}
+                  key={learner.id}
                 >
                   <div className="flex items-center gap-3">
                     <Avatar className="size-8 border border-border sm:size-9">
-                      <AvatarImage src={learner.img} />
+                      <AvatarImage src={learner.profile_picture} />
                       <AvatarFallback>
                         {learner.name[0].toUpperCase()}
                       </AvatarFallback>

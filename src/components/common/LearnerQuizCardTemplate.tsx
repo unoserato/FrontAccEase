@@ -1,29 +1,29 @@
 import { useState } from "react"
-import type { QuizProps } from "@/const/materialsProps"
+import type { QuizProps } from "@/const/props/materialProps"
 import { buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { ChevronDown, ChevronUp, FileQuestion } from "lucide-react"
 import { Link } from "react-router-dom"
-import { getQuizTotalQuestions } from "@/features/instructor/quizHelper"
 import { Badge } from "../ui/badge"
+import { getDateString } from "@/hooks/date-to-string"
 
 interface LearnerQuizCardTemplateProps {
   quizzes?: QuizProps[]
-  quiz?: QuizProps
   title?: string
 }
 
 export default function LearnerQuizCardTemplate({
   quizzes,
-  quiz,
   title = "Due Quizzes",
 }: LearnerQuizCardTemplateProps) {
   const [isOpen, setIsOpen] = useState(true)
 
-  const list = quizzes || (quiz ? [quiz] : [])
+  if (!quizzes) {
+    return null
+  }
 
-  if (list.length === 0) {
+  if (quizzes.length === 0) {
     return (
       <Card className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border p-8 text-center shadow-sm">
         <FileQuestion className="mb-2 size-8 text-muted-foreground/50" />
@@ -41,14 +41,17 @@ export default function LearnerQuizCardTemplate({
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
-        className="flex w-full cursor-pointer items-center justify-between rounded-lg py-1 text-left select-none transition-colors hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex w-full cursor-pointer items-center justify-between rounded-lg py-1 text-left transition-colors select-none hover:bg-muted/30 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
       >
         <div className="flex items-center gap-2.5">
           <h3 className="text-base font-bold tracking-tight text-foreground sm:text-lg">
             {title}
           </h3>
-          <Badge variant="secondary" className="px-2 py-0.5 text-xs font-semibold">
-            {list.length}
+          <Badge
+            variant="secondary"
+            className="px-2 py-0.5 text-xs font-semibold"
+          >
+            {quizzes.length}
           </Badge>
         </div>
 
@@ -64,13 +67,11 @@ export default function LearnerQuizCardTemplate({
       {/* Quiz List Items */}
       {isOpen && (
         <div className="mt-3 space-y-2 divide-y divide-border/40">
-          {list.map((item, index) => {
-            const totalQuestions = getQuizTotalQuestions(item)
-            const dueDateText = item.dueDate ? item.dueDate : "No due date"
+          {quizzes.map((item, index) => {
             const attemptsText =
-              item.maxAttempts === undefined || item.maxAttempts === null
+              item.attempt_count === undefined || item.attempt_count === null
                 ? "Unlimited"
-                : item.maxAttempts
+                : item.attempt_count
 
             return (
               <div
@@ -88,7 +89,7 @@ export default function LearnerQuizCardTemplate({
                   <div className="min-w-0 flex-1">
                     <Link
                       to={`/learner/quizzes/${item.id}`}
-                      className="block truncate text-sm font-bold text-foreground transition-colors hover:text-primary hover:underline sm:text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+                      className="block truncate rounded-sm text-sm font-bold text-foreground transition-colors hover:text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none sm:text-base"
                     >
                       {item.name || "Untitled Quiz"}
                     </Link>
@@ -103,7 +104,7 @@ export default function LearnerQuizCardTemplate({
                       Due
                     </span>
                     <span className="mt-0.5 block text-xs font-semibold text-foreground sm:text-sm">
-                      {dueDateText}
+                      {getDateString(item?.due_date)}
                     </span>
                   </div>
 
@@ -113,7 +114,7 @@ export default function LearnerQuizCardTemplate({
                       Items
                     </span>
                     <span className="mt-0.5 block text-xs font-semibold text-foreground sm:text-sm">
-                      {totalQuestions}
+                      {item.items}
                     </span>
                   </div>
 

@@ -8,6 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
   useSidebar,
 } from "../ui/sidebar"
 import { Logo } from "./Logo"
@@ -24,6 +25,7 @@ import { useMutation } from "@tanstack/react-query"
 import { logoutAPI } from "@/services/api/authAPI"
 import { toast } from "../ui/toast"
 import { type UserProps } from "@/const/props/userProps"
+import GridSkeleton from "../skeleton/GridSkeleton"
 
 interface UserSidebarProps {
   links: { name: string; href: string; icon: any }[]
@@ -36,10 +38,13 @@ export default function UserSidebar({ links, user }: UserSidebarProps) {
   const navigate = useNavigate()
   const removeQueries = useRemoveQueries()
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: logoutAPI,
-    onSuccess: () => {
+    onMutate: () => {
       navigate("/login", { replace: true })
+    },
+    onSuccess: () => {
+      // navigate("/login", { replace: true })
       removeQueries(["user"])
     },
     onError: (err: any) => {
@@ -51,8 +56,12 @@ export default function UserSidebar({ links, user }: UserSidebarProps) {
     },
   })
 
-  async function handleLogout() {
+  function handleLogout() {
     mutate()
+  }
+
+  if (isPending) {
+    return <GridSkeleton />
   }
 
   return (
@@ -156,8 +165,7 @@ export default function UserSidebar({ links, user }: UserSidebarProps) {
           open || openMobile ? "flex-row items-center" : "flex-col-reverse"
         } justify-between pb-4`}
       >
-        <NavLink
-          to="/"
+        <div
           onClick={() => {
             if (openMobile) setOpenMobile(false)
           }}
@@ -176,7 +184,7 @@ export default function UserSidebar({ links, user }: UserSidebarProps) {
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <p className="shrink-0 capitalize">{user?.user.name}</p>
-        </NavLink>
+        </div>
 
         <div className="flex">
           <Popover>
@@ -254,6 +262,7 @@ export default function UserSidebar({ links, user }: UserSidebarProps) {
           </Popover>
         </div>
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   )
 }

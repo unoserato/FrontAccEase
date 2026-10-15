@@ -43,7 +43,7 @@ export default function NewClassroomDialog() {
   const { mutate, isPending } = useMutation({
     mutationFn: createClassroomAPI,
     onSuccess: () => {
-      invalidateQueries(["classroom"])
+      invalidateQueries([["classroom"]])
       setOpen(false)
     },
   })

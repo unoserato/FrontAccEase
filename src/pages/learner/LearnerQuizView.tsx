@@ -3,12 +3,8 @@ import HeaderTemplate from "@/components/common/PageTemplate"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "@/components/ui/toast"
-import { quizzes } from "@/const/data"
-import QuizForm from "@/features/shared/QuizForm"
-import {
-  getQuizJson,
-  getQuizTotalQuestions,
-} from "@/features/instructor/quizHelper"
+import QuizTaker from "@/features/learner/QuizTaker"
+import { clearQuizProgress } from "@/features/learner/quizProgress"
 import {
   AlertTriangle,
   ArrowLeft,
@@ -21,47 +17,76 @@ import {
   XCircle,
 } from "lucide-react"
 import { useNavigate, useParams } from "react-router-dom"
-
-async function mockStartAttemptServerRequest(
-  quizId: string,
-  learnerId: string = "1234-1234"
-) {
-  await new Promise((resolve) => setTimeout(resolve, 400))
-  const key = `frontaccease_quiz_attempts_${quizId}_${learnerId}`
-  const existingAttempts = Number(localStorage.getItem(key) || "0")
-  const newAttemptNumber = existingAttempts + 1
-  localStorage.setItem(key, String(newAttemptNumber))
-  return {
-    success: true,
-    attemptId: `att_${Date.now()}`,
-    attemptNumber: newAttemptNumber,
-    timestamp: new Date().toISOString(),
-  }
-}
+import { useQuizById } from "@/services/tanstack/materials"
+import { getDateString } from "@/hooks/date-to-string"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import {
+  createSubmissionTicket,
+  updateSubmissionTicket,
+} from "@/services/api/CRUD/materialsCRUDAPI"
+import NotFound from "../errors/NotFound"
 
 export default function LearnerQuizView() {
-  const { id } = useParams<{ id: string }>()
+  const { id } = useParams()
+  const { data: quiz } = useQuizById(id!)
+  // const { data: classrooms } = useClassrooms()
+  // const { data: contents } = useClassroomContentView(classrooms[0]?.id)
+  // const quiz = contents.quizzes.find((quiz) => quiz.id === id)
+
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const [isQuizActive, setIsQuizActive] = useState(false)
   const [isTerminated, setIsTerminated] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
-  const [isStarting, setIsStarting] = useState(false)
+  const [submitQuizTaker, setSubmitQuizTaker] = useState<(() => void) | null>(
+    null
+  )
 
-  const quiz = quizzes.find((q) => String(q.id) === String(id)) || quizzes[0]
-  const quizJson = getQuizJson(quiz)
-  const totalQuestions = getQuizTotalQuestions(quiz)
-  const timeLimit = quizJson.timeLimit ?? quiz.timeLimit ?? 20
-  const maxAttempts = quiz.maxAttempts ?? 3
+  const { mutate, isPending: isStarting } = useMutation({
+    mutationFn: (id: string) => createSubmissionTicket(id),
+    onSuccess: (data) => {
+      queryClient.setQueryData(["quiz", id], (oldData: any) => {
+        if (!oldData) return oldData
+
+        return {
+          ...oldData,
+          quiz_json: {
+            ...oldData.quiz_json,
+            ...data,
+          },
+        }
+      })
+      setIsQuizActive(true)
+    },
+    onError: (err: any) => {
+      toast.add({
+        title: "Max attempts reached!",
+        description: err.response?.data?.detail,
+        type: "error",
+      })
+    },
+  })
+
+  const { mutateAsync: submitQuiz, isError } = useMutation({
+    mutationFn: ({ id, answer }: { id: string; answer: object }) =>
+      updateSubmissionTicket(id, answer),
+  })
+
+  const totalQuestions = quiz.items
+  const timeLimit = quiz.time_limit
+  const maxAttempts = quiz.attempt_count || 0
 
   // Monitor fullscreen exit, tab switching, and window blur (Alt+Tab) during quiz
   useEffect(() => {
-    if (!isQuizActive) return
+    if (!isQuizActive || !quiz) return
 
     const terminateQuiz = (reason: string) => {
       if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {})
       }
+      // A voided attempt must not leave answers behind for the retry.
+      clearQuizProgress(quiz.id)
       setIsQuizActive(false)
       setIsTerminated(true)
 
@@ -102,60 +127,29 @@ export default function LearnerQuizView() {
       document.removeEventListener("visibilitychange", handleVisibilityChange)
       window.removeEventListener("blur", handleBlur)
     }
-  }, [isQuizActive])
+  }, [isQuizActive, quiz])
 
-  const handleStartQuiz = async () => {
-    setIsStarting(true)
-    toast.add({
-      title: "Server Request Sent",
-      description: "Initializing attempt session with the server...",
-    })
+  if (!quiz) return <NotFound />
 
-    try {
-      const response = await mockStartAttemptServerRequest(quiz.id)
-
-      if (maxAttempts && response.attemptNumber > maxAttempts) {
-        toast.add({
-          title: "Attempt Limit Exceeded",
-          description: `You have reached the maximum allowed attempts (${maxAttempts}) for this assessment.`,
-        })
-        setIsStarting(false)
-        return
-      }
-
-      toast.add({
-        title: `Attempt #${response.attemptNumber} Recorded`,
-        description: `Server logged attempt ${response.attemptNumber} of ${maxAttempts}. Starting full screen assessment.`,
-      })
-
-      if (document.documentElement.requestFullscreen) {
-        await document.documentElement.requestFullscreen()
-      }
-
-      setIsTerminated(false)
-      setIsCompleted(false)
-      setIsQuizActive(true)
-    } catch (err) {
-      console.warn("Attempt server request failed:", err)
-      toast.add({
-        title: "Connection Error",
-        description: "Failed to record attempt session on server.",
-      })
-    } finally {
-      setIsStarting(false)
-    }
+  async function handleStartQuiz() {
+    mutate(quiz!.id)
   }
 
-  const handleQuizComplete = () => {
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(() => {})
-    }
-    setIsQuizActive(false)
+  function handleQuizComplete(sender: any) {
     setIsCompleted(true)
-    toast.add({
-      title: "Quiz Submitted",
-      description: "Your responses have been successfully recorded.",
-    })
+    setIsQuizActive(false)
+    toast.promise(
+      submitQuiz({
+        id: quiz.id,
+        answer: sender.data,
+      }),
+      {
+        loading: "Submitting quiz...",
+        success: "Quiz submitted successfully.",
+        error: (error) =>
+          error.response.data.detail || "Failed to submit quiz.",
+      }
+    )
   }
 
   // Active Fullscreen Quiz View
@@ -176,10 +170,10 @@ export default function LearnerQuizView() {
         </header>
 
         <main className="mx-auto w-full max-w-4xl flex-1 py-2">
-          <QuizForm
+          <QuizTaker
             quiz={quiz}
-            enableLocalStorage={true}
-            onComplete={handleQuizComplete}
+            onComplete={(sender) => handleQuizComplete(sender)}
+            doSubmit={setSubmitQuizTaker}
           />
         </main>
       </div>
@@ -219,7 +213,7 @@ export default function LearnerQuizView() {
               Back to Quizzes
             </Button>
             <Button onClick={handleStartQuiz} disabled={isStarting}>
-              {isStarting ? "Logging Attempt..." : "Retry Assessment"}
+              {isStarting ? "Getting quiz data..." : "Retry Assessment"}
             </Button>
           </div>
         </Card>
@@ -256,6 +250,11 @@ export default function LearnerQuizView() {
           </div>
           <div className="flex justify-center pt-2">
             <Button onClick={() => navigate(-1)}>Back to Quizzes</Button>
+            {isError && (
+              <Button onClick={() => submitQuizTaker?.()}>
+                Re-Submit Quiz
+              </Button>
+            )}
           </div>
         </Card>
       </section>
@@ -295,7 +294,7 @@ export default function LearnerQuizView() {
                 Due Date
               </p>
               <p className="text-sm font-bold text-foreground">
-                {quiz.dueDate || "August 27, 2026"}
+                {getDateString(quiz.due_date)}
               </p>
             </div>
           </div>
@@ -358,7 +357,7 @@ export default function LearnerQuizView() {
             disabled={isStarting}
             className="px-8 font-bold"
           >
-            {isStarting ? "Logging Attempt..." : "Start Assessment"}
+            {isStarting ? "Getting quiz data..." : "Start Assessment"}
           </Button>
         </div>
       </Card>

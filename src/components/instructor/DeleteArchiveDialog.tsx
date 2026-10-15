@@ -10,7 +10,11 @@ import {
   DialogTitle,
 } from "../ui/dialog"
 import { Button } from "../ui/button"
-import type { ClassroomProps, ModuleProps } from "@/const/props/materialProps"
+import type {
+  ClassroomProps,
+  ModuleProps,
+  QuizProps,
+} from "@/const/props/materialProps"
 import { useMutation } from "@tanstack/react-query"
 import { arhiveModuleAPI } from "@/services/api/materialsAPI"
 import { useInvalidateQueries } from "@/services/tanstack/auth"
@@ -21,7 +25,7 @@ export type ActionType = "delete" | "archive" | "edit" | null
 interface Props {
   action: ActionType
   setAction: (value: ActionType) => void
-  item: ModuleProps | ClassroomProps
+  item: ModuleProps | ClassroomProps | QuizProps
   editUrl?: string
   itemType?: "module" | "classroom" | "quiz" | string
 }
@@ -62,7 +66,7 @@ export default function DeleteArchiveDialog({
         title: "Module Archived",
         description: "Successfully archived module",
       })
-      invalidateQuery(["modules"])
+      invalidateQuery([["modules"]])
       setAction(null)
     },
   })

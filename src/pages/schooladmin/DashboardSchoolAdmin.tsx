@@ -11,7 +11,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/toast"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   ChartContainer,
   ChartTooltip,
@@ -28,10 +27,8 @@ import {
   GraduationCap,
   BookOpen,
   FileQuestion,
-  Globe,
   ChevronRight,
 } from "lucide-react"
-import { learners, classrooms, modules, quizzes } from "@/const/data"
 
 const chartData = [
   { date: "09-01", scans: 380 },
@@ -50,99 +47,21 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-interface UserScanItem {
-  id: string
-  userName: string
-  userImg?: string
-  userEmail: string
-  url: string
-  classroomName: string | null
-  classroomCode: string | null
-  scanTime: string
-  score: number
-  criticalIssues: number
-  seriousIssues: number
-  minorIssues: number
-  passedCount: number
-}
-
-const userScans: UserScanItem[] = [
-  {
-    id: "scan-1",
-    userName: learners[0]?.name || "Rene Clert Baterbonia",
-    userImg: learners[0]?.img,
-    userEmail: "reneclert@gmail.com",
-    url: "https://attendex.online",
-    classroomName: "Web Accessibility Fundamentals",
-    classroomCode: "WCAG-101",
-    scanTime: "10 mins ago",
-    score: 82,
-    criticalIssues: 2,
-    seriousIssues: 2,
-    minorIssues: 2,
-    passedCount: 18,
-  },
-  {
-    id: "scan-2",
-    userName: learners[1]?.name || "Divine Adili",
-    userImg: learners[1]?.img,
-    userEmail: "divineadili@gmail.com",
-    url: "https://inclusive-portfolio.dev",
-    classroomName: "Inclusive UI/UX Engineering",
-    classroomCode: "UIUX-202",
-    scanTime: "35 mins ago",
-    score: 91,
-    criticalIssues: 0,
-    seriousIssues: 1,
-    minorIssues: 3,
-    passedCount: 22,
-  },
-  {
-    id: "scan-3",
-    userName: learners[2]?.name || "Alyssa Nicole Santos",
-    userImg: learners[2]?.img,
-    userEmail: "alyssasantos@gmail.com",
-    url: "https://student-storefront.vercel.app",
-    classroomName: "Web Accessibility Fundamentals",
-    classroomCode: "WCAG-101",
-    scanTime: "1 hour ago",
-    score: 64,
-    criticalIssues: 4,
-    seriousIssues: 5,
-    minorIssues: 4,
-    passedCount: 12,
-  },
-  {
-    id: "scan-4",
-    userName: learners[3]?.name || "Marc Ethan Villanueva",
-    userImg: learners[3]?.img,
-    userEmail: "marcvillanueva@gmail.com",
-    url: "https://edu-portal-prototype.netlify.app",
-    classroomName: "Software Quality & Compliance Testing",
-    classroomCode: "QA-102",
-    scanTime: "2 hours ago",
-    score: 78,
-    criticalIssues: 1,
-    seriousIssues: 3,
-    minorIssues: 5,
-    passedCount: 19,
-  },
-  {
-    id: "scan-5",
-    userName: learners[4]?.name || "Sophia Isabel Reyes",
-    userImg: learners[4]?.img,
-    userEmail: "sophiareyes@gmail.com",
-    url: "https://a11y-dashboard.org",
-    classroomName: "Software Quality & Compliance Testing",
-    classroomCode: "QA-102",
-    scanTime: "4 hours ago",
-    score: 88,
-    criticalIssues: 0,
-    seriousIssues: 2,
-    minorIssues: 2,
-    passedCount: 20,
-  },
-]
+// interface UserScanItem {
+//   id: string
+//   userName: string
+//   userImg?: string
+//   userEmail: string
+//   url: string
+//   classroomName: string | null
+//   classroomCode: string | null
+//   scanTime: string
+//   score: number
+//   criticalIssues: number
+//   seriousIssues: number
+//   minorIssues: number
+//   passedCount: number
+// }
 
 export default function DashboardSchoolAdmin() {
   function handleExport() {
@@ -154,38 +73,38 @@ export default function DashboardSchoolAdmin() {
     })
   }
 
-  function getInitials(name: string) {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase()
-  }
+  // function getInitials(name: string) {
+  //   return name
+  //     .split(" ")
+  //     .map((n) => n[0])
+  //     .join("")
+  //     .slice(0, 2)
+  //     .toUpperCase()
+  // }
 
   const KPI = [
     {
       title: "Total Users",
       icon: Users,
       value: "2,310",
-      footerDesc: `${learners.length} Learners • 20 Instructors`,
+      footerDesc: `0 Learners • 20 Instructors`,
     },
     {
       title: "Classrooms",
       icon: GraduationCap,
-      value: `${classrooms.length}`,
+      value: `0`,
       footerDesc: "Managed academic cohorts",
     },
     {
       title: "Published Modules",
       icon: BookOpen,
-      value: `${modules.length}`,
+      value: `0`,
       footerDesc: "Curriculum learning units",
     },
     {
       title: "Quizzes",
       icon: FileQuestion,
-      value: `${quizzes.length}`,
+      value: `0`,
       footerDesc: "Active student assessments",
     },
   ]
@@ -463,12 +382,11 @@ export default function DashboardSchoolAdmin() {
             </CardHeader>
 
             <CardContent className="space-y-3 p-0">
-              {userScans.map((scan) => (
+              {/* {userScans.map((scan) => (
                 <div
                   key={scan.id}
                   className="flex flex-col gap-3 rounded-xl bg-muted/40 p-3.5 transition-colors hover:bg-muted/60 sm:flex-row sm:items-center sm:justify-between"
                 >
-                  {/* User & Scanned URL Information */}
                   <div className="flex min-w-0 items-center gap-3">
                     <Avatar className="size-9 shrink-0 border border-border">
                       <AvatarImage src={scan.userImg} alt={scan.userName} />
@@ -508,7 +426,6 @@ export default function DashboardSchoolAdmin() {
                     </div>
                   </div>
 
-                  {/* Score & View Button */}
                   <div className="flex shrink-0 items-center justify-between gap-3 self-start sm:self-auto">
                     <div className="flex items-center gap-2">
                       <Badge
@@ -533,7 +450,7 @@ export default function DashboardSchoolAdmin() {
                     </Button>
                   </div>
                 </div>
-              ))}
+              ))} */}
             </CardContent>
           </Card>
         </div>

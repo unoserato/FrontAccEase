@@ -70,7 +70,10 @@ export const learnerRoute = (
     />
     <Route
       path="/learner/classroom/module/:id"
-      element={suspense(<ModuleReadOnly />, <DetailSkeleton />)}
+      element={suspense(
+        <ModuleReadOnly href="/learner/classroom" />,
+        <DetailSkeleton />
+      )}
     />
   </>
 )

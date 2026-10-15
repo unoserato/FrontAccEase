@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button"
 import { useMutation } from "@tanstack/react-query"
 import { chatAPI } from "@/services/api/materialsAPI"
 import { RichText } from "@/components/learner/RichText"
+import copyText from "@/hooks/copy-text"
 
 const MAX_WORDS = 200
 const WORD_WARNING_THRESHOLD = 150
@@ -163,16 +164,6 @@ export default function Chat() {
       console.error("Failed to clear chat session:", e)
     }
     textareaRef.current?.focus()
-  }
-
-  const handleCopy = async (text: string, index: number) => {
-    try {
-      await navigator.clipboard.writeText(text)
-      setCopiedIndex(index)
-      setTimeout(() => setCopiedIndex(null), 2000)
-    } catch (e) {
-      console.error("Failed to copy message:", e)
-    }
   }
 
   const composer = (
@@ -335,7 +326,7 @@ export default function Chat() {
                     className="flex animate-in justify-end duration-300 fade-in slide-in-from-bottom-2 motion-reduce:animate-none"
                   >
                     <span className="sr-only">You said:</span>
-                    <p className="max-w-xl rounded-3xl bg-muted px-5 py-2.5 text-base leading-relaxed break-words whitespace-pre-wrap text-foreground">
+                    <p className="max-w-xl rounded-3xl bg-muted px-5 py-2.5 text-base leading-relaxed wrap-break-word whitespace-pre-wrap text-foreground">
                       {msg.text}
                     </p>
                   </li>
@@ -360,7 +351,18 @@ export default function Chat() {
                           type="button"
                           variant="ghost"
                           size="icon-sm"
-                          onClick={() => handleCopy(msg.text, i)}
+                          onClick={() => {
+                            setCopiedIndex(i)
+                            copyText({
+                              textToCopy: msg.text,
+                              setCopied(value) {
+                                console.log(value)
+                                if (!value) {
+                                  setCopiedIndex(null)
+                                }
+                              },
+                            })
+                          }}
                           aria-label={
                             copiedIndex === i ? "Copied" : "Copy response"
                           }

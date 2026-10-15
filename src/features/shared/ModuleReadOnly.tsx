@@ -20,7 +20,11 @@ import { useMe } from "@/services/tanstack/auth"
 import { useEffect } from "react"
 import { useModuleById } from "@/services/tanstack/materials"
 
-export default function ModuleReadOnly() {
+interface ReadOnlyProps {
+  href?: string
+}
+
+export default function ModuleReadOnly({ href }: ReadOnlyProps) {
   const { id } = useParams()
   const navigate = useNavigate()
   const { data: user } = useMe()
@@ -28,7 +32,11 @@ export default function ModuleReadOnly() {
   const isEditor = user?.role === "instructor"
 
   function handleBack() {
-    navigate(-1)
+    if (href) {
+      navigate(href)
+    } else {
+      navigate(-1)
+    }
   }
 
   const editor = useEditor({

@@ -1,6 +1,5 @@
 import { useState } from "react"
 import LearnerQuizCardTemplate from "@/components/common/LearnerQuizCardTemplate"
-import LearnerQuizHistoryCardTemplate from "@/components/common/LearnerQuizHistoryCardTemplate"
 import ModuleCardTemplate from "@/components/common/ModuleCardTemplate"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import { Button } from "@/components/ui/button"
@@ -12,48 +11,36 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { classrooms, quizzes, quizSubmissions, user } from "@/const/data"
+
 import { AlertTriangle, BookOpen, FileQuestion, LogOut } from "lucide-react"
 import { Link } from "react-router-dom"
-import { useModules } from "@/services/tanstack/materials"
-
-const myClassroom =
-  classrooms.find((classroom) =>
-    classroom.learners.some(
-      (learnerId) => learnerId === "1234-1234" || learnerId === user.id
-    )
-  ) || classrooms[0]
-
-const classroomQuizzes = quizzes.filter((q) =>
-  q.classrooms?.includes(myClassroom.id)
-)
-
-const classroomSubmissions = quizSubmissions.filter(
-  (sub) =>
-    (sub.learnerId === "1234-1234" || sub.learnerId === user.id) &&
-    classroomQuizzes.some((q) => q.id === sub.quizId)
-)
+import {
+  useClassroomContentView,
+  useClassrooms,
+} from "@/services/tanstack/materials"
 
 export default function Classroom() {
+  const { data: classrooms } = useClassrooms()
+  const { data: contents } = useClassroomContentView(classrooms[0]?.id)
+
+  console.log(contents)
+
   const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false)
   const [isLeaving, setIsLeaving] = useState(false)
-  const [hasLeft, setHasLeft] = useState(false)
-  const { data: modules } = useModules()
 
   const handleConfirmLeave = () => {
     setIsLeaving(true)
     setTimeout(() => {
       setIsLeaving(false)
       setIsLeaveDialogOpen(false)
-      setHasLeft(true)
     }, 600)
   }
 
-  const classroomModules = modules.filter((m) =>
-    m.classroom_id?.includes(myClassroom.id)
-  )
+  const myClassroom = classrooms[0]
+  const classroomQuizzes = contents.quizzes
+  const classroomModules = contents.modules
 
-  if (hasLeft) {
+  if (!myClassroom) {
     return (
       <section className="p-responsive space-y-8">
         <HeaderTemplate
@@ -66,15 +53,10 @@ export default function Classroom() {
             No Active Classroom Enrollment
           </h2>
           <p className="mt-1 max-w-md text-sm text-muted-foreground">
-            You have left {myClassroom.name}. In FrontAccEase, students can
-            belong to a single classroom. Contact your instructor or enter a
-            classroom code to re-enroll.
+            In FrontAccEase, students can belong to a single classroom. Contact
+            your instructor or enter a classroom code to enroll.
           </p>
-          <Button
-            className="mt-6"
-            onClick={() => setHasLeft(false)}
-            variant="outline"
-          >
+          <Button className="mt-6" variant="outline">
             Re-enter Demo Classroom
           </Button>
         </div>
@@ -85,7 +67,7 @@ export default function Classroom() {
   return (
     <section className="p-responsive space-y-8">
       <HeaderTemplate
-        title={myClassroom.classroomCode}
+        title={myClassroom.classroom_code}
         subtitle={myClassroom.name}
       />
 
@@ -135,11 +117,11 @@ export default function Classroom() {
 
       {/* Quiz History Section */}
       <div className="space-y-4">
-        <LearnerQuizHistoryCardTemplate
+        {/* <LearnerQuizHistoryCardTemplate
           submissions={classroomSubmissions}
           quizzes={classroomQuizzes}
           title="Quiz History"
-        />
+        /> */}
       </div>
 
       {/* Settings / Danger Zone Section */}
@@ -189,7 +171,7 @@ export default function Classroom() {
             <DialogDescription className="text-sm text-muted-foreground">
               Are you sure you want to leave{" "}
               <strong className="text-foreground">{myClassroom.name}</strong> (
-              <span className="font-mono">{myClassroom.classroomCode}</span>)?
+              <span className="font-mono">{myClassroom.classroom_code}</span>)?
             </DialogDescription>
           </DialogHeader>
 

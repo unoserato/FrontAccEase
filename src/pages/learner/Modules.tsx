@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card"
 import { coreModules } from "@/const/coreModules"
 // import { modules } from "@/const/data"
-import type { CoreModulesProps } from "@/const/materialsProps"
+import type { CoreModulesProps } from "@/const/props/materialProps"
 import { ArrowUpRight } from "lucide-react"
 import { Link } from "react-router-dom"
 

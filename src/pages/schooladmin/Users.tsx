@@ -23,7 +23,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { learners, instructors, type UserProps } from "@/const/data"
 import {
   Ban,
   ChevronDown,
@@ -36,6 +35,7 @@ import {
   UserCog,
   UserPlus,
 } from "lucide-react"
+import { instructors, learners, type UserProps } from "@/const/data"
 
 export default function Users() {
   const [searchParams, setSearchParams] = useSearchParams()
