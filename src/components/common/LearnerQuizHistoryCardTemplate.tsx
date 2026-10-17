@@ -1,12 +1,22 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Badge } from "@/components/ui/badge"
-import { buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import type { QuizSubmissionProps } from "@/const/materialsProps"
-import type { QuizProps } from "@/const/props/materialProps"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import type {
+  QuizProps,
+  QuizSubmissionProps,
+} from "@/const/props/materialProps"
 import { cn } from "@/lib/utils"
 import { Award, ChevronDown, ChevronUp, History } from "lucide-react"
-import { Link } from "react-router-dom"
+import { getDateString } from "@/hooks/date-to-string"
+import QuizForm from "@/features/instructor/QuizForm"
 
 interface LearnerQuizHistoryCardTemplateProps {
   submissions: QuizSubmissionProps[]
@@ -20,6 +30,90 @@ export default function LearnerQuizHistoryCardTemplate({
   title = "Quiz History",
 }: LearnerQuizHistoryCardTemplateProps) {
   const [isOpen, setIsOpen] = useState(true)
+  const [selectedSubmission, setSelectedSubmission] =
+    useState<QuizSubmissionProps | null>(null)
+
+  const selectedQuiz = useMemo<QuizProps | null>(() => {
+    if (!selectedSubmission) return null
+
+    if (selectedSubmission.quiz) {
+      const embedded = selectedSubmission.quiz
+      return {
+        id: selectedSubmission.quiz_id || embedded.id || "preview-quiz",
+        principle: embedded.principle || "Perceivable",
+        tags: embedded.tags || [],
+        classrooms: embedded.classrooms || [],
+        question_count: embedded.question_count,
+        total_points: embedded.total_points,
+        time_limit: embedded.time_limit,
+        due_date:
+          embedded.due_date ||
+          selectedSubmission.submitted_at ||
+          new Date().toISOString(),
+        theme: embedded.theme || "Default",
+        quiz_json: embedded.quiz_json as unknown,
+        created_at:
+          embedded.created_at ||
+          selectedSubmission.started_at ||
+          new Date().toISOString(),
+        attempt_count:
+          embedded.attempt_count ?? selectedSubmission.attempt_count ?? 1,
+        ...embedded,
+      } as QuizProps
+    }
+
+    const quizId = selectedSubmission.quiz_id ?? selectedSubmission.quizId
+    const matched = quizzes.find((q) => String(q.id) === String(quizId))
+    return matched ?? null
+  }, [selectedSubmission, quizzes])
+
+  const answers = useMemo<Record<string, unknown>>(() => {
+    if (!selectedSubmission) return {}
+    const raw = selectedSubmission.answers ?? selectedSubmission.content
+    if (!raw) return {}
+    if (typeof raw === "object" && !Array.isArray(raw)) {
+      return raw as Record<string, unknown>
+    }
+    if (typeof raw === "string") {
+      try {
+        const parsed = JSON.parse(raw)
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+          return parsed as Record<string, unknown>
+        }
+      } catch {
+        return {}
+      }
+    }
+    return {}
+  }, [selectedSubmission])
+
+  const correctAnswers = useMemo<Record<string, unknown> | undefined>(() => {
+    if (!selectedSubmission?.quiz_answer) return undefined
+    const qa = selectedSubmission.quiz_answer as {
+      content?: Record<string, unknown>
+      question_name?: string
+      answer?: string
+    }
+    if (
+      qa.content &&
+      typeof qa.content === "object" &&
+      !Array.isArray(qa.content)
+    ) {
+      return qa.content
+    }
+    if (qa.question_name && qa.answer !== undefined) {
+      return { [qa.question_name]: qa.answer }
+    }
+    if (Array.isArray(qa)) {
+      return qa.reduce<Record<string, unknown>>((acc, curr) => {
+        if (curr?.question_name && curr?.answer !== undefined) {
+          acc[curr.question_name] = curr.answer
+        }
+        return acc
+      }, {})
+    }
+    return undefined
+  }, [selectedSubmission])
 
   if (submissions.length === 0) {
     return (
@@ -39,13 +133,16 @@ export default function LearnerQuizHistoryCardTemplate({
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
-        className="flex w-full cursor-pointer items-center justify-between rounded-lg py-1 text-left select-none transition-colors hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex w-full cursor-pointer items-center justify-between rounded-lg py-1 text-left transition-colors select-none hover:bg-muted/30 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
       >
         <div className="flex items-center gap-2.5">
           <h3 className="text-base font-bold tracking-tight text-foreground sm:text-lg">
             {title}
           </h3>
-          <Badge variant="secondary" className="px-2 py-0.5 text-xs font-semibold">
+          <Badge
+            variant="secondary"
+            className="px-2 py-0.5 text-xs font-semibold"
+          >
             {submissions.length}
           </Badge>
         </div>
@@ -63,11 +160,14 @@ export default function LearnerQuizHistoryCardTemplate({
       {isOpen && (
         <div className="mt-3 space-y-2 divide-y divide-border/40">
           {submissions.map((item, index) => {
-            const matchedQuiz = quizzes.find((q) => q.id === item.quizId)
-            const quizName = matchedQuiz?.name || `Assessment #${item.quizId}`
-            const submittedDateText = item.submittedAt
-              ? item.submittedAt.split(" GMT")[0]
-              : "Completed"
+            const quizId = item.quiz_id ?? item.quizId
+            const matchedQuiz =
+              item.quiz ?? quizzes.find((q) => String(q.id) === String(quizId))
+            const quizName = matchedQuiz?.name || `Assessment #${quizId ?? ""}`
+            const submittedAt = item.submitted_at ?? item.submittedAt
+            const submittedDateText = submittedAt
+              ? getDateString(submittedAt)
+              : null
 
             return (
               <div
@@ -87,7 +187,9 @@ export default function LearnerQuizHistoryCardTemplate({
                       {quizName}
                     </span>
                     <span className="block text-xs text-muted-foreground">
-                      Submitted on {submittedDateText}
+                      {submittedDateText
+                        ? `Submitted on ${submittedDateText}`
+                        : "Completed"}
                     </span>
                   </div>
                 </div>
@@ -100,7 +202,7 @@ export default function LearnerQuizHistoryCardTemplate({
                       Score
                     </span>
                     <span className="mt-0.5 block text-xs font-semibold text-foreground sm:text-sm">
-                      {item.score !== undefined ? `${item.score} pts` : "Graded"}
+                      {item.score != null ? `${item.score} pts` : "Not graded"}
                     </span>
                   </div>
 
@@ -109,28 +211,85 @@ export default function LearnerQuizHistoryCardTemplate({
                     <span className="block text-xs font-medium text-muted-foreground">
                       Status
                     </span>
-                    <Badge variant="outline" className="mt-0.5 text-xs font-semibold">
+                    <Badge
+                      variant="outline"
+                      className="mt-0.5 text-xs font-semibold"
+                    >
                       Completed
                     </Badge>
                   </div>
 
                   {/* Action Link */}
-                  <Link
-                    to={`/learner/quizzes/${item.quizId}`}
-                    aria-label={`Review submission for ${quizName}`}
-                    className={cn(
-                      buttonVariants({ variant: "outline", size: "sm" }),
-                      "shrink-0 font-medium"
-                    )}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    aria-label={`View submission for ${quizName}`}
+                    className="shrink-0 font-medium"
+                    onClick={() => setSelectedSubmission(item)}
                   >
-                    Review
-                  </Link>
+                    View quiz
+                  </Button>
                 </div>
               </div>
             )
           })}
         </div>
       )}
+      <Dialog
+        open={selectedSubmission !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedSubmission(null)
+        }}
+      >
+        <DialogContent className="max-h-11/12 overflow-y-auto sm:max-w-4xl">
+          <DialogHeader className="border-b pb-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 pr-6">
+              <div>
+                <DialogTitle className="text-lg font-bold sm:text-xl">
+                  {selectedQuiz?.name ?? "Quiz submission"}
+                </DialogTitle>
+                <DialogDescription className="mt-1 text-xs text-muted-foreground">
+                  Your submitted answers are shown below in read-only mode.
+                </DialogDescription>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {selectedSubmission?.score != null && (
+                  <Badge
+                    variant="outline"
+                    className="border-emerald-500/30 bg-emerald-50/50 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400"
+                  >
+                    Score: {selectedSubmission.score} pts
+                  </Badge>
+                )}
+                {selectedSubmission?.submitted_at && (
+                  <Badge variant="secondary" className="text-xs">
+                    Submitted: {getDateString(selectedSubmission.submitted_at)}
+                  </Badge>
+                )}
+                <Badge variant="outline" className="text-xs">
+                  Read-Only Mode
+                </Badge>
+              </div>
+            </div>
+          </DialogHeader>
+          {!selectedQuiz ? (
+            <p className="py-6 text-center text-sm text-muted-foreground">
+              This quiz is no longer available.
+            </p>
+          ) : (
+            <div className="mt-2 rounded-lg border bg-card p-2 sm:p-4">
+              <QuizForm
+                key={selectedSubmission?.id}
+                quiz={selectedQuiz}
+                readOnly
+                answers={answers}
+                correctAnswers={correctAnswers}
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </Card>
   )
 }

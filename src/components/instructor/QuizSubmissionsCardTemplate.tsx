@@ -1,4 +1,5 @@
 import { useMemo } from "react"
+import { useQueries } from "@tanstack/react-query"
 import {
   Accordion,
   AccordionContent,
@@ -8,43 +9,45 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Users, User, Clock, FileText } from "lucide-react"
-import type {
-  ClassroomProps,
-  ClassroomViewProps,
-  QuizProps,
-} from "@/const/props/materialProps"
+import type { ClassroomProps, QuizProps } from "@/const/props/materialProps"
+import { getClassroomContentViewById } from "@/services/api/materialsAPI"
+import { staleTime } from "@/services/axios"
+import type { QuizSubmissionProps } from "@/const/materialsProps"
 
 export type QuizSubmissionsCardTemplateProps = {
   quiz: QuizProps
   classrooms: ClassroomProps[]
-  learners_list: ClassroomViewProps
+  submissions?: QuizSubmissionProps[]
 }
 
 export default function QuizSubmissionsCardTemplate({
   quiz,
-  learners_list,
   classrooms,
+  submissions = [],
 }: QuizSubmissionsCardTemplateProps) {
   const assignedClassrooms = useMemo(
     () =>
       (quiz.classrooms ?? [])
         .map((cId) => classrooms.find((c) => String(c.id) === String(cId)))
-        .filter(Boolean),
+        .filter((classroom): classroom is ClassroomProps => Boolean(classroom)),
     [quiz.classrooms, classrooms]
   )
 
-  const matchingSubmissions: Array<{
-    learnerId: string
-    score: number
-    submittedAt: string
-  }> = []
   const totalPoints = quiz.total_points ?? 0
 
   const targetClassrooms =
     assignedClassrooms.length > 0 ? assignedClassrooms : classrooms.slice(0, 1)
 
+  const classroomQueries = useQueries({
+    queries: targetClassrooms.map((classroom) => ({
+      queryKey: ["classroom-content", classroom.id],
+      queryFn: () => getClassroomContentViewById(classroom.id),
+      staleTime,
+    })),
+  })
+
   const defaultExpandedIds = useMemo(
-    () => targetClassrooms.map((c) => c?.id).filter(Boolean) as string[],
+    () => targetClassrooms.map((classroom) => classroom.id),
     [targetClassrooms]
   )
 
@@ -64,16 +67,24 @@ export default function QuizSubmissionsCardTemplate({
 
   return (
     <Accordion multiple defaultValue={defaultExpandedIds} className="space-y-3">
-      {targetClassrooms.map((classroom) => {
-        if (!classroom) return null
+      {targetClassrooms.map((classroom, index) => {
+        const classroomQuery = classroomQueries[index]
+        const classroomLearners = classroomQuery.data?.learners ?? []
+        const learnerCount = classroomQuery.data
+          ? classroomLearners.length
+          : classroom.enrollment_count
+        const matchingSubmissions = submissions.filter((submission) =>
+          classroomLearners.some((learner) => {
+            const subLearnerId = submission.learner_id ?? submission.learnerId
+            return (
+              subLearnerId != null &&
+              String(learner.id) === String(subLearnerId)
+            )
+          })
+        )
+        const submittedCount = matchingSubmissions.length
 
-        const classroomLearners = learners_list.learners
-
-        const submittedCount = 0
-
-        const isCompleted =
-          classroomLearners.length > 0 &&
-          submittedCount >= classroomLearners.length
+        const isCompleted = learnerCount > 0 && submittedCount >= learnerCount
 
         return (
           <AccordionItem
@@ -95,7 +106,7 @@ export default function QuizSubmissionsCardTemplate({
                     <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
                       <span>Code: {classroom.classroom_code}</span>
                       <span>•</span>
-                      <span>{classroomLearners.length} Enrolled Learners</span>
+                      <span>{learnerCount} Enrolled Learners</span>
                     </div>
                   </div>
                 </div>
@@ -108,7 +119,7 @@ export default function QuizSubmissionsCardTemplate({
                   >
                     <Users className="size-3.5" />
                     <span>
-                      {submittedCount} / {classroomLearners.length}
+                      {submittedCount} / {learnerCount}
                     </span>
                   </Badge>
                 </div>
@@ -116,7 +127,12 @@ export default function QuizSubmissionsCardTemplate({
             </AccordionTrigger>
 
             <AccordionContent className="border-t border-border/50 bg-muted/20 px-5 pt-3 pb-4">
-              {classroomLearners.length === 0 ? (
+              {classroomQuery.isPending ? (
+                <div className="flex items-center justify-center py-6 text-sm text-muted-foreground">
+                  <Clock className="mr-2 size-4" />
+                  <span>Loading enrolled learners…</span>
+                </div>
+              ) : classroomLearners.length === 0 ? (
                 <div className="flex items-center justify-center py-6 text-sm text-muted-foreground">
                   <Clock className="mr-2 size-4" />
                   <span>No enrolled learners found in this classroom.</span>
@@ -125,12 +141,16 @@ export default function QuizSubmissionsCardTemplate({
                 <div className="divide-y divide-border/40 rounded-lg border border-border/60 bg-background">
                   {classroomLearners.map((learner) => {
                     if (!learner) return null
-                    const submission = matchingSubmissions.find(
-                      (s) => String(s.learnerId) === String(learner.id)
-                    )
+                    const submission = matchingSubmissions.find((s) => {
+                      const subLearnerId = s.learner_id ?? s.learnerId
+                      return (
+                        subLearnerId != null &&
+                        String(subLearnerId) === String(learner.id)
+                      )
+                    })
                     const isSubmitted = !!submission
                     const score = submission?.score ?? 0
-                    const ratio = score / totalPoints
+                    const ratio = totalPoints > 0 ? score / totalPoints : 0
 
                     let scoreBadgeClass =
                       "border-emerald-500/30 text-emerald-700 bg-emerald-50/50 dark:bg-emerald-950/30 dark:text-emerald-400"
@@ -167,7 +187,7 @@ export default function QuizSubmissionsCardTemplate({
                             </p>
                             <p className="text-xs text-muted-foreground">
                               {isSubmitted
-                                ? `Submitted: ${submission?.submittedAt || "Recently"}`
+                                ? `Submitted: ${submission?.submitted_at ?? submission?.submittedAt ?? "Recently"}`
                                 : "No submission yet"}
                             </p>
                           </div>

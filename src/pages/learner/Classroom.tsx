@@ -18,12 +18,15 @@ import {
   useClassroomContentView,
   useClassrooms,
 } from "@/services/tanstack/materials"
+import LearnerQuizHistoryCardTemplate from "@/components/common/LearnerQuizHistoryCardTemplate"
+import ErrorBoundary from "../errors/ErrorBoundary"
+import ClassroomEmpty from "./ClassroomEmpty"
+import PageSkeleton from "@/components/skeleton/PageSkeleton"
 
 export default function Classroom() {
   const { data: classrooms } = useClassrooms()
-  const { data: contents } = useClassroomContentView(classrooms[0]?.id)
-
-  console.log(contents)
+  const { data: contents, isPending: isContentsPending } =
+    useClassroomContentView(classrooms[0]?.id)
 
   const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false)
   const [isLeaving, setIsLeaving] = useState(false)
@@ -37,38 +40,47 @@ export default function Classroom() {
   }
 
   const myClassroom = classrooms[0]
+  if (isContentsPending) {
+    return <PageSkeleton />
+  }
+  // if (!myClassroom) {
+  //   return (
+  //     <section className="p-responsive space-y-8">
+  //       <HeaderTemplate
+  //         title="Classroom"
+  //         subtitle="You are not currently enrolled in any classroom."
+  //       />
+  //       <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border p-12 text-center">
+  //         <BookOpen className="mb-4 size-12 text-muted-foreground/40" />
+  //         <h2 className="text-lg font-bold text-foreground">
+  //           No Active Classroom Enrollment
+  //         </h2>
+  //         <p className="mt-1 max-w-md text-sm text-muted-foreground">
+  //           In FrontAccEase, students can belong to a single classroom. Contact
+  //           your instructor or enter a classroom code to enroll.
+  //         </p>
+  //         <Button className="mt-6" variant="outline">
+  //           Re-enter Demo Classroom
+  //         </Button>
+  //       </div>
+  //     </section>
+  //   )
+  // }
+  if (!myClassroom) {
+    return <ClassroomEmpty />
+  }
+
+  if (!contents) return <ErrorBoundary />
+
   const classroomQuizzes = contents.quizzes
   const classroomModules = contents.modules
-
-  if (!myClassroom) {
-    return (
-      <section className="p-responsive space-y-8">
-        <HeaderTemplate
-          title="Classroom"
-          subtitle="You are not currently enrolled in any classroom."
-        />
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border p-12 text-center">
-          <BookOpen className="mb-4 size-12 text-muted-foreground/40" />
-          <h2 className="text-lg font-bold text-foreground">
-            No Active Classroom Enrollment
-          </h2>
-          <p className="mt-1 max-w-md text-sm text-muted-foreground">
-            In FrontAccEase, students can belong to a single classroom. Contact
-            your instructor or enter a classroom code to enroll.
-          </p>
-          <Button className="mt-6" variant="outline">
-            Re-enter Demo Classroom
-          </Button>
-        </div>
-      </section>
-    )
-  }
+  const classroomSubmissions = contents.submissions
 
   return (
     <section className="p-responsive space-y-8">
       <HeaderTemplate
-        title={myClassroom.classroom_code}
-        subtitle={myClassroom.name}
+        title={myClassroom.classroom_code + " — " + myClassroom.name}
+        subtitle={myClassroom.instructor.name}
       />
 
       {/* Due Quizzes Section */}
@@ -117,11 +129,11 @@ export default function Classroom() {
 
       {/* Quiz History Section */}
       <div className="space-y-4">
-        {/* <LearnerQuizHistoryCardTemplate
+        <LearnerQuizHistoryCardTemplate
           submissions={classroomSubmissions}
           quizzes={classroomQuizzes}
           title="Quiz History"
-        /> */}
+        />
       </div>
 
       {/* Settings / Danger Zone Section */}

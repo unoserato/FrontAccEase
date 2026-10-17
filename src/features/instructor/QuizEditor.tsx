@@ -185,7 +185,6 @@ function stitchCorrectAnswer(
 export default function QuizEditor() {
   const { id } = useParams()
   const { data: existingQuiz } = useQuizById(id!)
-
   const answerQuery = useQuizAnswerById(existingQuiz?.id)
 
   if (id && !existingQuiz) {

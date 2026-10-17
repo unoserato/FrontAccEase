@@ -94,6 +94,7 @@ export interface ClassroomViewProps {
   modules: ModuleProps[]
   learners: User[]
   quizzes: QuizProps[]
+  submissions: QuizSubmissionProps[]
 }
 
 export interface ModuleProps {
@@ -125,6 +126,11 @@ export interface InstructorMaterialsProps {
 }
 
 // quiz
+export interface QuizAnswer {
+  question_name: string
+  answer: string
+}
+
 export type QuestionType =
   "radiogroup" | "checkbox" | "dropdown" | "ranking" | "boolean"
 
@@ -144,7 +150,7 @@ export interface QuizProps {
   created_at: string
   created_by?: string
   attempt_count: number
-  items?: number
+  quiz_answer?: { contet: QuizAnswer }
 }
 
 export interface QuizJson {
@@ -268,4 +274,35 @@ export interface AnalyzerResultItem {
   created_at: string
   learner_id: string
   content: Result
+}
+
+export interface QuizSubmissionAnswerKey {
+  content?: Record<string, unknown>
+  question_name?: string
+  answer?: string
+}
+
+export interface QuizSubmissionProps {
+  id: string
+  learner_id?: string
+  learnerId?: string
+  quiz_id?: string
+  quizId?: string
+  answers?: Record<string, unknown> | string
+  score?: number
+  submitted_at?: string
+  submittedAt?: string
+  started_at?: string
+  startedAt?: string
+  attempt_count?: number
+  quiz?: Partial<QuizProps> & {
+    name: string
+    quiz_json?: QuizJson | Record<string, unknown> | string
+  }
+  quiz_answer?:
+    | QuizSubmissionAnswerKey
+    | QuizAnswer
+    | QuizAnswer[]
+    | Record<string, unknown>
+  content?: Record<string, unknown>
 }

@@ -17,6 +17,7 @@ import {
   getInstructorQuizzesAPI,
   getQuizAnswerByIdAPI,
   getQuizByIdAPI,
+  getQuizSubmissionsByIdAPI,
   sitemapAPI,
   webLLMTasksAPI,
 } from "../api/GET/materialsGETAPI"
@@ -78,9 +79,9 @@ export function useModuleById(id: string) {
 }
 
 export function useClassroomContentView(id: string) {
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: ["classroom-content", id],
-    queryFn: () => getClassroomContentViewById(id),
+    queryFn: id ? () => getClassroomContentViewById(id) : skipToken,
     staleTime: staleTime,
   })
 }
@@ -164,6 +165,16 @@ export function useSitemap(url?: string) {
     queryKey: ["sitemap", url],
     queryFn: url ? () => sitemapAPI(url) : skipToken,
     enabled: !!url,
+    staleTime: staleTime,
+    retry: 1,
+  })
+}
+
+export function useQuizSubmissionsById(id?: string) {
+  return useQuery({
+    queryKey: ["quiz-submission", id],
+    queryFn: id ? () => getQuizSubmissionsByIdAPI(id) : skipToken,
+    enabled: !!id,
     staleTime: staleTime,
     retry: 1,
   })

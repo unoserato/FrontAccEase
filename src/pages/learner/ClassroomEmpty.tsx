@@ -16,10 +16,26 @@ import {
 } from "@/components/ui/input-otp"
 import { DoorOpen, Info, Lock } from "lucide-react"
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { joinClassroomByCodeAPI } from "@/services/api/CRUD/materialsCRUDAPI"
+import type { ClassroomProps } from "@/const/props/materialProps"
+import { Spinner } from "@/components/ui/spinner"
 
 export default function ClassroomEmpty() {
   const [code, setCode] = useState("")
+  const queryClient = useQueryClient()
   const isCodeComplete = code.length === 6
+
+  const { mutate: joinClassroom, isPending } = useMutation({
+    mutationFn: joinClassroomByCodeAPI,
+    onSuccess: (newClassrooms: ClassroomProps[]) => {
+      queryClient.setQueryData(["classroom"], newClassrooms)
+    },
+  })
+
+  async function handleJoinClassroom() {
+    joinClassroom(code)
+  }
 
   return (
     <section className="p-responsive space-y-8">
@@ -69,8 +85,18 @@ export default function ClassroomEmpty() {
             </p>
           </div>
 
-          <Button className="w-full max-w-xs" disabled={!isCodeComplete}>
-            Join Classroom
+          <Button
+            className="w-full max-w-xs"
+            onClick={handleJoinClassroom}
+            disabled={!isCodeComplete || isPending}
+          >
+            {isPending ? (
+              <div className="flex gap-2">
+                <Spinner /> Joining Classroom...
+              </div>
+            ) : (
+              "Join Classroom"
+            )}
           </Button>
 
           <div className="mt-2 w-full rounded-xl border border-border bg-muted/40 p-4 text-left">

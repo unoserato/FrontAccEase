@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import type { Model } from "survey-core"
 import { Survey } from "survey-react-ui"
 import "survey-core/survey-core.min.css"
@@ -14,7 +14,7 @@ interface QuizTakerProps {
   /** Overrides the theme preset stored on the quiz. */
   themePreset?: string
   onComplete?: (sender: Model) => void
-  doSubmit?: (submit: () => void) => void
+  doSubmit?: (sender: Model) => void
   className?: string
   /** Resume an in-progress attempt from localStorage. Defaults to true. */
   persistProgress?: boolean
@@ -94,16 +94,20 @@ export default function QuizTaker({
         model.onComplete.add(onComplete)
       }
 
+      if (doSubmit) {
+        model.onComplete.add(doSubmit)
+      }
+
       return model
     } catch (err) {
       console.error("Failed to build SurveyJS quiz model:", err)
       return createQuizModel({ id: "quiz-error", name: "" } as QuizProps)
     }
-  }, [quiz, themePreset, onComplete, persistProgress, storageKey])
+  }, [quiz, themePreset, onComplete, persistProgress, storageKey, doSubmit])
 
-  useEffect(() => {
-    doSubmit?.(() => surveyModel.tryComplete())
-  }, [surveyModel, doSubmit])
+  // useEffect(() => {
+  //   doSubmit?.(() => surveyModel.tryComplete())
+  // }, [surveyModel, doSubmit])
 
   return (
     <div className={className}>

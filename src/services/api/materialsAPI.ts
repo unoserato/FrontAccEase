@@ -29,11 +29,6 @@ export async function createClassroomAPI(classroom: {
   return response.data
 }
 
-export async function arhiveModuleAPI(id: string) {
-  const response = await api.post(`/instructor/archive-module/${id}`)
-  return response.data
-}
-
 export async function chatAPI(msg: string) {
   const response = await api.post("/chat/chat", { msg: msg })
   return response.data

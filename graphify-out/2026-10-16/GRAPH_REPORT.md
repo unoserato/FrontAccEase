@@ -1,11 +1,11 @@
-# Graph Report - react  (2026-10-15)
+# Graph Report - react  (2026-10-16)
 
 ## Corpus Check
-- 330 files · ~148,615 words
+- 331 files · ~149,168 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1774 nodes · 4085 edges · 155 communities (90 shown, 65 thin omitted)
+- 1782 nodes · 4090 edges · 155 communities (89 shown, 66 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 26 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
@@ -17,14 +17,14 @@
 ## Community Hubs (Navigation)
 - use-mark.ts
 - devDependencies
-- AnalyzerLogsSchoolAdmin.tsx
-- LearnerQuizHistoryCardTemplate.tsx
+- AnalyzerResults.tsx
+- Chat.tsx
 - simple-editor.tsx
-- use-list.ts
+- use-list-dropdown-menu.ts
 - Permissions.tsx
 - search-and-replace.tsx
-- use-blockquote.ts
-- use-undo-redo.ts
+- use-list.ts
+- isNodeTypeSelected
 - button/button.tsx
 - compilerOptions
 - tiptap-utils.ts
@@ -35,55 +35,56 @@
 - components.json
 - use-search-and-replace.ts
 - compilerOptions
-- ProtectedLayout.tsx
-- QuizzesInstructorView.tsx
-- input-group/input-group.tsx
-- use-element-rect.ts
+- useCheckToken
+- PageTemplate.tsx
+- cn
+- image-upload-node.tsx
 - Button
 - use-text-align.ts
 - QuizEditor.tsx
 - Analyzer.tsx
 - shadcn/ui
 - use-heading.ts
-- ui/button-group.tsx
+- TooltipButtonTemplate.tsx
 - PublicNavbar.tsx
 - Customization & Theming
 - ClassroomEmpty.tsx
-- DeleteArchiveDialog.tsx
+- QuizzesInstructorView.tsx
 - materials.ts
-- ui/button.tsx
+- useClassrooms
 - ui/card.tsx
 - instructorRoute.tsx
-- useTiptapEditor
-- LearnerQuizView.tsx
-- Users.tsx
-- link-popover.tsx
+- use-color-highlight.ts
+- QuizProps
+- AnalyzerLogsSchoolAdmin.tsx
+- color-highlight-popover.tsx
 - rules/graphify.md
 - Design Critique: FrontAccEase Landing Page
 - workflows/graphify.md
 - toast.tsx
-- ui/badge.tsx
+- ui/button.tsx
 - @tiptap/extension-image
 - publicRoute.tsx
 - @tiptap/extension-list
-- ProtectedLayoutNoSidebar.tsx
-- eslint
-- SignUpPage.tsx
+- ProtectedLayout.tsx
+- theme-provider.tsx
+- field.tsx
 - use-scrolling.ts
 - tsconfig.json
 - Critique Snapshot: `src/pages/learner/Classroom.tsx`
 - schoolAdminRoute.tsx
 - vercel.json
-- AnalyzerResults.tsx
+- modeToggle.tsx
 - marker.tsx
-- list-dropdown-menu.tsx
+- item.tsx
 - @types/react
 - @tiptap/extension-text-align
 - date-fns
-- cn
+- useIsMobile
 - @fontsource-variable/roboto
-- button-group/button-group.tsx
+- Q: Add elapsed time in webLLM.ts
 - dependencies
+- ViewToggle.tsx
 - @radix-ui/react-dropdown-menu
 - react-dom
 - react-hotkeys-hook
@@ -91,12 +92,13 @@
 - react-icons
 - shadcn
 - Critical Rules
-- isNodeTypeSelected
-- auth-04.tsx
+- link-popover.tsx
+- axios
 - tailwindcss
 - @tailwindcss/vite
 - @tanstack/react-query
 - @tiptap/core
+- prettier
 - @tiptap/extension-highlight
 - @tiptap/extension-horizontal-rule
 - @tiptap/extension-superscript
@@ -105,9 +107,7 @@
 - @tiptap/starter-kit
 - lucide-react
 - @tiptap/extension-typography
-- class-variance-authority
-- image-upload-node.tsx
-- PageTemplate.tsx
+- date-time-picker.tsx
 - scss.d.ts
 - React Application HTML Entrypoint
 - Application Logo Asset
@@ -131,9 +131,8 @@
 - scripts
 - learnerRoute.tsx
 - react-markdown
-- parseShortcutKeys
+- useTiptapEditor
 - package.json
-- SearchTemplate.tsx
 - materialProps.ts
 - @base-ui/react
 - globals
@@ -175,12 +174,12 @@
 10. `QuizEditorContent()` - 22 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `CalendarDayButton()` --references--> `react`  [EXTRACTED]
+  src/components/ui/calendar.tsx → package.json
 - `ThemeProvider()` --references--> `react`  [EXTRACTED]
   src/components/theme-provider.tsx → package.json
 - `useTheme()` --references--> `react`  [EXTRACTED]
   src/components/theme-provider.tsx → package.json
-- `CalendarDayButton()` --references--> `react`  [EXTRACTED]
-  src/components/ui/calendar.tsx → package.json
 - `ChartContainer()` --references--> `react`  [EXTRACTED]
   src/components/ui/chart.tsx → package.json
 - `ChartTooltipContent()` --references--> `react`  [EXTRACTED]
@@ -189,59 +188,59 @@
 ## Import Cycles
 - None detected.
 
-## Communities (155 total, 65 thin omitted)
+## Communities (155 total, 66 thin omitted)
 
 ### Community 0 - "use-mark.ts"
-Cohesion: 0.10
-Nodes (23): BoldIcon, SvgProps, Code2Icon, SvgProps, ItalicIcon, SvgProps, StrikeIcon, SvgProps (+15 more)
+Cohesion: 0.08
+Nodes (28): BoldIcon, SvgProps, Code2Icon, SvgProps, ItalicIcon, SvgProps, StrikeIcon, SvgProps (+20 more)
 
 ### Community 1 - "devDependencies"
 Cohesion: 0.18
-Nodes (11): eslint-plugin-react-refresh, devDependencies, eslint-plugin-react-refresh, prettier, sass-embedded, @shadcn/lint, typescript, prettier (+3 more)
+Nodes (11): eslint, eslint-plugin-react-refresh, devDependencies, eslint, eslint-plugin-react-refresh, sass-embedded, @shadcn/lint, typescript (+3 more)
 
-### Community 2 - "AnalyzerLogsSchoolAdmin.tsx"
-Cohesion: 0.10
-Nodes (20): Dialog(), DialogClose(), DialogContent(), DialogDescription(), DialogFooter(), DialogHeader(), DialogTitle(), DialogTrigger() (+12 more)
+### Community 2 - "AnalyzerResults.tsx"
+Cohesion: 0.15
+Nodes (13): PrincipleIssue, PrinciplePassed, AnalyzerResults(), capitalize(), FindingCard(), FindingItem, FindingType, formatDate() (+5 more)
 
-### Community 3 - "LearnerQuizHistoryCardTemplate.tsx"
-Cohesion: 0.28
-Nodes (7): LearnerQuizHistoryCardTemplate(), LearnerQuizHistoryCardTemplateProps, ChatMessage, ClassroomProps, Classwork, QuizSubmissionProps, Submission
+### Community 3 - "Chat.tsx"
+Cohesion: 0.15
+Nodes (13): LearnerQuizHistoryCardTemplateProps, RichText(), RichTextProps, ChatMessage, ClassroomProps, Classwork, QuizSubmissionProps, Submission (+5 more)
 
 ### Community 4 - "simple-editor.tsx"
-Cohesion: 0.11
-Nodes (16): ArrowLeftIcon, SvgProps, HorizontalRule, SEARCH_AND_REPLACE_SCROLL_OPTIONS, ColorHighlightPopoverContent(), Spacer(), SpacerOrientation, BaseProps (+8 more)
+Cohesion: 0.09
+Nodes (20): ArrowLeftIcon, SvgProps, HorizontalRule, SEARCH_AND_REPLACE_SCROLL_OPTIONS, ColorHighlightPopover(), ColorHighlightPopoverContent(), Spacer(), SpacerOrientation (+12 more)
 
-### Community 5 - "use-list.ts"
+### Community 5 - "use-list-dropdown-menu.ts"
 Cohesion: 0.11
-Nodes (29): ListIcon, SvgProps, ListOrderedIcon, SvgProps, ListTodoIcon, SvgProps, ListButton, ListButtonProps (+21 more)
+Nodes (22): ListIcon, SvgProps, ListOrderedIcon, SvgProps, ListTodoIcon, SvgProps, isListActive(), listIcons (+14 more)
 
 ### Community 6 - "Permissions.tsx"
-Cohesion: 0.15
-Nodes (15): QuizSubmissionsCardTemplateProps, Accordion(), AccordionContent(), AccordionItem(), AccordionTrigger(), Avatar(), AvatarFallback(), AvatarImage() (+7 more)
+Cohesion: 0.18
+Nodes (13): QuizSubmissionsCardTemplateProps, Accordion(), AccordionContent(), AccordionItem(), AccordionTrigger(), Avatar(), AvatarFallback(), AvatarImage() (+5 more)
 
 ### Community 7 - "search-and-replace.tsx"
 Cohesion: 0.09
-Nodes (19): ArrowRightIcon, SvgProps, CaseSensitiveIcon, SvgProps, ExternalLinkIcon, SvgProps, SvgProps, WholeWordIcon (+11 more)
+Nodes (20): ArrowRightIcon, SvgProps, CaseSensitiveIcon, SvgProps, ChevronDownIcon, SvgProps, ChevronUpIcon, SvgProps (+12 more)
 
-### Community 8 - "use-blockquote.ts"
-Cohesion: 0.24
-Nodes (17): BlockquoteIcon, SvgProps, CodeBlockIcon, SvgProps, canToggleBlockquote(), shouldShowButton(), toggleBlockquote(), useBlockquote() (+9 more)
+### Community 8 - "use-list.ts"
+Cohesion: 0.21
+Nodes (22): BlockquoteIcon, SvgProps, CodeBlockIcon, SvgProps, canToggleBlockquote(), shouldShowButton(), toggleBlockquote(), useBlockquote() (+14 more)
 
-### Community 9 - "use-undo-redo.ts"
-Cohesion: 0.18
-Nodes (12): Redo2Icon, SvgProps, SvgProps, Undo2Icon, canExecuteUndoRedoAction(), executeUndoRedoAction(), historyActionLabels, historyIcons (+4 more)
+### Community 9 - "isNodeTypeSelected"
+Cohesion: 0.15
+Nodes (17): Redo2Icon, SvgProps, SvgProps, Undo2Icon, HistoryShortcutBadge(), UndoRedoButton, UndoRedoButtonProps, canExecuteUndoRedoAction() (+9 more)
 
 ### Community 10 - "button/button.tsx"
-Cohesion: 0.15
-Nodes (12): ButtonSize, ButtonStyle, ButtonVariant, Tooltip(), TooltipContent, TooltipContentProps, TooltipContext, TooltipContextValue (+4 more)
+Cohesion: 0.12
+Nodes (15): CheckIcon, SvgProps, ButtonProps, ButtonSize, ButtonStyle, ButtonVariant, Tooltip(), TooltipContent (+7 more)
 
 ### Community 11 - "compilerOptions"
 Cohesion: 0.08
 Nodes (24): DOM, src, vite/client, compilerOptions, allowImportingTsExtensions, erasableSyntaxOnly, jsx, lib (+16 more)
 
 ### Community 12 - "tiptap-utils.ts"
-Cohesion: 0.12
-Nodes (15): Commands, NodeBackground, NodeBackgroundOptions, @tiptap/core, findNodeAtPosition(), getSelectedNodesOfType(), isAllowedUri(), MAC_SYMBOLS (+7 more)
+Cohesion: 0.10
+Nodes (21): Commands, NodeBackground, NodeBackgroundOptions, @tiptap/core, HeadingButtonProps, HeadingShortcutBadge(), HEADING_SHORTCUT_KEYS, UseHeadingConfig (+13 more)
 
 ### Community 13 - "chart.tsx"
 Cohesion: 0.25
@@ -249,11 +248,11 @@ Nodes (9): ChartContext, ChartContextProps, ChartLegendContent(), ChartTooltipCo
 
 ### Community 14 - "sidebar.tsx"
 Cohesion: 0.10
-Nodes (22): Props, ToolTipTemplateProps, UserSidebar(), Sidebar(), SidebarContent(), SidebarContext, SidebarContextProps, SidebarFooter() (+14 more)
+Nodes (18): UserSidebar(), UserSidebarProps, Sidebar(), SidebarContent(), SidebarContext, SidebarContextProps, SidebarFooter(), SidebarGroup() (+10 more)
 
 ### Community 15 - "Instruments.tsx"
-Cohesion: 0.10
-Nodes (18): Input(), Item(), ItemActions(), ItemContent(), ItemMedia(), itemMediaVariants, ItemTitle(), itemVariants (+10 more)
+Cohesion: 0.11
+Nodes (30): Button(), CardFooter(), Dialog(), DialogClose(), DialogContent(), DialogDescription(), DialogFooter(), DialogHeader() (+22 more)
 
 ### Community 16 - "attachment.tsx"
 Cohesion: 0.20
@@ -271,53 +270,53 @@ Nodes (19): SearchIcon, SvgProps, DEFAULT_SCROLL_INTO_VIEW_OPTIONS, EMPTY_EDITOR
 Cohesion: 0.10
 Nodes (20): node, vite.config.ts, compilerOptions, allowImportingTsExtensions, erasableSyntaxOnly, lib, module, moduleDetection (+12 more)
 
-### Community 20 - "ProtectedLayout.tsx"
-Cohesion: 0.18
-Nodes (13): PublicFooter(), PublicNavbar(), PageSkeleton(), UserSkeleton(), instructorNav, learnerNav, schoolAdminNav, AuthLayout() (+5 more)
+### Community 20 - "useCheckToken"
+Cohesion: 0.27
+Nodes (8): PublicFooter(), PublicNavbar(), PageSkeleton(), AuthLayout(), ProtectedLayout(), ProtectedLayoutNoSidebar(), meAPI(), useCheckToken()
 
-### Community 21 - "QuizzesInstructorView.tsx"
-Cohesion: 0.13
-Nodes (17): HeaderTemplate(), QuizSubmissionsCardTemplate(), Tabs(), TabsContent(), TabsList(), tabsListVariants, TabsTrigger(), copyText() (+9 more)
+### Community 21 - "PageTemplate.tsx"
+Cohesion: 0.23
+Nodes (7): HeaderTemplate(), HeaderTemplateProps, coreModules, CoreModulesProps, ContinueLearningCard(), CoreModuleCardTemplate(), MOCK_MODULE_PROGRESS
 
-### Community 22 - "input-group/input-group.tsx"
-Cohesion: 0.16
-Nodes (10): InputGroup(), InputGroupAddon(), inputGroupAddonVariants, InputGroupButton(), inputGroupButtonVariants, InputGroupInput(), InputGroupText(), InputGroupTextarea() (+2 more)
+### Community 22 - "cn"
+Cohesion: 0.09
+Nodes (27): ButtonGroup(), ButtonGroupSeparator(), ButtonGroupText(), buttonGroupVariants, DropdownMenuCheckboxItem(), DropdownMenuContent(), DropdownMenuGroup(), DropdownMenuItem() (+19 more)
 
-### Community 23 - "use-element-rect.ts"
-Cohesion: 0.15
-Nodes (18): ImageUploadNode, SimpleEditor(), CursorVisibilityOptions, useCursorVisibility(), ElementRectOptions, initialRect, isClientSide(), RectState (+10 more)
+### Community 23 - "image-upload-node.tsx"
+Cohesion: 0.06
+Nodes (31): CloseIcon, SvgProps, Commands, ImageUploadNode, ImageUploadNodeOptions, @tiptap/react, UploadFunction, FileItem (+23 more)
 
 ### Community 24 - "Button"
-Cohesion: 0.13
-Nodes (13): MoonStarIcon, SvgProps, SunIcon, SvgProps, ThemeToggle(), IconComponent, IconProps, ImageShortcutBadge() (+5 more)
+Cohesion: 0.15
+Nodes (11): MoonStarIcon, SvgProps, SunIcon, SvgProps, ThemeToggle(), ColorHighlightButton, ColorHighlightButtonProps, ColorHighlightShortcutBadge() (+3 more)
 
 ### Community 25 - "use-text-align.ts"
-Cohesion: 0.13
-Nodes (18): AlignCenterIcon, SvgProps, AlignJustifyIcon, SvgProps, AlignLeftIcon, SvgProps, AlignRightIcon, SvgProps (+10 more)
+Cohesion: 0.09
+Nodes (25): AlignCenterIcon, SvgProps, AlignJustifyIcon, SvgProps, AlignLeftIcon, SvgProps, AlignRightIcon, SvgProps (+17 more)
 
 ### Community 26 - "QuizEditor.tsx"
 Cohesion: 0.15
 Nodes (28): QuestionElement, QuestionType, QuizJson, QuizPage, AnswerKey, QUESTION_TYPE_OPTIONS, QuizEditorContent(), stitchCorrectAnswer() (+20 more)
 
 ### Community 27 - "Analyzer.tsx"
-Cohesion: 0.14
-Nodes (17): ScanHistory, PopoverHeader(), PopoverTitle(), AnalyzerResultItem, PrincipleItem, Result, models, steps (+9 more)
+Cohesion: 0.13
+Nodes (18): ScanHistory, AnalyzerResultItem, PrincipleItem, Result, models, steps, LearnerQuizView(), createExtensionScanAPI() (+10 more)
 
 ### Community 28 - "shadcn/ui"
 Cohesion: 0.18
 Nodes (11): Component Docs, Examples, and Usage, Component Selection, Current Project Context, Detailed References, Key Fields, Key Patterns, Principles, Quick Reference (+3 more)
 
 ### Community 29 - "use-heading.ts"
-Cohesion: 0.11
-Nodes (23): HeadingFiveIcon, SvgProps, HeadingFourIcon, SvgProps, HeadingIcon, SvgProps, HeadingOneIcon, SvgProps (+15 more)
+Cohesion: 0.09
+Nodes (28): HeadingFiveIcon, SvgProps, HeadingFourIcon, SvgProps, HeadingIcon, SvgProps, HeadingOneIcon, SvgProps (+20 more)
 
-### Community 30 - "ui/button-group.tsx"
-Cohesion: 0.38
-Nodes (3): ButtonGroup(), buttonGroupVariants, Separator()
+### Community 30 - "TooltipButtonTemplate.tsx"
+Cohesion: 0.26
+Nodes (7): Props, ToolTipTemplateProps, ButtonGroup(), buttonGroupVariants, Tooltip(), TooltipContent(), TooltipTrigger()
 
 ### Community 31 - "PublicNavbar.tsx"
-Cohesion: 0.22
-Nodes (7): Sheet(), SheetContent(), SheetDescription(), SheetHeader(), SheetTitle(), SheetTrigger(), publicNav
+Cohesion: 0.17
+Nodes (9): Logo(), LogoProps, UserHeader(), Sheet(), SheetContent(), SheetDescription(), SheetHeader(), SheetTitle() (+1 more)
 
 ### Community 32 - "Customization & Theming"
 Cohesion: 0.14
@@ -327,65 +326,69 @@ Nodes (14): 1. Built-in variants, 2. Tailwind classes via `className`, 3. Add a 
 Cohesion: 0.22
 Nodes (12): EmptyState(), EmptyStateProps, Empty(), EmptyContent(), EmptyDescription(), EmptyHeader(), EmptyMedia(), emptyMediaVariants (+4 more)
 
-### Community 34 - "DeleteArchiveDialog.tsx"
-Cohesion: 0.25
-Nodes (13): ClassroomCardTemplate(), EditorDropdown(), ModuleCardTemplateProps, QuizCardTemplateProps, ActionType, DeleteArchiveDialog(), Props, ClassroomProps (+5 more)
+### Community 34 - "QuizzesInstructorView.tsx"
+Cohesion: 0.10
+Nodes (27): ClassroomCardTemplate(), EditorDropdown(), LearnerQuizCardTemplate(), ModuleCardTemplate(), ModuleCardTemplateProps, QuizCardTemplate(), QuizCardTemplateProps, ActionType (+19 more)
 
 ### Community 35 - "materials.ts"
-Cohesion: 0.11
-Nodes (28): QuizEditor(), InstructorMaterials(), InstructorMaterialsView(), getAnalyzerLogsByLearner(), getExtensionScanAPI(), getInstructorMaterialsAPI(), getInstructorMaterialsModulesAPI(), getInstructorQuizzesAPI() (+20 more)
+Cohesion: 0.12
+Nodes (27): QuizEditor(), InstructorMaterials(), InstructorMaterialsView(), getExtensionScanAPI(), getInstructorMaterialsAPI(), getInstructorMaterialsModulesAPI(), getInstructorQuizzesAPI(), getModuleByIdAPI() (+19 more)
 
-### Community 36 - "ui/button.tsx"
-Cohesion: 0.14
-Nodes (24): GridListButtonGroupTemplate(), LearnerQuizCardTemplate(), ModuleCardTemplate(), QuizCardTemplate(), ViewMode, ViewToggleProps, Button(), buttonVariants (+16 more)
+### Community 36 - "useClassrooms"
+Cohesion: 0.11
+Nodes (22): GridListButtonGroupTemplate(), TooltipButtonTemplate(), ModuleEditor(), NewClassroomDialog(), ClassroomInstructor(), ClassroomInstructorView(), Dashboard(), DashboardInstructor() (+14 more)
 
 ### Community 37 - "ui/card.tsx"
-Cohesion: 0.13
-Nodes (23): getInitials(), getRoleConfig(), RoleConfig, UserProfile(), UserProfileProps, HeroInterfacePreview(), PourExplorer(), PourPrincipleData (+15 more)
+Cohesion: 0.19
+Nodes (18): getInitials(), getRoleConfig(), RoleConfig, UserProfile(), HeroInterfacePreview(), PourExplorer(), PourPrincipleData, pourPrinciples (+10 more)
 
 ### Community 38 - "instructorRoute.tsx"
 Cohesion: 0.14
 Nodes (15): DetailSkeleton(), GridSkeleton(), TableSkeleton(), Skeleton(), AnalyzerLogsClassroomView, AnalyzerLogsInstructor, ClassroomInstructor, ClassroomInstructorView (+7 more)
 
-### Community 39 - "useTiptapEditor"
-Cohesion: 0.13
-Nodes (26): ImagePlusIcon, SvgProps, ColorHighlightButton, ColorHighlightButtonProps, ColorHighlightShortcutBadge(), canColorHighlight(), COLOR_HIGHLIGHT_SHORTCUT_KEY, getHighlightColorValue() (+18 more)
+### Community 39 - "use-color-highlight.ts"
+Cohesion: 0.12
+Nodes (25): ImagePlusIcon, SvgProps, canColorHighlight(), getHighlightColorValue(), HIGHLIGHT_COLORS, HighlightMode, isColorHighlightActive(), removeHighlight() (+17 more)
 
-### Community 40 - "LearnerQuizView.tsx"
-Cohesion: 0.17
-Nodes (18): LearnerQuizCardTemplateProps, QuizProps, QuizForm(), QuizFormProps, clearQuizProgress(), clearQuizProgressByKey(), getQuizProgressKey(), QuizTaker() (+10 more)
-
-### Community 41 - "Users.tsx"
+### Community 40 - "QuizProps"
 Cohesion: 0.20
-Nodes (13): ChartConfig, ChartContainer(), Checkbox(), Table(), TableBody(), TableCell(), TableHead(), TableHeader() (+5 more)
+Nodes (15): LearnerQuizCardTemplateProps, QuizProps, QuizForm(), QuizFormProps, clearQuizProgress(), clearQuizProgressByKey(), getQuizProgressKey(), QuizTaker() (+7 more)
 
-### Community 42 - "link-popover.tsx"
-Cohesion: 0.07
-Nodes (29): BanIcon, SvgProps, CornerDownLeftIcon, SvgProps, HighlighterIcon, SvgProps, SvgProps, TrashIcon (+21 more)
+### Community 41 - "AnalyzerLogsSchoolAdmin.tsx"
+Cohesion: 0.14
+Nodes (20): SearchInputProps, SearchTemplate(), ChartConfig, ChartContainer(), Checkbox(), Table(), TableBody(), TableCell() (+12 more)
+
+### Community 42 - "color-highlight-popover.tsx"
+Cohesion: 0.13
+Nodes (15): BanIcon, SvgProps, HighlighterIcon, SvgProps, HighlightColor, pickHighlightColorsByValue(), ColorHighlightPopoverButton, ColorHighlightPopoverContentProps (+7 more)
 
 ### Community 44 - "Design Critique: FrontAccEase Landing Page"
 Cohesion: 0.14
 Nodes (13): Design Critique: FrontAccEase Landing Page, Design Health Score, Design Specificity Verdict, Minor Observations, Overall Impression, [P1] Missing WAI-ARIA Tab Semantics in Interactive Tab Lists, [P2] Mobile Visibility Gap for Instructor Preview Tab, [P3] Non-Functional Mockup Action Buttons (+5 more)
 
 ### Community 46 - "toast.tsx"
-Cohesion: 0.05
-Nodes (22): App(), client, ModeToggle(), ModeToggleProps, disableTransitionsTemporarily(), getSystemTheme(), isTheme(), ResolvedTheme (+14 more)
+Cohesion: 0.12
+Nodes (5): App(), client, Toaster(), TooltipProvider(), RootRouter()
 
-### Community 47 - "ui/badge.tsx"
+### Community 47 - "ui/button.tsx"
 Cohesion: 0.14
-Nodes (12): PricingBlock(), PricingBlockProps, SectionHeader(), SectionHeaderProps, Badge(), badgeVariants, AboutPage(), AccessibilityPage() (+4 more)
+Nodes (16): LearnerQuizHistoryCardTemplate(), PricingBlock(), PricingBlockProps, SectionHeader(), SectionHeaderProps, Badge(), badgeVariants, buttonVariants (+8 more)
 
 ### Community 49 - "publicRoute.tsx"
-Cohesion: 0.10
-Nodes (19): RootLayout(), ErrorBoundary(), instructorRoute, learnerRoute, AboutPage, AccessibilityPage, AccessibilityStatementPage, ContactPage (+11 more)
+Cohesion: 0.09
+Nodes (20): PublicLayout(), RootLayout(), ErrorBoundary(), instructorRoute, learnerRoute, AboutPage, AccessibilityPage, AccessibilityStatementPage (+12 more)
 
-### Community 51 - "ProtectedLayoutNoSidebar.tsx"
-Cohesion: 0.26
-Nodes (6): ErrorOne(), ErrorOneProps, UserRole, Forbidden(), NotFound(), Unauthorized()
+### Community 51 - "ProtectedLayout.tsx"
+Cohesion: 0.17
+Nodes (11): ErrorOne(), ErrorOneProps, UserSkeleton(), instructorNav, learnerNav, publicNav, schoolAdminNav, UserRole (+3 more)
 
-### Community 53 - "SignUpPage.tsx"
-Cohesion: 0.16
-Nodes (10): Field(), FieldDescription(), FieldError(), FieldGroup(), fieldVariants, Label(), Switch(), passwordRequirements (+2 more)
+### Community 52 - "theme-provider.tsx"
+Cohesion: 0.21
+Nodes (12): ModeToggle(), disableTransitionsTemporarily(), getSystemTheme(), isTheme(), ResolvedTheme, Theme, THEME_VALUES, ThemeProvider() (+4 more)
+
+### Community 53 - "field.tsx"
+Cohesion: 0.11
+Nodes (16): UserProfileProps, LoginPage(), Field(), FieldDescription(), FieldError(), FieldGroup(), fieldVariants, Spinner() (+8 more)
 
 ### Community 54 - "use-scrolling.ts"
 Cohesion: 0.50
@@ -403,45 +406,37 @@ Nodes (13): Critique Snapshot: `src/pages/learner/Classroom.tsx`, Design Health 
 Cohesion: 0.14
 Nodes (13): AnalyzerLogsClassroomView, AnalyzerLogsSchoolAdmin, ClassroomInstructorView, CoreModulesView, DashboardSchoolAdmin, InstructorMaterials, InstructorMaterialsView, Instruments (+5 more)
 
-### Community 59 - "AnalyzerResults.tsx"
-Cohesion: 0.11
-Nodes (22): RichText(), RichTextProps, SelectContent(), SelectGroup(), SelectItem(), SelectTrigger(), SelectValue(), AnalyzerResults() (+14 more)
+### Community 59 - "modeToggle.tsx"
+Cohesion: 0.20
+Nodes (10): ModeToggleProps, SelectContent(), SelectGroup(), SelectItem(), SelectTrigger(), SelectValue(), Analyzer(), AnalyzerExtension() (+2 more)
 
-### Community 61 - "list-dropdown-menu.tsx"
-Cohesion: 0.15
-Nodes (12): ChevronDownIcon, SvgProps, ChevronUpIcon, SvgProps, HeadingButton, HeadingDropdownMenu, HeadingDropdownMenuProps, UseHeadingDropdownMenuConfig (+4 more)
+### Community 61 - "item.tsx"
+Cohesion: 0.19
+Nodes (6): Item(), ItemMedia(), itemMediaVariants, ItemTitle(), itemVariants, Separator()
 
-### Community 65 - "cn"
-Cohesion: 0.15
-Nodes (14): CheckIcon, SvgProps, DropdownMenuCheckboxItem(), DropdownMenuContent(), DropdownMenuGroup(), DropdownMenuItem(), DropdownMenuLabel(), DropdownMenuRadioItem() (+6 more)
+### Community 65 - "useIsMobile"
+Cohesion: 0.23
+Nodes (11): react, react, DateTimePicker(), getSidebarState(), SidebarMenuSkeleton(), SidebarProvider(), getServerSnapshot(), getSnapshot() (+3 more)
 
-### Community 68 - "button-group/button-group.tsx"
-Cohesion: 0.24
-Nodes (6): ButtonGroup(), ButtonGroupSeparator(), ButtonGroupText(), buttonGroupVariants, Orientation, Separator()
+### Community 68 - "Q: Add elapsed time in webLLM.ts"
+Cohesion: 0.40
+Nodes (4): Answer, Outcome, Q: Add elapsed time in webLLM.ts, Source Nodes
 
 ### Community 69 - "dependencies"
 Cohesion: 0.15
-Nodes (13): axios, @floating-ui/react, dependencies, axios, @floating-ui/react, @radix-ui/react-popover, recharts, rehype-highlight (+5 more)
+Nodes (13): class-variance-authority, @floating-ui/react, dependencies, class-variance-authority, @floating-ui/react, @radix-ui/react-popover, recharts, rehype-highlight (+5 more)
 
 ### Community 77 - "Critical Rules"
 Cohesion: 0.25
 Nodes (8): Chat & Messaging → [chat.md](./rules/chat.md), CLI, Component Structure → [composition.md](./rules/composition.md), Critical Rules, Forms & Inputs → [forms.md](./rules/forms.md), Icons → [icons.md](./rules/icons.md), Styling & Tailwind → [styling.md](./rules/styling.md), Use Components, Not Custom Markup → [composition.md](./rules/composition.md)
 
-### Community 78 - "isNodeTypeSelected"
-Cohesion: 0.28
-Nodes (11): LinkIcon, SvgProps, canSetLink(), isLinkActive(), LinkHandlerProps, shouldShowLinkButton(), useLinkHandler(), useLinkPopover() (+3 more)
+### Community 78 - "link-popover.tsx"
+Cohesion: 0.09
+Nodes (26): CornerDownLeftIcon, SvgProps, ExternalLinkIcon, SvgProps, LinkIcon, SvgProps, SvgProps, TrashIcon (+18 more)
 
-### Community 79 - "auth-04.tsx"
-Cohesion: 0.23
-Nodes (8): Logo(), LogoProps, UserHeader(), UserSidebarProps, LoginPage(), Spinner(), UserProps, loginAPI()
-
-### Community 97 - "image-upload-node.tsx"
-Cohesion: 0.11
-Nodes (13): CloseIcon, SvgProps, Commands, ImageUploadNodeOptions, @tiptap/react, UploadFunction, FileItem, ImageUploadDragAreaProps (+5 more)
-
-### Community 98 - "PageTemplate.tsx"
-Cohesion: 0.08
-Nodes (25): react, react, HeaderTemplateProps, BreadcrumbItem, CtaItem, PageWithTitleTemplate(), SectionHeaderTemplateProps, StatusTabValue (+17 more)
+### Community 98 - "date-time-picker.tsx"
+Cohesion: 0.07
+Nodes (21): BreadcrumbItem, CtaItem, PageWithTitleTemplate(), SectionHeaderTemplateProps, StatusTabValue, ViewMode, Calendar(), CalendarDayButton() (+13 more)
 
 ### Community 108 - "Component Composition"
 Cohesion: 0.15
@@ -499,41 +494,37 @@ Nodes (7): scripts, build, dev, format, lint, preview, typecheck
 Cohesion: 0.14
 Nodes (13): suspense(), Analyzer, AnalyzerExtension, AnalyzerResults, Chat, Classroom, CoreModuleReadOnly, CoreModulesView (+5 more)
 
-### Community 127 - "parseShortcutKeys"
-Cohesion: 0.07
-Nodes (36): BlockquoteButton, BlockquoteButtonProps, BlockquoteShortcutBadge(), BLOCKQUOTE_SHORTCUT_KEY, UseBlockquoteConfig, CodeBlockButton, CodeBlockButtonProps, CodeBlockShortcutBadge() (+28 more)
+### Community 127 - "useTiptapEditor"
+Cohesion: 0.10
+Nodes (19): BlockquoteButton, BlockquoteButtonProps, BlockquoteShortcutBadge(), BLOCKQUOTE_SHORTCUT_KEY, UseBlockquoteConfig, CodeBlockButton, CodeBlockButtonProps, CodeBlockShortcutBadge() (+11 more)
 
 ### Community 128 - "package.json"
 Cohesion: 0.29
 Nodes (6): allowScripts, @parcel/watcher@2.6.0, name, private, type, version
 
-### Community 129 - "SearchTemplate.tsx"
-Cohesion: 0.19
-Nodes (10): SearchInputProps, SearchTemplate(), TooltipButtonTemplate(), InputGroup(), InputGroupAddon(), inputGroupAddonVariants, InputGroupButton(), inputGroupButtonVariants (+2 more)
-
 ### Community 130 - "materialProps.ts"
-Cohesion: 0.16
-Nodes (13): ClassroomViewProps, CoreLessonsProps, CoreTopicsProps, InstructorMaterialsProps, PrincipleData, PrincipleIssue, PrinciplePassed, PrincipleScoreItem (+5 more)
+Cohesion: 0.20
+Nodes (11): ClassroomViewProps, CoreLessonsProps, CoreTopicsProps, InstructorMaterialsProps, PrincipleData, PrincipleScoreItem, PrincipleSummaryCount, ResultSummaryItem (+3 more)
 
 ## Knowledge Gaps
-- **533 isolated node(s):** `$schema`, `style`, `rsc`, `tsx`, `config` (+528 more)
+- **537 isolated node(s):** `$schema`, `style`, `rsc`, `tsx`, `config` (+532 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **65 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **66 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `dependencies` connect `dependencies` to `package.json`, `@base-ui/react`, `input-otp`, `@shadcn/react`, `survey-core`, `@tiptap/react`, `@mlc-ai/web-llm`, `survey-creator-react`, `cmdk`, `lodash.throttle`, `react-router-dom`, `@tiptap/extension-find-and-replace`, `remark-gfm`, `tw-animate-css`, `@tiptap/extension-subscript`, `@tiptap/extensions`, `@tiptap/extension-image`, `@tiptap/extension-list`, `@tiptap/extension-text-align`, `date-fns`, `@fontsource-variable/roboto`, `@radix-ui/react-dropdown-menu`, `react-dom`, `react-hotkeys-hook`, `react-day-picker`, `react-icons`, `shadcn`, `tailwindcss`, `@tailwindcss/vite`, `@tanstack/react-query`, `@tiptap/core`, `@tiptap/extension-highlight`, `@tiptap/extension-horizontal-rule`, `@tiptap/extension-superscript`, `@tiptap/pm`, `cn`, `@tiptap/starter-kit`, `lucide-react`, `@tiptap/extension-typography`, `class-variance-authority`, `PageTemplate.tsx`, `clsx`, `react-markdown`?**
-  _High betweenness centrality (0.145) - this node is a cross-community bridge._
-- **Why does `react` connect `PageTemplate.tsx` to `ClassroomEmpty.tsx`, `dependencies`, `Users.tsx`, `chart.tsx`, `toast.tsx`, `sidebar.tsx`?**
-  _High betweenness centrality (0.140) - this node is a cross-community bridge._
-- **Why does `Button()` connect `ui/button.tsx` to `SearchTemplate.tsx`, `AnalyzerLogsSchoolAdmin.tsx`, `Permissions.tsx`, `sidebar.tsx`, `Instruments.tsx`, `attachment.tsx`, `QuizzesInstructorView.tsx`, `QuizEditor.tsx`, `Analyzer.tsx`, `PublicNavbar.tsx`, `ClassroomEmpty.tsx`, `DeleteArchiveDialog.tsx`, `ui/card.tsx`, `LearnerQuizView.tsx`, `Users.tsx`, `toast.tsx`, `SignUpPage.tsx`, `AnalyzerResults.tsx`, `auth-04.tsx`, `PageTemplate.tsx`, `message-scroller.tsx`?**
-  _High betweenness centrality (0.063) - this node is a cross-community bridge._
+- **Why does `dependencies` connect `dependencies` to `package.json`, `@base-ui/react`, `input-otp`, `@shadcn/react`, `survey-core`, `@tiptap/react`, `@mlc-ai/web-llm`, `survey-creator-react`, `cmdk`, `lodash.throttle`, `react-router-dom`, `@tiptap/extension-find-and-replace`, `remark-gfm`, `tw-animate-css`, `@tiptap/extension-subscript`, `@tiptap/extensions`, `@tiptap/extension-image`, `@tiptap/extension-list`, `@tiptap/extension-text-align`, `date-fns`, `useIsMobile`, `@fontsource-variable/roboto`, `@radix-ui/react-dropdown-menu`, `react-dom`, `react-hotkeys-hook`, `react-day-picker`, `react-icons`, `shadcn`, `axios`, `tailwindcss`, `@tailwindcss/vite`, `@tanstack/react-query`, `@tiptap/core`, `@tiptap/extension-highlight`, `@tiptap/extension-horizontal-rule`, `@tiptap/extension-superscript`, `@tiptap/pm`, `cn`, `@tiptap/starter-kit`, `lucide-react`, `@tiptap/extension-typography`, `clsx`, `react-markdown`?**
+  _High betweenness centrality (0.143) - this node is a cross-community bridge._
+- **Why does `react` connect `useIsMobile` to `ClassroomEmpty.tsx`, `date-time-picker.tsx`, `dependencies`, `AnalyzerLogsSchoolAdmin.tsx`, `chart.tsx`, `sidebar.tsx`, `theme-provider.tsx`?**
+  _High betweenness centrality (0.137) - this node is a cross-community bridge._
+- **Why does `useIsMobile()` connect `useIsMobile` to `date-time-picker.tsx`, `QuizzesInstructorView.tsx`, `sidebar.tsx`, `Instruments.tsx`, `ProtectedLayout.tsx`, `useCheckToken`, `PageTemplate.tsx`?**
+  _High betweenness centrality (0.060) - this node is a cross-community bridge._
 - **What connects `$schema`, `style`, `rsc` to the rest of the system?**
-  _533 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _537 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `use-mark.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.1010752688172043 - nodes in this community are weakly interconnected._
-- **Should `AnalyzerLogsSchoolAdmin.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.09581646423751687 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08392603129445235 - nodes in this community are weakly interconnected._
 - **Should `simple-editor.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.1076923076923077 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0896551724137931 - nodes in this community are weakly interconnected._
+- **Should `use-list-dropdown-menu.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.11083743842364532 - nodes in this community are weakly interconnected._

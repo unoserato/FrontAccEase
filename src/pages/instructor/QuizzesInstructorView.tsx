@@ -39,16 +39,20 @@ import { useMe } from "@/services/tanstack/auth"
 import {
   useClassrooms,
   useInstructorQuizzes,
+  useQuizSubmissionsById,
 } from "@/services/tanstack/materials"
 import type { ClassroomProps, QuizProps } from "@/const/props/materialProps"
+import type { QuizSubmissionProps } from "@/const/materialsProps"
 import { getDateString } from "@/hooks/date-to-string"
+import QuizSubmissionsCardTemplate from "@/components/instructor/QuizSubmissionsCardTemplate"
 
 export default function QuizzesInstructorView() {
+  const { id } = useParams()
   const { data: user } = useMe()
   const { data: quizzes } = useInstructorQuizzes()
   const { data: classrooms } = useClassrooms()
+  const { data: submissions = [] } = useQuizSubmissionsById(id)
 
-  const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
 
   const quiz = quizzes.find((q) => q.id === id)
@@ -114,8 +118,19 @@ export default function QuizzesInstructorView() {
             <TabsTrigger value="dashboard" className="text-xs sm:text-sm">
               Dashboard & Details
             </TabsTrigger>
-            <TabsTrigger value="submissions" className="text-xs sm:text-sm">
-              Submissions
+            <TabsTrigger
+              value="submissions"
+              className="flex items-center gap-1.5 text-xs sm:text-sm"
+            >
+              <span>Submissions</span>
+              {submissions.length > 0 && (
+                <Badge
+                  variant="secondary"
+                  className="rounded-full px-1.5 py-0 text-xs font-semibold"
+                >
+                  {submissions.length}
+                </Badge>
+              )}
             </TabsTrigger>
             <TabsTrigger value="preview" className="text-xs sm:text-sm">
               Quiz Preview
@@ -124,11 +139,19 @@ export default function QuizzesInstructorView() {
         </div>
 
         <TabsContent value="dashboard" className="mt-4 sm:mt-6">
-          <DashboardTab quiz={quiz} classrooms={classrooms} />
+          <DashboardTab
+            quiz={quiz}
+            classrooms={classrooms}
+            submissions={submissions}
+          />
         </TabsContent>
 
         <TabsContent value="submissions" className="mt-4 sm:mt-6">
-          <SubmissionsTab quiz={quiz} classrooms={classrooms} />
+          <SubmissionsTab
+            quiz={quiz}
+            classrooms={classrooms}
+            submissions={submissions}
+          />
         </TabsContent>
 
         <TabsContent value="preview" className="mt-4 sm:mt-6">
@@ -143,9 +166,11 @@ export default function QuizzesInstructorView() {
 function DashboardTab({
   quiz,
   classrooms,
+  submissions = [],
 }: {
   quiz: QuizProps
   classrooms: ClassroomProps[]
+  submissions?: QuizSubmissionProps[]
 }) {
   const assignedClassrooms = useMemo(
     () =>
@@ -155,17 +180,41 @@ function DashboardTab({
     [quiz.classrooms, classrooms]
   )
 
+  const totalLearners = useMemo(
+    () =>
+      assignedClassrooms.reduce(
+        (sum, item) => sum + (item?.enrollment_count ?? 0),
+        0
+      ),
+    [assignedClassrooms]
+  )
+
   // Dynamic KPI Computations
-  const totalSubmissions = 0
+  const totalSubmissions =
+    totalLearners > 0 ? totalLearners : submissions.length
+  const submissionsCount = submissions.length
 
-  const submissionsCount = 0
+  const avgScore = useMemo(() => {
+    if (!submissions.length || !quiz.total_points) return 0
+    const totalScore = submissions.reduce(
+      (sum, s) => sum + (Number(s.score) || 0),
+      0
+    )
+    const avg = totalScore / submissions.length
+    return Math.round((avg / quiz.total_points) * 100)
+  }, [submissions, quiz.total_points])
 
-  const avgScore = 0
-
-  const passingRate = 0
+  const passingRate = useMemo(() => {
+    if (!submissions.length || !quiz.total_points) return 0
+    const passThreshold = quiz.total_points * 0.75
+    const passedCount = submissions.filter(
+      (s) => (Number(s.score) || 0) >= passThreshold
+    ).length
+    return Math.round((passedCount / submissions.length) * 100)
+  }, [submissions, quiz.total_points])
 
   const quizStatus = quiz.status || "Open"
-  const timeLimit = quiz.time_limit ?? 20
+  const timeLimit = quiz.time_limit || 0
   const tags = quiz.tags ?? ["1.1.1 Non-Text Content"]
 
   const progressPercent = Math.min(
@@ -193,10 +242,10 @@ function DashboardTab({
       footerDesc: `${progressPercent}% completion rate`,
     },
     {
-      title: "Questions & Time",
+      title: "Questions",
       icon: HelpCircle,
-      value: `${quiz.items} Qs`,
-      footerDesc: `${timeLimit} mins time limit`,
+      value: `${quiz.question_count}`,
+      footerDesc: `${timeLimit > 0 ? `${timeLimit} mins time limit` : "No time limit"}`,
     },
   ]
 
@@ -328,7 +377,7 @@ function DashboardTab({
                   Total Points
                 </p>
                 <p className="truncate text-sm font-semibold text-foreground">
-                  {quiz.total_points} Points ({quiz.items} Qs)
+                  {quiz.total_points} Points ({quiz.question_count} Qs)
                 </p>
               </div>
             </div>
@@ -433,9 +482,11 @@ function DashboardTab({
 function SubmissionsTab({
   quiz,
   classrooms,
+  submissions = [],
 }: {
   quiz: QuizProps
   classrooms: ClassroomProps[]
+  submissions?: QuizSubmissionProps[]
 }) {
   const assignedClassrooms = useMemo(
     () =>
@@ -454,13 +505,23 @@ function SubmissionsTab({
         <h2 className="text-base font-bold tracking-tight text-foreground sm:text-lg">
           Assigned Classrooms
         </h2>
-        <span className="text-xs font-medium text-muted-foreground">
-          {targetClassrooms.length}{" "}
-          {targetClassrooms.length === 1 ? "Classroom" : "Classrooms"}
-        </span>
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="text-xs">
+            {submissions.length}{" "}
+            {submissions.length === 1 ? "Submission" : "Submissions"}
+          </Badge>
+          <span className="text-xs font-medium text-muted-foreground">
+            {targetClassrooms.length}{" "}
+            {targetClassrooms.length === 1 ? "Classroom" : "Classrooms"}
+          </span>
+        </div>
       </div>
 
-      {/* <QuizSubmissionsCardTemplate quiz={quiz} /> */}
+      <QuizSubmissionsCardTemplate
+        quiz={quiz}
+        classrooms={classrooms}
+        submissions={submissions}
+      />
     </div>
   )
 }

@@ -39,11 +39,12 @@ export default function LearnerQuizView() {
   const [isQuizActive, setIsQuizActive] = useState(false)
   const [isTerminated, setIsTerminated] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
-  const [submitQuizTaker, setSubmitQuizTaker] = useState<(() => void) | null>(
+
+  const [answerCache, setAnswerCache] = useState<Record<string, string> | null>(
     null
   )
 
-  const { mutate, isPending: isStarting } = useMutation({
+  const { mutate: startQuiz, isPending: isStarting } = useMutation({
     mutationFn: (id: string) => createSubmissionTicket(id),
     onSuccess: (data) => {
       queryClient.setQueryData(["quiz", id], (oldData: any) => {
@@ -73,7 +74,7 @@ export default function LearnerQuizView() {
       updateSubmissionTicket(id, answer),
   })
 
-  const totalQuestions = quiz.items
+  const totalQuestions = quiz.question_count
   const timeLimit = quiz.time_limit
   const maxAttempts = quiz.attempt_count || 0
 
@@ -132,24 +133,52 @@ export default function LearnerQuizView() {
   if (!quiz) return <NotFound />
 
   async function handleStartQuiz() {
-    mutate(quiz!.id)
+    await startQuiz(quiz!.id)
+    await document.documentElement.requestFullscreen()
   }
 
-  function handleQuizComplete(sender: any) {
+  async function handleQuizComplete(sender?: any) {
+    const answer = answerCache ?? sender?.data
+
+    if (answer == null) {
+      toast.add({
+        title: "Error",
+        description: "No quiz answers found.",
+        type: "error",
+      })
+      return
+    }
+
     setIsCompleted(true)
     setIsQuizActive(false)
-    toast.promise(
-      submitQuiz({
-        id: quiz.id,
-        answer: sender.data,
-      }),
-      {
-        loading: "Submitting quiz...",
-        success: "Quiz submitted successfully.",
-        error: (error) =>
-          error.response.data.detail || "Failed to submit quiz.",
-      }
-    )
+    await document.exitFullscreen()
+
+    try {
+      await toast.promise(
+        submitQuiz({
+          id: quiz.id,
+          answer,
+        }),
+        {
+          loading:
+            answerCache == null
+              ? "Submitting quiz..."
+              : "Re-submitting quiz...",
+          success: "Quiz submitted successfully.",
+          error: (error) =>
+            error?.response?.data?.detail ||
+            error?.message ||
+            "Failed to submit quiz.",
+        }
+      )
+
+      setAnswerCache(answer)
+      await queryClient.invalidateQueries({
+        queryKey: ["quiz-submission", quiz.id],
+      })
+    } catch (error) {
+      console.error("Quiz submission failed:", error)
+    }
   }
 
   // Active Fullscreen Quiz View
@@ -173,7 +202,6 @@ export default function LearnerQuizView() {
           <QuizTaker
             quiz={quiz}
             onComplete={(sender) => handleQuizComplete(sender)}
-            doSubmit={setSubmitQuizTaker}
           />
         </main>
       </div>
@@ -251,9 +279,7 @@ export default function LearnerQuizView() {
           <div className="flex justify-center pt-2">
             <Button onClick={() => navigate(-1)}>Back to Quizzes</Button>
             {isError && (
-              <Button onClick={() => submitQuizTaker?.()}>
-                Re-Submit Quiz
-              </Button>
+              <Button onClick={handleQuizComplete}>Re-Submit Quiz</Button>
             )}
           </div>
         </Card>
@@ -318,7 +344,9 @@ export default function LearnerQuizView() {
                 Time Limit
               </p>
               <p className="text-sm font-bold text-foreground">
-                {timeLimit} Minutes
+                {(timeLimit ?? 0) > 0
+                  ? `${timeLimit} Minutes`
+                  : "No Time Limit"}
               </p>
             </div>
           </div>

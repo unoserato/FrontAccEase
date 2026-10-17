@@ -16,7 +16,7 @@ import type {
   QuizProps,
 } from "@/const/props/materialProps"
 import { useMutation } from "@tanstack/react-query"
-import { arhiveModuleAPI } from "@/services/api/materialsAPI"
+import { arhiveModuleAPI } from "@/services/api/CRUD/materialsCRUDAPI"
 import { useInvalidateQueries } from "@/services/tanstack/auth"
 import { toast } from "../ui/toast"
 

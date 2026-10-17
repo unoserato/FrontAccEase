@@ -40,7 +40,7 @@
     "semantic_hash": "4f6a75c93e0cae85afd27b5a06355d8e"
   },
   "src/components/common/UserSidebar.tsx": {
-    "mtime": 1792067519.550588,
+    "mtime": 1792080248.2978275,
     "ast_hash": "db9543c9b38bd2da04dc9aeecb792e4b",
     "semantic_hash": ""
   },
@@ -770,8 +770,8 @@
     "semantic_hash": "1e0015f27fea9bbf74a4da063987071a"
   },
   "src/const/data.ts": {
-    "mtime": 1792068461.8168983,
-    "ast_hash": "b03f64ceb168aeb44dc8c39876dfb0ff",
+    "mtime": 1792078852.097898,
+    "ast_hash": "42183ff53a99e53f4dec58723e72f948",
     "semantic_hash": ""
   },
   "src/const/materialsProps.ts": {
@@ -925,8 +925,8 @@
     "semantic_hash": ""
   },
   "src/pages/learner/Analyzer.tsx": {
-    "mtime": 1792075319.196947,
-    "ast_hash": "5a5859ed2dbaff8760a819735fb89e20",
+    "mtime": 1792080058.394511,
+    "ast_hash": "cc066627fccc3ab5778788450c68c4ac",
     "semantic_hash": ""
   },
   "src/pages/learner/Chat.tsx": {
@@ -1215,8 +1215,8 @@
     "semantic_hash": ""
   },
   "src/pages/common/AnalyzerResults.tsx": {
-    "mtime": 1792076186.9788847,
-    "ast_hash": "ec688eb84e5a4c92b2b958c5a9b13035",
+    "mtime": 1792079943.9446285,
+    "ast_hash": "4f0f25435dc9936f1ed9440b961c713a",
     "semantic_hash": ""
   },
   "src/pages/learner/CoreModulesView.tsx": {
@@ -1585,8 +1585,8 @@
     "semantic_hash": ""
   },
   "src/const/props/materialProps.ts": {
-    "mtime": 1791993867.1787655,
-    "ast_hash": "042977b815ab5e30e327cc46a49e667d",
+    "mtime": 1792078588.4373665,
+    "ast_hash": "2f26c12e24a5f8f639fa3e1e5709f68b",
     "semantic_hash": ""
   },
   "src/const/props/userProps.ts": {
@@ -1720,13 +1720,18 @@
     "semantic_hash": ""
   },
   "src/components/learner/ScanHistory.tsx": {
-    "mtime": 1792068772.9635565,
-    "ast_hash": "97ce284c28806ec064d2bb42254ae64a",
+    "mtime": 1792079020.5425828,
+    "ast_hash": "274e5ffa1fd38bb88a84d619332c1b21",
     "semantic_hash": ""
   },
   "src/services/webLLM.ts": {
-    "mtime": 1792071269.8001442,
-    "ast_hash": "43f30ef7af6d83184d3dae40b47021ea",
+    "mtime": 1792080231.1880586,
+    "ast_hash": "be0897b7099cd52590fe6792f64a6aa7",
+    "semantic_hash": ""
+  },
+  "graphify-out/memory/query_20261015_160137_8659200b_add_elapsed_time_in_webllm_ts.md": {
+    "mtime": 1792080097.078838,
+    "ast_hash": "ec3c9258fdcd83f1f4afe7181abdf041",
     "semantic_hash": ""
   }
 }

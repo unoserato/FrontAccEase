@@ -26,26 +26,7 @@ import QuizCardTemplate from "@/components/common/QuizCardTemplate"
 import { Badge } from "@/components/ui/badge"
 import copyText from "@/hooks/copy-text"
 import { useClassroomContentView } from "@/services/tanstack/materials"
-import { DEFAULT_QUIZ_JSON } from "@/features/shared/quizHelper"
-import type { ClassroomViewProps, QuizProps } from "@/const/props/materialProps"
-
-function getMockClassroomQuizzes(classroomId: string): QuizProps[] {
-  return [
-    {
-      id: `mock-quiz-${classroomId}`,
-      name: "Accessibility Foundations Check",
-      principle: "Perceivable",
-      tags: ["Mock data"],
-      classrooms: [classroomId],
-      time_limit: 15,
-      due_date: "",
-      theme: "Default",
-      quiz_json: DEFAULT_QUIZ_JSON,
-      created_at: "",
-      attempt_count: 0,
-    },
-  ]
-}
+import type { ClassroomViewProps } from "@/const/props/materialProps"
 
 export default function ClassroomInstructorView() {
   const { id } = useParams()
@@ -80,10 +61,6 @@ export default function ClassroomInstructorView() {
             key="copy-code"
             variant="ghost"
             onClick={() =>
-              // copyText({
-              //   textToCopy: classroom.classroom.classroom_join_code,
-              //   setCopied,
-              // })
               copyText({
                 textToCopy: classroom.classroom.classroom_join_code,
                 setCopied(value) {
@@ -146,14 +123,7 @@ export default function ClassroomInstructorView() {
 function Dashboard({ classroom }: { classroom: ClassroomViewProps }) {
   // Filter modules and quizzes assigned to this classroom
   const classroomModules = classroom.modules
-
-  const classroomQuizzes = getMockClassroomQuizzes(
-    String(classroom.classroom.id)
-  ).filter(
-    (q) =>
-      q.classrooms?.includes(String(classroom.classroom.id)) ||
-      q.classrooms?.includes(classroom.classroom.id)
-  )
+  const classroomQuizzes = classroom.quizzes
 
   const totalScans = classroom.learners.length
 

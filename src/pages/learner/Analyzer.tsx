@@ -335,7 +335,7 @@ export default function Analyzer() {
     })
   }
 
-  function handleSubmit() {
+  function handleSubmit(type: string) {
     if (!extensionModel) {
       setError("Please select a scanner model.")
       return
@@ -351,21 +351,21 @@ export default function Analyzer() {
       : `https://${cleanInput}`
 
     setError("")
-    // if (selectedModel === "fast") {
-    //   analyzerMutation.mutate(fullUrl, {
-    //     onSuccess: (data: Result) => {
-    //       void saveAndOpenResult(data)
-    //     },
-    //     onError: (err: unknown) => {
-    //       const msg =
-    //         err instanceof Error
-    //           ? err.message
-    //           : "Failed to analyze URL. Please check the domain and try again."
-    //       setError(msg)
-    //     },
-    //   })
-    //   return
-    // }
+    if (type === "server") {
+      analyzerMutation.mutate(fullUrl, {
+        onSuccess: (data: Result) => {
+          void saveAndOpenResult(data)
+        },
+        onError: (err: unknown) => {
+          const msg =
+            err instanceof Error
+              ? err.message
+              : "Failed to analyze URL. Please check the domain and try again."
+          setError(msg)
+        },
+      })
+      return
+    }
 
     void runWebLLMScan(fullUrl)
   }
@@ -488,7 +488,7 @@ export default function Analyzer() {
                   if (error) setError("")
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && !isScanning) handleSubmit()
+                  if (e.key === "Enter" && !isScanning) handleSubmit("server")
                 }}
                 className="h-11 w-full bg-transparent px-3 text-xs font-semibold text-foreground outline-none placeholder:text-muted-foreground/50 disabled:opacity-50 sm:text-sm"
                 aria-invalid={!!error}
@@ -501,7 +501,7 @@ export default function Analyzer() {
               {/* Scan Button with Live Mutation State */}
               <Button
                 size="lg"
-                onClick={handleSubmit}
+                onClick={() => handleSubmit("server")}
                 disabled={isScanning || !domain.trim()}
                 className="h-11 shrink-0 rounded-xl px-5 text-xs font-bold sm:text-sm"
               >

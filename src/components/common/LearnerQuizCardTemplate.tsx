@@ -114,7 +114,7 @@ export default function LearnerQuizCardTemplate({
                       Items
                     </span>
                     <span className="mt-0.5 block text-xs font-semibold text-foreground sm:text-sm">
-                      {item.items}
+                      {item.question_count}
                     </span>
                   </div>
 

@@ -24,7 +24,6 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
   const isEditor = user?.role == "instructor"
   const isMobile = useIsMobile()
   const navigate = useNavigate()
-  console.log(action)
 
   const quizClassroomIds = quiz.classrooms ?? []
   const assignedClassrooms = quizClassroomIds

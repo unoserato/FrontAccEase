@@ -3,11 +3,12 @@ import type {
   ClassroomProps,
   InstructorMaterialsProps,
   ModuleProps,
-  QuestionElement,
+  QuizAnswer,
   QuizProps,
 } from "@/const/props/materialProps"
 import { api } from "@/services/axios"
 import type { ExtensionScanSession, WebLLMTaskBatch } from "@/services/webLLM"
+import type { QuizSubmissionProps } from "@/const/materialsProps"
 
 export async function getInstructorMaterialsAPI(): Promise<
   InstructorMaterialsProps[]
@@ -45,9 +46,7 @@ export async function getQuizByIdAPI(id: string): Promise<QuizProps> {
   return response.data
 }
 
-export async function getQuizAnswerByIdAPI(
-  id: string
-): Promise<Record<string, QuestionElement["correctAnswer"]>> {
+export async function getQuizAnswerByIdAPI(id: string): Promise<QuizAnswer[]> {
   const response = await api.get(`/helper/get-quiz-answer-by-id/${id}`)
   return response.data
 }
@@ -74,4 +73,18 @@ export async function getExtensionScanAPI(
 ): Promise<ExtensionScanSession> {
   const response = await api.get(`/accessibility/scans/${code}`)
   return response.data
+}
+
+export async function getQuizAnswersByIdAPI(id: string) {
+  const response = await api.get(`/helper/get-quiz-answer-by-id/${id}`)
+  return response.data
+}
+
+export async function getQuizSubmissionsByIdAPI(
+  id: string
+): Promise<QuizSubmissionProps[]> {
+  const response = await api.get(`/helper/get-quiz-submission-by-quiz-id/${id}`)
+  return Array.isArray(response.data)
+    ? response.data
+    : response.data?.submissions || response.data?.data || []
 }

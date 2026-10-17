@@ -21,14 +21,10 @@ export interface Classwork {
   submissions: Submission[]
 }
 
-export interface QuizSubmissionProps {
-  id: string
-  quizId: string
-  learnerId: string
-  content: string | object
-  score?: number
-  submittedAt?: string
-}
+export type {
+  QuizSubmissionProps,
+  QuizSubmissionAnswerKey,
+} from "./props/materialProps"
 
 export interface ChatMessage {
   sender: "user" | "assistant"

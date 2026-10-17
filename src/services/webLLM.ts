@@ -42,12 +42,12 @@ export interface ExtensionScanSession {
 }
 
 export const WEBLLM_MODELS = [
-  //   {
-  //     label: "Select a model",
-  //     value: "",
-  //     badge: '',
-  //     description: null,
-  //   },
+  {
+    label: "Select a model",
+    value: "",
+    badge: "",
+    description: null,
+  },
   {
     label: "Qwen2.5 0.5B Instruct",
     value: "Qwen2.5-0.5B-Instruct-q4f16_1-MLC",
