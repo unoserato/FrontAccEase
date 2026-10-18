@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { ArrowRight, CheckCircle2, XCircle } from "lucide-react"
+import { CheckCircle2, XCircle } from "lucide-react"
 import { Logo } from "@/components/common/Logo"
 import {
   Field,
@@ -72,7 +72,7 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="p-responsive h-full w-full">
+    <div className="p-responsive h-fit w-full">
       <div className="mx-auto my-auto w-full max-w-md space-y-6">
         <div className="space-y-2 text-center">
           <Link
@@ -218,7 +218,6 @@ export default function SignUpPage() {
                 <span>
                   {isLoading ? "Creating Account..." : "Create Account"}
                 </span>
-                <ArrowRight className="size-4" />
               </Button>
             </CardContent>
 

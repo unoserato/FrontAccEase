@@ -1,104 +1,75 @@
-import FindAndReplace from "@tiptap/extension-find-and-replace"
-import Highlight from "@tiptap/extension-highlight"
-import HorizontalRule from "@tiptap/extension-horizontal-rule"
-import Image from "@tiptap/extension-image"
-import { TaskItem, TaskList } from "@tiptap/extension-list"
-import Subscript from "@tiptap/extension-subscript"
-import Superscript from "@tiptap/extension-superscript"
-import TextAlign from "@tiptap/extension-text-align"
-import Typography from "@tiptap/extension-typography"
-import { Selection } from "@tiptap/extensions"
-import { EditorContent, useEditor } from "@tiptap/react"
-import StarterKit from "@tiptap/starter-kit"
-import { ArrowLeft, Calendar, FileText } from "lucide-react"
 import { useNavigate, useParams } from "react-router-dom"
+import { ArrowLeft, FileText, RotateCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { coreModules } from "@/const/coreModules"
 import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { useCoreModuleProgressActivities } from "@/services/tanstack/materials"
+import type {
+  CoreModuleAssessmentActivity,
+  CoreModuleInteractiveActivity,
+  CoreModuleLessonActivity,
+} from "@/const/props/materialProps"
+import CoreModuleLessonView from "./core-module/CoreModuleLessonView"
+import CoreModuleAssessmentView from "./core-module/CoreModuleAssessmentView"
+import CoreModuleInteractiveView from "./core-module/CoreModuleInteractiveView"
 
 export default function CoreModuleReadOnly() {
-  const { principleId, topicId, lessonId } = useParams()
+  const { principle_id, activity_id } = useParams()
+  const { data: contents } = useCoreModuleProgressActivities(activity_id || "")
   const navigate = useNavigate()
 
   function handleBack() {
-    navigate(-1)
+    if (window.history.length > 1) {
+      navigate(-1)
+    } else {
+      navigate(`/learner/modules/${principle_id || ""}`)
+    }
   }
 
-  const targetPrinciple = coreModules.find(
-    (m) =>
-      m.id === principleId ||
-      m.principle.toLowerCase() === principleId?.toLowerCase()
-  )
+  const isLesson = contents?.kind === "lesson"
+  const isAssessment =
+    contents?.kind === "mini" ||
+    contents?.kind === "pre" ||
+    contents?.kind === "post" ||
+    Boolean(contents && "questions" in contents)
+  const isInteractive =
+    contents?.kind === "interactive" ||
+    Boolean(contents && "scenario" in contents)
 
-  const targetTopic = targetPrinciple?.topics.find(
-    (t) =>
-      t.id === topicId ||
-      t.name.toLowerCase().includes(topicId?.toLowerCase() || "")
-  )
+  const principleLabel = principle_id
+    ? principle_id.charAt(0).toUpperCase() + principle_id.slice(1)
+    : "Core Principle"
 
-  const targetLesson = targetTopic?.lessons.find(
-    (l) =>
-      l.id === lessonId ||
-      l.name.toLowerCase().includes(lessonId?.toLowerCase() || "")
-  )
+  const title =
+    (isLesson && contents && "lesson" in contents ? contents.lesson?.title : null) ||
+    contents?.title ||
+    "Core Activity"
 
-  const editor = useEditor({
-    immediatelyRender: false,
-    editable: false,
-    editorProps: {
-      attributes: {
-        autocomplete: "off",
-        autocorrect: "off",
-        autocapitalize: "off",
-        "aria-label": "Read-only core module lesson content area.",
-        class:
-          "prose dark:prose-invert max-w-none focus:outline-none min-h-[450px] leading-relaxed text-foreground",
-      },
-    },
-    extensions: [
-      StarterKit.configure({
-        horizontalRule: false,
-        link: {
-          openOnClick: true,
-          enableClickSelection: true,
-        },
-      }),
-      HorizontalRule,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-      TaskList,
-      TaskItem.configure({ nested: true }),
-      Highlight.configure({ multicolor: true }),
-      Image,
-      Typography,
-      Superscript,
-      Subscript,
-      Selection,
-      FindAndReplace.configure({
-        searchDebounceMs: 500,
-        injectCSS: false,
-      }),
-    ],
-    content: "",
-  })
-
-  if (!targetLesson) {
+  if (!contents) {
     return (
-      <div style={{ minHeight: "70vh" }} className="mx-auto my-auto flex items-center justify-center p-4">
+      <div
+        style={{ minHeight: "70vh" }}
+        className="mx-auto my-auto flex items-center justify-center p-4"
+      >
         <Card className="max-w-md p-8 text-center shadow-sm">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
             <FileText className="h-6 w-6 text-muted-foreground" />
           </div>
           <h2 className="text-lg font-bold text-foreground">
-            Core Module Lesson Not Found
+            Activity Not Found
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            The requested core module lesson could not be found.
+            The requested core module activity could not be found.
           </p>
-          <Button onClick={handleBack} variant="outline" className="mt-6 gap-2">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Modules
-          </Button>
+          <div className="mt-6 flex items-center justify-center gap-2">
+            <Button onClick={handleBack} variant="outline" className="gap-2">
+              <ArrowLeft className="size-4" />
+              Back to Modules
+            </Button>
+            <Button onClick={() => window.location.reload()} variant="ghost" className="gap-2">
+              <RotateCw className="size-4" />
+              Refresh
+            </Button>
+          </div>
         </Card>
       </div>
     )
@@ -116,18 +87,30 @@ export default function CoreModuleReadOnly() {
               onClick={handleBack}
               title="Back"
               aria-label="Back"
-              className="shrink-0"
+              className="shrink-0 cursor-pointer"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="size-4" />
             </Button>
             <div className="flex min-w-0 items-center gap-2.5">
-              <span className="shrink-0 bg-foreground px-1.5 py-0.5 text-xs font-medium tracking-wider text-background uppercase sm:px-2 sm:text-xs">
-                {targetPrinciple?.principle}
+              <span className="shrink-0 bg-foreground px-1.5 py-0.5 text-xs font-medium tracking-wider text-background uppercase sm:px-2">
+                {principleLabel}
               </span>
               <h1 className="truncate text-sm font-semibold text-foreground sm:text-base">
-                {targetLesson.name}
+                {title}
               </h1>
             </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => window.location.reload()}
+              title="Refresh Activity"
+              className="gap-1.5 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
+            >
+              <RotateCw className="size-3.5" />
+              <span className="hidden sm:inline">Refresh</span>
+            </Button>
           </div>
         </div>
       </header>
@@ -135,53 +118,51 @@ export default function CoreModuleReadOnly() {
       {/* Main Document Area */}
       <main className="mx-auto max-w-4xl px-4 pt-6 sm:px-6 sm:pt-8">
         <Card className="p-6 shadow-sm sm:p-10">
-          <header className="mb-6 space-y-3 border-b border-border pb-6">
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="outline" className="text-xs font-semibold">
-                {targetPrinciple?.principle}
-              </Badge>
-              {targetTopic && (
-                <Badge variant="secondary" className="text-xs">
-                  {targetTopic.name}
-                </Badge>
-              )}
+          {/* Lesson Content View */}
+          {isLesson && (
+            <CoreModuleLessonView
+              key={contents.id}
+              activity={contents as CoreModuleLessonActivity}
+              principleLabel={principleLabel}
+            />
+          )}
+
+          {/* Assessment View (Pre / Mini / Post) */}
+          {isAssessment && (
+            <CoreModuleAssessmentView
+              key={contents.id}
+              activity={contents as CoreModuleAssessmentActivity}
+              principleLabel={principleLabel}
+            />
+          )}
+
+          {/* Interactive Scenario View */}
+          {isInteractive && (
+            <CoreModuleInteractiveView
+              key={contents.id}
+              activity={contents as CoreModuleInteractiveActivity}
+              principleLabel={principleLabel}
+            />
+          )}
+
+          {/* Fallback for other activity kinds */}
+          {!isLesson && !isAssessment && !isInteractive && (
+            <div className="space-y-4">
+              <header className="border-b border-border pb-4">
+                <span className="text-xs font-semibold uppercase text-muted-foreground">
+                  {principleLabel}
+                </span>
+                <h1 className="mt-2 text-2xl font-bold text-foreground">
+                  {contents.title}
+                </h1>
+              </header>
+              <p className="text-sm text-muted-foreground">
+                Activity content is currently unavailable.
+              </p>
             </div>
-
-            <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-              {targetLesson.name}
-            </h1>
-
-            <p className="text-sm text-muted-foreground sm:text-base">
-              {targetLesson.description}
-            </p>
-
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5">
-                <Calendar className="h-3.5 w-3.5" />
-                Last modified {targetLesson.lastModified}
-              </span>
-            </div>
-          </header>
-
-          <EditorContent editor={editor} />
+          )}
         </Card>
       </main>
     </div>
   )
 }
-
-// Sync content dynamically when document finishes loading
-// useEffect(() => {
-//   if (editor && targetLesson?.content) {
-//     try {
-//       const parsedContent =
-//         typeof targetLesson.content === "string"
-//           ? JSON.parse(targetLesson.content)
-//           : targetLesson.content
-
-//       editor.commands.setContent(parsedContent)
-//     } catch {
-//       editor.commands.setContent(targetLesson.content)
-//     }
-//   }
-// }, [editor, targetLesson])

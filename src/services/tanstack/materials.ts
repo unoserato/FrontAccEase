@@ -2,6 +2,7 @@ import {
   skipToken,
   useMutation,
   useQuery,
+  useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query"
 import {
@@ -13,6 +14,8 @@ import {
 } from "../api/materialsAPI"
 import {
   getAnalyzerLogsByLearner,
+  getCoreModuleActivitiesAPI,
+  getCoreModulesAPI,
   getExtensionScanAPI,
   getInstructorQuizzesAPI,
   getQuizAnswerByIdAPI,
@@ -21,7 +24,11 @@ import {
   sitemapAPI,
   webLLMTasksAPI,
 } from "../api/GET/materialsGETAPI"
-import { createExtensionScanAPI } from "../api/CRUD/materialsCRUDAPI"
+import {
+  createExtensionScanAPI,
+  submitCoreAssessmentActivityAPI,
+  answerCoreInteractiveActivityAPI,
+} from "../api/CRUD/materialsCRUDAPI"
 
 import { staleTime } from "../axios"
 import {
@@ -78,7 +85,7 @@ export function useModuleById(id: string) {
   })
 }
 
-export function useClassroomContentView(id: string) {
+export function useClassroomContentView(id?: string) {
   return useQuery({
     queryKey: ["classroom-content", id],
     queryFn: id ? () => getClassroomContentViewById(id) : skipToken,
@@ -177,5 +184,88 @@ export function useQuizSubmissionsById(id?: string) {
     enabled: !!id,
     staleTime: staleTime,
     retry: 1,
+  })
+}
+
+export function useCoreModuleProgress() {
+  return useSuspenseQuery({
+    queryKey: ["core-module-progress"],
+    queryFn: getCoreModulesAPI,
+    staleTime: staleTime,
+    retry: 1,
+  })
+}
+
+export function useCoreModuleProgressActivities(id: string) {
+  return useSuspenseQuery({
+    queryKey: ["core-module-progress-activities", id],
+    queryFn: () => getCoreModuleActivitiesAPI(id),
+    staleTime: staleTime,
+    retry: 1,
+  })
+}
+
+export function useSubmitCoreAssessment(activityId?: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationKey: ["submit-core-assessment", activityId],
+    mutationFn: ({
+      activityId: targetId,
+      answers,
+      idempotency_key,
+    }: {
+      activityId?: string
+      answers: Record<string, unknown>
+      idempotency_key?: string
+    }) => {
+      const id = targetId || activityId
+      if (!id) throw new Error("Activity ID is required")
+      return submitCoreAssessmentActivityAPI(id, { answers, idempotency_key })
+    },
+    onSuccess: (_, variables) => {
+      const id = variables.activityId || activityId
+      queryClient.invalidateQueries({ queryKey: ["core-module-progress"] })
+      if (id) {
+        queryClient.invalidateQueries({
+          queryKey: ["core-module-progress-activities", id],
+        })
+      }
+    },
+  })
+}
+
+export function useAnswerCoreInteractive(activityId?: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationKey: ["answer-core-interactive", activityId],
+    mutationFn: ({
+      activityId: targetId,
+      choice,
+      answer,
+    }: {
+      activityId?: string
+      choice?: string
+      answer?: string | Record<string, unknown>
+    }) => {
+      const id = targetId || activityId
+      if (!id) throw new Error("Activity ID is required")
+      const finalChoice =
+        choice ??
+        (typeof answer === "string"
+          ? answer
+          : (answer as Record<string, unknown>)?.choice ??
+            (answer as Record<string, unknown>)?.value ??
+            (answer as Record<string, unknown>)?.answer)
+      return answerCoreInteractiveActivityAPI(id, String(finalChoice))
+    },
+    onSuccess: (_, variables) => {
+      const id = variables.activityId || activityId
+      queryClient.invalidateQueries({ queryKey: ["core-module-progress"] })
+      if (id) {
+        queryClient.invalidateQueries({
+          queryKey: ["core-module-progress-activities", id],
+        })
+      }
+    },
   })
 }

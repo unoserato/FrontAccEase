@@ -26,9 +26,9 @@ export default function LoginPage() {
     onSuccess: (data: UserProps) => {
       // 1. Immediately store authenticated user in TanStack Query cache
       queryClient.setQueryData(["user"], data)
-
       // 2. Redirect to previously attempted page if available
-      const from = (location.state as { from?: { pathname?: string } })?.from?.pathname
+      const from = (location.state as { from?: { pathname?: string } })?.from
+        ?.pathname
       if (from) {
         navigate(from, { replace: true })
         return

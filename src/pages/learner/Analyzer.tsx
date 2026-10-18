@@ -460,7 +460,7 @@ export default function Analyzer() {
           Let's Analyze your Page
         </h1>
         <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm md:text-base">
-          Audit any public URL for WCAG 2.1 &amp; 2.2 Level AA/AAA compliance,
+          Audit any public URL for WCAG 2.2 &amp; 2.2 Level AA/AAA compliance,
           DOM semantic hierarchy, contrast ratios, and screen reader readiness.
         </p>
       </div>
@@ -528,7 +528,7 @@ export default function Analyzer() {
                 {isWebLLMPending
                   ? modelProgressText ||
                     `Processing task ${currentTask} of ${totalTasks}...`
-                  : `Evaluating WCAG 2.1 Level AA & AAA rules on “${domain}”...`}
+                  : `Evaluating WCAG 2.2 Level AA & AAA rules on “${domain}”...`}
               </span>
             </div>
           )}

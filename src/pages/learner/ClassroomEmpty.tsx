@@ -20,9 +20,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { joinClassroomByCodeAPI } from "@/services/api/CRUD/materialsCRUDAPI"
 import type { ClassroomProps } from "@/const/props/materialProps"
 import { Spinner } from "@/components/ui/spinner"
+import { FieldError } from "@/components/ui/field"
 
 export default function ClassroomEmpty() {
   const [code, setCode] = useState("")
+  const [error, setError] = useState("")
   const queryClient = useQueryClient()
   const isCodeComplete = code.length === 6
 
@@ -31,9 +33,13 @@ export default function ClassroomEmpty() {
     onSuccess: (newClassrooms: ClassroomProps[]) => {
       queryClient.setQueryData(["classroom"], newClassrooms)
     },
+    onError: (err: any) => {
+      setError(err.response.data.detail || "Error joining classroom")
+    },
   })
 
   async function handleJoinClassroom() {
+    setError("")
     joinClassroom(code)
   }
 
@@ -83,6 +89,7 @@ export default function ClassroomEmpty() {
             <p className="text-xs text-muted-foreground">
               6-digit code, numbers only.
             </p>
+            {error && <FieldError>{error}</FieldError>}
           </div>
 
           <Button

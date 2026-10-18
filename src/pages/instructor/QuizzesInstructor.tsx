@@ -2,12 +2,12 @@ import QuizCardTemplate from "@/components/common/QuizCardTemplate"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import SearchTemplate from "@/components/common/SearchTemplate"
 import TooltipButtonTemplate from "@/components/common/TooltipButtonTemplate"
-import { buttonVariants } from "@/components/ui/button"
-import { Archive, FileQuestion, Filter } from "lucide-react"
+import EmptyState from "@/components/common/EmptyState"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { Archive, FileQuestion, Filter, SearchX } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { useInstructorQuizzes } from "@/services/tanstack/materials"
-import { Empty } from "@/components/ui/empty"
 
 export default function QuizzesInstructor() {
   const [search, setSearch] = useState("")
@@ -65,12 +65,40 @@ export default function QuizzesInstructor() {
       </div>
 
       <div className="flex flex-col gap-3 sm:gap-4">
-        {filteredQuizzes.length == 0 ? (
-          <Empty className="aspect-video h-full w-full border">Hello</Empty>
+        {filteredQuizzes.length === 0 ? (
+          <EmptyState
+            icon={search.trim().length > 0 ? SearchX : FileQuestion}
+            title={
+              search.trim().length > 0 ? "No quizzes found" : "No quizzes yet"
+            }
+            description={
+              search.trim().length > 0
+                ? `No quizzes match "${search}". Try searching by another name or principle.`
+                : "Design and publish your first quiz to evaluate student understanding of accessibility criteria."
+            }
+            actions={
+              search.trim().length > 0 ? (
+                <Button variant="outline" size="sm" onClick={() => setSearch("")}>
+                  Clear Search
+                </Button>
+              ) : (
+                <Link
+                  to="./new"
+                  className={buttonVariants({ variant: "default" })}
+                >
+                  <FileQuestion className="size-4" />
+                  New Quiz
+                </Link>
+              )
+            }
+          />
         ) : (
-          filteredQuizzes.map((quiz) => <QuizCardTemplate quiz={quiz} />)
+          filteredQuizzes.map((quiz) => (
+            <QuizCardTemplate key={quiz.id} quiz={quiz} />
+          ))
         )}
       </div>
     </section>
   )
 }
+

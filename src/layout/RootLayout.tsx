@@ -1,5 +1,7 @@
 import { useEffect } from "react"
 import { Outlet, useLocation } from "react-router-dom"
+import NavigationProgressBar from "@/components/common/NavigationProgressBar"
+
 export default function RootLayout() {
   const { pathname } = useLocation()
 
@@ -13,5 +15,11 @@ export default function RootLayout() {
     }
   }, [pathname])
 
-  return <Outlet />
+  return (
+    <>
+      <NavigationProgressBar />
+      <Outlet />
+    </>
+  )
 }
+

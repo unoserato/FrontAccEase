@@ -1,10 +1,10 @@
 import HeaderTemplate from "@/components/common/PageTemplate"
-
 import SearchTemplate from "@/components/common/SearchTemplate"
 import TooltipButtonTemplate from "@/components/common/TooltipButtonTemplate"
 import GridListButtonGroupTemplate from "@/components/common/GridListButtonGroupTemplate"
-import { buttonVariants } from "@/components/ui/button"
-import { Archive, Plus } from "lucide-react"
+import EmptyState from "@/components/common/EmptyState"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { Archive, BookOpen, Plus, SearchX } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { useModules } from "@/services/tanstack/materials"
@@ -15,18 +15,17 @@ export default function ModulesInstructor() {
   const [gridView, setGridView] = useState(true)
   const { data: modules } = useModules()
 
-  if (!modules) return null
-  console.log(modules)
-
-  const filteredModules = modules.filter((module) => {
-    if (search.trim().length > 0) {
-      return (
-        module.name.toLowerCase().includes(search.toLowerCase()) ||
-        module.principle.toLowerCase().includes(search.toLowerCase())
-      )
-    }
-    return true
-  })
+  const filteredModules = modules
+    .filter((module) => module.archived === false)
+    .filter((module) => {
+      if (search.trim().length > 0) {
+        return (
+          module.name.toLowerCase().includes(search.toLowerCase()) ||
+          module.principle.toLowerCase().includes(search.toLowerCase())
+        )
+      }
+      return true
+    })
 
   return (
     <section className="p-responsive space-y-4 sm:space-y-6">
@@ -36,6 +35,7 @@ export default function ModulesInstructor() {
         cta={[
           <Link
             to={"./new"}
+            key="new-module"
             className={`${buttonVariants({ variant: "default" })} `}
           >
             <Plus />
@@ -53,12 +53,13 @@ export default function ModulesInstructor() {
           />
         </div>
         <div className="flex shrink-0 items-center justify-end gap-2">
-          <TooltipButtonTemplate
-            triggerTextIcon={<Archive />}
-            triggerVariant="outline"
-            content="Archived Modules"
-            onClick={() => alert("Archived Modules")}
-          />
+          <Link to="./archived">
+            <TooltipButtonTemplate
+              triggerTextIcon={<Archive />}
+              triggerVariant="outline"
+              content="Archived Modules"
+            />
+          </Link>
           <GridListButtonGroupTemplate
             gridView={gridView}
             setGridView={(e) => setGridView(e)}
@@ -66,16 +67,43 @@ export default function ModulesInstructor() {
         </div>
       </div>
 
-      {gridView ? (
+      {filteredModules.length === 0 ? (
+        <EmptyState
+          icon={search.trim().length > 0 ? SearchX : BookOpen}
+          title={
+            search.trim().length > 0 ? "No modules found" : "No modules yet"
+          }
+          description={
+            search.trim().length > 0
+              ? `No modules match "${search}". Try searching by another name or principle.`
+              : "Create your first course module to organize accessibility lessons and learning materials."
+          }
+          actions={
+            search.trim().length > 0 ? (
+              <Button variant="outline" size="sm" onClick={() => setSearch("")}>
+                Clear Search
+              </Button>
+            ) : (
+              <Link
+                to="./new"
+                className={buttonVariants({ variant: "default" })}
+              >
+                <Plus className="size-4" />
+                New Module
+              </Link>
+            )
+          }
+        />
+      ) : gridView ? (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
           {filteredModules.map((module) => (
-            <ModuleCardTemplate module={module} />
+            <ModuleCardTemplate key={module.id} module={module} />
           ))}
         </div>
       ) : (
         <div className="flex flex-col gap-2">
           {filteredModules.map((module) => (
-            <p>{module.name}</p>
+            <ModuleCardTemplate key={module.id} module={module} view="list" />
           ))}
         </div>
       )}

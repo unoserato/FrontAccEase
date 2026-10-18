@@ -32,7 +32,7 @@ export const learnerRoute = (
         path="dashboard"
         element={suspense(<Dashboard />, <PageSkeleton />)}
       />
-      <Route path="modules" element={suspense(<Modules />, <GridSkeleton />)} />
+      <Route path="modules" element={suspense(<Modules />, <PageSkeleton />)} />
       <Route
         path="modules/:principleId"
         element={suspense(<CoreModulesView />, <GridSkeleton />)}
@@ -61,7 +61,7 @@ export const learnerRoute = (
     </Route>
 
     <Route
-      path="/learner/modules/:principleId/:topicId/:lessonId"
+      path="/learner/modules/:principle_id/:activity_id"
       element={suspense(<CoreModuleReadOnly />, <DetailSkeleton />)}
     />
     <Route

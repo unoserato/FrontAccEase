@@ -25,6 +25,7 @@ export default function ModuleCardTemplate({
   const { data: user } = useMe()
   const navigate = useNavigate()
   const isEditor = user?.role === "instructor"
+  const archived = module.archived
 
   if (view === "list") {
     return (
@@ -64,16 +65,21 @@ export default function ModuleCardTemplate({
               </p>
             </div>
             {isEditor && (
-              <EditorDropdown setAction={(value) => setAction(value)} />
+              <EditorDropdown
+                setAction={(value) => setAction(value)}
+                archived={archived}
+              />
             )}
           </div>
         </div>
 
-        {/* <DeleteArchiveDialog
+        <DeleteArchiveDialog
           action={action}
           setAction={setAction}
           item={module}
-        /> */}
+          editUrl={`/instructor/modules/edit/${module.id}`}
+          itemType="module"
+        />
       </>
     )
   }
@@ -96,7 +102,10 @@ export default function ModuleCardTemplate({
             </div>
             <div className="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5">
               {isEditor && (
-                <EditorDropdown setAction={(value) => setAction(value)} />
+                <EditorDropdown
+                  setAction={(value) => setAction(value)}
+                  archived={archived}
+                />
               )}
             </div>
           </div>

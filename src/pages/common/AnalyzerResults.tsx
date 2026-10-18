@@ -39,6 +39,7 @@ import {
   Download,
   ExternalLink,
   Eye,
+  FileDown,
   Globe,
   Hash,
   Loader2,
@@ -53,6 +54,7 @@ import { toast } from "@/components/ui/toast"
 import { cn } from "cn"
 import SearchTemplate from "@/components/common/SearchTemplate"
 import { RichText } from "@/components/learner/RichText"
+import { exportAnalyzerReportToPDF } from "@/lib/pdfExport"
 import {
   useAnalyzer,
   useAnalyzerLogsByLearner,
@@ -92,7 +94,7 @@ function getScoreConfig(score: number): {
     return {
       color: "text-emerald-500 dark:text-emerald-400",
       bg: "bg-emerald-500",
-      label: "WCAG 2.1 Compliant",
+      label: "WCAG 2.2 Compliant",
       ring: "ring-emerald-500/20",
     }
   if (score >= 70)
@@ -457,7 +459,7 @@ function FindingCard({ item }: { item: FindingItem }) {
                 <p className="text-emerald-700/90 dark:text-emerald-300/80">
                   This rule verified successfully against{" "}
                   <span className="font-mono font-medium">
-                    {item.wcag || "WCAG 2.1"}
+                    {item.wcag || "WCAG 2.2"}
                   </span>{" "}
                   specifications for {item.principleName}. The analyzed DOM
                   elements satisfy accessibility compliance.
@@ -634,6 +636,7 @@ export default function AnalyzerResults() {
   const [selectedPrinciple, setSelectedPrinciple] = useState<string>("all")
   const [selectedSeverity, setSelectedSeverity] = useState<string>("all")
   const [copiedSummary, setCopiedSummary] = useState(false)
+  const [isExportingPDF, setIsExportingPDF] = useState(false)
 
   // Extract all issues across principles
   const allIssues = !resultData
@@ -850,6 +853,33 @@ ${allIssues
     setTimeout(() => setCopiedSummary(false), 2000)
   }
 
+  // Export PDF handler
+  function handleExportPDF() {
+    if (!resultData) return
+    try {
+      setIsExportingPDF(true)
+      exportAnalyzerReportToPDF({
+        result: resultData,
+        scanInfo: {
+          id: scanEntry?.id,
+          createdAt: scanEntry?.created_at,
+        },
+      })
+      toast.add({
+        title: "PDF Report Generated",
+        description: "Your full WCAG Accessibility Audit PDF has been downloaded.",
+      })
+    } catch (err) {
+      console.error("Failed to export PDF:", err)
+      toast.add({
+        title: "Export Failed",
+        description: "Could not generate PDF report. Please try again.",
+      })
+    } finally {
+      setIsExportingPDF(false)
+    }
+  }
+
   const activeCount =
     activeTab === "issues"
       ? filteredIssues.length
@@ -897,7 +927,7 @@ ${allIssues
             </a>
             <span className="text-border">·</span>
             <Badge variant="outline" className="h-5 px-1.5 text-xs">
-              WCAG 2.1 AA/AAA
+              WCAG 2.2 AA/AAA
             </Badge>
             {scanEntry?.created_at && (
               <>
@@ -917,7 +947,7 @@ ${allIssues
             variant="outline"
             size="sm"
             onClick={handleCopySummary}
-            className="h-9 gap-1.5 text-xs font-semibold"
+            className="h-9 gap-1.5 text-xs font-semibold cursor-pointer"
           >
             {copiedSummary ? (
               <Check className="size-3.5 text-emerald-500" />
@@ -928,12 +958,27 @@ ${allIssues
           </Button>
 
           <Button
+            variant="outline"
             size="sm"
             onClick={handleExportJSON}
-            className="h-9 gap-1.5 text-xs font-bold"
+            className="h-9 gap-1.5 text-xs font-semibold cursor-pointer"
           >
             <Download className="size-3.5" />
             <span>Export JSON</span>
+          </Button>
+
+          <Button
+            size="sm"
+            onClick={handleExportPDF}
+            disabled={isExportingPDF}
+            className="h-9 gap-1.5 text-xs font-bold cursor-pointer"
+          >
+            {isExportingPDF ? (
+              <Loader2 className="size-3.5 animate-spin" />
+            ) : (
+              <FileDown className="size-3.5" />
+            )}
+            <span>{isExportingPDF ? "Generating PDF..." : "Export PDF"}</span>
           </Button>
         </div>
       </div>

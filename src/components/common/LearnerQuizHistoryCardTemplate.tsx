@@ -62,7 +62,7 @@ export default function LearnerQuizHistoryCardTemplate({
       } as QuizProps
     }
 
-    const quizId = selectedSubmission.quiz_id ?? selectedSubmission.quizId
+    const quizId = selectedSubmission.quiz_id
     const matched = quizzes.find((q) => String(q.id) === String(quizId))
     return matched ?? null
   }, [selectedSubmission, quizzes])
@@ -160,7 +160,7 @@ export default function LearnerQuizHistoryCardTemplate({
       {isOpen && (
         <div className="mt-3 space-y-2 divide-y divide-border/40">
           {submissions.map((item, index) => {
-            const quizId = item.quiz_id ?? item.quizId
+            const quizId = item.quiz_id
             const matchedQuiz =
               item.quiz ?? quizzes.find((q) => String(q.id) === String(quizId))
             const quizName = matchedQuiz?.name || `Assessment #${quizId ?? ""}`

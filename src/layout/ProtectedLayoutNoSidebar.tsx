@@ -4,7 +4,7 @@ import type { UserRole } from "@/const/props/userProps"
 import { Suspense } from "react"
 import Forbidden from "@/pages/errors/Forbidden"
 import Unauthorized from "@/pages/errors/Unauthorized"
-import { Outlet } from "react-router-dom"
+import { Outlet, useLocation } from "react-router-dom"
 import { useCheckToken } from "@/services/tanstack/auth"
 
 export default function ProtectedLayoutNoSidebar({
@@ -12,6 +12,7 @@ export default function ProtectedLayoutNoSidebar({
 }: {
   allowedRoles: UserRole | UserRole[]
 }) {
+  const location = useLocation()
   const { data: user, isLoading } = useCheckToken()
 
   if (isLoading) {
@@ -34,7 +35,7 @@ export default function ProtectedLayoutNoSidebar({
   }
 
   return (
-    <Suspense fallback={<PageSkeleton />}>
+    <Suspense key={location.pathname} fallback={<PageSkeleton />}>
       <main className="flex-1">
         <Outlet />
       </main>

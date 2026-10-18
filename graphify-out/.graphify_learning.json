@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-15T17:30:14.581691+00:00",
+  "generated_at": "2026-10-17T17:14:41.229092+00:00",
   "nodes": {
     "package_scripts_build": {
       "code_fingerprint": "53e62e5c60a0d1d762a019e9103ff68c664d9c75d30dc04bd6e3170506ab9110",
@@ -12,7 +12,7 @@
           "q": "Fix production build errors caused by stale const/data imports"
         }
       ],
-      "score": 0.999968877,
+      "score": 0.955050232,
       "source_file": "package.json",
       "status": "tentative",
       "uses": 1
@@ -28,13 +28,13 @@
           "q": "Fix production build errors caused by stale const/data imports"
         }
       ],
-      "score": 0.999968877,
+      "score": 0.955050232,
       "source_file": "src/const/data.ts",
       "status": "tentative",
       "uses": 1
     },
     "src_const_props_materialprops": {
-      "code_fingerprint": "f52b6d80dc4a95c29f0d03b952eeb7a2450f1ef20826ed340d7ebb32eb3030b9",
+      "code_fingerprint": "57985bc2ee8ea23765cb1270796c2518637bcec3175eecce2499ff35a3bb8cb8",
       "label": "materialProps.ts",
       "last": "2026-10-15T17:28:18.196154+00:00",
       "provenance": [
@@ -44,13 +44,13 @@
           "q": "Fix production build errors caused by stale const/data imports"
         }
       ],
-      "score": 0.999968877,
+      "score": 0.955050232,
       "source_file": "src/const/props/materialProps.ts",
       "status": "tentative",
       "uses": 1
     },
     "src_pages_learner_analyzer_analyzer": {
-      "code_fingerprint": "56035a83c5600125d64d3cf6f8cb2f653d8086db027024e6f495ec0a48dc8af9",
+      "code_fingerprint": "69afca7b34ccc0807c9aade22c08647a9575b0b44f63d546b9e7518273133889",
       "label": "Analyzer()",
       "last": "2026-10-15T16:01:37.075836+00:00",
       "provenance": [
@@ -60,13 +60,13 @@
           "q": "Add elapsed time in webLLM.ts"
         }
       ],
-      "score": 0.998579014,
+      "score": 0.953722803,
       "source_file": "src/pages/learner/Analyzer.tsx",
       "status": "tentative",
       "uses": 1
     },
     "src_services_webllm_compilewebllmresults": {
-      "code_fingerprint": "36b8c7b846806c50367e9f1814ed9d52ec3cd5093a703ea2d21fcb11d570f21e",
+      "code_fingerprint": "eff5454880114cb34189fe2943abd48cfd5419e62896a60e5df973ae2bb66dca",
       "label": "compileWebLLMResults()",
       "last": "2026-10-15T16:01:37.075836+00:00",
       "provenance": [
@@ -76,7 +76,7 @@
           "q": "Add elapsed time in webLLM.ts"
         }
       ],
-      "score": 0.998579014,
+      "score": 0.953722803,
       "source_file": "src/services/webLLM.ts",
       "status": "tentative",
       "uses": 1

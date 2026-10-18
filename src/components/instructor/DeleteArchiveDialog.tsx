@@ -15,12 +15,14 @@ import type {
   ModuleProps,
   QuizProps,
 } from "@/const/props/materialProps"
-import { useMutation } from "@tanstack/react-query"
-import { arhiveModuleAPI } from "@/services/api/CRUD/materialsCRUDAPI"
-import { useInvalidateQueries } from "@/services/tanstack/auth"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import {
+  arhiveModuleAPI,
+  unarhiveModuleAPI,
+} from "@/services/api/CRUD/materialsCRUDAPI"
 import { toast } from "../ui/toast"
 
-export type ActionType = "delete" | "archive" | "edit" | null
+export type ActionType = "delete" | "archive" | "edit" | "unarchive" | null
 
 interface Props {
   action: ActionType
@@ -38,7 +40,7 @@ export default function DeleteArchiveDialog({
   itemType: customItemType,
 }: Props) {
   const navigate = useNavigate()
-  const invalidateQuery = useInvalidateQueries()
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     if (action === "edit") {
@@ -56,23 +58,41 @@ export default function DeleteArchiveDialog({
   }
 
   const itemType = getItemTypeLabel()
-  const isModalOpen = action === "archive" || action === "delete"
+  const isModalOpen =
+    action === "archive" || action === "delete" || action == "unarchive"
 
-  const { mutate: archiveModule } = useMutation({
+  const { mutate: archiveModule, isPending: isArchiving } = useMutation({
     mutationFn: arhiveModuleAPI,
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.add({
         type: "success",
         title: "Module Archived",
         description: "Successfully archived module",
       })
-      invalidateQuery([["modules"]])
+      queryClient.setQueryData(["modules"], data)
+      setAction(null)
+    },
+  })
+
+  const { mutate: unarchiveModule, isPending: isUnarchiving } = useMutation({
+    mutationFn: unarhiveModuleAPI,
+    onSuccess: (data) => {
+      toast.add({
+        type: "success",
+        title: "Module Unarchived",
+        description: "Successfully unarchived module",
+      })
+      queryClient.setQueryData(["modules"], data)
+
       setAction(null)
     },
   })
 
   function handleArchiveModule() {
     archiveModule(item.id)
+  }
+  function handleUnarchiveModule() {
+    unarchiveModule(item.id)
   }
   return (
     <Dialog
@@ -86,13 +106,25 @@ export default function DeleteArchiveDialog({
           <DialogTitle className="capitalize">
             {action === "archive"
               ? `Archive ${itemType}?`
-              : `Delete ${itemType}?`}
+              : action === "unarchive"
+                ? `Unarchive ${itemType}?`
+                : `Delete ${itemType}?`}
           </DialogTitle>
 
           <DialogDescription>
-            {action === "archive" ? (
-              `Archiving ${item.name} will make it unavailable to active members.`
-            ) : (
+            {action === "unarchive" && (
+              <span>
+                Unarchiving <b className="text-foreground">{item.name}</b> will
+                restore it and make it available to active members.
+              </span>
+            )}
+            {action === "archive" && (
+              <span>
+                Archiving <b className="text-foreground">{item.name}</b> will
+                make it unavailable to active members.
+              </span>
+            )}
+            {action === "delete" && (
               <span>
                 Deleting <b className="text-foreground">{item.name}</b> will
                 permanently remove the {itemType}.
@@ -108,13 +140,25 @@ export default function DeleteArchiveDialog({
 
           <Button
             variant={action === "delete" ? "destructive" : "default"}
+            disabled={isArchiving || isUnarchiving}
             onClick={() => {
-              if (action == "archive" && itemType == "module") {
+              if (action === "archive" && itemType === "module") {
                 handleArchiveModule()
+              }
+              if (action === "unarchive" && itemType === "module") {
+                handleUnarchiveModule()
               }
             }}
           >
-            {action === "archive" ? "Archive" : "Delete"}
+            {action === "archive"
+              ? isArchiving
+                ? "Archiving..."
+                : "Archive"
+              : action === "unarchive"
+                ? isUnarchiving
+                  ? "Unarchiving..."
+                  : "Unarchive"
+                : "Delete"}
           </Button>
         </DialogFooter>
       </DialogContent>

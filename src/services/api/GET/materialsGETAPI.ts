@@ -1,6 +1,8 @@
 import type {
   AnalyzerResultItem,
   ClassroomProps,
+  CoreModuleActivityContent,
+  CoreModuleProgressProps,
   InstructorMaterialsProps,
   ModuleProps,
   QuizAnswer,
@@ -87,4 +89,16 @@ export async function getQuizSubmissionsByIdAPI(
   return Array.isArray(response.data)
     ? response.data
     : response.data?.submissions || response.data?.data || []
+}
+
+export async function getCoreModulesAPI(): Promise<CoreModuleProgressProps> {
+  const response = await api.get(`/learner/pour/progress`)
+  return response.data
+}
+
+export async function getCoreModuleActivitiesAPI(
+  id: string
+): Promise<CoreModuleActivityContent> {
+  const response = await api.get(`/learner/pour/activities/${id}`)
+  return response.data
 }

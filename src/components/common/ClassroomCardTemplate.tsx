@@ -45,7 +45,10 @@ export default function ClassroomCardTemplate({
 
           <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
             {isEditor && (
-              <EditorDropdown setAction={(value) => setAction(value)} />
+              <EditorDropdown
+                setAction={(value) => setAction(value)}
+                archived={classroom.archived}
+              />
             )}
           </div>
         </CardHeader>

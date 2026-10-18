@@ -6,11 +6,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import { Archive, EllipsisVertical, Pencil, Trash } from "lucide-react"
+import {
+  Archive,
+  ArchiveRestore,
+  EllipsisVertical,
+  Pencil,
+  Trash,
+} from "lucide-react"
 
 export default function EditorDropdown({
+  archived,
   setAction,
 }: {
+  archived?: boolean
   setAction: (value: ActionType) => void
 }) {
   return (
@@ -31,10 +39,17 @@ export default function EditorDropdown({
             Edit
           </DropdownMenuItem>
 
-          <DropdownMenuItem onClick={() => setAction("archive")}>
-            <Archive className="mr-2 h-4 w-4" />
-            Archive
-          </DropdownMenuItem>
+          {archived ? (
+            <DropdownMenuItem onClick={() => setAction("unarchive")}>
+              <ArchiveRestore className="mr-2 h-4 w-4" />
+              Unarchive
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem onClick={() => setAction("archive")}>
+              <Archive className="mr-2 h-4 w-4" />
+              Archive
+            </DropdownMenuItem>
+          )}
 
           <DropdownMenuItem
             variant="destructive"

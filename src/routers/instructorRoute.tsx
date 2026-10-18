@@ -29,6 +29,9 @@ const DashboardInstructor = lazy(
 const ModulesInstructor = lazy(
   () => import("@/pages/instructor/ModulesInstructor")
 )
+const ModulesArchivedInstructor = lazy(
+  () => import("@/pages/instructor/ModulesArchivedInstructor")
+)
 const QuizzesInstructor = lazy(
   () => import("@/pages/instructor/QuizzesInstructor")
 )
@@ -50,6 +53,10 @@ export const instructorRoute = (
       <Route
         path="modules"
         element={suspense(<ModulesInstructor />, <GridSkeleton />)}
+      />
+      <Route
+        path="modules/archived"
+        element={suspense(<ModulesArchivedInstructor />, <GridSkeleton />)}
       />
       <Route
         path="quizzes"
