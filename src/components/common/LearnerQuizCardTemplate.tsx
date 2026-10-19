@@ -104,7 +104,7 @@ export default function LearnerQuizCardTemplate({
                       Due
                     </span>
                     <span className="mt-0.5 block text-xs font-semibold text-foreground sm:text-sm">
-                      {getDateString(item?.due_date)}
+                      {getDateString(item?.due_date || "")}
                     </span>
                   </div>
 

@@ -17,5 +17,12 @@ export default defineConfig({
       usePolling: true,
       interval: 1000,
     },
+    proxy: {
+      "/api": {
+        target: "http://192.168.1.104:8001", // Your local FastAPI port
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""), // Removes '/api' prefix before forwarding to FastAPI
+      },
+    },
   },
 })

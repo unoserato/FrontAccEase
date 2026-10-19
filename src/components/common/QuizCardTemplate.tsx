@@ -40,9 +40,9 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
 
   const passingRate = 0
 
-  const dueDate = quiz.due_date
+  const dueDate = quiz.due_date || ""
 
-  const quizStatus = new Date(quiz.due_date) > new Date() ? "Open" : "Closed"
+  const quizStatus = new Date(dueDate) > new Date() ? "Open" : "Closed"
   const quizAuthor = quiz.created_by
   const classroomsCount = quiz.classrooms?.length ?? 0
   const classroomsLabel =
@@ -77,10 +77,7 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
 
           <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
             {isEditor && (
-              <EditorDropdown
-                setAction={(value) => setAction(value)}
-                archived={Boolean(quiz.archived)}
-              />
+              <EditorDropdown setAction={(value) => setAction(value)} />
             )}
           </div>
         </div>
@@ -141,7 +138,7 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
                   Due Date
                 </p>
                 <p className="text-xs font-bold text-foreground">
-                  {new Date(dueDate).toString()}
+                  {getDateString(dueDate)}
                 </p>
               </div>
               <div>

@@ -9,6 +9,7 @@ import {
   Award,
   BookOpen,
   CheckCircle2,
+  ChevronLeft,
   ChevronRight,
   CircleDashed,
   ClipboardCheck,
@@ -22,6 +23,7 @@ import {
 import { Button, buttonVariants } from "@/components/ui/button"
 import { useMe } from "@/services/tanstack/auth"
 import { useCoreModuleProgress } from "@/services/tanstack/materials"
+import { cn } from "@/lib/utils"
 
 function getActivityKindLabel(kind: string): string {
   switch (kind) {
@@ -85,18 +87,46 @@ function getActivityLink(
   return `/learner/modules/${principleName}/${activityId}`
 }
 
+function getPrincipleTitle(
+  item?: PrincipleProgressProps | { name: string; content?: any } | null
+): string {
+  if (!item) return ""
+  return (
+    (item as any).content?.revision?.title ||
+    (item as any).content?.title ||
+    ((item as any).name
+      ? (item as any).name.charAt(0).toUpperCase() + (item as any).name.slice(1)
+      : "")
+  )
+}
+
 export default function CoreModulesView() {
   const { principleId } = useParams()
   const navigate = useNavigate()
   const { data: user } = useMe()
   const { data: coreModuleProgress } = useCoreModuleProgress()
 
-  const matchedPrinciple = coreModuleProgress?.principles.find(
-    (p) =>
-      p.name.toLowerCase() === principleId?.toLowerCase() ||
-      p.content.id === principleId
-  )
+  const principles = useMemo(() => {
+    return coreModuleProgress?.principles || []
+  }, [coreModuleProgress?.principles])
+
+  const currentIndex = useMemo(() => {
+    return principles.findIndex(
+      (p) =>
+        p.name.toLowerCase() === principleId?.toLowerCase() ||
+        p.content.id === principleId
+    )
+  }, [principles, principleId])
+
+  const matchedPrinciple =
+    currentIndex !== -1 ? principles[currentIndex] : undefined
   const principleContent = matchedPrinciple?.content
+
+  const prevPrinciple = currentIndex > 0 ? principles[currentIndex - 1] : null
+  const nextPrinciple =
+    currentIndex >= 0 && currentIndex < principles.length - 1
+      ? principles[currentIndex + 1]
+      : null
 
   const activities = useMemo(() => {
     return (principleContent?.activities || [])
@@ -157,6 +187,46 @@ export default function CoreModulesView() {
         title={principleTitle}
         subtitle={principleDescription}
         backTo="/learner/modules"
+        cta={[
+          <Button
+            key="prev-principle"
+            variant="outline"
+            size="sm"
+            disabled={!prevPrinciple}
+            onClick={() =>
+              prevPrinciple &&
+              navigate(`/learner/modules/${prevPrinciple.name}`)
+            }
+            title={
+              prevPrinciple
+                ? `Previous: ${getPrincipleTitle(prevPrinciple)}`
+                : "No previous principle"
+            }
+            className="gap-1.5 font-semibold"
+          >
+            <ChevronLeft className="size-4" />
+            Previous
+          </Button>,
+          <Button
+            key="next-principle"
+            variant="outline"
+            size="sm"
+            disabled={!nextPrinciple}
+            onClick={() =>
+              nextPrinciple &&
+              navigate(`/learner/modules/${nextPrinciple.name}`)
+            }
+            title={
+              nextPrinciple
+                ? `Next: ${getPrincipleTitle(nextPrinciple)}`
+                : "No next principle"
+            }
+            className="gap-1.5 font-semibold"
+          >
+            Next
+            <ChevronRight className="size-4" />
+          </Button>,
+        ]}
       />
 
       <div className="grid grid-cols-1 gap-6 pt-6 sm:pt-6 lg:grid-cols-3">
@@ -352,6 +422,63 @@ export default function CoreModulesView() {
                 </div>
               )}
             </CardContent>
+
+            {/* Bottom Next / Previous Principle Navigation */}
+            <div className="flex flex-col gap-3 border-t border-border/60 pt-6 sm:flex-row sm:items-center sm:justify-between">
+              {prevPrinciple ? (
+                <Link
+                  to={`/learner/modules/${prevPrinciple.name}`}
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    "group flex h-auto w-full flex-col items-start gap-1 p-3.5 text-left sm:w-auto sm:max-w-xs"
+                  )}
+                >
+                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground group-hover:text-foreground">
+                    <ChevronLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
+                    Previous Module
+                  </span>
+                  <span className="max-w-full truncate font-bold text-foreground">
+                    {getPrincipleTitle(prevPrinciple)}
+                  </span>
+                </Link>
+              ) : (
+                <div />
+              )}
+
+              {nextPrinciple ? (
+                <Link
+                  to={`/learner/modules/${nextPrinciple.name}`}
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    "group ml-auto flex h-auto w-full flex-col items-end gap-1 p-3.5 text-right sm:w-auto sm:max-w-xs"
+                  )}
+                >
+                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground group-hover:text-foreground">
+                    Next Module
+                    <ChevronRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                  <span className="max-w-full truncate font-bold text-foreground">
+                    {getPrincipleTitle(nextPrinciple)}
+                  </span>
+                </Link>
+              ) : (
+                <Link
+                  to="/learner/modules"
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    "group ml-auto flex h-auto w-full flex-col items-end gap-1 p-3.5 text-right sm:w-auto sm:max-w-xs"
+                  )}
+                >
+                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground group-hover:text-foreground">
+                    All Modules
+                    <ChevronRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                  <span className="font-bold text-foreground">
+                    Back to Modules Overview
+                  </span>
+                </Link>
+              )}
+            </div>
           </div>
         </div>
 

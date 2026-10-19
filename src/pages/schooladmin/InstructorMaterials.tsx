@@ -15,14 +15,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
-import { useInstructorMaterialsList } from "@/services/tanstack/materials"
+import { useInstructorMaterialsCount } from "@/services/tanstack/materials"
 
 export default function InstructorMaterials() {
   const [search, setSearch] = useState("")
-  const { data: instructorMaterials } = useInstructorMaterialsList()
+  const { data: instructors } = useInstructorMaterialsCount()
   const navigate = useNavigate()
 
-  const filteredInstructors = instructorMaterials.filter((instructor) => {
+  const filteredInstructors = instructors.filter((instructor) => {
     if (search.trim().length > 0) {
       return instructor.user.name.toLowerCase().includes(search.toLowerCase())
     }
@@ -101,7 +101,7 @@ export default function InstructorMaterials() {
                         <div className="flex items-center gap-3">
                           <Avatar size="sm">
                             <AvatarImage
-                              src={instructor.profile_picture}
+                              src={instructor.profile_picture || ""}
                               alt={instructor.name}
                             />
                             <AvatarFallback>

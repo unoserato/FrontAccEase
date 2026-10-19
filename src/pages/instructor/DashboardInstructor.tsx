@@ -160,7 +160,7 @@ export default function DashboardInstructor() {
                   <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Calendar className="size-3" />
-                      Due: {getDateString(quiz.due_date)}
+                      Due: {getDateString(quiz.due_date || "")}
                     </span>
                     <span>•</span>
                     <span>{quiz.question_count} questions</span>

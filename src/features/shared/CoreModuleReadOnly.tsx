@@ -1,8 +1,20 @@
+import { useMemo } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { ArrowLeft, FileText, Lock, RotateCw } from "lucide-react"
+import {
+  ArrowLeft,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  Lock,
+  RotateCw,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { useCoreModuleProgressActivities } from "@/services/tanstack/materials"
+import {
+  useCoreModuleProgress,
+  useCoreModuleProgressActivities,
+} from "@/services/tanstack/materials"
 import type {
   CoreModuleAssessmentActivity,
   CoreModuleInteractiveActivity,
@@ -15,14 +27,77 @@ import CoreModuleInteractiveView from "./core-module/CoreModuleInteractiveView"
 export default function CoreModuleReadOnly() {
   const { principle_id, activity_id } = useParams()
   const { data: contents } = useCoreModuleProgressActivities(activity_id || "")
+  const { data: coreModuleProgress } = useCoreModuleProgress()
   const navigate = useNavigate()
 
+  const principles = useMemo(() => {
+    return coreModuleProgress?.principles || []
+  }, [coreModuleProgress?.principles])
+
+  const matchedPrinciple = useMemo(() => {
+    if (!principles.length) return null
+    return (
+      principles.find(
+        (p) =>
+          p.name.toLowerCase() === principle_id?.toLowerCase() ||
+          p.content?.id === principle_id
+      ) ||
+      // Fallback: search if activity_id belongs to any principle's activities
+      principles.find((p) =>
+        (p.content?.activities || []).some((act) => act.id === activity_id)
+      ) ||
+      principles[0]
+    )
+  }, [principles, principle_id, activity_id])
+
+  const principleContent = matchedPrinciple?.content
+  const principleRouteName =
+    matchedPrinciple?.name || principle_id || "perceivable"
+
+  const activities = useMemo(() => {
+    return (principleContent?.activities || [])
+      .slice()
+      .sort((a, b) => a.display_order - b.display_order)
+  }, [principleContent?.activities])
+
+  const currentActivityIndex = useMemo(() => {
+    if (!activity_id || !activities.length) return -1
+    return activities.findIndex((a) => a.id === activity_id)
+  }, [activities, activity_id])
+
+  const prevActivity =
+    currentActivityIndex > 0 ? activities[currentActivityIndex - 1] : null
+  const nextActivity =
+    currentActivityIndex >= 0 && currentActivityIndex < activities.length - 1
+      ? activities[currentActivityIndex + 1]
+      : null
+
+  const completedActivityIds = useMemo(() => {
+    return new Set(
+      (principleContent?.completions || []).map((c) =>
+        String((c as any).activity_id || (c as any).id)
+      )
+    )
+  }, [principleContent?.completions])
+
+  const isNextActivityLocked = useMemo(() => {
+    if (!nextActivity) return false
+    const isCompleted = completedActivityIds.has(String(nextActivity.id))
+    const isNext =
+      nextActivity.id === principleContent?.next_activity_id ||
+      (!principleContent?.next_activity_id &&
+        completedActivityIds.size === 0 &&
+        activities[0]?.id === nextActivity.id)
+    return !isCompleted && !isNext
+  }, [
+    nextActivity,
+    completedActivityIds,
+    principleContent?.next_activity_id,
+    activities,
+  ])
+
   function handleBack() {
-    if (window.history.length > 1) {
-      navigate(-1)
-    } else {
-      navigate(`/learner/modules/${principle_id || ""}`)
-    }
+    navigate(`/learner/modules/${principleRouteName}`)
   }
 
   const isLocked = Boolean(
@@ -41,9 +116,12 @@ export default function CoreModuleReadOnly() {
     activityContent?.kind === "interactive" ||
     Boolean(activityContent && "scenario" in activityContent)
 
-  const principleLabel = principle_id
-    ? principle_id.charAt(0).toUpperCase() + principle_id.slice(1)
-    : "Core Principle"
+  const principleLabel =
+    principleContent?.revision?.title ||
+    principleContent?.title ||
+    (principle_id
+      ? principle_id.charAt(0).toUpperCase() + principle_id.slice(1)
+      : "Core Principle")
 
   const title =
     (isLesson && activityContent && "lesson" in activityContent
@@ -104,11 +182,25 @@ export default function CoreModuleReadOnly() {
           </div>
           <h2 className="text-lg font-bold text-foreground">Activity Locked</h2>
           <p className="mt-1 text-sm text-muted-foreground">{detailMessage}</p>
-          <div className="mt-6 flex items-center justify-center gap-2">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
             <Button onClick={handleBack} variant="outline" className="gap-2">
               <ArrowLeft className="size-4" />
               Back to Modules
             </Button>
+            {prevActivity && (
+              <Button
+                onClick={() =>
+                  navigate(
+                    `/learner/modules/${principleRouteName}/${prevActivity.id}`
+                  )
+                }
+                variant="default"
+                className="gap-2"
+              >
+                <ChevronLeft className="size-4" />
+                Previous Activity
+              </Button>
+            )}
             <Button
               onClick={() => window.location.reload()}
               variant="ghost"
@@ -133,8 +225,8 @@ export default function CoreModuleReadOnly() {
               variant="ghost"
               size="icon"
               onClick={handleBack}
-              title="Back"
-              aria-label="Back"
+              title={`Back to ${principleLabel}`}
+              aria-label={`Back to ${principleLabel}`}
               className="shrink-0 cursor-pointer"
             >
               <ArrowLeft className="size-4" />
@@ -148,12 +240,62 @@ export default function CoreModuleReadOnly() {
               </h1>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={!prevActivity}
+              onClick={() =>
+                prevActivity &&
+                navigate(
+                  `/learner/modules/${principleRouteName}/${prevActivity.id}`
+                )
+              }
+              title={
+                prevActivity
+                  ? `Previous Activity: ${prevActivity.title}`
+                  : "No previous activity"
+              }
+              aria-label="Previous Activity"
+              className="gap-1 font-semibold"
+            >
+              <ChevronLeft className="size-3.5" />
+              <span className="hidden sm:inline">Previous</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={!nextActivity || isNextActivityLocked}
+              onClick={() =>
+                nextActivity &&
+                !isNextActivityLocked &&
+                navigate(
+                  `/learner/modules/${principleRouteName}/${nextActivity.id}`
+                )
+              }
+              title={
+                !nextActivity
+                  ? "Last activity in this principle"
+                  : isNextActivityLocked
+                    ? `Locked: Complete earlier activities to unlock "${nextActivity.title}"`
+                    : `Next Activity: ${nextActivity.title}`
+              }
+              aria-label="Next Activity"
+              className="gap-1 font-semibold"
+            >
+              <span className="hidden sm:inline">Next</span>
+              {isNextActivityLocked ? (
+                <Lock className="size-3 text-muted-foreground" />
+              ) : (
+                <ChevronRight className="size-3.5" />
+              )}
+            </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => window.location.reload()}
               title="Refresh Activity"
+              aria-label="Refresh Activity"
               className="cursor-pointer gap-1.5 text-xs text-muted-foreground hover:text-foreground"
             >
               <RotateCw className="size-3.5" />
@@ -210,6 +352,115 @@ export default function CoreModuleReadOnly() {
             </div>
           )}
         </Card>
+
+        {/* Bottom Sequential Activity Navigation */}
+        <div className="mt-6 flex flex-col gap-3 rounded-xl border border-border/80 bg-card p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between sm:p-5">
+          {/* Previous Activity Button */}
+          {prevActivity ? (
+            <Button
+              variant="outline"
+              onClick={() =>
+                navigate(
+                  `/learner/modules/${principleRouteName}/${prevActivity.id}`
+                )
+              }
+              className="h-auto min-h-11 flex items-center justify-start gap-2.5 py-2 px-3.5 text-left"
+              title={`Previous: ${prevActivity.title}`}
+            >
+              <ChevronLeft className="size-4 shrink-0 text-muted-foreground" />
+              <div className="flex flex-col items-start leading-tight">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  Previous Activity
+                </span>
+                <span className="max-w-45 truncate text-xs font-bold text-foreground sm:max-w-60">
+                  {prevActivity.title}
+                </span>
+              </div>
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              onClick={handleBack}
+              className="h-auto min-h-11 flex items-center justify-start gap-2.5 py-2 px-3.5 text-left"
+              title="Return to Principle Overview"
+            >
+              <ArrowLeft className="size-4 shrink-0 text-muted-foreground" />
+              <div className="flex flex-col items-start leading-tight">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  Module Overview
+                </span>
+                <span className="text-xs font-bold text-foreground">
+                  {principleLabel}
+                </span>
+              </div>
+            </Button>
+          )}
+
+          {/* Stepper Position Indicator */}
+          {currentActivityIndex !== -1 && activities.length > 0 && (
+            <div className="order-first text-center sm:order-none">
+              <span className="text-xs font-medium text-muted-foreground">
+                Activity{" "}
+                <span className="font-bold text-foreground">
+                  {currentActivityIndex + 1}
+                </span>{" "}
+                of {activities.length}
+              </span>
+            </div>
+          )}
+
+          {/* Next Activity Button */}
+          {nextActivity ? (
+            <Button
+              variant={isNextActivityLocked ? "outline" : "default"}
+              disabled={isNextActivityLocked}
+              onClick={() =>
+                !isNextActivityLocked &&
+                navigate(
+                  `/learner/modules/${principleRouteName}/${nextActivity.id}`
+                )
+              }
+              className="h-auto min-h-11 flex items-center justify-end gap-2.5 py-2 px-3.5 text-right"
+              title={
+                isNextActivityLocked
+                  ? `Locked: Complete earlier activities first to unlock "${nextActivity.title}"`
+                  : `Next: ${nextActivity.title}`
+              }
+            >
+              <div className="flex flex-col items-end leading-tight">
+                <span className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider opacity-85">
+                  {isNextActivityLocked && <Lock className="size-2.5" />}
+                  {isNextActivityLocked ? "Locked" : "Next Activity"}
+                </span>
+                <span className="max-w-45 truncate text-xs font-bold sm:max-w-60">
+                  {nextActivity.title}
+                </span>
+              </div>
+              {isNextActivityLocked ? (
+                <Lock className="size-4 shrink-0 text-muted-foreground" />
+              ) : (
+                <ChevronRight className="size-4 shrink-0" />
+              )}
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              onClick={handleBack}
+              className="h-auto min-h-11 flex items-center justify-end gap-2.5 py-2 px-3.5 text-right"
+              title="Return to Principle Overview"
+            >
+              <div className="flex flex-col items-end leading-tight">
+                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  Completed Principle
+                </span>
+                <span className="text-xs font-bold text-foreground">
+                  Module Overview
+                </span>
+              </div>
+              <CheckCircle2 className="size-4 shrink-0 text-emerald-500" />
+            </Button>
+          )}
+        </div>
       </main>
     </div>
   )

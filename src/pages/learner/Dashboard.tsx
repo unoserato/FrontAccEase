@@ -26,32 +26,33 @@ import {
 } from "lucide-react"
 import { SiGoogleclassroom } from "react-icons/si"
 import {
-  useAnalyzerLogsByLearner,
+  // useAnalyzerLogsByLearner,
   useClassroomContentView,
-  useClassrooms,
-  useCoreModuleProgress,
+  // useClassrooms,
+  // useCoreModuleProgress,
 } from "@/services/tanstack/materials"
 import { useMe } from "@/services/tanstack/auth"
 import { getDateString } from "@/hooks/date-to-string"
 import HeaderTemplate from "@/components/common/PageTemplate"
+import { useLearnerDashboardData } from "@/services/tanstack/parallelQueries"
 
-function getSummaryCount(
-  summaryList: unknown,
-  name: "critical" | "serious" | "moderate" | "minor" | "total_passed"
-): number {
-  if (Array.isArray(summaryList)) {
-    const item = summaryList.find(
-      (s: { name?: string; count?: number }) =>
-        s.name?.toLowerCase() === name.toLowerCase()
-    )
-    return item?.count ?? 0
-  }
-  if (summaryList && typeof summaryList === "object") {
-    const obj = summaryList as Record<string, number>
-    return obj[`${name}_count`] ?? 0
-  }
-  return 0
-}
+// function getSummaryCount(
+//   summaryList: unknown,
+//   name: "critical" | "serious" | "moderate" | "minor" | "total_passed"
+// ): number {
+//   if (Array.isArray(summaryList)) {
+//     const item = summaryList.find(
+//       (s: { name?: string; count?: number }) =>
+//         s.name?.toLowerCase() === name.toLowerCase()
+//     )
+//     return item?.count ?? 0
+//   }
+//   if (summaryList && typeof summaryList === "object") {
+//     const obj = summaryList as Record<string, number>
+//     return obj[`${name}_count`] ?? 0
+//   }
+//   return 0
+// }
 
 interface MilestoneProps {
   analyzerLogsCount: number
@@ -163,11 +164,16 @@ function LearnerMilestonesCard({
 export default function Dashboard() {
   const navigate = useNavigate()
   const { data: userProfile } = useMe()
-  const { data: classrooms } = useClassrooms()
+  // const { data: classrooms } = useClassrooms()
+  // const { data: analyzerLogs } = useAnalyzerLogsByLearner()
+  // const { data: coreModuleProgress } = useCoreModuleProgress()
+  const [
+    { data: classrooms },
+    { data: analyzerLogs },
+    { data: coreModuleProgress },
+  ] = useLearnerDashboardData()
   const myClassroom = classrooms?.[0]
   const { data: contents } = useClassroomContentView(myClassroom?.id)
-  const { data: analyzerLogs } = useAnalyzerLogsByLearner()
-  const { data: coreModuleProgress } = useCoreModuleProgress()
 
   const allQuizzes = useMemo(() => contents?.quizzes || [], [contents?.quizzes])
   const submissions = useMemo(

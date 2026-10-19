@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { useNavigate, useLocation } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import type { AnalyzerResultItem, Result } from "@/const/props/analyzerProps"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -76,7 +76,6 @@ function isValidUrl(input: string): boolean {
 
 export default function Analyzer() {
   const navigate = useNavigate()
-  const location = useLocation()
   const queryClient = useQueryClient()
 
   const [domain, setDomain] = useState("")
@@ -99,7 +98,7 @@ export default function Analyzer() {
   const [copyCode, setCopyCode] = useState(false)
 
   const engineRef = useRef<{ model: string; engine: MLCEngine } | null>(null)
-  const processedExtensionBatch = useRef(false)
+  // const processedExtensionBatch = useRef(false)
 
   // TanStack Query & Mutations
   const { data: scanHistory } = useAnalyzerLogsByLearner()
@@ -145,12 +144,7 @@ export default function Analyzer() {
     ])
     const targetId = updatedHistory?.[0]?.id || newId
 
-    navigate(`/learner/analyzer/${targetId}`, {
-      state: {
-        result: data,
-        scanId: targetId,
-      },
-    })
+    navigate(`/learner/analyzer/${targetId}`)
   }
 
   async function runWebLLMScan(
@@ -248,26 +242,26 @@ export default function Analyzer() {
   }
 
   // Handle incoming tasks passed from AnalyzerExtension page
-  useEffect(() => {
-    const state = location.state as {
-      taskBatch?: WebLLMTaskBatch
-      targetUrl?: string
-      webLLMModel?: any
-    } | null
-    if (
-      !state?.taskBatch ||
-      !state.targetUrl ||
-      processedExtensionBatch.current
-    ) {
-      return
-    }
-    processedExtensionBatch.current = true
-    void runWebLLMScan(
-      state.targetUrl,
-      state.taskBatch,
-      state.webLLMModel || WEBLLM_MODELS[2].value
-    )
-  }, [location.state])
+  // useEffect(() => {
+  //   const state = location.state as {
+  //     taskBatch?: WebLLMTaskBatch
+  //     targetUrl?: string
+  //     webLLMModel?: any
+  //   } | null
+  //   if (
+  //     !state?.taskBatch ||
+  //     !state.targetUrl ||
+  //     processedExtensionBatch.current
+  //   ) {
+  //     return
+  //   }
+  //   processedExtensionBatch.current = true
+  //   void runWebLLMScan(
+  //     state.targetUrl,
+  //     state.taskBatch,
+  //     state.webLLMModel || WEBLLM_MODELS[2].value
+  //   )
+  // }, [location.state])
 
   // React to extension polling updates from TanStack Query
   useEffect(() => {

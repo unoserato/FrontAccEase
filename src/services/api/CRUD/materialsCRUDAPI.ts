@@ -82,16 +82,14 @@ export interface AnswerCoreInteractivePayload {
 export async function answerCoreInteractiveActivityAPI(
   activityId: string,
   choiceOrPayload:
-    | string
-    | AnswerCoreInteractivePayload
-    | Record<string, unknown>
+    string | AnswerCoreInteractivePayload | Record<string, unknown>
 ) {
   const choice =
     typeof choiceOrPayload === "string"
       ? choiceOrPayload
-      : (choiceOrPayload as AnswerCoreInteractivePayload).choice ??
+      : ((choiceOrPayload as AnswerCoreInteractivePayload).choice ??
         (choiceOrPayload as Record<string, unknown>).answer ??
-        (choiceOrPayload as Record<string, unknown>).value
+        (choiceOrPayload as Record<string, unknown>).value)
 
   const payload: AnswerCoreInteractivePayload = {
     choice: String(choice),
@@ -100,6 +98,36 @@ export async function answerCoreInteractiveActivityAPI(
   const response = await api.post(
     `/learner/pour/activities/answer/${activityId}`,
     payload
+  )
+  return response.data
+}
+
+export async function uploadImageAPI(
+  file: File,
+  onProgress?: (event: { progress: number }) => void,
+  signal?: AbortSignal
+): Promise<string> {
+  console.log(file)
+  const formData = new FormData()
+  formData.append("image", file)
+
+  const response = await api.post(`/helper/upload-image`, formData, {
+    signal, // Axios automatically cancels the HTTP request when signal aborts
+    onUploadProgress: (progressEvent) => {
+      if (progressEvent.total) {
+        const percent = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        )
+        onProgress?.({ progress: percent })
+      }
+    },
+  })
+  return response.data.url
+}
+
+export async function startPrincipleAPI(principle: string) {
+  const response = await api.post(
+    `/learner/pour/principles/start/${principle.toLowerCase()}`
   )
   return response.data
 }

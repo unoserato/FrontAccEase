@@ -23,6 +23,8 @@ export interface Task {
   task_id: string
   criterion: Criterion
   evaluation_prompt: string
+  status?: string
+  reason?: string
 }
 
 export interface PourGroups {
@@ -145,17 +147,24 @@ export interface AnalyzerResultItem {
   created_at?: string
   learner_id?: string
   status?: string | null
-  content: Result
+  content: Result | string
 }
 
 export interface WcagEvaluationProps {
   // main llm props
   id: string
-  learner_id: string
-  content: Content
-  status: string | null
-  created_at: string
+  learner_id?: string
+  content: Content | string
+  status?: string | null
+  created_at?: string
 }
+
+export interface AnalyzerResultsProps {
+  data?: AnalyzerResultItem | WcagEvaluationProps | Result
+  scanEntry?: AnalyzerResultItem | WcagEvaluationProps
+  result?: Result
+}
+
 // summary
 export interface AnalyzerSummaryProps {
   created_at: string

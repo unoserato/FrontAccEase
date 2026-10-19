@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import {
   AlertCircle,
   Check,
@@ -55,7 +55,9 @@ export default function CoreModuleInteractiveView({
           const res = data as InteractiveAnswerResponse
           setAnswerResult(res)
           setSubmissionError(null)
-          const isPassed = Boolean(res?.passed ?? res?.correct ?? res?.is_correct)
+          const isPassed = Boolean(
+            res?.passed ?? res?.correct ?? res?.is_correct
+          )
           toast.add({
             title: isPassed ? "Correct Solution!" : "Incorrect Solution",
             description:
@@ -77,7 +79,8 @@ export default function CoreModuleInteractiveView({
               ? detail
               : Array.isArray(detail)
                 ? detail.map((d) => d?.msg || JSON.stringify(d)).join(", ")
-                : error?.message || "Failed to submit scenario answer. Please try again."
+                : error?.message ||
+                  "Failed to submit scenario answer. Please try again."
 
           setSubmissionError(detailMsg)
           toast.add({
@@ -108,7 +111,10 @@ export default function CoreModuleInteractiveView({
           <Badge variant="outline" className="text-xs font-semibold">
             {principleLabel}
           </Badge>
-          <Badge variant="secondary" className="flex items-center gap-1 text-xs">
+          <Badge
+            variant="secondary"
+            className="flex items-center gap-1 text-xs"
+          >
             <Sparkles className="size-3 text-primary" />
             Interactive Scenario
           </Badge>
@@ -154,9 +160,11 @@ export default function CoreModuleInteractiveView({
             const isSelected = selectedChoice === choice.value
             const optionLetter = String.fromCharCode(65 + index)
 
-            let borderColor = "border-border/70 bg-card hover:border-border hover:bg-muted/40"
+            let borderColor =
+              "border-border/70 bg-card hover:border-border hover:bg-muted/40"
             if (isSelected) {
-              borderColor = "border-primary bg-primary/5 shadow-xs ring-1 ring-primary"
+              borderColor =
+                "border-primary bg-primary/5 shadow-xs ring-1 ring-primary"
             }
 
             return (
@@ -171,7 +179,7 @@ export default function CoreModuleInteractiveView({
                   if (answerResult) setAnswerResult(null)
                   if (submissionError) setSubmissionError(null)
                 }}
-                className={`group flex items-start gap-3.5 rounded-xl border p-4 text-left transition-all duration-150 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none cursor-pointer disabled:opacity-60 ${borderColor}`}
+                className={`group flex cursor-pointer items-start gap-3.5 rounded-xl border p-4 text-left transition-all duration-150 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none disabled:opacity-60 ${borderColor}`}
               >
                 <div
                   className={`mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors ${
@@ -208,7 +216,7 @@ export default function CoreModuleInteractiveView({
             <Button
               onClick={handleSubmit}
               disabled={selectedChoice === null || isSubmitting}
-              className="gap-2 cursor-pointer"
+              className="cursor-pointer gap-2"
             >
               {isSubmitting ? (
                 <Loader2 className="size-4 animate-spin" />
@@ -223,7 +231,7 @@ export default function CoreModuleInteractiveView({
                 size="sm"
                 onClick={handleReset}
                 disabled={isSubmitting}
-                className="gap-1.5 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
+                className="cursor-pointer gap-1.5 text-xs text-muted-foreground hover:text-foreground"
               >
                 <RotateCcw className="size-3.5" />
                 Reset
@@ -234,10 +242,10 @@ export default function CoreModuleInteractiveView({
 
         {/* Submission Error Backup Display */}
         {submissionError && (
-          <div className="animate-in fade-in rounded-xl border border-destructive/40 bg-destructive/5 p-4 sm:p-5">
+          <div className="animate-in rounded-xl border border-destructive/40 bg-destructive/5 p-4 fade-in sm:p-5">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-3">
-                <AlertCircle className="size-5 shrink-0 text-destructive mt-0.5" />
+                <AlertCircle className="mt-0.5 size-5 shrink-0 text-destructive" />
                 <div className="space-y-0.5">
                   <h3 className="text-sm font-semibold text-destructive">
                     Submission Did Not Go Through
@@ -246,7 +254,8 @@ export default function CoreModuleInteractiveView({
                     {submissionError}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Your choice is preserved. You can re-submit now or refresh the activity.
+                    Your choice is preserved. You can re-submit now or refresh
+                    the activity.
                   </p>
                 </div>
               </div>
@@ -256,7 +265,7 @@ export default function CoreModuleInteractiveView({
                   variant="default"
                   disabled={isSubmitting || selectedChoice === null}
                   onClick={handleSubmit}
-                  className="gap-1.5 cursor-pointer"
+                  className="cursor-pointer gap-1.5"
                 >
                   {isSubmitting ? (
                     <Loader2 className="size-3.5 animate-spin" />
@@ -269,7 +278,7 @@ export default function CoreModuleInteractiveView({
                   size="sm"
                   variant="outline"
                   onClick={() => window.location.reload()}
-                  className="gap-1.5 cursor-pointer"
+                  className="cursor-pointer gap-1.5"
                 >
                   <RefreshCw className="size-3.5" />
                   Refresh

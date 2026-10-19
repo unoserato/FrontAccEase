@@ -320,7 +320,7 @@ export default function LearnerQuizView() {
                 Due Date
               </p>
               <p className="text-sm font-bold text-foreground">
-                {getDateString(quiz.due_date)}
+                {getDateString(quiz.due_date || "")}
               </p>
             </div>
           </div>

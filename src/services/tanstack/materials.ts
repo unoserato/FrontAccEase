@@ -24,6 +24,7 @@ import {
   getQuizSubmissionsByIdAPI,
   sitemapAPI,
   webLLMTasksAPI,
+  getWCAGInstruments,
 } from "../api/GET/materialsGETAPI"
 import {
   createExtensionScanAPI,
@@ -33,7 +34,7 @@ import {
 
 import { staleTime } from "../axios"
 import {
-  getInstructorMaterialsAPI,
+  getInstructorMaterialsCountAPI,
   getInstructorMaterialsModulesAPI,
   getModuleByIdAPI,
 } from "../api/GET/materialsGETAPI"
@@ -62,10 +63,10 @@ export function useEnrolledLearnersByClassroomId(id: string) {
   })
 }
 
-export function useInstructorMaterialsList() {
+export function useInstructorMaterialsCount() {
   return useSuspenseQuery({
     queryKey: ["instructor-materials-list"],
-    queryFn: getInstructorMaterialsAPI,
+    queryFn: getInstructorMaterialsCountAPI,
     staleTime: staleTime,
   })
 }
@@ -277,5 +278,13 @@ export function useAnswerCoreInteractive(activityId?: string) {
         })
       }
     },
+  })
+}
+
+export function useWCAGInstruments() {
+  return useSuspenseQuery({
+    queryKey: ["wcag-instruments"],
+    queryFn: getWCAGInstruments,
+    staleTime: staleTime,
   })
 }

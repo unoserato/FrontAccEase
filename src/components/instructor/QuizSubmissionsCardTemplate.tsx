@@ -176,7 +176,7 @@ export default function QuizSubmissionsCardTemplate({
                       >
                         <div className="flex items-center gap-3">
                           <Avatar className="size-8 border border-border text-xs font-semibold sm:size-9">
-                            <AvatarImage src={learner.profile_picture} />
+                            <AvatarImage src={learner.profile_picture || ""} />
                             <AvatarFallback>
                               {initials || <User className="size-3.5" />}
                             </AvatarFallback>

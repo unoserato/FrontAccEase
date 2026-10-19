@@ -11,7 +11,7 @@ export async function getModulesAPI(): Promise<ModuleProps[]> {
 }
 
 export async function createModuleAPI(module: {
-  title: string
+  name: string
   principle: string
   content: object
   classroom_id: string[]
@@ -45,15 +45,17 @@ export async function getClassroomAPI(): Promise<ClassroomProps[]> {
   return response.data
 }
 
-export async function getEnrolledLearners(id: string) {
-  const response = await api.get(`/helper/get-enrolled-learner/${id}`)
+export async function getEnrolledLearners(classroom_id: string) {
+  const response = await api.get(`/helper/get-enrolled-learner/${classroom_id}`)
   return response.data
 }
 
 export async function getClassroomContentViewById(
-  id: string
+  classroom_id: string
 ): Promise<ClassroomViewProps> {
-  const response = await api.get(`/helper/get-classroom-content/${id}`)
+  const response = await api.get(
+    `/helper/get-classroom-content/${classroom_id}`
+  )
   return response.data
 }
 

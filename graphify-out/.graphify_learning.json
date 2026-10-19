@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-18T15:59:18.468863+00:00",
+  "generated_at": "2026-10-19T13:50:44.448525+00:00",
   "nodes": {
     "package_scripts_build": {
       "code_fingerprint": "71b5bd2bc44b46e7b82da50e6d22e5bf75764319f3623558986063476859af22",
@@ -12,13 +12,13 @@
           "q": "Fix production build errors caused by stale const/data imports"
         }
       ],
-      "score": 0.934366257,
+      "score": 0.914910696,
       "source_file": "package.json",
       "status": "tentative",
       "uses": 1
     },
     "src_const_data": {
-      "code_fingerprint": "506662bcab389d714b73d0f0e95ab9b96a8ae8bdd61fffe9398a1e257d09913a",
+      "code_fingerprint": "d4dd89bc5ceaa1717f13a7336d287bc62b94ce52f3cf7eb731a02825d85867c1",
       "label": "data.ts",
       "last": "2026-10-15T17:28:18.196154+00:00",
       "provenance": [
@@ -28,29 +28,13 @@
           "q": "Fix production build errors caused by stale const/data imports"
         }
       ],
-      "score": 0.934366257,
+      "score": 0.914910696,
       "source_file": "src/const/data.ts",
       "status": "tentative",
       "uses": 1
     },
-    "src_const_props_materialprops": {
-      "code_fingerprint": "1118ff22609eda2422f05710bf4da328fe4cca488ee7b513e207b781a4c1e29e",
-      "label": "materialProps.ts",
-      "last": "2026-10-15T17:28:18.196154+00:00",
-      "provenance": [
-        {
-          "date": "2026-10-15T17:28:18.196154+00:00",
-          "outcome": "useful",
-          "q": "Fix production build errors caused by stale const/data imports"
-        }
-      ],
-      "score": 0.934366257,
-      "source_file": "src/const/props/materialProps.ts",
-      "status": "tentative",
-      "uses": 1
-    },
     "src_pages_learner_analyzer_analyzer": {
-      "code_fingerprint": "22713ad74b80af820f7bb5b0ec1df36e8a352e875813f65fe465fe9152cb5f9b",
+      "code_fingerprint": "8a7381a3ab59bc33e4e4d0fff13ca144ca4ffbed368d0909086a11157da12fdd",
       "label": "Analyzer()",
       "last": "2026-10-15T16:01:37.075836+00:00",
       "provenance": [
@@ -60,13 +44,13 @@
           "q": "Add elapsed time in webLLM.ts"
         }
       ],
-      "score": 0.933067576,
+      "score": 0.913639056,
       "source_file": "src/pages/learner/Analyzer.tsx",
       "status": "tentative",
       "uses": 1
     },
     "src_services_webllm_compilewebllmresults": {
-      "code_fingerprint": "eff5454880114cb34189fe2943abd48cfd5419e62896a60e5df973ae2bb66dca",
+      "code_fingerprint": "251ad66df58e018dcb9fc8e93f4923b0a752ded92d18353a35a7538e59906f00",
       "label": "compileWebLLMResults()",
       "last": "2026-10-15T16:01:37.075836+00:00",
       "provenance": [
@@ -76,7 +60,7 @@
           "q": "Add elapsed time in webLLM.ts"
         }
       ],
-      "score": 0.933067576,
+      "score": 0.913639056,
       "source_file": "src/services/webLLM.ts",
       "status": "tentative",
       "uses": 1

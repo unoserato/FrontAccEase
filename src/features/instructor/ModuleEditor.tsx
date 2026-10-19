@@ -28,7 +28,7 @@ import { useHotkeys } from "react-hotkeys-hook"
 import { cn } from "cn"
 import SearchTemplate from "@/components/common/SearchTemplate"
 import { useUnmount } from "@/hooks/useUnmount"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createModuleAPI } from "@/services/api/materialsAPI"
 import { toast } from "@/components/ui/toast"
 import { useClassrooms, useModules } from "@/services/tanstack/materials"
@@ -36,7 +36,7 @@ import { useClassrooms, useModules } from "@/services/tanstack/materials"
 const MODULES_PATH = "/instructor/modules"
 
 export default function ModuleEditor() {
-  const { id } = useParams<{ id?: string }>()
+  const { id } = useParams()
   const { data: modules } = useModules()
   const { data: classrooms } = useClassrooms()
   const existingModule = useMemo(
@@ -45,7 +45,7 @@ export default function ModuleEditor() {
   )
   const navigate = useNavigate()
 
-  const [title, setTitle] = useState(
+  const [name, setName] = useState(
     existingModule ? existingModule.name : "Untitled Module"
   )
   const [content, setContent] = useState<any>(
@@ -66,7 +66,7 @@ export default function ModuleEditor() {
   if (existingModule !== prevModule) {
     setPrevModule(existingModule)
     if (existingModule) {
-      setTitle(existingModule.name)
+      setName(existingModule.name)
       setContent(existingModule.content)
       if (existingModule.principle)
         setSelectedPrinciple(existingModule.principle)
@@ -113,10 +113,11 @@ export default function ModuleEditor() {
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     )
   }
-
+  const queryClient = useQueryClient()
   const { mutate: saveModule } = useMutation({
     mutationFn: createModuleAPI,
     onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["modules"] })
       toast.add({
         type: "success",
         title: "Module saved",
@@ -142,7 +143,7 @@ export default function ModuleEditor() {
   function handleSave() {
     setIsSaving(true)
     const payload = {
-      title: title,
+      name: name,
       principle: selectedPrinciple,
       content: content,
       classroom_id: selectedClassrooms,
@@ -171,8 +172,8 @@ export default function ModuleEditor() {
 
             <div className="flex min-w-0 flex-1 items-center gap-2">
               <Input
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
+                value={name}
+                onChange={(event) => setName(event.target.value)}
                 placeholder="Untitled Module"
                 aria-label="Module title"
                 className="xs:max-w-65 xs:text-base h-9 max-w-45 min-w-0 flex-1 border-transparent bg-transparent px-2 text-sm font-semibold tracking-tight shadow-none transition-colors hover:border-border focus-visible:border-ring focus-visible:bg-background sm:max-w-md sm:text-lg"

@@ -7,17 +7,7 @@
         "level": 1,
         "textAlign": null
       },
-      "content": [
-        {
-          "text": "Start creating your document",
-          "type": "text",
-          "marks": [
-            {
-              "type": "bold"
-            }
-          ]
-        }
-      ]
+      "content": []
     }
   ]
 }

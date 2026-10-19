@@ -1,24 +1,10 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Item, ItemContent, ItemActions } from "@/components/ui/item"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import {
   Sheet,
   SheetContent,
@@ -27,84 +13,216 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
   wcagGuidelines,
-  wcagCriteria,
-  type WCAGCriterion,
   type WCAGGuideline,
-  type WCAGLevel,
   type WCAGPrinciple,
 } from "@/const/criterion"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { ExternalLink, PanelLeft, Pencil } from "lucide-react"
+import { FileText, PanelLeft } from "lucide-react"
 import SearchTemplate from "@/components/common/SearchTemplate"
+import { useWCAGInstruments } from "@/services/tanstack/materials"
+import type { InstrumentProps } from "@/const/props/miscellaneousProps"
+
+// TODO: make it dropddown per 1.1, 1.2. etc
+
+interface ParsedInstrument extends InstrumentProps {
+  guidelineId: string
+  criterionNum: string
+  criterionName: string
+  level: string | null
+  body: string
+}
+
+function parseInstrument(item: InstrumentProps): ParsedInstrument {
+  const match = item.title.match(/^(\d+\.\d+)(?:\.(\d+))?\s*(.*)$/)
+  const guidelineId = match ? match[1] : ""
+  const criterionNum = match
+    ? match[2]
+      ? `${match[1]}.${match[2]}`
+      : match[1]
+    : ""
+  const criterionName = match ? match[3] : item.title
+
+  // Extract level from content e.g. (Level A), (Level AA), (Level AAA), (Level AA) New
+  const levelMatch = item.content.match(
+    /^\s*\(Level\s+(A{1,3})\)(?:\s+(New))?/i
+  )
+  const level = levelMatch
+    ? `Level ${levelMatch[1].toUpperCase()}${levelMatch[2] ? " (New)" : ""}`
+    : item.content.trim().startsWith("Note")
+      ? "Note"
+      : null
+
+  // Strip leading (Level ...) tag lines
+  const body = item.content
+    .replace(/^(\s*\(Level\s+[A-Za-z0-9]+\)(?:\s+New)?\s*)+/i, "")
+    .trim()
+
+  return {
+    ...item,
+    guidelineId,
+    criterionNum,
+    criterionName,
+    level,
+    body,
+  }
+}
+
+function compareCriterionNum(a: string, b: string): number {
+  const aParts = a.split(".").map(Number)
+  const bParts = b.split(".").map(Number)
+  for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+    const aVal = aParts[i] || 0
+    const bVal = bParts[i] || 0
+    if (aVal !== bVal) return aVal - bVal
+  }
+  return 0
+}
+
+function renderContentBody(body: string) {
+  const sections = body.split(/\n\n+/).filter(Boolean)
+
+  return (
+    <div className="space-y-4 text-sm leading-relaxed text-foreground/90">
+      {sections.map((section, idx) => {
+        const lines = section
+          .split("\n")
+          .map((l) => l.trim())
+          .filter(Boolean)
+
+        // Check if lines are a bulleted list (- item)
+        const isBulletList =
+          lines.length > 1 && lines.every((line) => line.startsWith("- "))
+
+        if (isBulletList) {
+          return (
+            <ul key={idx} className="space-y-1.5 pl-2">
+              {lines.map((line, lIdx) => (
+                <li key={lIdx} className="flex items-start gap-2">
+                  <span className="mt-2 size-1.5 shrink-0 rounded-full bg-foreground/60" />
+                  <span>{line.replace(/^-\s*/, "")}</span>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
+        // Check if first line acts as a section heading
+        const firstLine = lines[0] || ""
+        const isHeadingAndBody =
+          lines.length > 1 &&
+          (firstLine.endsWith(":") ||
+            firstLine.startsWith("Note") ||
+            firstLine.startsWith("Exception") ||
+            firstLine === "Controls, Input" ||
+            firstLine === "Time-Based Media" ||
+            firstLine === "Test" ||
+            firstLine === "Sensory" ||
+            firstLine === "CAPTCHA" ||
+            firstLine === "Decoration, Formatting, Invisible" ||
+            (firstLine.length < 35 && !firstLine.includes(".")))
+
+        if (isHeadingAndBody) {
+          const heading = firstLine
+          const rest = lines.slice(1).join(" ")
+          return (
+            <div
+              key={idx}
+              className="space-y-1 rounded-xl border border-border/70 bg-muted/30 p-3.5 sm:p-4"
+            >
+              <h4 className="font-bold text-foreground">{heading}</h4>
+              <p className="text-muted-foreground">{rest}</p>
+            </div>
+          )
+        }
+
+        return (
+          <p key={idx} className="leading-relaxed">
+            {section}
+          </p>
+        )
+      })}
+    </div>
+  )
+}
 
 export default function Instruments() {
   const isMobile = useIsMobile()
   const navigate = useNavigate()
+  const { data: instrumentsData } = useWCAGInstruments()
   const { guidelineId } = useParams<{ guidelineId?: string }>()
 
   const [search, setSearch] = useState("")
-  const [criteriaList, setCriteriaList] =
-    useState<WCAGCriterion[]>(wcagCriteria)
-  const [selectedCriterionId, setSelectedCriterionId] =
-    useState<string>("1.1.1")
+  const [selectedCriterionId, setSelectedCriterionId] = useState<string>("1")
   const [sheetOpen, setSheetOpen] = useState(false)
+
+  // Parse all instruments from the API dataset
+  const parsedInstruments = useMemo(() => {
+    return instrumentsData.map(parseInstrument)
+  }, [])
 
   // Current active guideline ID from URL or default to "1.1"
   const selectedGuidelineId = guidelineId || "1.1"
 
-  // Sync selected criterion when guidelineId changes
+  // Filter criteria based on search query
+  const filteredInstruments = useMemo(() => {
+    if (!search.trim()) return parsedInstruments
+    const query = search.toLowerCase()
+    return parsedInstruments.filter(
+      (item) =>
+        item.title.toLowerCase().includes(query) ||
+        item.principle.toLowerCase().includes(query) ||
+        item.content.toLowerCase().includes(query)
+    )
+  }, [parsedInstruments, search])
+
+  // Filter guidelines matching search or containing matching criteria
+  const matchingGuidelineIds = useMemo(() => {
+    return new Set(filteredInstruments.map((item) => item.guidelineId))
+  }, [filteredInstruments])
+
+  const filteredGuidelines = useMemo(() => {
+    if (!search.trim()) return wcagGuidelines
+    const query = search.toLowerCase()
+    return wcagGuidelines.filter(
+      (g) =>
+        g.name.toLowerCase().includes(query) ||
+        g.principle.toLowerCase().includes(query) ||
+        matchingGuidelineIds.has(g.id)
+    )
+  }, [search, matchingGuidelineIds])
+
+  // Criteria belonging to the currently selected guideline
+  const currentGuidelineCriteria = useMemo(() => {
+    return filteredInstruments
+      .filter((c) => c.guidelineId === selectedGuidelineId)
+      .sort((a, b) => compareCriterionNum(a.criterionNum, b.criterionNum))
+  }, [filteredInstruments, selectedGuidelineId])
+
+  // Sync selected criterion when guidelineId changes or when criteria list changes
   const [prevGuidelineId, setPrevGuidelineId] = useState(selectedGuidelineId)
   if (selectedGuidelineId !== prevGuidelineId) {
     setPrevGuidelineId(selectedGuidelineId)
-    const firstCriterion = criteriaList.find(
-      (c) => c.guidelineId === selectedGuidelineId
-    )
+    const firstCriterion = currentGuidelineCriteria[0]
     if (firstCriterion) {
-      setSelectedCriterionId(firstCriterion.id)
+      setSelectedCriterionId(String(firstCriterion.id))
     }
   }
 
-  // Filter guidelines based on search query
-  const filteredGuidelines = wcagGuidelines.filter((g) => {
-    if (!search.trim()) return true
-    const query = search.toLowerCase()
-    return (
-      g.name.toLowerCase().includes(query) ||
-      g.principle.toLowerCase().includes(query)
-    )
-  })
+  // Ensure selectedCriterionId belongs to currentGuidelineCriteria
+  const activeCriterion =
+    currentGuidelineCriteria.find(
+      (c) => String(c.id) === selectedCriterionId
+    ) ||
+    currentGuidelineCriteria[0] ||
+    null
 
-  // Criteria belonging to the currently selected guideline
-  const currentGuidelineCriteria = criteriaList.filter(
-    (c) => c.guidelineId === selectedGuidelineId
-  )
-
-  // Group guidelines by principle
   const principles: WCAGPrinciple[] = [
     "Perceivable",
     "Operable",
     "Understandable",
     "Robust",
   ]
-
-  const selectedCriterion =
-    criteriaList.find((c) => c.id === selectedCriterionId) ||
-    currentGuidelineCriteria[0] ||
-    criteriaList[0]
-
-  const handleUpdateCriterion = (updated: WCAGCriterion) => {
-    setCriteriaList((prev) =>
-      prev.map((item) => (item.id === updated.id ? updated : item))
-    )
-  }
 
   const handleSelectGuideline = (id: string) => {
     navigate(`/admin/instruments/${id}`)
@@ -118,7 +236,7 @@ export default function Instruments() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <HeaderTemplate
           title="Instruments"
-          subtitle="Rules the analyzer cross-checks against a client’s HTML."
+          subtitle="WCAG 2.2 accessibility success criteria and rules cross-checked against HTML."
         />
 
         {/* Mobile Browse Guidelines Sheet Trigger */}
@@ -144,7 +262,7 @@ export default function Instruments() {
                   filteredGuidelines={filteredGuidelines}
                   selectedGuidelineId={selectedGuidelineId}
                   onSelectGuideline={handleSelectGuideline}
-                  criteriaList={criteriaList}
+                  instruments={filteredInstruments}
                 />
               </SheetContent>
             </Sheet>
@@ -168,16 +286,16 @@ export default function Instruments() {
               filteredGuidelines={filteredGuidelines}
               selectedGuidelineId={selectedGuidelineId}
               onSelectGuideline={handleSelectGuideline}
-              criteriaList={criteriaList}
+              instruments={filteredInstruments}
             />
           </CardContent>
         </Card>
 
-        {/* Right Column: Selected Criterion Detail using shadcn Tabs */}
+        {/* Right Column: Selected Criterion Detail */}
         <Card className="flex flex-col justify-between shadow-xs lg:col-span-2">
-          {currentGuidelineCriteria.length > 0 ? (
+          {currentGuidelineCriteria.length > 0 && activeCriterion ? (
             <Tabs
-              value={selectedCriterionId}
+              value={String(activeCriterion.id)}
               onValueChange={setSelectedCriterionId}
               className="flex flex-1 flex-col justify-between p-4 sm:p-6"
             >
@@ -192,10 +310,13 @@ export default function Instruments() {
                       {currentGuidelineCriteria.map((c) => (
                         <TabsTrigger
                           key={c.id}
-                          value={c.id}
+                          value={String(c.id)}
                           className="text-xs"
                         >
-                          {c.num} {c.name.replace(`${c.num} `, "")}
+                          <span className="font-bold">{c.criterionNum}</span>
+                          <span className="ml-1 text-muted-foreground">
+                            {c.criterionName}
+                          </span>
                         </TabsTrigger>
                       ))}
                     </TabsList>
@@ -206,106 +327,57 @@ export default function Instruments() {
                 {currentGuidelineCriteria.map((c) => (
                   <TabsContent
                     key={c.id}
-                    value={c.id}
+                    value={String(c.id)}
                     className="mt-0 space-y-6 p-0 outline-none"
                   >
-                    {/* Header Info & Edit Action */}
+                    {/* Header Info */}
                     <div className="flex items-start justify-between">
-                      <div className="space-y-1">
-                        <p className="text-sm font-bold text-foreground">
+                      <div className="space-y-1.5">
+                        <span className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
                           {c.principle}
-                        </p>
-                        <h2 className="text-xl font-extrabold tracking-tight text-foreground sm:text-3xl">
-                          {c.name}
+                        </span>
+                        <h2 className="text-xl font-extrabold tracking-tight text-foreground sm:text-2xl lg:text-3xl">
+                          {c.title}
                         </h2>
-                        <div className="pt-1">
-                          <Badge variant="secondary" className="font-semibold">
-                            {c.level}
-                          </Badge>
-                        </div>
-                      </div>
-
-                      <EditCriterionDialog
-                        criterion={c}
-                        onSave={handleUpdateCriterion}
-                      />
-                    </div>
-
-                    {/* Description Box */}
-                    <div className="space-y-1.5 rounded-2xl border border-border/40 bg-muted/40 p-4">
-                      <h3 className="text-sm font-bold text-foreground">
-                        Description
-                      </h3>
-                      <p className="text-sm leading-relaxed text-foreground/90">
-                        {c.description}
-                      </p>
-                    </div>
-
-                    {/* Techniques & Rules */}
-                    {c.techniques && c.techniques.length > 0 && (
-                      <div className="space-y-3 pt-2">
-                        <h3 className="text-sm font-bold text-foreground">
-                          Techniques & Analyzer Rules
-                        </h3>
-                        <div className="space-y-2">
-                          {c.techniques.map((tech) => (
-                            <Item
-                              key={tech.id}
-                              variant="outline"
-                              className="justify-between rounded-xl bg-card p-3 text-xs sm:text-sm"
+                        {c.level && (
+                          <div className="pt-1">
+                            <Badge
+                              variant={
+                                c.level.includes("Level AAA")
+                                  ? "outline"
+                                  : c.level.includes("Level AA")
+                                    ? "secondary"
+                                    : "default"
+                              }
+                              className="font-semibold"
                             >
-                              <ItemContent className="flex-row items-center gap-2">
-                                <span className="font-bold text-foreground">
-                                  {tech.id}:
-                                </span>
-                                <span className="text-muted-foreground">
-                                  {tech.title}
-                                </span>
-                              </ItemContent>
-                              {tech.url && (
-                                <ItemActions>
-                                  <a
-                                    href={tech.url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="ml-2 text-muted-foreground transition-colors hover:text-foreground"
-                                  >
-                                    <ExternalLink className="h-4 w-4" />
-                                  </a>
-                                </ItemActions>
-                              )}
-                            </Item>
-                          ))}
-                        </div>
+                              {c.level}
+                            </Badge>
+                          </div>
+                        )}
                       </div>
-                    )}
+                    </div>
+
+                    {/* Content Box */}
+                    <div className="rounded-2xl border border-border/60 bg-card p-5 sm:p-6">
+                      <h3 className="mb-4 text-xs font-bold tracking-wider text-muted-foreground uppercase">
+                        Criterion Specification & Guidance
+                      </h3>
+                      {renderContentBody(c.body)}
+                    </div>
                   </TabsContent>
                 ))}
               </div>
-
-              {/* Bottom Reference Link */}
-              {selectedCriterion && (
-                <div className="mt-6 flex justify-end border-t border-border/60 pt-4">
-                  <Button
-                    variant="link"
-                    className="px-0 font-semibold text-foreground"
-                  >
-                    <a
-                      href={selectedCriterion.referenceUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center space-x-1.5"
-                    >
-                      <span>References</span>
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  </Button>
-                </div>
-              )}
             </Tabs>
           ) : (
-            <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">
-              Select a guideline to view criteria details.
+            <div className="flex h-64 flex-col items-center justify-center p-8 text-center text-muted-foreground">
+              <FileText className="mb-2 size-8 opacity-40" />
+              <p className="text-sm font-medium">
+                No criteria found matching your selection.
+              </p>
+              <p className="text-xs">
+                Select a guideline from the list or clear your search query.
+              </p>
             </div>
           )}
         </Card>
@@ -321,7 +393,7 @@ function BrowseGuidelinesContent({
   filteredGuidelines,
   selectedGuidelineId,
   onSelectGuideline,
-  criteriaList,
+  instruments,
 }: {
   search: string
   setSearch: (val: string) => void
@@ -329,14 +401,14 @@ function BrowseGuidelinesContent({
   filteredGuidelines: WCAGGuideline[]
   selectedGuidelineId: string
   onSelectGuideline: (guidelineId: string) => void
-  criteriaList: WCAGCriterion[]
+  instruments: ParsedInstrument[]
 }) {
   return (
     <div className="flex-1 space-y-4">
       <SearchTemplate
         search={search}
         setSearch={(value) => setSearch(value)}
-        title="principle"
+        title="principle or criterion"
       />
       <div className="space-y-6 overflow-y-auto pr-1">
         {principles.map((principle) => {
@@ -348,13 +420,13 @@ function BrowseGuidelinesContent({
 
           return (
             <div key={principle} className="space-y-1.5">
-              <h4 className="px-1 text-sm font-bold tracking-wide">
+              <h4 className="px-1 text-xs font-bold tracking-wider text-muted-foreground uppercase">
                 {principle}
               </h4>
               <div className="space-y-1">
                 {guidelinesInPrinciple.map((guideline) => {
                   const isActive = selectedGuidelineId === guideline.id
-                  const subCount = criteriaList.filter(
+                  const count = instruments.filter(
                     (c) => c.guidelineId === guideline.id
                   ).length
 
@@ -362,20 +434,20 @@ function BrowseGuidelinesContent({
                     <Button
                       key={guideline.id}
                       type="button"
-                      variant={"ghost"}
-                      className={"w-full justify-between"}
+                      variant={isActive ? "secondary" : "ghost"}
+                      className="w-full justify-between font-medium"
                       onClick={() => onSelectGuideline(guideline.id)}
                     >
-                      <span>{guideline.name}</span>
-                      {subCount > 1 && (
+                      <span className="truncate">{guideline.name}</span>
+                      {count > 0 && (
                         <span
-                          className={`rounded-md px-1.5 py-0.5 text-xs ${
+                          className={`rounded-md px-1.5 py-0.5 text-xs font-semibold ${
                             isActive
-                              ? "bg-background/20 text-background"
+                              ? "bg-foreground/10 text-foreground"
                               : "bg-muted text-muted-foreground"
                           }`}
                         >
-                          {subCount}
+                          {count}
                         </span>
                       )}
                     </Button>
@@ -387,114 +459,5 @@ function BrowseGuidelinesContent({
         })}
       </div>
     </div>
-  )
-}
-
-function EditCriterionDialog({
-  criterion,
-  onSave,
-}: {
-  criterion: WCAGCriterion
-  onSave: (updated: WCAGCriterion) => void
-}) {
-  const [open, setOpen] = useState(false)
-  const [name, setName] = useState(criterion.name)
-  const [level, setLevel] = useState<WCAGLevel>(criterion.level)
-  const [description, setDescription] = useState(criterion.description)
-  const [referenceUrl, setReferenceUrl] = useState(criterion.referenceUrl)
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSave({
-      ...criterion,
-      name,
-      level,
-      description,
-      referenceUrl,
-    })
-    setOpen(false)
-  }
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger
-        render={
-          <Button variant="ghost" size="icon-sm" className="rounded-full">
-            <Pencil className="h-4 w-4" />
-            <span className="sr-only">Edit Criterion</span>
-          </Button>
-        }
-      />
-      <DialogContent className={"max-w-xl"}>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <DialogHeader>
-            <DialogTitle>Edit Criterion</DialogTitle>
-            <DialogDescription>
-              Update rule definition and details for the LLM knowledgebase.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-3">
-            <div className="space-y-1.5">
-              <Label htmlFor="criterion-name">Criterion Name</Label>
-              <Input
-                id="criterion-name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="criterion-level">Compliance Level</Label>
-              <Select
-                value={level}
-                onValueChange={(val) => setLevel(val as WCAGLevel)}
-              >
-                <SelectTrigger id="criterion-level">
-                  <SelectValue placeholder="Select level" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Level A">Level A</SelectItem>
-                  <SelectItem value="Level AA">Level AA</SelectItem>
-                  <SelectItem value="Level AAA">Level AAA</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="criterion-desc">Description</Label>
-              <Textarea
-                id="criterion-desc"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={3}
-                required
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <Label htmlFor="criterion-ref">Reference URL</Label>
-              <Input
-                id="criterion-ref"
-                value={referenceUrl}
-                onChange={(e) => setReferenceUrl(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <DialogFooter>
-            <DialogClose
-              render={
-                <Button type="button" variant="outline">
-                  Cancel
-                </Button>
-              }
-            />
-            <Button type="submit">Save Changes</Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
   )
 }

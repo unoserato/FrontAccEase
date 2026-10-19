@@ -22,25 +22,28 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import ModuleCardTemplate from "@/components/common/ModuleCardTemplate"
-import QuizCardTemplate from "@/components/common/QuizCardTemplate"
+// import QuizCardTemplate from "@/components/common/QuizCardTemplate"
 import { Badge } from "@/components/ui/badge"
 import copyText from "@/hooks/copy-text"
 import { useClassroomContentView } from "@/services/tanstack/materials"
 import type { ClassroomViewProps } from "@/const/props/classroomProps"
 import ErrorBoundary from "../errors/ErrorBoundary"
+import PageSkeleton from "@/components/skeleton/PageSkeleton"
+import QuizSubmissionsCardTemplate from "@/components/instructor/QuizSubmissionsCardTemplate"
 
 export default function ClassroomInstructorView() {
   const { id } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const [copied, setCopied] = useState(false)
-  const { data: classroom } = useClassroomContentView(id!)
+  const { data: classroom, isPending: isClassroomPending } =
+    useClassroomContentView(id!)
 
   const tabParam = searchParams.get("tab")
   const activeTabValue =
-    tabParam === "c" ? "classwork" : tabParam === "p" ? "people" : "dashboard"
+    tabParam === "q" ? "quizzes" : tabParam === "p" ? "people" : "dashboard"
 
   const handleTabChange = (value: string) => {
-    const code = value === "classwork" ? "c" : value === "people" ? "p" : "d"
+    const code = value === "quizzes" ? "q" : value === "people" ? "p" : "d"
     setSearchParams(
       (prev) => {
         const next = new URLSearchParams(prev)
@@ -51,7 +54,8 @@ export default function ClassroomInstructorView() {
     )
   }
 
-  if (!classroom) return <ErrorBoundary />
+  if (isClassroomPending) return <PageSkeleton />
+  if (!classroom && !isClassroomPending) return <ErrorBoundary />
 
   return (
     <section className="p-responsive w-full space-y-4 bg-background sm:space-y-6">
@@ -97,8 +101,8 @@ export default function ClassroomInstructorView() {
             <TabsTrigger value="dashboard" className="text-xs sm:text-sm">
               Dashboard
             </TabsTrigger>
-            <TabsTrigger value="classwork" className="text-xs sm:text-sm">
-              Classwork
+            <TabsTrigger value="quizzes" className="text-xs sm:text-sm">
+              Quizzes
             </TabsTrigger>
             <TabsTrigger value="people" className="text-xs sm:text-sm">
               People
@@ -110,8 +114,8 @@ export default function ClassroomInstructorView() {
           <Dashboard classroom={classroom} />
         </TabsContent>
 
-        <TabsContent value="classwork" className="mt-4 sm:mt-6">
-          <Classwork />
+        <TabsContent value="quizzes" className="mt-4 sm:mt-6">
+          <Quizzes classroom={classroom} />
         </TabsContent>
 
         <TabsContent value="people" className="mt-4 sm:mt-6">
@@ -221,7 +225,7 @@ function Dashboard({ classroom }: { classroom: ClassroomViewProps }) {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold text-foreground sm:text-lg">
-              Classroom Quizzes & Assessments
+              Classroom Quizzes
             </h3>
             <p className="text-xs text-muted-foreground">
               Evaluations assigned to {classroom.classroom.name}
@@ -243,7 +247,12 @@ function Dashboard({ classroom }: { classroom: ClassroomViewProps }) {
         ) : (
           <div className="grid grid-cols-1 gap-4">
             {classroomQuizzes.map((quiz) => (
-              <QuizCardTemplate key={quiz.id} quiz={quiz} />
+              <QuizSubmissionsCardTemplate
+                key={quiz.id}
+                quiz={quiz}
+                classrooms={[classroom.classroom]}
+                submissions={classroom.submissions}
+              />
             ))}
           </div>
         )}
@@ -252,10 +261,18 @@ function Dashboard({ classroom }: { classroom: ClassroomViewProps }) {
   )
 }
 
-function Classwork() {
+function Quizzes({ classroom }: { classroom: ClassroomViewProps }) {
+  const quizzes = classroom.quizzes
+
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6 py-4 sm:py-6">
-      {/* <ClassworkCardTemplate classroom={classroom} /> */}
+      {quizzes.map((quiz) => (
+        <QuizSubmissionsCardTemplate
+          quiz={quiz}
+          classrooms={[classroom.classroom]}
+          submissions={classroom.submissions}
+        />
+      ))}
     </div>
   )
 }

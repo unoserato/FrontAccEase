@@ -1,9 +1,11 @@
 import type {
   AnalyzerResultItem,
   AnalyzerSummaryProps,
+  WcagEvaluationProps,
 } from "@/const/props/analyzerProps"
 import type { ClassroomProps } from "@/const/props/classroomProps"
-import type { InstructorMaterialsProps } from "@/const/props/instructorProps"
+import type { InstructorMaterialsCountProps } from "@/const/props/instructorProps"
+import type { InstrumentProps } from "@/const/props/miscellaneousProps"
 import type {
   CoreModuleActivityResponse,
   CoreModuleProgressProps,
@@ -17,8 +19,8 @@ import type {
 import { api } from "@/services/axios"
 import type { ExtensionScanSession, WebLLMTaskBatch } from "@/services/webLLM"
 
-export async function getInstructorMaterialsAPI(): Promise<
-  InstructorMaterialsProps[]
+export async function getInstructorMaterialsCountAPI(): Promise<
+  InstructorMaterialsCountProps[]
 > {
   const response = await api.get("/admin/instructor")
   return response.data
@@ -110,7 +112,12 @@ export async function getAnalyzerLogsSummaryByLearnerAPI(): Promise<
 
 export async function getAnalyzerResultByIdAPI(
   id: string
-): Promise<AnalyzerResultItem> {
+): Promise<AnalyzerResultItem | WcagEvaluationProps> {
   const response = await api.get(`/helper/analyzer-logs/${id}`)
+  return response.data
+}
+
+export async function getWCAGInstruments(): Promise<InstrumentProps[]> {
+  const response = await api.get(`/admin/wcag-instrument`)
   return response.data
 }

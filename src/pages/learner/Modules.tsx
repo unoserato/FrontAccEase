@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import type { PrincipleProgressItem } from "@/const/props/moduleProps"
+import { startPrincipleAPI } from "@/services/api/CRUD/materialsCRUDAPI"
 import { useCoreModuleProgress } from "@/services/tanstack/materials"
 import { ArrowUpRight, Brain, Code, Eye, Keyboard, Layers } from "lucide-react"
 import { Link } from "react-router-dom"
@@ -49,7 +50,11 @@ export default function Modules() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {coreModuleProgress?.principles.map((principle) => {
               return (
-                <Link to={`./${principle.name}`} key={principle.name}>
+                <Link
+                  onClick={async () => await startPrincipleAPI(principle.name)}
+                  to={`./${principle.name}`}
+                  key={principle.name}
+                >
                   <CoreModuleCardTemplate principle={principle} />
                 </Link>
               )

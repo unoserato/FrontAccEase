@@ -42,10 +42,7 @@ import {
   useQuizSubmissionsById,
 } from "@/services/tanstack/materials"
 import type { ClassroomProps } from "@/const/props/classroomProps"
-import type {
-  QuizProps,
-  QuizSubmissionProps,
-} from "@/const/props/quizProps"
+import type { QuizProps, QuizSubmissionProps } from "@/const/props/quizProps"
 import { getDateString } from "@/hooks/date-to-string"
 import QuizSubmissionsCardTemplate from "@/components/instructor/QuizSubmissionsCardTemplate"
 
@@ -177,8 +174,10 @@ function DashboardTab({
 }) {
   const assignedClassrooms = useMemo(
     () =>
-      quiz.classrooms
-        .map((qc) => classrooms.find((c) => String(c.id) === String(qc)))
+      quiz
+        .classrooms!.map((qc) =>
+          classrooms.find((c) => String(c.id) === String(qc))
+        )
         .filter(Boolean),
     [quiz.classrooms, classrooms]
   )
@@ -300,7 +299,7 @@ function DashboardTab({
                 {quiz.name}
               </CardTitle>
               <CardDescription className="text-xs text-muted-foreground">
-                Created on {getDateString(quiz.created_at)}
+                Created on {getDateString(quiz.created_at || "")}
               </CardDescription>
             </div>
           </div>
@@ -352,7 +351,7 @@ function DashboardTab({
                   Due Date
                 </p>
                 <p className="truncate text-sm font-semibold text-foreground">
-                  {getDateString(quiz.due_date)}
+                  {getDateString(quiz.due_date || "")}
                 </p>
               </div>
             </div>

@@ -1,10 +1,15 @@
-import { useState, useMemo } from "react"
-import { useParams, Link, useNavigate, useLocation } from "react-router-dom"
+import { useState, useMemo, useEffect } from "react"
+import { useParams, Link, useNavigate } from "react-router-dom"
 import type {
   AnalyzerResultItem,
+  AnalyzerResultsProps,
+  Content,
   PrincipleIssue,
+  PrincipleItem,
   PrinciplePassed,
   Result,
+  Task,
+  WcagEvaluationProps,
 } from "@/const/props/analyzerProps"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -154,6 +159,7 @@ interface FindingItem {
   selector?: string
   element?: string
   identifier?: string
+  evaluationPrompt?: string
   examples?: Array<{
     element?: string
     selector?: string
@@ -437,6 +443,22 @@ function FindingCard({ item }: { item: FindingItem }) {
             </div>
           )}
 
+          {/* AI Evaluation Prompt */}
+          {item.evaluationPrompt && (
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+                  <Sparkles className="size-3 text-primary" />
+                  Evaluation Prompt
+                </span>
+                <CopyButton text={item.evaluationPrompt} label="Prompt" />
+              </div>
+              <div className="rounded-lg border border-border/40 bg-muted/40 p-3 text-xs leading-relaxed text-foreground">
+                {item.evaluationPrompt}
+              </div>
+            </div>
+          )}
+
           {/* Element HTML snippet */}
           {item.element && (
             <div className="space-y-1.5">
@@ -571,82 +593,246 @@ function ManualRow({
   )
 }
 
-export default function AnalyzerResults() {
+function convertWcagEvaluationToResult(content: Content): Result {
+  const taskBatch = content.task_batch
+  const tasks = taskBatch?.tasks || []
+  const allTasks: Task[] =
+    tasks.length > 0
+      ? tasks
+      : [
+          ...(taskBatch?.pour_groups?.perceivable || []),
+          ...(taskBatch?.pour_groups?.operable || []),
+          ...(taskBatch?.pour_groups?.understandable || []),
+          ...(taskBatch?.pour_groups?.robust || []),
+        ]
+
+  const principleKeys = ["perceivable", "operable", "understandable", "robust"]
+  const grouped = new Map<
+    string,
+    {
+      name: string
+      issues: PrincipleIssue[]
+      passed: PrinciplePassed[]
+      manual_review: any[]
+    }
+  >()
+
+  for (const key of principleKeys) {
+    grouped.set(key, {
+      name: capitalize(key),
+      issues: [],
+      passed: [],
+      manual_review: [],
+    })
+  }
+
+  let passedCount = 0
+  let failedCount = 0
+  let manualCount = 0
+
+  for (const task of allTasks) {
+    const rawPrinciple = (
+      task.criterion?.principle || "perceivable"
+    ).toLowerCase()
+    const groupKey = principleKeys.includes(rawPrinciple)
+      ? rawPrinciple
+      : "perceivable"
+    const group = grouped.get(groupKey)!
+
+    const status = (task.status || "").toLowerCase()
+    const wcag = task.criterion?.id
+      ? `${task.criterion.id} ${task.criterion.title || ""}`.trim()
+      : "WCAG Criterion"
+
+    const item = {
+      wcag,
+      level: task.criterion?.level || "A",
+      message:
+        task.reason ||
+        task.criterion?.description ||
+        task.evaluation_prompt ||
+        "Accessibility evaluation task",
+      status: task.status || "manual",
+      element: task.target?.html,
+      selector: task.target?.parent,
+      identifier: task.task_id,
+      evaluationPrompt: task.evaluation_prompt,
+      examples: task.target?.context
+        ? [
+            {
+              element: task.target.html,
+              selector: task.target.parent,
+              identifier: [
+                task.target.context.previous
+                  ? `Previous: ${task.target.context.previous}`
+                  : null,
+                task.target.context.next
+                  ? `Next: ${task.target.context.next}`
+                  : null,
+              ]
+                .filter(Boolean)
+                .join(" | "),
+            },
+          ]
+        : undefined,
+    }
+
+    if (status === "fail" || status === "failed") {
+      failedCount += 1
+      group.issues.push({
+        ...item,
+        severity: "serious",
+        count: 1,
+      })
+    } else if (status === "pass" || status === "passed") {
+      passedCount += 1
+      group.passed.push({
+        ...item,
+        severity: null,
+      })
+    } else {
+      manualCount += 1
+      group.manual_review.push(item)
+    }
+  }
+
+  const totalEvaluated = passedCount + failedCount
+  const overallScore =
+    totalEvaluated > 0
+      ? Math.round((passedCount / totalEvaluated) * 100)
+      : manualCount > 0
+        ? 100
+        : 0
+
+  const principles: PrincipleItem[] = principleKeys.map((key) => {
+    const g = grouped.get(key)!
+    const gEvaluated = g.passed.length + g.issues.length
+    const gScore =
+      gEvaluated > 0 ? Math.round((g.passed.length / gEvaluated) * 100) : 100
+
+    return {
+      name: g.name,
+      data: {
+        score: gScore,
+        issues: g.issues,
+        passed: g.passed,
+        manual_review: g.manual_review,
+        summary: [
+          { name: "critical", count: 0 },
+          { name: "serious", count: g.issues.length },
+          { name: "moderate", count: 0 },
+          { name: "minor", count: 0 },
+          { name: "passed", count: g.passed.length },
+          { name: "manual_review", count: g.manual_review.length },
+        ],
+      },
+    }
+  })
+
+  return {
+    url: content.url || "",
+    overall_score: overallScore,
+    principles,
+    summary: [
+      { name: "critical", count: 0 },
+      { name: "serious", count: failedCount },
+      { name: "moderate", count: 0 },
+      { name: "minor", count: 0 },
+      { name: "total_passed", count: passedCount },
+      { name: "manual_review", count: manualCount },
+    ],
+    principle_scores: principles.map((p) => ({
+      principle: p.name,
+      score: p.data.score,
+    })),
+    elapsed_time: undefined,
+  }
+}
+
+export default function AnalyzerResults({
+  data: propData,
+  scanEntry: propScanEntry,
+  result: propResult,
+}: AnalyzerResultsProps = {}) {
   const { id } = useParams()
-  // const location = useLocation()
-  const { data: resultData, isLoading: isLoadingScan } = useAnalyzerResultById(
+  const { data: apiScanData, isLoading: isLoadingScan } = useAnalyzerResultById(
     id || ""
   )
 
-  // const scanEntry = useMemo<AnalyzerResultItem | undefined>(() => {
-  //   if (propScanEntry) return propScanEntry
-  //   if (data && "content" in data) return data as AnalyzerResultItem
-  //   if (location.state?.scanEntry) {
-  //     return location.state.scanEntry as AnalyzerResultItem
-  //   }
-  //   if (
-  //     apiScanData &&
-  //     typeof apiScanData === "object" &&
-  //     "content" in apiScanData
-  //   ) {
-  //     return apiScanData as AnalyzerResultItem
-  //   }
-  //   return undefined
-  // }, [propScanEntry, data, location.state, apiScanData])
+  const rawScanData = propScanEntry || propData || apiScanData
 
-  // const resultData = useMemo<Result | undefined>(() => {
-  //   if (propResult) return propResult
-  //   if (data && "principles" in data && !("content" in data)) {
-  //     return data as Result
-  //   }
-  //   if (location.state?.result) {
-  //     const res = location.state.result
-  //     return typeof res === "string" ? JSON.parse(res) : res
-  //   }
-  //   if (scanEntry?.content) {
-  //     if (typeof scanEntry.content === "string") {
-  //       try {
-  //         return JSON.parse(scanEntry.content)
-  //       } catch (e) {
-  //         console.error("Failed to parse scanEntry.content JSON:", e)
-  //       }
-  //     } else if (
-  //       typeof scanEntry.content === "object" &&
-  //       scanEntry.content !== null
-  //     ) {
-  //       return scanEntry.content as Result
-  //     }
-  //   }
-  //   if (apiScanData) {
-  //     const c =
-  //       typeof apiScanData === "object" && "content" in apiScanData
-  //         ? apiScanData.content
-  //         : apiScanData
-  //     if (typeof c === "string") {
-  //       try {
-  //         return JSON.parse(c)
-  //       } catch (e) {
-  //         console.error("Failed to parse apiScanData content JSON:", e)
-  //       }
-  //     } else if (c && typeof c === "object" && "principles" in c) {
-  //       return c as Result
-  //     }
-  //   }
-  //   if (id) {
-  //     try {
-  //       const stored = sessionStorage.getItem(
-  //         `frontaccease_analyzer_result_${id}`
-  //       )
-  //       if (stored) return JSON.parse(stored)
-  //     } catch {
-  //       // ignore
-  //     }
-  //   }
-  //   return undefined
-  // }, [propResult, data, location.state, scanEntry, apiScanData, id])
+  const scanEntry = useMemo<
+    AnalyzerResultItem | WcagEvaluationProps | undefined
+  >(() => {
+    if (propScanEntry) return propScanEntry
+    if (propData && "content" in propData) {
+      return propData as AnalyzerResultItem | WcagEvaluationProps
+    }
+    if (
+      apiScanData &&
+      typeof apiScanData === "object" &&
+      "content" in apiScanData
+    ) {
+      return apiScanData as AnalyzerResultItem | WcagEvaluationProps
+    }
+    return undefined
+  }, [propScanEntry, propData, apiScanData])
+
+  const resultData = useMemo<Result | undefined>(() => {
+    if (propResult) return propResult
+    if (propData && "principles" in propData && !("content" in propData)) {
+      return propData as Result
+    }
+
+    const rawContent =
+      scanEntry?.content ??
+      (rawScanData &&
+      typeof rawScanData === "object" &&
+      "content" in rawScanData
+        ? (rawScanData as any).content
+        : rawScanData)
+
+    if (!rawContent) return undefined
+
+    let parsed = rawContent
+    if (typeof rawContent === "string") {
+      try {
+        parsed = JSON.parse(rawContent)
+      } catch (e) {
+        console.error("Failed to parse scan content JSON:", e)
+        return undefined
+      }
+    }
+
+    if (!parsed || typeof parsed !== "object") return undefined
+
+    // WcagEvaluationProps (LLM scan)
+    if ("task_batch" in parsed || (parsed as any).scan_type === "llm") {
+      return convertWcagEvaluationToResult(parsed as Content)
+    }
+
+    // AnalyzerResultItem (Axe-core server scan)
+    if ("principles" in parsed) {
+      return parsed as Result
+    }
+
+    return undefined
+  }, [propResult, propData, scanEntry, rawScanData])
+
+  const isLLMScan = useMemo(() => {
+    if (!scanEntry?.content) return false
+    const c = scanEntry.content
+    if (typeof c === "string") {
+      return c.includes('"task_batch"') || c.includes('"scan_type":"llm"')
+    }
+    return Boolean(
+      typeof c === "object" &&
+      ("task_batch" in c || (c as any).scan_type === "llm")
+    )
+  }, [scanEntry])
 
   const { data: sitemapLinks = [], isLoading: isLoadingSitemap } = useSitemap(
-    resultData?.content?.url
+    resultData?.url
   )
 
   const navigate = useNavigate()
@@ -683,12 +869,7 @@ export default function AnalyzerResults() {
         }
 
         setScanningUrl(null)
-        navigate(`/learner/analyzer/${targetId}`, {
-          state: {
-            result: data,
-            scanId: targetId,
-          },
-        })
+        navigate(`/learner/analyzer/${targetId}`)
       },
       onError: (err: unknown) => {
         setScanningUrl(null)
@@ -715,7 +896,7 @@ export default function AnalyzerResults() {
   // Extract all issues across principles
   const allIssues = !resultData
     ? []
-    : resultData.content.principles?.flatMap((p) =>
+    : resultData.principles?.flatMap((p) =>
         (p.data?.issues || []).map((issue: PrincipleIssue) => ({
           ...issue,
           principleName: capitalize(p.name),
@@ -725,7 +906,7 @@ export default function AnalyzerResults() {
   // Extract all passed checks across principles
   const allPassed = !resultData
     ? []
-    : resultData.content.principles?.flatMap((p) =>
+    : resultData.principles?.flatMap((p) =>
         (p.data?.passed || []).map((passedItem: PrinciplePassed) => ({
           ...passedItem,
           principleName: capitalize(p.name),
@@ -735,12 +916,22 @@ export default function AnalyzerResults() {
   // Extract manual review items
   const allManual = !resultData
     ? []
-    : resultData.content.principles?.flatMap((p) =>
+    : resultData.principles?.flatMap((p) =>
         (p.data?.manual_review || []).map((item: unknown) => ({
           ...(item as object),
           principleName: capitalize(p.name),
         }))
       ) || []
+
+  useEffect(() => {
+    if (
+      allIssues.length === 0 &&
+      allPassed.length === 0 &&
+      allManual.length > 0
+    ) {
+      setActiveTab("manual")
+    }
+  }, [allIssues.length, allPassed.length, allManual.length])
 
   // Filter issues
   const filteredIssues = allIssues.filter((issue) => {
@@ -822,10 +1013,9 @@ export default function AnalyzerResults() {
   // Principle scores mapped
   const principleScoresList = !resultData
     ? []
-    : resultData.content.principle_scores &&
-        resultData.content.principle_scores.length > 0
-      ? resultData.content.principle_scores.map((ps) => {
-          const foundPrinciple = resultData.content.principles?.find(
+    : resultData.principle_scores && resultData.principle_scores.length > 0
+      ? resultData.principle_scores.map((ps) => {
+          const foundPrinciple = resultData.principles?.find(
             (p) => p.name.toLowerCase() === ps.principle.toLowerCase()
           )
           return {
@@ -836,13 +1026,21 @@ export default function AnalyzerResults() {
             manualCount: foundPrinciple?.data?.manual_review?.length ?? 0,
           }
         })
-      : (resultData.content.principles || []).map((p) => ({
+      : (resultData.principles || []).map((p) => ({
           name: capitalize(p.name),
           score: p.data?.score ?? 80,
           issuesCount: p.data?.issues?.length ?? 0,
           passedCount: p.data?.passed?.length ?? 0,
           manualCount: p.data?.manual_review?.length ?? 0,
         }))
+
+  if (isLoadingScan && !resultData) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <Loader2 className="size-8 animate-spin text-primary" />
+      </div>
+    )
+  }
 
   if (!resultData) {
     return (
@@ -881,7 +1079,7 @@ export default function AnalyzerResults() {
   }
 
   const overallScore =
-    resultData.content.overall_score ??
+    resultData.overall_score ??
     (principleScoresList.length > 0
       ? Math.round(
           principleScoresList.reduce((acc, p) => acc + (p.score || 0), 0) /
@@ -891,36 +1089,17 @@ export default function AnalyzerResults() {
   const scoreConfig = getScoreConfig(overallScore)
 
   // Calculate summary counts
-  const criticalCount = getSummaryCount(resultData.content.summary, "critical")
-  const seriousCount = getSummaryCount(resultData.content.summary, "serious")
-  const moderateCount = getSummaryCount(resultData.content.summary, "moderate")
-  const minorCount = getSummaryCount(resultData.content.summary, "minor")
+  const criticalCount = getSummaryCount(resultData.summary, "critical")
+  const seriousCount = getSummaryCount(resultData.summary, "serious")
+  const moderateCount = getSummaryCount(resultData.summary, "moderate")
+  const minorCount = getSummaryCount(resultData.summary, "minor")
   const totalViolations =
     criticalCount + seriousCount + moderateCount + minorCount
-  const totalPassedCount = getSummaryCount(
-    resultData.content.summary,
-    "total_passed"
-  )
-
-  // Export JSON handler hidden for now
-  // function handleExportJSON() {
-  //   const dataStr =
-  //     "data:text/json;charset=utf-8," +
-  //     encodeURIComponent(JSON.stringify(resultData, null, 2))
-  //   const downloadAnchor = document.createElement("a")
-  //   downloadAnchor.setAttribute("href", dataStr)
-  //   const hostClean = resultData?.content.url
-  //     .replace(/^https?:\/\//, "")
-  //     .replace(/[^\w-]/g, "_")
-  //   downloadAnchor.setAttribute("download", `${hostClean}-wcag-audit.json`)
-  //   document.body.appendChild(downloadAnchor)
-  //   downloadAnchor.click()
-  //   downloadAnchor.remove()
-  // }
+  const totalPassedCount = getSummaryCount(resultData.summary, "total_passed")
 
   // Copy Markdown Summary handler
   function handleCopySummary() {
-    const summaryText = `# WCAG Audit: ${resultData?.content.url}
+    const summaryText = `# WCAG Audit: ${resultData?.url}
 Overall Compliance Score: ${overallScore}/100
 Violations: ${totalViolations} (Critical: ${criticalCount}, Serious: ${seriousCount}, Moderate: ${moderateCount}, Minor: ${minorCount})
 Total Passed Checks: ${totalPassedCount}
@@ -944,10 +1123,10 @@ ${allIssues
     try {
       setIsExportingPDF(true)
       exportAnalyzerReportToPDF({
-        result: resultData.content,
+        result: resultData,
         scanInfo: {
-          id: resultData.id,
-          createdAt: resultData.created_at,
+          id: scanEntry?.id || id,
+          createdAt: scanEntry?.created_at,
         },
       })
       toast.add({
@@ -1000,14 +1179,14 @@ ${allIssues
 
           <div className="flex flex-wrap items-center gap-2 pl-10 text-xs text-muted-foreground">
             <a
-              href={resultData.content.url}
+              href={resultData.url}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 font-semibold text-primary hover:underline"
             >
               <Globe className="size-3.5" />
               <span className="max-w-64 truncate sm:max-w-none">
-                {resultData.content.url}
+                {resultData.url}
               </span>
               <ArrowUpRight className="size-3 shrink-0" />
             </a>
@@ -1015,7 +1194,19 @@ ${allIssues
             <Badge variant="outline" className="h-5 px-1.5 text-xs">
               WCAG 2.2 AA/AAA
             </Badge>
-            {/* {scanEntry?.status && (
+            {isLLMScan && (
+              <>
+                <span className="text-border">·</span>
+                <Badge
+                  variant="outline"
+                  className="h-5 gap-1 border-primary/40 bg-primary/10 px-1.5 text-xs text-primary"
+                >
+                  <Sparkles className="size-3" />
+                  LLM Evaluation
+                </Badge>
+              </>
+            )}
+            {scanEntry?.status && (
               <>
                 <span className="text-border">·</span>
                 <Badge
@@ -1034,7 +1225,7 @@ ${allIssues
                   {getDateString(scanEntry.created_at)}
                 </span>
               </>
-            )} */}
+            )}
           </div>
         </div>
 
@@ -1182,7 +1373,7 @@ ${allIssues
             <div className="space-y-0.5">
               <span className="text-muted-foreground">Audited URL</span>
               <p className="truncate font-mono font-semibold text-foreground">
-                {resultData.content.url}
+                {resultData.url}
               </p>
             </div>
 
@@ -1232,7 +1423,7 @@ ${allIssues
                         {sitemapLinks.map((link) => {
                           const displayPath =
                             link.replace(/^https?:\/\/[^/]+/i, "") || "/"
-                          const isCurrent = link === resultData.content.url
+                          const isCurrent = link === resultData.url
                           const isThisScanning = scanningUrl === link
 
                           return (
@@ -1316,7 +1507,7 @@ ${allIssues
                 Elapsed Time
               </span>
               <span className="font-mono text-sm font-bold text-foreground tabular-nums">
-                {formatElapsedTime(resultData.content.elapsed_time)}
+                {formatElapsedTime(resultData.elapsed_time)}
               </span>
             </div>
 

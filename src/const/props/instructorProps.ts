@@ -1,6 +1,6 @@
 import type { User } from "./userProps"
 
-export interface InstructorMaterialsProps {
+export interface InstructorMaterialsCountProps {
   role: string
   user: User & {
     module_count: number

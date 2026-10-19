@@ -34,7 +34,11 @@ export default function SignUpPage() {
   const [confirmPassword, setConfirmPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
 
-  const { mutate, isPending: isLoading } = useMutation({
+  const {
+    mutate,
+    isPending: isLoading,
+    isError,
+  } = useMutation({
     mutationFn: signupAPI,
     onSuccess: () => {
       toast.add({
@@ -46,7 +50,7 @@ export default function SignUpPage() {
     },
     onError: (err: any) => {
       setError(
-        err.response.data.detail ||
+        err?.response?.data?.detail ||
           "We are currently having problems with account creation.\nPlease try again later."
       )
     },
@@ -192,8 +196,7 @@ export default function SignUpPage() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                   />
-
-                  <FieldError>{error}</FieldError>
+                  {isError && <FieldError>{error}</FieldError>}
                 </Field>
               </FieldGroup>
               <div className="flex items-center justify-between">

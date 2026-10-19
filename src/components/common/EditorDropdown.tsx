@@ -15,9 +15,11 @@ import {
 } from "lucide-react"
 
 export default function EditorDropdown({
+  itemType,
   archived,
   setAction,
 }: {
+  itemType?: "quiz" | "module" | "classroom"
   archived?: boolean
   setAction: (value: ActionType) => void
 }) {
@@ -39,7 +41,7 @@ export default function EditorDropdown({
             Edit
           </DropdownMenuItem>
 
-          {archived ? (
+          {itemType != "quiz" && archived ? (
             <DropdownMenuItem onClick={() => setAction("unarchive")}>
               <ArchiveRestore className="mr-2 h-4 w-4" />
               Unarchive

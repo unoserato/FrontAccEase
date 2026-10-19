@@ -31,7 +31,7 @@ export default function EmptyState({
   ...props
 }: EmptyStateProps) {
   return (
-    <Empty className={cn("py-12 sm:py-16", className)} {...props}>
+    <Empty className={cn("border py-12 sm:py-16", className)} {...props}>
       <EmptyHeader>
         {media != null ? (
           <EmptyMedia>{media}</EmptyMedia>
