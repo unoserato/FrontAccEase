@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react"
 import { useLocation } from "react-router-dom"
-import type { ChatMessage } from "@/const/materialsProps"
+import type { ChatMessage } from "@/const/props/miscellaneousProps"
 import {
   ArrowDown,
   ArrowUp,
@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/button"
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useMutation } from "@tanstack/react-query"

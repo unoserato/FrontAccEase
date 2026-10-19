@@ -320,7 +320,7 @@ export default function PricingPage() {
       {/* =========================================================================
           1. HERO HEADER: HIGH-DENSITY DEVELOPER INSTRUMENTATION
           ========================================================================= */}
-      <section className="relative overflow-hidden border-b border-border/60 bg-gradient-to-b from-background via-muted/20 to-background pt-12 pb-16 sm:pt-20 sm:pb-24">
+      <section className="relative overflow-hidden border-b border-border/60 bg-linear-to-b from-background via-muted/20 to-background pt-12 pb-16 sm:pt-20 sm:pb-24">
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center">
             {/* Top Status Pill */}

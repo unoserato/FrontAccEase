@@ -1,5 +1,5 @@
 import { useState } from "react"
-import type { QuizProps } from "@/const/props/materialProps"
+import type { QuizProps } from "@/const/props/quizProps"
 import { buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { cn } from "@/lib/utils"

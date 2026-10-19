@@ -58,7 +58,6 @@ interface MilestoneProps {
   submissionsCount: number
   hasEnrolledClassroom: boolean
   classroomName?: string
-  highestScore: number
 }
 
 function LearnerMilestonesCard({
@@ -66,7 +65,6 @@ function LearnerMilestonesCard({
   submissionsCount,
   hasEnrolledClassroom,
   classroomName,
-  highestScore,
 }: MilestoneProps) {
   const milestones = [
     {
@@ -97,16 +95,6 @@ function LearnerMilestonesCard({
           : "Complete an assigned quiz",
       icon: Award,
       earned: submissionsCount > 0,
-    },
-    {
-      id: "wcag-champion",
-      title: "High Scorer",
-      subtitle:
-        highestScore >= 80
-          ? `Top score: ${highestScore}%`
-          : "Score 80%+ on an audit or quiz",
-      icon: Sparkles,
-      earned: highestScore >= 80,
     },
   ]
 
@@ -200,13 +188,6 @@ export default function Dashboard() {
   const latestAudit =
     analyzerLogs && analyzerLogs.length > 0 ? analyzerLogs[0] : null
 
-  const highestScore = useMemo(() => {
-    const auditScores = analyzerLogs.map((l) => l.content?.overall_score ?? 0)
-    const quizScores = submissions.map((s) => s.score ?? 0)
-    const allScores = [...auditScores, ...quizScores]
-    return allScores.length > 0 ? Math.max(...allScores) : 0
-  }, [analyzerLogs, submissions])
-
   const userName = userProfile?.user?.name
 
   const overallProgress = Math.round(coreModuleProgress?.percentage ?? 0)
@@ -257,27 +238,11 @@ export default function Dashboard() {
   ]
 
   // Recent URL Audit parsing
-  const auditTargetUrl = latestAudit?.content?.url || ""
+  const auditTargetUrl = latestAudit?.url || "example.com"
   const auditCleanUrl = auditTargetUrl.replace(/^https?:\/\//, "")
-  const auditScore = latestAudit?.content?.overall_score ?? 0
+  const auditScore = latestAudit?.score ?? 0
   const isAuditHigh = auditScore >= 90
   const isAuditMedium = auditScore >= 70 && auditScore < 90
-
-  const criticalIssues = getSummaryCount(
-    latestAudit?.content?.summary,
-    "critical"
-  )
-  const seriousIssues = getSummaryCount(
-    latestAudit?.content?.summary,
-    "serious"
-  )
-  const moderateIssues = getSummaryCount(
-    latestAudit?.content?.summary,
-    "moderate"
-  )
-  const minorIssues = getSummaryCount(latestAudit?.content?.summary, "minor")
-  const totalAuditIssues =
-    criticalIssues + seriousIssues + moderateIssues + minorIssues
 
   return (
     <section className="p-responsive space-y-6">
@@ -480,7 +445,6 @@ export default function Dashboard() {
             submissionsCount={submissions.length}
             hasEnrolledClassroom={!!myClassroom}
             classroomName={myClassroom?.name || myClassroom?.classroom_code}
-            highestScore={highestScore}
           />
           {/* Recent Analyzer Audit History */}
           <Card className="space-y-4 p-5">
@@ -524,35 +488,6 @@ export default function Dashboard() {
                         {auditCleanUrl}
                       </span>
                     </div>
-                    {totalAuditIssues > 0 ? (
-                      <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                        {criticalIssues > 0 && (
-                          <span className="rounded bg-rose-500/10 px-1.5 py-0.5 text-xs font-medium text-rose-600 dark:text-rose-400">
-                            {criticalIssues} Critical
-                          </span>
-                        )}
-                        {seriousIssues > 0 && (
-                          <span className="rounded bg-amber-500/10 px-1.5 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400">
-                            {seriousIssues} Serious
-                          </span>
-                        )}
-                        {moderateIssues > 0 && (
-                          <span className="rounded bg-slate-500/10 px-1.5 py-0.5 text-xs font-medium text-slate-600 dark:text-slate-400">
-                            {moderateIssues} Moderate
-                          </span>
-                        )}
-                        {minorIssues > 0 && (
-                          <span className="rounded bg-slate-500/10 px-1.5 py-0.5 text-xs font-medium text-slate-600 dark:text-slate-400">
-                            {minorIssues} Minor
-                          </span>
-                        )}
-                      </div>
-                    ) : (
-                      <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                        No major accessibility issues detected! Excellent
-                        compliance.
-                      </p>
-                    )}
                   </div>
 
                   <Link
@@ -561,10 +496,6 @@ export default function Dashboard() {
                       size: "sm",
                     })}`}
                     to={`/learner/analyzer/${latestAudit.id}`}
-                    state={{
-                      result: latestAudit.content,
-                      scanId: latestAudit.id,
-                    }}
                   >
                     View Audit Findings
                     <ChevronRight className="ml-1 size-3.5" />

@@ -1,4 +1,5 @@
-import type { ClassroomProps, QuizJson } from "@/const/props/materialProps"
+import type { ClassroomProps } from "@/const/props/classroomProps"
+import type { QuizJson } from "@/const/props/quizProps"
 import { api } from "@/services/axios"
 import type { ExtensionScanSession } from "@/services/webLLM"
 

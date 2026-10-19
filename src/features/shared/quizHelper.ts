@@ -1,11 +1,11 @@
-import type { QuizJson, QuizProps } from "@/const/props/materialProps"
+import type { QuizJson, QuizProps } from "@/const/props/quizProps"
 
 export type {
   QuestionType,
   QuestionElement,
   QuizPage,
   QuizJson,
-} from "@/const/props/materialProps"
+} from "@/const/props/quizProps"
 
 /**
  * Role-agnostic quiz scaffolding and read-only queries. Authoring mutations

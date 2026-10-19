@@ -15,7 +15,7 @@ import {
   ThreeDimensionalLight,
   ThreeDimensionalDark,
 } from "survey-core/themes"
-import type { QuizProps } from "@/const/props/materialProps"
+import type { QuizProps } from "@/const/props/quizProps"
 
 type SurveyQuiz = Pick<QuizProps, "name" | "theme"> & {
   quiz_json?: unknown

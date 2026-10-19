@@ -20,10 +20,8 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { toast } from "@/components/ui/toast"
 import { useSubmitCoreAssessment } from "@/services/tanstack/materials"
-import type {
-  CoreModuleAssessmentActivity,
-  QuizJson,
-} from "@/const/props/materialProps"
+import type { CoreModuleAssessmentActivity } from "@/const/props/moduleProps"
+import type { QuizJson } from "@/const/props/quizProps"
 
 interface CoreModuleAssessmentViewProps {
   activity: CoreModuleAssessmentActivity

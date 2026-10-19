@@ -3,7 +3,7 @@ import type {
   QuestionElement,
   QuizPage,
   QuizJson,
-} from "@/const/props/materialProps"
+} from "@/const/props/quizProps"
 
 // Scaffolding and read-only queries are role-agnostic and live in shared.
 export {
@@ -18,7 +18,7 @@ export type {
   QuestionElement,
   QuizPage,
   QuizJson,
-} from "@/const/props/materialProps"
+} from "@/const/props/quizProps"
 
 /**
  * Instructor-only authoring mutations.

@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/toast"
 import { useAnswerCoreInteractive } from "@/services/tanstack/materials"
-import type { CoreModuleInteractiveActivity } from "@/const/props/materialProps"
+import type { CoreModuleInteractiveActivity } from "@/const/props/moduleProps"
 
 interface CoreModuleInteractiveViewProps {
   activity: CoreModuleInteractiveActivity

@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import type { PrincipleProgressProps } from "@/const/props/materialProps"
+import type { PrincipleProgressProps } from "@/const/props/moduleProps"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import NotFound from "../errors/NotFound"
 import { Badge } from "@/components/ui/badge"
@@ -16,6 +16,7 @@ import {
   FileQuestion,
   Keyboard,
   Layers,
+  Lock,
   Volume2,
 } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -205,7 +206,11 @@ export default function CoreModulesView() {
                       String(activity.id)
                     )
                     const isNext =
-                      activity.id === principleContent?.next_activity_id
+                      activity.id === principleContent?.next_activity_id ||
+                      (!principleContent?.next_activity_id &&
+                        completedActivityIds.size === 0 &&
+                        activities[0]?.id === activity.id)
+                    const isLocked = !isCompleted && !isNext
                     const attempt = attemptsMap.get(String(activity.id))
                     const ActivityIcon = getActivityIcon(activity.kind)
 
@@ -225,10 +230,8 @@ export default function CoreModulesView() {
                               <CircleDashed className="size-4 animate-spin" />
                             </div>
                           ) : (
-                            <div className="flex size-7 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground">
-                              <span className="text-xs font-bold">
-                                {activity.display_order}
-                              </span>
+                            <div className="flex size-7 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground/60">
+                              <Lock className="size-3" />
                             </div>
                           )}
                           <div className="mt-2 h-full w-0.5 bg-border group-last:hidden" />
@@ -236,10 +239,12 @@ export default function CoreModulesView() {
 
                         {/* Activity Card Item */}
                         <div
-                          className={`w-full rounded-xl border bg-card p-4 shadow-sm transition-all hover:border-border hover:shadow-md sm:p-5 ${
+                          className={`w-full rounded-xl border bg-card p-4 shadow-sm transition-all sm:p-5 ${
                             isNext
-                              ? "border-primary/50 ring-1 ring-primary/20"
-                              : "border-border/80"
+                              ? "border-primary/50 ring-1 ring-primary/20 hover:border-border hover:shadow-md"
+                              : isLocked
+                                ? "border-border/60 opacity-80"
+                                : "border-border/80 hover:border-border hover:shadow-md"
                           }`}
                         >
                           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -308,29 +313,36 @@ export default function CoreModulesView() {
                                   Score: {Math.round(attempt.score)}%
                                 </Badge>
                               )}
-                              <Link
-                                to={getActivityLink(
-                                  principleName,
-                                  activity.id,
-                                  activity.kind
-                                )}
-                                className={buttonVariants({
-                                  variant: isNext
-                                    ? "default"
-                                    : isCompleted
-                                      ? "outline"
-                                      : "secondary",
-                                  size: "sm",
-                                  className: "font-semibold shadow-2xs",
-                                })}
-                              >
-                                {isCompleted
-                                  ? "Review"
-                                  : isNext
-                                    ? "Continue"
-                                    : "Start"}
-                                <ChevronRight className="ml-1 size-3.5" />
-                              </Link>
+                              {isLocked ? (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  disabled
+                                  className="cursor-not-allowed font-semibold opacity-60 shadow-2xs"
+                                  title="Complete earlier activities first to unlock"
+                                >
+                                  <Lock className="mr-1.5 size-3.5" />
+                                  Locked
+                                </Button>
+                              ) : (
+                                <Link
+                                  to={getActivityLink(
+                                    principleName,
+                                    activity.id,
+                                    activity.kind
+                                  )}
+                                  className={buttonVariants({
+                                    variant: isNext ? "default" : "outline",
+                                    size: "sm",
+                                    className: "font-semibold shadow-2xs",
+                                  })}
+                                >
+                                  {isCompleted ? "Review" : "Continue"}
+                                  {isNext && (
+                                    <ChevronRight className="ml-1 size-3.5" />
+                                  )}
+                                </Link>
+                              )}
                             </div>
                           </div>
                         </div>

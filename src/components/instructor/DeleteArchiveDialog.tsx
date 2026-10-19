@@ -10,11 +10,9 @@ import {
   DialogTitle,
 } from "../ui/dialog"
 import { Button } from "../ui/button"
-import type {
-  ClassroomProps,
-  ModuleProps,
-  QuizProps,
-} from "@/const/props/materialProps"
+import type { ClassroomProps } from "@/const/props/classroomProps"
+import type { ModuleProps } from "@/const/props/moduleProps"
+import type { QuizProps } from "@/const/props/quizProps"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   arhiveModuleAPI,

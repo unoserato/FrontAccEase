@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import type { PrincipleProgressItem } from "@/const/props/materialProps"
+import type { PrincipleProgressItem } from "@/const/props/moduleProps"
 import { useCoreModuleProgress } from "@/services/tanstack/materials"
 import { ArrowUpRight, Brain, Code, Eye, Keyboard, Layers } from "lucide-react"
 import { Link } from "react-router-dom"

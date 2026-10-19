@@ -6,11 +6,12 @@ import "highlight.js/styles/github-dark.css"
 
 type RichTextProps = {
   content: string
+  className?: string
 }
 
-export function RichText({ content }: RichTextProps) {
+export function RichText({ content, className }: RichTextProps) {
   return (
-    <div className="max-w-none text-sm leading-6">
+    <div className={`max-w-none text-sm leading-6 ${className}`}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}

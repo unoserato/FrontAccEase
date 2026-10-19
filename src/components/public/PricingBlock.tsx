@@ -26,8 +26,12 @@ export default function PricingBlock({
   className = "",
   defaultAudience = "solo",
 }: PricingBlockProps) {
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("yearly")
-  const [audience, setAudience] = useState<"solo" | "organization">(defaultAudience)
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
+    "yearly"
+  )
+  const [audience, setAudience] = useState<"solo" | "organization">(
+    defaultAudience
+  )
 
   const isYearly = billingCycle === "yearly"
 
@@ -354,7 +358,10 @@ export default function PricingBlock({
                     {plan.name}
                   </h3>
                   {!plan.highlighted && (
-                    <Badge variant="outline" className="text-xs text-muted-foreground">
+                    <Badge
+                      variant="outline"
+                      className="text-xs text-muted-foreground"
+                    >
                       {plan.badge}
                     </Badge>
                   )}
@@ -385,11 +392,13 @@ export default function PricingBlock({
                   <p className="mt-1 text-xs text-muted-foreground">
                     {isNumeric && Number(displayPrice) > 0
                       ? isYearly
-                        ? "Billed annually ($" + Number(displayPrice) * 12 + "/user/yr)"
+                        ? "Billed annually ($" +
+                          Number(displayPrice) * 12 +
+                          "/user/yr)"
                         : "Billed monthly"
                       : isNumeric
-                      ? "Free forever, no credit card required"
-                      : "Tailored to your campus enrollment scale"}
+                        ? "Free forever, no credit card required"
+                        : "Tailored to your campus enrollment scale"}
                   </p>
                 </div>
 
@@ -409,18 +418,25 @@ export default function PricingBlock({
 
                 {/* Core Trio Capabilities Mini-Matrix */}
                 <div className="space-y-2 rounded-2xl border border-border bg-muted/30 p-3">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                     Core Trio Inclusions:
                   </span>
                   <div className="space-y-1.5 text-xs">
                     {plan.coreTrioFeatures.map((trio, tIdx) => {
                       const TrioIcon = trio.icon
                       return (
-                        <div key={tIdx} className="flex items-start gap-2 text-foreground">
-                          <TrioIcon className="size-3.5 shrink-0 text-primary mt-0.5" />
+                        <div
+                          key={tIdx}
+                          className="flex items-start gap-2 text-foreground"
+                        >
+                          <TrioIcon className="mt-0.5 size-3.5 shrink-0 text-primary" />
                           <div>
-                            <span className="font-semibold">{trio.label}: </span>
-                            <span className="text-muted-foreground">{trio.detail}</span>
+                            <span className="font-semibold">
+                              {trio.label}:{" "}
+                            </span>
+                            <span className="text-muted-foreground">
+                              {trio.detail}
+                            </span>
                           </div>
                         </div>
                       )
@@ -430,7 +446,7 @@ export default function PricingBlock({
 
                 {/* Feature List */}
                 <div className="space-y-2.5 pt-1">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                     Plan Specifications:
                   </span>
                   <ul className="space-y-2 text-xs" role="list">
@@ -465,7 +481,7 @@ export default function PricingBlock({
       {/* =========================================================================
           ORGANIZATION SCAN POOLING EXPLAINER (WATERMELON UI CALLOUT BANNER)
           ========================================================================= */}
-      <div className="rounded-3xl border border-border bg-muted/40 p-6 sm:p-8 shadow-xs">
+      <div className="rounded-3xl border border-border bg-muted/40 p-6 shadow-xs sm:p-8">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-4">
             <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
@@ -475,9 +491,15 @@ export default function PricingBlock({
               <h4 className="font-heading text-sm font-bold text-foreground sm:text-base">
                 How Does Scan Pooling Work for Classrooms &amp; Organizations?
               </h4>
-              <p className="max-w-2xl text-xs text-muted-foreground leading-relaxed sm:text-sm">
-                In classrooms and engineering teams, monthly scans are pooled into a single unified shared quota. For example, a classroom of 30 students on Plus gets{" "}
-                <strong className="text-foreground font-semibold">4,500 total scans/month</strong> shared across all lab assignments with instructor telemetry oversight.
+              <p className="max-w-2xl text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                In classrooms and engineering teams, monthly scans are pooled
+                into a single unified shared quota. For example, a classroom of
+                30 students on Plus gets{" "}
+                <strong className="font-semibold text-foreground">
+                  4,500 total scans/month
+                </strong>{" "}
+                shared across all lab assignments with instructor telemetry
+                oversight.
               </p>
             </div>
           </div>
@@ -495,7 +517,8 @@ export default function PricingBlock({
       {showDetailedLink && (
         <div className="flex flex-col items-center justify-center gap-2 pt-2 text-center">
           <p className="text-xs text-muted-foreground sm:text-sm">
-            Need a granular feature-by-feature matrix, dynamic seat quota calculator, or academic procurement details?
+            Need a granular feature-by-feature matrix, dynamic seat quota
+            calculator, or academic procurement details?
           </p>
           <Link
             to="/pricing"

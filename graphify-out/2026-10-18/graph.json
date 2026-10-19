@@ -934,8 +934,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "package_dependencies_axios",
-      "community": 103,
-      "community_name": "dependencies",
+      "community": 76,
+      "community_name": "axios",
       "norm_label": "axios"
     },
     {
@@ -945,8 +945,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "axios",
-      "community": 103,
-      "community_name": "dependencies",
+      "community": 76,
+      "community_name": "axios",
       "norm_label": "axios"
     },
     {
@@ -1198,8 +1198,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "package_dependencies_react_day_picker",
-      "community": 118,
-      "community_name": "react-day-picker",
+      "community": 103,
+      "community_name": "dependencies",
       "norm_label": "react-day-picker"
     },
     {
@@ -1209,8 +1209,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "react_day_picker",
-      "community": 118,
-      "community_name": "react-day-picker",
+      "community": 103,
+      "community_name": "dependencies",
       "norm_label": "react-day-picker"
     },
     {
@@ -1539,8 +1539,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "package_devdependencies_eslint_js",
-      "community": 63,
-      "community_name": "devDependencies",
+      "community": 84,
+      "community_name": "@eslint/js",
       "norm_label": "@eslint/js"
     },
     {
@@ -1550,8 +1550,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "eslint_js",
-      "community": 63,
-      "community_name": "devDependencies",
+      "community": 84,
+      "community_name": "@eslint/js",
       "norm_label": "@eslint/js"
     },
     {
@@ -1825,8 +1825,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "package_devdependencies_prettier",
-      "community": 144,
-      "community_name": "prettier",
+      "community": 63,
+      "community_name": "devDependencies",
       "norm_label": "prettier"
     },
     {
@@ -1836,8 +1836,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "prettier",
-      "community": 144,
-      "community_name": "prettier",
+      "community": 63,
+      "community_name": "devDependencies",
       "norm_label": "prettier"
     },
     {
@@ -4542,7 +4542,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_icon",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "list-icon.tsx"
     },
     {
@@ -4555,7 +4555,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_icon_svgprops",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "svgprops"
     },
     {
@@ -4566,7 +4566,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_icon_listicon",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listicon"
     },
     {
@@ -4577,7 +4577,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_ordered_icon",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "list-ordered-icon.tsx"
     },
     {
@@ -4590,7 +4590,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_ordered_icon_svgprops",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "svgprops"
     },
     {
@@ -4601,7 +4601,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_ordered_icon_listorderedicon",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listorderedicon"
     },
     {
@@ -4612,7 +4612,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_todo_icon",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "list-todo-icon.tsx"
     },
     {
@@ -4625,7 +4625,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_todo_icon_svgprops",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "svgprops"
     },
     {
@@ -4636,7 +4636,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_icons_list_todo_icon_listtodoicon",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listtodoicon"
     },
     {
@@ -5377,7 +5377,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_badge_badge",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "badge/badge.tsx"
     },
     {
@@ -5390,7 +5390,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_badge_badge_badgeprops",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "badgeprops"
     },
     {
@@ -5401,7 +5401,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_badge_badge_badge",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "badge"
     },
     {
@@ -5412,7 +5412,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_badge_index",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "badge/index.tsx"
     },
     {
@@ -5544,7 +5544,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_button_buttonprops",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "buttonprops"
     },
     {
@@ -5567,7 +5567,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_button_button",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "button"
     },
     {
@@ -5578,7 +5578,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_button_index",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "button/index.tsx"
     },
     {
@@ -5688,8 +5688,8 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenu",
-      "community": 3,
-      "community_name": "useTiptapEditor",
+      "community": 15,
+      "community_name": "heading-dropdown-menu.tsx",
       "norm_label": "dropdownmenu()"
     },
     {
@@ -5713,7 +5713,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_primitive_dropdown_menu_dropdown_menu_dropdownmenutrigger",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "dropdownmenutrigger()"
     },
     {
@@ -6485,7 +6485,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_blockquote_button_blockquote_button",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "blockquote-button.tsx"
     },
     {
@@ -6498,7 +6498,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_blockquote_button_blockquote_button_blockquotebuttonprops",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "blockquotebuttonprops"
     },
     {
@@ -6510,7 +6510,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_blockquote_button_blockquote_button_blockquoteshortcutbadge",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "blockquoteshortcutbadge()"
     },
     {
@@ -6532,7 +6532,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_blockquote_button_index",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "blockquote-button/index.tsx"
     },
     {
@@ -6554,7 +6554,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_blockquote_button_use_blockquote_blockquote_shortcut_key",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "blockquote_shortcut_key"
     },
     {
@@ -6567,7 +6567,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_blockquote_button_use_blockquote_useblockquoteconfig",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "useblockquoteconfig"
     },
     {
@@ -6626,7 +6626,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_code_block_button_code_block_button",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "code-block-button.tsx"
     },
     {
@@ -6639,7 +6639,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_code_block_button_code_block_button_codeblockbuttonprops",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "codeblockbuttonprops"
     },
     {
@@ -6651,7 +6651,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_code_block_button_code_block_button_codeblockshortcutbadge",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "codeblockshortcutbadge()"
     },
     {
@@ -6673,7 +6673,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_code_block_button_index",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "code-block-button/index.tsx"
     },
     {
@@ -6695,7 +6695,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_code_block_button_use_code_block_code_block_shortcut_key",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "code_block_shortcut_key"
     },
     {
@@ -6708,7 +6708,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_code_block_button_use_code_block_usecodeblockconfig",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "usecodeblockconfig"
     },
     {
@@ -6767,7 +6767,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_color_highlight_button_color_highlight_button",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "color-highlight-button.tsx"
     },
     {
@@ -6780,7 +6780,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_color_highlight_button_color_highlight_button_colorhighlightbuttonprops",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "colorhighlightbuttonprops"
     },
     {
@@ -6792,7 +6792,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_color_highlight_button_color_highlight_button_colorhighlightshortcutbadge",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "colorhighlightshortcutbadge()"
     },
     {
@@ -6886,7 +6886,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_color_highlight_button_use_color_highlight_usecolorhighlightconfig",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "usecolorhighlightconfig"
     },
     {
@@ -7335,7 +7335,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_image_upload_button",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "image-upload-button.tsx"
     },
     {
@@ -7348,7 +7348,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_image_upload_button_iconprops",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "iconprops"
     },
     {
@@ -7361,7 +7361,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_image_upload_button_iconcomponent",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "iconcomponent"
     },
     {
@@ -7374,7 +7374,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_image_upload_button_imageuploadbuttonprops",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "imageuploadbuttonprops"
     },
     {
@@ -7386,7 +7386,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_image_upload_button_imageshortcutbadge",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "imageshortcutbadge()"
     },
     {
@@ -7443,7 +7443,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_image_upload_button_use_image_upload_useimageuploadconfig",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "useimageuploadconfig"
     },
     {
@@ -7717,7 +7717,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_index",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "list-button/index.tsx"
     },
     {
@@ -7727,7 +7727,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_list_button",
-      "community": 3,
+      "community": 0,
       "community_name": "useTiptapEditor",
       "norm_label": "list-button.tsx"
     },
@@ -7740,7 +7740,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_list_button_listbuttonprops",
-      "community": 3,
+      "community": 0,
       "community_name": "useTiptapEditor",
       "norm_label": "listbuttonprops"
     },
@@ -7752,7 +7752,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_list_button_listshortcutbadge",
-      "community": 3,
+      "community": 0,
       "community_name": "useTiptapEditor",
       "norm_label": "listshortcutbadge()"
     },
@@ -7763,7 +7763,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_list_button_listbutton",
-      "community": 3,
+      "community": 0,
       "community_name": "useTiptapEditor",
       "norm_label": "listbutton"
     },
@@ -7775,7 +7775,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "use-list.ts"
     },
     {
@@ -7788,7 +7788,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_listtype",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listtype"
     },
     {
@@ -7800,7 +7800,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_uselistconfig",
-      "community": 3,
+      "community": 0,
       "community_name": "useTiptapEditor",
       "norm_label": "uselistconfig"
     },
@@ -7812,7 +7812,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_listicons",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listicons"
     },
     {
@@ -7823,7 +7823,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_listlabels",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listlabels"
     },
     {
@@ -7833,7 +7833,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_list_shortcut_keys",
-      "community": 3,
+      "community": 0,
       "community_name": "useTiptapEditor",
       "norm_label": "list_shortcut_keys"
     },
@@ -7846,7 +7846,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_cantogglelist",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "cantogglelist()"
     },
     {
@@ -7858,7 +7858,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_islistactive",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "islistactive()"
     },
     {
@@ -7882,7 +7882,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_shouldshowbutton",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "shouldshowbutton()"
     },
     {
@@ -7894,7 +7894,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_button_use_list_uselist",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "uselist()"
     },
     {
@@ -7905,7 +7905,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_index",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "list-dropdown-menu/index.tsx"
     },
     {
@@ -7916,7 +7916,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_list_dropdown_menu",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "list-dropdown-menu.tsx"
     },
     {
@@ -7929,7 +7929,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_list_dropdown_menu_listdropdownmenuprops",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listdropdownmenuprops"
     },
     {
@@ -7941,7 +7941,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_list_dropdown_menu_listdropdownmenuimpl",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listdropdownmenuimpl()"
     },
     {
@@ -7952,7 +7952,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_list_dropdown_menu_listdropdownmenu",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listdropdownmenu"
     },
     {
@@ -7963,7 +7963,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "use-list-dropdown-menu.ts"
     },
     {
@@ -7976,7 +7976,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_uselistdropdownmenuconfig",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "uselistdropdownmenuconfig"
     },
     {
@@ -7989,7 +7989,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_listoption",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listoption"
     },
     {
@@ -8000,7 +8000,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_listoptions",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "listoptions"
     },
     {
@@ -8012,7 +8012,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_cantoggleanylist",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "cantoggleanylist()"
     },
     {
@@ -8024,7 +8024,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_isanylistactive",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "isanylistactive()"
     },
     {
@@ -8036,7 +8036,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_getfilteredlistoptions",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "getfilteredlistoptions()"
     },
     {
@@ -8048,7 +8048,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_shouldshowlistdropdown",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "shouldshowlistdropdown()"
     },
     {
@@ -8060,7 +8060,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_getactivelisttype",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "getactivelisttype()"
     },
     {
@@ -8072,7 +8072,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_list_dropdown_menu_use_list_dropdown_menu_uselistdropdownmenu",
       "community": 3,
-      "community_name": "useTiptapEditor",
+      "community_name": "use-list.ts",
       "norm_label": "uselistdropdownmenu()"
     },
     {
@@ -8094,7 +8094,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_mark_button_mark_button",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "mark-button.tsx"
     },
     {
@@ -8107,7 +8107,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_mark_button_mark_button_markbuttonprops",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "markbuttonprops"
     },
     {
@@ -8119,7 +8119,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_mark_button_mark_button_markshortcutbadge",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "markshortcutbadge()"
     },
     {
@@ -8167,7 +8167,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_mark_button_use_mark_usemarkconfig",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "usemarkconfig"
     },
     {
@@ -8634,7 +8634,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_text_align_button_text_align_button",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "text-align-button.tsx"
     },
     {
@@ -8647,7 +8647,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_text_align_button_text_align_button_iconprops",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "iconprops"
     },
     {
@@ -8660,7 +8660,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_text_align_button_text_align_button_iconcomponent",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "iconcomponent"
     },
     {
@@ -8673,7 +8673,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_text_align_button_text_align_button_textalignbuttonprops",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "textalignbuttonprops"
     },
     {
@@ -8685,7 +8685,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_text_align_button_text_align_button_textalignshortcutbadge",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "textalignshortcutbadge()"
     },
     {
@@ -8733,7 +8733,7 @@
       "_origin": "ast",
       "id": "src_components_tiptap_ui_text_align_button_use_text_align_usetextalignconfig",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "usetextalignconfig"
     },
     {
@@ -13911,7 +13911,7 @@
       "label": "CoreModuleAssessmentViewProps",
       "file_type": "code",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L17",
+      "source_location": "L28",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
@@ -13924,7 +13924,7 @@
       "label": "SubmissionResponse",
       "file_type": "code",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L22",
+      "source_location": "L33",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
@@ -13937,7 +13937,7 @@
       "label": "CoreModuleAssessmentView()",
       "file_type": "code",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L31",
+      "source_location": "L42",
       "_callable": true,
       "_origin": "ast",
       "id": "src_features_shared_core_module_coremoduleassessmentview_coremoduleassessmentview",
@@ -13960,7 +13960,7 @@
       "label": "CoreModuleInteractiveViewProps",
       "file_type": "code",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L17",
+      "source_location": "L19",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
@@ -13973,7 +13973,7 @@
       "label": "InteractiveAnswerResponse",
       "file_type": "code",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L22",
+      "source_location": "L24",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
@@ -13986,7 +13986,7 @@
       "label": "CoreModuleInteractiveView()",
       "file_type": "code",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L33",
+      "source_location": "L35",
       "_callable": true,
       "_origin": "ast",
       "id": "src_features_shared_core_module_coremoduleinteractiveview_coremoduleinteractiveview",
@@ -14671,7 +14671,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_hooks_use_tiptap_editor",
-      "community": 3,
+      "community": 0,
       "community_name": "useTiptapEditor",
       "norm_label": "use-tiptap-editor.ts"
     },
@@ -14683,7 +14683,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_hooks_use_tiptap_editor_getactivepageeditor",
-      "community": 3,
+      "community": 0,
       "community_name": "useTiptapEditor",
       "norm_label": "getactivepageeditor()"
     },
@@ -14695,7 +14695,7 @@
       "_callable": true,
       "_origin": "ast",
       "id": "src_hooks_use_tiptap_editor_usetiptapeditor",
-      "community": 3,
+      "community": 0,
       "community_name": "useTiptapEditor",
       "norm_label": "usetiptapeditor()"
     },
@@ -15084,7 +15084,7 @@
       "_origin": "ast",
       "id": "src_lib_tiptap_utils_ismac",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "ismac()"
     },
     {
@@ -15096,7 +15096,7 @@
       "_origin": "ast",
       "id": "src_lib_tiptap_utils_formatshortcutkey",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "formatshortcutkey()"
     },
     {
@@ -15108,7 +15108,7 @@
       "_origin": "ast",
       "id": "src_lib_tiptap_utils_parseshortcutkeys",
       "community": 0,
-      "community_name": "parseShortcutKeys",
+      "community_name": "useTiptapEditor",
       "norm_label": "parseshortcutkeys()"
     },
     {
@@ -46554,7 +46554,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L7",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -46566,7 +46566,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L11",
+      "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview",
@@ -46938,7 +46938,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L7",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -46950,7 +46950,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L11",
+      "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview",
@@ -47646,7 +47646,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L8",
+      "source_location": "L19",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -47658,7 +47658,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L12",
+      "source_location": "L14",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview",
@@ -48666,7 +48666,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L8",
+      "source_location": "L19",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -48678,7 +48678,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L12",
+      "source_location": "L14",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview",
@@ -49161,7 +49161,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L9",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -49473,7 +49473,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L9",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -56989,7 +56989,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L10",
+      "source_location": "L21",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -57001,7 +57001,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L13",
+      "source_location": "L15",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview",
@@ -57121,7 +57121,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L10",
+      "source_location": "L21",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -57133,7 +57133,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L13",
+      "source_location": "L15",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview",
@@ -58647,7 +58647,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L12",
+      "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -58659,7 +58659,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L15",
+      "source_location": "L17",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview",
@@ -59223,7 +59223,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L12",
+      "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -59583,7 +59583,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L12",
+      "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -59595,7 +59595,7 @@
       "context": "field",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L18",
+      "source_location": "L29",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview_coremoduleassessmentviewprops",
@@ -59619,7 +59619,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L15",
+      "source_location": "L17",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview",
@@ -59631,7 +59631,7 @@
       "context": "field",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L18",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview_coremoduleinteractiveviewprops",
@@ -61527,7 +61527,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L31",
+      "source_location": "L42",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -61538,7 +61538,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L17",
+      "source_location": "L28",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -61549,7 +61549,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L22",
+      "source_location": "L33",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -61585,7 +61585,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L11",
+      "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -61597,7 +61597,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L11",
+      "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview",
@@ -61610,7 +61610,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L48",
+      "source_location": "L61",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview_coremoduleassessmentview",
@@ -61622,7 +61622,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/features/shared/core-module/CoreModuleAssessmentView.tsx",
-      "source_location": "L38",
+      "source_location": "L51",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleassessmentview_coremoduleassessmentview",
@@ -61632,7 +61632,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L33",
+      "source_location": "L35",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview",
@@ -61643,7 +61643,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L17",
+      "source_location": "L19",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview",
@@ -61654,7 +61654,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L22",
+      "source_location": "L24",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview",
@@ -61666,7 +61666,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L14",
+      "source_location": "L16",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview",
@@ -61678,7 +61678,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L14",
+      "source_location": "L16",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview",
@@ -61691,7 +61691,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/features/shared/core-module/CoreModuleInteractiveView.tsx",
-      "source_location": "L47",
+      "source_location": "L45",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_features_shared_core_module_coremoduleinteractiveview_coremoduleinteractiveview",

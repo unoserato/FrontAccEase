@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { ArrowLeft, FileText, RotateCw } from "lucide-react"
+import { ArrowLeft, FileText, Lock, RotateCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useCoreModuleProgressActivities } from "@/services/tanstack/materials"
@@ -7,7 +7,7 @@ import type {
   CoreModuleAssessmentActivity,
   CoreModuleInteractiveActivity,
   CoreModuleLessonActivity,
-} from "@/const/props/materialProps"
+} from "@/const/props/moduleProps"
 import CoreModuleLessonView from "./core-module/CoreModuleLessonView"
 import CoreModuleAssessmentView from "./core-module/CoreModuleAssessmentView"
 import CoreModuleInteractiveView from "./core-module/CoreModuleInteractiveView"
@@ -25,23 +25,31 @@ export default function CoreModuleReadOnly() {
     }
   }
 
-  const isLesson = contents?.kind === "lesson"
+  const isLocked = Boolean(
+    contents && "detail" in contents && typeof contents.detail === "string"
+  )
+  const activityContent =
+    !isLocked && contents && "kind" in contents ? contents : null
+
+  const isLesson = activityContent?.kind === "lesson"
   const isAssessment =
-    contents?.kind === "mini" ||
-    contents?.kind === "pre" ||
-    contents?.kind === "post" ||
-    Boolean(contents && "questions" in contents)
+    activityContent?.kind === "mini" ||
+    activityContent?.kind === "pre" ||
+    activityContent?.kind === "post" ||
+    Boolean(activityContent && "questions" in activityContent)
   const isInteractive =
-    contents?.kind === "interactive" ||
-    Boolean(contents && "scenario" in contents)
+    activityContent?.kind === "interactive" ||
+    Boolean(activityContent && "scenario" in activityContent)
 
   const principleLabel = principle_id
     ? principle_id.charAt(0).toUpperCase() + principle_id.slice(1)
     : "Core Principle"
 
   const title =
-    (isLesson && contents && "lesson" in contents ? contents.lesson?.title : null) ||
-    contents?.title ||
+    (isLesson && activityContent && "lesson" in activityContent
+      ? activityContent.lesson?.title
+      : null) ||
+    activityContent?.title ||
     "Core Activity"
 
   if (!contents) {
@@ -65,7 +73,47 @@ export default function CoreModuleReadOnly() {
               <ArrowLeft className="size-4" />
               Back to Modules
             </Button>
-            <Button onClick={() => window.location.reload()} variant="ghost" className="gap-2">
+            <Button
+              onClick={() => window.location.reload()}
+              variant="ghost"
+              className="gap-2"
+            >
+              <RotateCw className="size-4" />
+              Refresh
+            </Button>
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
+  if (isLocked) {
+    const detailMessage =
+      (contents && "detail" in contents && typeof contents.detail === "string"
+        ? contents.detail
+        : null) || "Complete earlier activities first"
+
+    return (
+      <div
+        style={{ minHeight: "70vh" }}
+        className="mx-auto my-auto flex items-center justify-center p-4"
+      >
+        <Card className="max-w-md p-8 text-center shadow-sm">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400">
+            <Lock className="h-6 w-6" />
+          </div>
+          <h2 className="text-lg font-bold text-foreground">Activity Locked</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{detailMessage}</p>
+          <div className="mt-6 flex items-center justify-center gap-2">
+            <Button onClick={handleBack} variant="outline" className="gap-2">
+              <ArrowLeft className="size-4" />
+              Back to Modules
+            </Button>
+            <Button
+              onClick={() => window.location.reload()}
+              variant="ghost"
+              className="gap-2"
+            >
               <RotateCw className="size-4" />
               Refresh
             </Button>
@@ -106,7 +154,7 @@ export default function CoreModuleReadOnly() {
               size="sm"
               onClick={() => window.location.reload()}
               title="Refresh Activity"
-              className="gap-1.5 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
+              className="cursor-pointer gap-1.5 text-xs text-muted-foreground hover:text-foreground"
             >
               <RotateCw className="size-3.5" />
               <span className="hidden sm:inline">Refresh</span>
@@ -119,41 +167,41 @@ export default function CoreModuleReadOnly() {
       <main className="mx-auto max-w-4xl px-4 pt-6 sm:px-6 sm:pt-8">
         <Card className="p-6 shadow-sm sm:p-10">
           {/* Lesson Content View */}
-          {isLesson && (
+          {isLesson && activityContent && (
             <CoreModuleLessonView
-              key={contents.id}
-              activity={contents as CoreModuleLessonActivity}
+              key={activityContent.id}
+              activity={activityContent as CoreModuleLessonActivity}
               principleLabel={principleLabel}
             />
           )}
 
           {/* Assessment View (Pre / Mini / Post) */}
-          {isAssessment && (
+          {isAssessment && activityContent && (
             <CoreModuleAssessmentView
-              key={contents.id}
-              activity={contents as CoreModuleAssessmentActivity}
+              key={activityContent.id}
+              activity={activityContent as CoreModuleAssessmentActivity}
               principleLabel={principleLabel}
             />
           )}
 
           {/* Interactive Scenario View */}
-          {isInteractive && (
+          {isInteractive && activityContent && (
             <CoreModuleInteractiveView
-              key={contents.id}
-              activity={contents as CoreModuleInteractiveActivity}
+              key={activityContent.id}
+              activity={activityContent as CoreModuleInteractiveActivity}
               principleLabel={principleLabel}
             />
           )}
 
           {/* Fallback for other activity kinds */}
-          {!isLesson && !isAssessment && !isInteractive && (
+          {!isLesson && !isAssessment && !isInteractive && activityContent && (
             <div className="space-y-4">
               <header className="border-b border-border pb-4">
-                <span className="text-xs font-semibold uppercase text-muted-foreground">
+                <span className="text-xs font-semibold text-muted-foreground uppercase">
                   {principleLabel}
                 </span>
                 <h1 className="mt-2 text-2xl font-bold text-foreground">
-                  {contents.title}
+                  {activityContent.title}
                 </h1>
               </header>
               <p className="text-sm text-muted-foreground">

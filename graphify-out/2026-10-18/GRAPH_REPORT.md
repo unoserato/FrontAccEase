@@ -1,7 +1,7 @@
 # Graph Report - react  (2026-10-18)
 
 ## Corpus Check
-- 339 files · ~156,590 words
+- 339 files · ~157,070 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -15,10 +15,10 @@
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- parseShortcutKeys
+- useTiptapEditor
 - ClassroomEmpty.tsx
 - use-heading.ts
-- useTiptapEditor
+- use-list.ts
 - materials.ts
 - Permissions.tsx
 - QuizEditor.tsx
@@ -90,6 +90,7 @@
 - 2026-09-26T12-28-39Z__src-pages-learner-dashboard-tsx.md
 - Impeccable Critique: `src/pages/learner/Classroom.tsx`
 - ProtectedLayoutNoSidebar.tsx
+- axios
 - Forms & Inputs
 - @tiptap/extensions
 - Critical Rules
@@ -97,6 +98,7 @@
 - package.json
 - scripts
 - bubble.tsx
+- @eslint/js
 - ProtectedLayout.tsx
 - remark-gfm
 - cmdk
@@ -124,7 +126,6 @@
 - @mlc-ai/web-llm
 - ViewToggle.tsx
 - @tiptap/extension-subscript
-- react-day-picker
 - react-dom
 - react-hotkeys-hook
 - react-icons
@@ -149,7 +150,6 @@
 - @tiptap/react
 - @tiptap/starter-kit
 - tw-animate-css
-- prettier
 - prettier-plugin-tailwindcss
 - @tanstack/eslint-plugin-query
 - @types/lodash.throttle
@@ -198,9 +198,9 @@
 
 ## Communities (164 total, 68 thin omitted)
 
-### Community 0 - "parseShortcutKeys"
+### Community 0 - "useTiptapEditor"
 Cohesion: 0.09
-Nodes (31): BlockquoteButtonProps, BlockquoteShortcutBadge(), BLOCKQUOTE_SHORTCUT_KEY, UseBlockquoteConfig, CodeBlockButtonProps, CodeBlockShortcutBadge(), CODE_BLOCK_SHORTCUT_KEY, UseCodeBlockConfig (+23 more)
+Nodes (38): BlockquoteButtonProps, BlockquoteShortcutBadge(), BLOCKQUOTE_SHORTCUT_KEY, UseBlockquoteConfig, CodeBlockButtonProps, CodeBlockShortcutBadge(), CODE_BLOCK_SHORTCUT_KEY, UseCodeBlockConfig (+30 more)
 
 ### Community 1 - "ClassroomEmpty.tsx"
 Cohesion: 0.19
@@ -210,9 +210,9 @@ Nodes (14): EmptyStateProps, Empty(), EmptyContent(), EmptyDescription(), EmptyH
 Cohesion: 0.10
 Nodes (33): BlockquoteIcon, SvgProps, CodeBlockIcon, SvgProps, HeadingFiveIcon, SvgProps, HeadingFourIcon, SvgProps (+25 more)
 
-### Community 3 - "useTiptapEditor"
-Cohesion: 0.10
-Nodes (34): ListIcon, SvgProps, ListOrderedIcon, SvgProps, ListTodoIcon, SvgProps, ListButton, ListButtonProps (+26 more)
+### Community 3 - "use-list.ts"
+Cohesion: 0.12
+Nodes (26): ListIcon, SvgProps, ListOrderedIcon, SvgProps, ListTodoIcon, SvgProps, canToggleList(), isListActive() (+18 more)
 
 ### Community 4 - "materials.ts"
 Cohesion: 0.09
@@ -259,8 +259,8 @@ Cohesion: 0.11
 Nodes (29): EmptyState(), GridListButtonGroupTemplate(), HeaderTemplate(), HeaderTemplateProps, SearchInputProps, SearchTemplate(), TooltipButtonTemplate(), ToolTipTemplateProps (+21 more)
 
 ### Community 15 - "heading-dropdown-menu.tsx"
-Cohesion: 0.15
-Nodes (16): HeadingIcon, SvgProps, HeadingButton, HeadingButtonProps, HeadingShortcutBadge(), HEADING_SHORTCUT_KEYS, headingIcons, isHeadingActive() (+8 more)
+Cohesion: 0.14
+Nodes (17): HeadingIcon, SvgProps, HeadingButton, HeadingButtonProps, HeadingShortcutBadge(), HEADING_SHORTCUT_KEYS, headingIcons, isHeadingActive() (+9 more)
 
 ### Community 16 - "ModuleEditor.tsx"
 Cohesion: 0.16
@@ -440,7 +440,7 @@ Nodes (4): Attachment(), AttachmentMedia(), attachmentMediaVariants, attachmentV
 
 ### Community 63 - "devDependencies"
 Cohesion: 0.18
-Nodes (11): @eslint/js, eslint-plugin-react-refresh, devDependencies, @eslint/js, eslint-plugin-react-refresh, sass-embedded, @shadcn/lint, typescript (+3 more)
+Nodes (11): eslint-plugin-react-refresh, devDependencies, eslint-plugin-react-refresh, prettier, sass-embedded, @shadcn/lint, typescript, prettier (+3 more)
 
 ### Community 64 - "schoolAdminRoute.tsx"
 Cohesion: 0.13
@@ -532,7 +532,7 @@ Nodes (4): compilerOptions, paths, files, references
 
 ### Community 103 - "dependencies"
 Cohesion: 0.15
-Nodes (13): axios, input-otp, dependencies, axios, input-otp, @radix-ui/react-dropdown-menu, react-markdown, rehype-highlight (+5 more)
+Nodes (13): input-otp, dependencies, input-otp, @radix-ui/react-dropdown-menu, react-day-picker, react-markdown, rehype-highlight, @tiptap/extension-horizontal-rule (+5 more)
 
 ### Community 104 - "theme-toggle.tsx"
 Cohesion: 0.32
@@ -546,7 +546,7 @@ Nodes (5): MoonStarIcon, SvgProps, SunIcon, SvgProps, ThemeToggle()
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `dependencies` connect `dependencies` to `@shadcn/react`, `survey-core`, `survey-creator-react`, `@radix-ui/react-popover`, `tailwindcss`, `@tailwindcss/vite`, `@tanstack/react-query`, `@tiptap/core`, `@tiptap/extension-find-and-replace`, `@tiptap/extension-highlight`, `recharts`, `@tiptap/extension-typography`, `@tiptap/pm`, `@tiptap/react`, `@tiptap/starter-kit`, `tw-animate-css`, `survey-react-ui`, `pdfExport.ts`, `clsx`, `@tiptap/extensions`, `chart.tsx`, `package.json`, `remark-gfm`, `cmdk`, `@tiptap/extension-image`, `@fontsource-variable/roboto`, `@base-ui/react`, `class-variance-authority`, `cn`, `date-fns`, `@tiptap/extension-list`, `shadcn`, `lodash.throttle`, `lucide-react`, `@mlc-ai/web-llm`, `@tiptap/extension-subscript`, `react-day-picker`, `react-dom`, `react-hotkeys-hook`, `react-icons`, `react-router-dom`, `@tiptap/extension-superscript`, `@tiptap/extension-text-align`, `@floating-ui/react`, `jspdf-autotable`?**
+- **Why does `dependencies` connect `dependencies` to `@shadcn/react`, `survey-core`, `survey-creator-react`, `@radix-ui/react-popover`, `tailwindcss`, `@tailwindcss/vite`, `@tanstack/react-query`, `@tiptap/core`, `@tiptap/extension-find-and-replace`, `@tiptap/extension-highlight`, `recharts`, `@tiptap/extension-typography`, `@tiptap/pm`, `@tiptap/react`, `@tiptap/starter-kit`, `tw-animate-css`, `survey-react-ui`, `pdfExport.ts`, `clsx`, `axios`, `@tiptap/extensions`, `chart.tsx`, `package.json`, `remark-gfm`, `cmdk`, `@tiptap/extension-image`, `@fontsource-variable/roboto`, `@base-ui/react`, `class-variance-authority`, `cn`, `date-fns`, `@tiptap/extension-list`, `shadcn`, `lodash.throttle`, `lucide-react`, `@mlc-ai/web-llm`, `@tiptap/extension-subscript`, `react-dom`, `react-hotkeys-hook`, `react-icons`, `react-router-dom`, `@tiptap/extension-superscript`, `@tiptap/extension-text-align`, `@floating-ui/react`, `jspdf-autotable`?**
   _High betweenness centrality (0.151) - this node is a cross-community bridge._
 - **Why does `react` connect `chart.tsx` to `date-time-picker.tsx`, `ClassroomEmpty.tsx`, `theme-provider.tsx`, `dependencies`, `sidebar.tsx`, `Button`, `useIsMobile`?**
   _High betweenness centrality (0.133) - this node is a cross-community bridge._
@@ -554,9 +554,9 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.067) - this node is a cross-community bridge._
 - **What connects `$schema`, `style`, `rsc` to the rest of the system?**
   _558 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `parseShortcutKeys` be split into smaller, more focused modules?**
-  _Cohesion score 0.09175377468060394 - nodes in this community are weakly interconnected._
+- **Should `useTiptapEditor` be split into smaller, more focused modules?**
+  _Cohesion score 0.08549019607843138 - nodes in this community are weakly interconnected._
 - **Should `use-heading.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.1014799154334038 - nodes in this community are weakly interconnected._
-- **Should `useTiptapEditor` be split into smaller, more focused modules?**
-  _Cohesion score 0.09830866807610994 - nodes in this community are weakly interconnected._
+- **Should `use-list.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.11764705882352941 - nodes in this community are weakly interconnected._

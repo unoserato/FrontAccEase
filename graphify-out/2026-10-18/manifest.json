@@ -1595,8 +1595,8 @@
     "semantic_hash": "cf9ee337a8084a67e774cef53bf5d21f"
   },
   "src/features/shared/CoreModuleReadOnly.tsx": {
-    "mtime": 1792336445.3782637,
-    "ast_hash": "57e0a330ca125400fd5c57162d6e7569",
+    "mtime": 1792337741.789407,
+    "ast_hash": "b1231c537a30e67eb4fbf48a21f0a9c1",
     "semantic_hash": ""
   },
   "src/features/shared/ModuleReadOnly.tsx": {
@@ -1760,13 +1760,13 @@
     "semantic_hash": ""
   },
   "src/features/shared/core-module/CoreModuleAssessmentView.tsx": {
-    "mtime": 1792336409.9320076,
-    "ast_hash": "4601a5c767dc57cadb69e7f8a15d03c5",
+    "mtime": 1792337729.2532275,
+    "ast_hash": "294de16f10a772524a2203e607bedd17",
     "semantic_hash": ""
   },
   "src/features/shared/core-module/CoreModuleInteractiveView.tsx": {
-    "mtime": 1792337202.3157246,
-    "ast_hash": "6ecf029a6dd9137474d5f429da96c2b1",
+    "mtime": 1792337751.2813494,
+    "ast_hash": "a77dd97fdf2aa8e1e4ee60d6942f96eb",
     "semantic_hash": ""
   },
   "src/features/shared/core-module/CoreModuleLessonView.tsx": {

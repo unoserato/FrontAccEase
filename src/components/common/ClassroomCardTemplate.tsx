@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom"
 import EditorDropdown from "./EditorDropdown"
 import { useMe } from "@/services/tanstack/auth"
 import { Users } from "lucide-react"
-import type { ClassroomProps } from "@/const/props/materialProps"
+import type { ClassroomProps } from "@/const/props/classroomProps"
 
 export default function ClassroomCardTemplate({
   classroom,

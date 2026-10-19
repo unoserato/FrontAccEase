@@ -1,11 +1,11 @@
-import { useState } from "react"
-import { useParams, Link, useNavigate } from "react-router-dom"
+import { useState, useMemo } from "react"
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom"
 import type {
   AnalyzerResultItem,
   PrincipleIssue,
   PrinciplePassed,
   Result,
-} from "@/const/props/materialProps"
+} from "@/const/props/analyzerProps"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -36,7 +36,6 @@ import {
   ChevronUp,
   Code2,
   Copy,
-  Download,
   ExternalLink,
   Eye,
   FileDown,
@@ -57,9 +56,11 @@ import { RichText } from "@/components/learner/RichText"
 import { exportAnalyzerReportToPDF } from "@/lib/pdfExport"
 import {
   useAnalyzer,
-  useAnalyzerLogsByLearner,
+  useAnalyzerResultById,
   useSitemap,
 } from "@/services/tanstack/materials"
+import { getDateString } from "@/hooks/date-to-string"
+import copyText from "@/hooks/copy-text"
 
 function capitalize(str: string): string {
   if (!str) return ""
@@ -71,15 +72,28 @@ function getSummaryCount(
   name: "critical" | "serious" | "moderate" | "minor" | "total_passed"
 ): number {
   if (Array.isArray(summaryList)) {
-    const item = summaryList.find(
-      (s: { name?: string; count?: number }) =>
-        s.name?.toLowerCase() === name.toLowerCase()
-    )
+    const item = summaryList.find((s: { name?: string; count?: number }) => {
+      const itemName = s.name?.toLowerCase()
+      const targetName = name.toLowerCase()
+      if (itemName === targetName) return true
+      if (
+        (targetName === "total_passed" && itemName === "passed") ||
+        (targetName === "passed" && itemName === "total_passed")
+      ) {
+        return true
+      }
+      return false
+    })
     return item?.count ?? 0
   }
   if (summaryList && typeof summaryList === "object") {
     const obj = summaryList as Record<string, number>
-    return obj[`${name}_count`] ?? 0
+    return (
+      obj[`${name}_count`] ??
+      (name === "total_passed"
+        ? (obj["passed_count"] ?? obj["total_passed"] ?? 0)
+        : 0)
+    )
   }
   return 0
 }
@@ -109,20 +123,6 @@ function getScoreConfig(score: number): {
     bg: "bg-rose-500",
     label: "Action Required",
     ring: "ring-rose-500/20",
-  }
-}
-
-function formatDate(dateStr: string): string {
-  try {
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(dateStr))
-  } catch {
-    return dateStr
   }
 }
 
@@ -166,9 +166,12 @@ function CopyButton({ text, label }: { text: string; label: string }) {
 
   const handleCopy = (e: React.MouseEvent) => {
     e.stopPropagation()
-    navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 1800)
+    copyText({
+      textToCopy: text,
+      setCopied(value) {
+        setCopied(value)
+      },
+    })
   }
 
   return (
@@ -370,9 +373,9 @@ function FindingCard({ item }: { item: FindingItem }) {
           {/* Collapsed Target Preview chip */}
           {!expanded && targetPreview && (
             <div className="flex items-center gap-1.5 overflow-hidden pt-0.5">
-              <Code2 className={`size-3 shrink-0 ${config.previewIconColor}`} />
+              <Code2 className={`size-3 shrink-0`} />
               <span
-                className={`w-full truncate rounded border border-secondary/5 bg-primary px-2 py-2 font-mono text-xs ${config.previewTextColor}`}
+                className={`w-full truncate rounded border border-secondary/5 bg-black px-2 py-2 font-mono text-xs ${config.previewTextColor}`}
               >
                 {targetPreview}
               </span>
@@ -445,7 +448,10 @@ function FindingCard({ item }: { item: FindingItem }) {
                 <CopyButton text={item.element} label="HTML Snippet" />
               </div>
               <div className="overflow-hidden rounded-lg border border-white/5">
-                <RichText content={"```html\n" + item.element + "\n```"} />
+                <RichText
+                  content={"```html\n" + item.element + "\n```"}
+                  className="bg-black"
+                />
               </div>
             </div>
           )}
@@ -567,12 +573,80 @@ function ManualRow({
 
 export default function AnalyzerResults() {
   const { id } = useParams()
-  const { data: scanHistory } = useAnalyzerLogsByLearner()
-  const scanEntry = scanHistory.find((scan) => scan.id == id!)
-  const resultData = scanEntry?.content
+  // const location = useLocation()
+  const { data: resultData, isLoading: isLoadingScan } = useAnalyzerResultById(
+    id || ""
+  )
+
+  // const scanEntry = useMemo<AnalyzerResultItem | undefined>(() => {
+  //   if (propScanEntry) return propScanEntry
+  //   if (data && "content" in data) return data as AnalyzerResultItem
+  //   if (location.state?.scanEntry) {
+  //     return location.state.scanEntry as AnalyzerResultItem
+  //   }
+  //   if (
+  //     apiScanData &&
+  //     typeof apiScanData === "object" &&
+  //     "content" in apiScanData
+  //   ) {
+  //     return apiScanData as AnalyzerResultItem
+  //   }
+  //   return undefined
+  // }, [propScanEntry, data, location.state, apiScanData])
+
+  // const resultData = useMemo<Result | undefined>(() => {
+  //   if (propResult) return propResult
+  //   if (data && "principles" in data && !("content" in data)) {
+  //     return data as Result
+  //   }
+  //   if (location.state?.result) {
+  //     const res = location.state.result
+  //     return typeof res === "string" ? JSON.parse(res) : res
+  //   }
+  //   if (scanEntry?.content) {
+  //     if (typeof scanEntry.content === "string") {
+  //       try {
+  //         return JSON.parse(scanEntry.content)
+  //       } catch (e) {
+  //         console.error("Failed to parse scanEntry.content JSON:", e)
+  //       }
+  //     } else if (
+  //       typeof scanEntry.content === "object" &&
+  //       scanEntry.content !== null
+  //     ) {
+  //       return scanEntry.content as Result
+  //     }
+  //   }
+  //   if (apiScanData) {
+  //     const c =
+  //       typeof apiScanData === "object" && "content" in apiScanData
+  //         ? apiScanData.content
+  //         : apiScanData
+  //     if (typeof c === "string") {
+  //       try {
+  //         return JSON.parse(c)
+  //       } catch (e) {
+  //         console.error("Failed to parse apiScanData content JSON:", e)
+  //       }
+  //     } else if (c && typeof c === "object" && "principles" in c) {
+  //       return c as Result
+  //     }
+  //   }
+  //   if (id) {
+  //     try {
+  //       const stored = sessionStorage.getItem(
+  //         `frontaccease_analyzer_result_${id}`
+  //       )
+  //       if (stored) return JSON.parse(stored)
+  //     } catch {
+  //       // ignore
+  //     }
+  //   }
+  //   return undefined
+  // }, [propResult, data, location.state, scanEntry, apiScanData, id])
 
   const { data: sitemapLinks = [], isLoading: isLoadingSitemap } = useSitemap(
-    resultData?.url
+    resultData?.content?.url
   )
 
   const navigate = useNavigate()
@@ -641,7 +715,7 @@ export default function AnalyzerResults() {
   // Extract all issues across principles
   const allIssues = !resultData
     ? []
-    : resultData.principles?.flatMap((p) =>
+    : resultData.content.principles?.flatMap((p) =>
         (p.data?.issues || []).map((issue: PrincipleIssue) => ({
           ...issue,
           principleName: capitalize(p.name),
@@ -651,7 +725,7 @@ export default function AnalyzerResults() {
   // Extract all passed checks across principles
   const allPassed = !resultData
     ? []
-    : resultData.principles?.flatMap((p) =>
+    : resultData.content.principles?.flatMap((p) =>
         (p.data?.passed || []).map((passedItem: PrinciplePassed) => ({
           ...passedItem,
           principleName: capitalize(p.name),
@@ -661,7 +735,7 @@ export default function AnalyzerResults() {
   // Extract manual review items
   const allManual = !resultData
     ? []
-    : resultData.principles?.flatMap((p) =>
+    : resultData.content.principles?.flatMap((p) =>
         (p.data?.manual_review || []).map((item: unknown) => ({
           ...(item as object),
           principleName: capitalize(p.name),
@@ -748,9 +822,10 @@ export default function AnalyzerResults() {
   // Principle scores mapped
   const principleScoresList = !resultData
     ? []
-    : resultData.principle_scores && resultData.principle_scores.length > 0
-      ? resultData.principle_scores.map((ps) => {
-          const foundPrinciple = resultData.principles?.find(
+    : resultData.content.principle_scores &&
+        resultData.content.principle_scores.length > 0
+      ? resultData.content.principle_scores.map((ps) => {
+          const foundPrinciple = resultData.content.principles?.find(
             (p) => p.name.toLowerCase() === ps.principle.toLowerCase()
           )
           return {
@@ -761,7 +836,7 @@ export default function AnalyzerResults() {
             manualCount: foundPrinciple?.data?.manual_review?.length ?? 0,
           }
         })
-      : (resultData.principles || []).map((p) => ({
+      : (resultData.content.principles || []).map((p) => ({
           name: capitalize(p.name),
           score: p.data?.score ?? 80,
           issuesCount: p.data?.issues?.length ?? 0,
@@ -805,37 +880,47 @@ export default function AnalyzerResults() {
     )
   }
 
-  const overallScore = resultData.overall_score ?? 0
+  const overallScore =
+    resultData.content.overall_score ??
+    (principleScoresList.length > 0
+      ? Math.round(
+          principleScoresList.reduce((acc, p) => acc + (p.score || 0), 0) /
+            principleScoresList.length
+        )
+      : 0)
   const scoreConfig = getScoreConfig(overallScore)
 
   // Calculate summary counts
-  const criticalCount = getSummaryCount(resultData.summary, "critical")
-  const seriousCount = getSummaryCount(resultData.summary, "serious")
-  const moderateCount = getSummaryCount(resultData.summary, "moderate")
-  const minorCount = getSummaryCount(resultData.summary, "minor")
+  const criticalCount = getSummaryCount(resultData.content.summary, "critical")
+  const seriousCount = getSummaryCount(resultData.content.summary, "serious")
+  const moderateCount = getSummaryCount(resultData.content.summary, "moderate")
+  const minorCount = getSummaryCount(resultData.content.summary, "minor")
   const totalViolations =
     criticalCount + seriousCount + moderateCount + minorCount
-  const totalPassedCount = getSummaryCount(resultData.summary, "total_passed")
+  const totalPassedCount = getSummaryCount(
+    resultData.content.summary,
+    "total_passed"
+  )
 
-  // Export JSON handler
-  function handleExportJSON() {
-    const dataStr =
-      "data:text/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(resultData, null, 2))
-    const downloadAnchor = document.createElement("a")
-    downloadAnchor.setAttribute("href", dataStr)
-    const hostClean = resultData?.url
-      .replace(/^https?:\/\//, "")
-      .replace(/[^\w-]/g, "_")
-    downloadAnchor.setAttribute("download", `${hostClean}-wcag-audit.json`)
-    document.body.appendChild(downloadAnchor)
-    downloadAnchor.click()
-    downloadAnchor.remove()
-  }
+  // Export JSON handler hidden for now
+  // function handleExportJSON() {
+  //   const dataStr =
+  //     "data:text/json;charset=utf-8," +
+  //     encodeURIComponent(JSON.stringify(resultData, null, 2))
+  //   const downloadAnchor = document.createElement("a")
+  //   downloadAnchor.setAttribute("href", dataStr)
+  //   const hostClean = resultData?.content.url
+  //     .replace(/^https?:\/\//, "")
+  //     .replace(/[^\w-]/g, "_")
+  //   downloadAnchor.setAttribute("download", `${hostClean}-wcag-audit.json`)
+  //   document.body.appendChild(downloadAnchor)
+  //   downloadAnchor.click()
+  //   downloadAnchor.remove()
+  // }
 
   // Copy Markdown Summary handler
   function handleCopySummary() {
-    const summaryText = `# WCAG Audit: ${resultData?.url}
+    const summaryText = `# WCAG Audit: ${resultData?.content.url}
 Overall Compliance Score: ${overallScore}/100
 Violations: ${totalViolations} (Critical: ${criticalCount}, Serious: ${seriousCount}, Moderate: ${moderateCount}, Minor: ${minorCount})
 Total Passed Checks: ${totalPassedCount}
@@ -859,15 +944,16 @@ ${allIssues
     try {
       setIsExportingPDF(true)
       exportAnalyzerReportToPDF({
-        result: resultData,
+        result: resultData.content,
         scanInfo: {
-          id: scanEntry?.id,
-          createdAt: scanEntry?.created_at,
+          id: resultData.id,
+          createdAt: resultData.created_at,
         },
       })
       toast.add({
         title: "PDF Report Generated",
-        description: "Your full WCAG Accessibility Audit PDF has been downloaded.",
+        description:
+          "Your full WCAG Accessibility Audit PDF has been downloaded.",
       })
     } catch (err) {
       console.error("Failed to export PDF:", err)
@@ -914,14 +1000,14 @@ ${allIssues
 
           <div className="flex flex-wrap items-center gap-2 pl-10 text-xs text-muted-foreground">
             <a
-              href={resultData.url}
+              href={resultData.content.url}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 font-semibold text-primary hover:underline"
             >
               <Globe className="size-3.5" />
               <span className="max-w-64 truncate sm:max-w-none">
-                {resultData.url}
+                {resultData.content.url}
               </span>
               <ArrowUpRight className="size-3 shrink-0" />
             </a>
@@ -929,26 +1015,32 @@ ${allIssues
             <Badge variant="outline" className="h-5 px-1.5 text-xs">
               WCAG 2.2 AA/AAA
             </Badge>
+            {/* {scanEntry?.status && (
+              <>
+                <span className="text-border">·</span>
+                <Badge
+                  variant="secondary"
+                  className="h-5 px-1.5 text-xs capitalize"
+                >
+                  {scanEntry.status}
+                </Badge>
+              </>
+            )}
             {scanEntry?.created_at && (
               <>
                 <span className="text-border">·</span>
                 <span className="inline-flex items-center gap-1">
                   <Calendar className="size-3" />
-                  {formatDate(scanEntry.created_at)}
+                  {getDateString(scanEntry.created_at)}
                 </span>
               </>
-            )}
+            )} */}
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="flex shrink-0 flex-wrap items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleCopySummary}
-            className="h-9 gap-1.5 text-xs font-semibold cursor-pointer"
-          >
+          <Button variant="outline" onClick={handleCopySummary}>
             {copiedSummary ? (
               <Check className="size-3.5 text-emerald-500" />
             ) : (
@@ -957,22 +1049,7 @@ ${allIssues
             <span>{copiedSummary ? "Copied!" : "Copy Summary"}</span>
           </Button>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleExportJSON}
-            className="h-9 gap-1.5 text-xs font-semibold cursor-pointer"
-          >
-            <Download className="size-3.5" />
-            <span>Export JSON</span>
-          </Button>
-
-          <Button
-            size="sm"
-            onClick={handleExportPDF}
-            disabled={isExportingPDF}
-            className="h-9 gap-1.5 text-xs font-bold cursor-pointer"
-          >
+          <Button onClick={handleExportPDF} disabled={isExportingPDF}>
             {isExportingPDF ? (
               <Loader2 className="size-3.5 animate-spin" />
             ) : (
@@ -1105,7 +1182,7 @@ ${allIssues
             <div className="space-y-0.5">
               <span className="text-muted-foreground">Audited URL</span>
               <p className="truncate font-mono font-semibold text-foreground">
-                {resultData.url}
+                {resultData.content.url}
               </p>
             </div>
 
@@ -1155,7 +1232,7 @@ ${allIssues
                         {sitemapLinks.map((link) => {
                           const displayPath =
                             link.replace(/^https?:\/\/[^/]+/i, "") || "/"
-                          const isCurrent = link === resultData.url
+                          const isCurrent = link === resultData.content.url
                           const isThisScanning = scanningUrl === link
 
                           return (
@@ -1239,7 +1316,7 @@ ${allIssues
                 Elapsed Time
               </span>
               <span className="font-mono text-sm font-bold text-foreground tabular-nums">
-                {formatElapsedTime(resultData.elapsed_time)}
+                {formatElapsedTime(resultData.content.elapsed_time)}
               </span>
             </div>
 

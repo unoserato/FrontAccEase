@@ -8,7 +8,6 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { classworks, learners } from "@/const/data"
-import type { ClassroomProps, Classwork } from "@/const/materialsProps"
 import {
   Calendar,
   CheckCircle2,
@@ -17,6 +16,7 @@ import {
   User,
   Users,
 } from "lucide-react"
+import type { ClassroomProps } from "@/const/props/classroomProps"
 
 export default function ClassworkCardTemplate({
   classroom,

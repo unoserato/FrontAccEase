@@ -1,4 +1,4 @@
-import type { PrincipleItem, Result } from "@/const/props/materialProps"
+import type { PrincipleItem, Result } from "@/const/props/analyzerProps"
 
 export type WebLLMStatus = "Pass" | "Fail" | "Manual Review"
 

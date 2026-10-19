@@ -26,7 +26,8 @@ import QuizCardTemplate from "@/components/common/QuizCardTemplate"
 import { Badge } from "@/components/ui/badge"
 import copyText from "@/hooks/copy-text"
 import { useClassroomContentView } from "@/services/tanstack/materials"
-import type { ClassroomViewProps } from "@/const/props/materialProps"
+import type { ClassroomViewProps } from "@/const/props/classroomProps"
+import ErrorBoundary from "../errors/ErrorBoundary"
 
 export default function ClassroomInstructorView() {
   const { id } = useParams()
@@ -49,6 +50,8 @@ export default function ClassroomInstructorView() {
       { replace: true }
     )
   }
+
+  if (!classroom) return <ErrorBoundary />
 
   return (
     <section className="p-responsive w-full space-y-4 bg-background sm:space-y-6">
@@ -258,7 +261,10 @@ function Classwork() {
 }
 
 function People({ classroom }: { classroom: ClassroomViewProps }) {
-  const instructor = classroom.classroom.instructor.name
+  const instructor =
+    classroom.classroom.instructor?.name ||
+    classroom.classroom.created_by ||
+    "Instructor"
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6 py-4 sm:space-y-8 sm:py-6">
       <Card>
@@ -270,7 +276,7 @@ function People({ classroom }: { classroom: ClassroomViewProps }) {
         <CardContent className="flex items-center gap-3.5 px-4 pb-4 text-sm sm:px-5 sm:pb-5 sm:text-base">
           <Avatar className="size-9 border border-border sm:size-10">
             <AvatarImage src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" />
-            <AvatarFallback>{instructor[0]}</AvatarFallback>
+            <AvatarFallback>{instructor[0] || "I"}</AvatarFallback>
           </Avatar>
           <div>
             <p className="font-semibold text-foreground">{instructor}</p>
@@ -302,7 +308,7 @@ function People({ classroom }: { classroom: ClassroomViewProps }) {
                 >
                   <div className="flex items-center gap-3">
                     <Avatar className="size-8 border border-border sm:size-9">
-                      <AvatarImage src={learner.profile_picture} />
+                      <AvatarImage src={learner.profile_picture ?? ""} />
                       <AvatarFallback>
                         {learner.name[0].toUpperCase()}
                       </AvatarFallback>

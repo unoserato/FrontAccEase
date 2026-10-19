@@ -1,5 +1,3 @@
-import type { Classwork, QuizSubmissionProps } from "./materialsProps"
-
 export type Role = "learner" | "instructor" | "admin"
 
 export interface UserProps {
@@ -468,39 +466,39 @@ export const instructors: UserProps[] = [
 //   },
 // ]
 
-export const classworks: Classwork[] = [
-  {
-    id: "1",
-    classroomId: "1",
-    name: "Quiz about Bobet Mr. MVP",
-    due: "Sep 01 2026 19:41:18 GMT+0800",
-    submissions: [
-      {
-        userId: "1234-1234",
-        content: "",
-        score: 0,
-      },
-      {
-        userId: "1233-1233",
-        content: "",
-        score: 0,
-      },
-    ],
-  },
-  {
-    id: "2",
-    classroomId: "1",
-    name: "Quiz about Bobet Mr. MVP",
-    due: "",
-    submissions: [
-      {
-        userId: "1234-1234",
-        content: "",
-        score: 0,
-      },
-    ],
-  },
-]
+// export const classworks: Classwork[] = [
+//   {
+//     id: "1",
+//     classroomId: "1",
+//     name: "Quiz about Bobet Mr. MVP",
+//     due: "Sep 01 2026 19:41:18 GMT+0800",
+//     submissions: [
+//       {
+//         userId: "1234-1234",
+//         content: "",
+//         score: 0,
+//       },
+//       {
+//         userId: "1233-1233",
+//         content: "",
+//         score: 0,
+//       },
+//     ],
+//   },
+//   {
+//     id: "2",
+//     classroomId: "1",
+//     name: "Quiz about Bobet Mr. MVP",
+//     due: "",
+//     submissions: [
+//       {
+//         userId: "1234-1234",
+//         content: "",
+//         score: 0,
+//       },
+//     ],
+//   },
+// ]
 
 // export const quizzes: QuizProps[] = [
 //   {
@@ -685,80 +683,80 @@ export const classworks: Classwork[] = [
 //   },
 // ]
 
-export const quizSubmissions: QuizSubmissionProps[] = [
-  // Submissions for UI Quiz 1 (totalPoints: 50)
-  {
-    id: "sub-101",
-    quizId: "1",
-    learnerId: "1234-1234",
-    content: {
-      q_1: "Web Content Accessibility Guidelines",
-    },
-    score: 48,
-    submittedAt: "Aug 26, 2026 14:20 GMT+0800",
-  },
-  {
-    id: "sub-102",
-    quizId: "1",
-    learnerId: "1233-1233",
-    content: {
-      q_1: "Web Content Accessibility Guidelines",
-    },
-    score: 44,
-    submittedAt: "Aug 27, 2026 09:15 GMT+0800",
-  },
-  {
-    id: "sub-103",
-    quizId: "1",
-    learnerId: "1235-1235",
-    content: {
-      q_1: "Web Content Accessibility Guidelines",
-    },
-    score: 50,
-    submittedAt: "Aug 27, 2026 11:30 GMT+0800",
-  },
-  {
-    id: "sub-104",
-    quizId: "1",
-    learnerId: "1237-1237",
-    content: {
-      q_1: "Web Content Accessibility Guidelines",
-    },
-    score: 38,
-    submittedAt: "Aug 27, 2026 16:45 GMT+0800",
-  },
-  // Submissions for Operable & Keyboard Navigation Evaluation (totalPoints: 75)
-  {
-    id: "sub-201",
-    quizId: "2",
-    learnerId: "1234-1234",
-    content: {
-      q_1: "Keyboard navigation guidelines",
-    },
-    score: 70,
-    submittedAt: "Sep 08, 2026 11:45 GMT+0800",
-  },
-  {
-    id: "sub-202",
-    quizId: "2",
-    learnerId: "1233-1233",
-    content: {
-      q_1: "Keyboard navigation guidelines",
-    },
-    score: 65,
-    submittedAt: "Sep 09, 2026 15:10 GMT+0800",
-  },
-  {
-    id: "sub-203",
-    quizId: "2",
-    learnerId: "1235-1235",
-    content: {
-      q_1: "Keyboard navigation guidelines",
-    },
-    score: 72,
-    submittedAt: "Sep 10, 2026 08:30 GMT+0800",
-  },
-]
+// export const quizSubmissions: QuizSubmissionProps[] = [
+//   // Submissions for UI Quiz 1 (totalPoints: 50)
+//   {
+//     id: "sub-101",
+//     quizId: "1",
+//     learnerId: "1234-1234",
+//     content: {
+//       q_1: "Web Content Accessibility Guidelines",
+//     },
+//     score: 48,
+//     submittedAt: "Aug 26, 2026 14:20 GMT+0800",
+//   },
+//   {
+//     id: "sub-102",
+//     quizId: "1",
+//     learnerId: "1233-1233",
+//     content: {
+//       q_1: "Web Content Accessibility Guidelines",
+//     },
+//     score: 44,
+//     submittedAt: "Aug 27, 2026 09:15 GMT+0800",
+//   },
+//   {
+//     id: "sub-103",
+//     quizId: "1",
+//     learnerId: "1235-1235",
+//     content: {
+//       q_1: "Web Content Accessibility Guidelines",
+//     },
+//     score: 50,
+//     submittedAt: "Aug 27, 2026 11:30 GMT+0800",
+//   },
+//   {
+//     id: "sub-104",
+//     quizId: "1",
+//     learnerId: "1237-1237",
+//     content: {
+//       q_1: "Web Content Accessibility Guidelines",
+//     },
+//     score: 38,
+//     submittedAt: "Aug 27, 2026 16:45 GMT+0800",
+//   },
+//   // Submissions for Operable & Keyboard Navigation Evaluation (totalPoints: 75)
+//   {
+//     id: "sub-201",
+//     quizId: "2",
+//     learnerId: "1234-1234",
+//     content: {
+//       q_1: "Keyboard navigation guidelines",
+//     },
+//     score: 70,
+//     submittedAt: "Sep 08, 2026 11:45 GMT+0800",
+//   },
+//   {
+//     id: "sub-202",
+//     quizId: "2",
+//     learnerId: "1233-1233",
+//     content: {
+//       q_1: "Keyboard navigation guidelines",
+//     },
+//     score: 65,
+//     submittedAt: "Sep 09, 2026 15:10 GMT+0800",
+//   },
+//   {
+//     id: "sub-203",
+//     quizId: "2",
+//     learnerId: "1235-1235",
+//     content: {
+//       q_1: "Keyboard navigation guidelines",
+//     },
+//     score: 72,
+//     submittedAt: "Sep 10, 2026 08:30 GMT+0800",
+//   },
+// ]
 
 export interface ClassLogItem {
   id: string

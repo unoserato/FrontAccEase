@@ -13,7 +13,8 @@ import {
   getModulesAPI,
 } from "../api/materialsAPI"
 import {
-  getAnalyzerLogsByLearner,
+  getAnalyzerResultByIdAPI,
+  getAnalyzerLogsSummaryByLearnerAPI,
   getCoreModuleActivitiesAPI,
   getCoreModulesAPI,
   getExtensionScanAPI,
@@ -121,8 +122,17 @@ export function useQuizAnswerById(id?: string) {
 export function useAnalyzerLogsByLearner() {
   return useSuspenseQuery({
     queryKey: ["analyzer-logs"],
-    queryFn: getAnalyzerLogsByLearner,
+    queryFn: getAnalyzerLogsSummaryByLearnerAPI,
     staleTime: staleTime,
+  })
+}
+
+export function useAnalyzerResultById(id: string) {
+  return useQuery({
+    queryKey: ["analyzer-result", id],
+    queryFn: () => getAnalyzerResultByIdAPI(id),
+    staleTime: staleTime,
+    enabled: Boolean(id),
   })
 }
 
@@ -253,9 +263,9 @@ export function useAnswerCoreInteractive(activityId?: string) {
         choice ??
         (typeof answer === "string"
           ? answer
-          : (answer as Record<string, unknown>)?.choice ??
+          : ((answer as Record<string, unknown>)?.choice ??
             (answer as Record<string, unknown>)?.value ??
-            (answer as Record<string, unknown>)?.answer)
+            (answer as Record<string, unknown>)?.answer))
       return answerCoreInteractiveActivityAPI(id, String(finalChoice))
     },
     onSuccess: (_, variables) => {

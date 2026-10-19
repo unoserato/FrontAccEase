@@ -12,7 +12,7 @@ import {
 import type {
   QuizProps,
   QuizSubmissionProps,
-} from "@/const/props/materialProps"
+} from "@/const/props/quizProps"
 import { cn } from "@/lib/utils"
 import { Award, ChevronDown, ChevronUp, History } from "lucide-react"
 import { getDateString } from "@/hooks/date-to-string"

@@ -9,7 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import EditorDropdown from "./EditorDropdown"
 import { useNavigate } from "react-router-dom"
 import { useMe } from "@/services/tanstack/auth"
-import type { QuizProps } from "@/const/props/materialProps"
+import type { QuizProps } from "@/const/props/quizProps"
 import { useClassrooms } from "@/services/tanstack/materials"
 import { getDateString } from "@/hooks/date-to-string"
 

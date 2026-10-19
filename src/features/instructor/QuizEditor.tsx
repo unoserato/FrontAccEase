@@ -35,11 +35,11 @@ import EmptyState from "@/components/common/EmptyState"
 
 // Features & Types
 import QuizForm from "@/features/instructor/QuizForm"
+import type { QuizProps } from "@/const/props/quizProps"
 import {
-  type QuizProps,
   type WCAGPrinciple,
   WCAG_PRINCIPLES_DATA,
-} from "@/const/props/materialProps"
+} from "@/const/props/wcagProps"
 
 // Icons
 import {
@@ -96,7 +96,7 @@ import {
   useQuizAnswerById,
   useQuizById,
 } from "@/services/tanstack/materials"
-import type { ClassroomProps } from "@/const/props/materialProps"
+import type { ClassroomProps } from "@/const/props/classroomProps"
 import { useMutation } from "@tanstack/react-query"
 import {
   createInstructorQuizAPI,

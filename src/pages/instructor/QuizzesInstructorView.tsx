@@ -41,8 +41,11 @@ import {
   useInstructorQuizzes,
   useQuizSubmissionsById,
 } from "@/services/tanstack/materials"
-import type { ClassroomProps, QuizProps } from "@/const/props/materialProps"
-import type { QuizSubmissionProps } from "@/const/materialsProps"
+import type { ClassroomProps } from "@/const/props/classroomProps"
+import type {
+  QuizProps,
+  QuizSubmissionProps,
+} from "@/const/props/quizProps"
 import { getDateString } from "@/hooks/date-to-string"
 import QuizSubmissionsCardTemplate from "@/components/instructor/QuizSubmissionsCardTemplate"
 

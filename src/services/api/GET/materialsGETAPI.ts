@@ -1,16 +1,21 @@
 import type {
   AnalyzerResultItem,
-  ClassroomProps,
-  CoreModuleActivityContent,
+  AnalyzerSummaryProps,
+} from "@/const/props/analyzerProps"
+import type { ClassroomProps } from "@/const/props/classroomProps"
+import type { InstructorMaterialsProps } from "@/const/props/instructorProps"
+import type {
+  CoreModuleActivityResponse,
   CoreModuleProgressProps,
-  InstructorMaterialsProps,
   ModuleProps,
+} from "@/const/props/moduleProps"
+import type {
   QuizAnswer,
   QuizProps,
-} from "@/const/props/materialProps"
+  QuizSubmissionProps,
+} from "@/const/props/quizProps"
 import { api } from "@/services/axios"
 import type { ExtensionScanSession, WebLLMTaskBatch } from "@/services/webLLM"
-import type { QuizSubmissionProps } from "@/const/materialsProps"
 
 export async function getInstructorMaterialsAPI(): Promise<
   InstructorMaterialsProps[]
@@ -53,13 +58,6 @@ export async function getQuizAnswerByIdAPI(id: string): Promise<QuizAnswer[]> {
   return response.data
 }
 
-export async function getAnalyzerLogsByLearner(): Promise<
-  AnalyzerResultItem[]
-> {
-  const response = await api.get(`/learner/analyzer-logs`)
-  return response.data
-}
-
 export async function sitemapAPI(url: string): Promise<string[]> {
   const response = await api.post("/accessibility/sitemap", { url })
   return Array.isArray(response.data?.links) ? response.data.links : []
@@ -98,7 +96,21 @@ export async function getCoreModulesAPI(): Promise<CoreModuleProgressProps> {
 
 export async function getCoreModuleActivitiesAPI(
   id: string
-): Promise<CoreModuleActivityContent> {
+): Promise<CoreModuleActivityResponse> {
   const response = await api.get(`/learner/pour/activities/${id}`)
+  return response.data
+}
+
+export async function getAnalyzerLogsSummaryByLearnerAPI(): Promise<
+  AnalyzerSummaryProps[]
+> {
+  const response = await api.get(`/learner/analyzer-logs`)
+  return response.data
+}
+
+export async function getAnalyzerResultByIdAPI(
+  id: string
+): Promise<AnalyzerResultItem> {
+  const response = await api.get(`/helper/analyzer-logs/${id}`)
   return response.data
 }

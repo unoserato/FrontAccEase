@@ -64,7 +64,11 @@ export default function Classroom() {
     <section className="p-responsive space-y-8">
       <HeaderTemplate
         title={myClassroom.classroom_code + " — " + myClassroom.name}
-        subtitle={myClassroom.instructor.name}
+        subtitle={
+          myClassroom.instructor?.name ||
+          myClassroom.created_by ||
+          "Instructor"
+        }
       />
 
       {/* Due Quizzes Section */}

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
-import type { AnalyzerResultItem, Result } from "@/const/props/materialProps"
+import type { AnalyzerResultItem, Result } from "@/const/props/analyzerProps"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"

@@ -13,7 +13,7 @@ import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import { BookOpen, CheckCircle2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import type { CoreModuleLessonActivity } from "@/const/props/materialProps"
+import type { CoreModuleLessonActivity } from "@/const/props/moduleProps"
 
 interface CoreModuleLessonViewProps {
   activity: CoreModuleLessonActivity

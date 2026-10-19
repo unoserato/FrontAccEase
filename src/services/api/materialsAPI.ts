@@ -1,8 +1,8 @@
 import type {
   ClassroomProps,
   ClassroomViewProps,
-  ModuleProps,
-} from "@/const/props/materialProps"
+} from "@/const/props/classroomProps"
+import type { ModuleProps } from "@/const/props/moduleProps"
 import { api } from "../axios"
 
 export async function getModulesAPI(): Promise<ModuleProps[]> {

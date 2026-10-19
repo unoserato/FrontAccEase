@@ -1,6 +1,6 @@
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
-import type { Result, PrincipleIssue, PrinciplePassed } from "@/const/props/materialProps"
+import type { Result, PrincipleIssue, PrinciplePassed } from "@/const/props/analyzerProps"
 
 export interface TableColumn {
   header: string

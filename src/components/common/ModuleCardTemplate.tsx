@@ -8,7 +8,7 @@ import DeleteArchiveDialog, {
 import EditorDropdown from "./EditorDropdown"
 import { useNavigate } from "react-router-dom"
 import { useMe } from "@/services/tanstack/auth"
-import type { ModuleProps } from "@/const/props/materialProps"
+import type { ModuleProps } from "@/const/props/moduleProps"
 
 export type ModuleCardTemplateProps = {
   module: ModuleProps

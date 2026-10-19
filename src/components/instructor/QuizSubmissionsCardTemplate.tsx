@@ -9,10 +9,10 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Users, User, Clock, FileText } from "lucide-react"
-import type { ClassroomProps, QuizProps } from "@/const/props/materialProps"
+import type { ClassroomProps } from "@/const/props/classroomProps"
+import type { QuizProps, QuizSubmissionProps } from "@/const/props/quizProps"
 import { getClassroomContentViewById } from "@/services/api/materialsAPI"
 import { staleTime } from "@/services/axios"
-import type { QuizSubmissionProps } from "@/const/materialsProps"
 
 export type QuizSubmissionsCardTemplateProps = {
   quiz: QuizProps
@@ -75,7 +75,7 @@ export default function QuizSubmissionsCardTemplate({
           : classroom.enrollment_count
         const matchingSubmissions = submissions.filter((submission) =>
           classroomLearners.some((learner) => {
-            const subLearnerId = submission.learner_id ?? submission.learnerId
+            const subLearnerId = submission.learner_id
             return (
               subLearnerId != null &&
               String(learner.id) === String(subLearnerId)
@@ -142,7 +142,7 @@ export default function QuizSubmissionsCardTemplate({
                   {classroomLearners.map((learner) => {
                     if (!learner) return null
                     const submission = matchingSubmissions.find((s) => {
-                      const subLearnerId = s.learner_id ?? s.learnerId
+                      const subLearnerId = s.learner_id
                       return (
                         subLearnerId != null &&
                         String(subLearnerId) === String(learner.id)

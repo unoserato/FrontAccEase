@@ -1,5 +1,5 @@
 import { memo } from "react"
-import type { AnalyzerResultItem } from "../../const/props/materialProps"
+import type { AnalyzerSummaryProps } from "@/const/props/analyzerProps"
 import { ArrowUpRight, Clock, Globe } from "lucide-react"
 import { Link } from "react-router-dom"
 import { getDateString } from "@/hooks/date-to-string"
@@ -9,24 +9,17 @@ import { Badge } from "../ui/badge"
 export const ScanHistory = memo(function ScanHistory({
   scanHistory,
 }: {
-  scanHistory: AnalyzerResultItem[]
+  scanHistory: AnalyzerSummaryProps[]
 }) {
   return (
     <div>
       {scanHistory.map((item) => {
-        const targetUrl = item.content?.url || "https://attendex.online"
+        const targetUrl = item.url || "example.com"
         const urlClean = targetUrl.replace(/^https?:\/\//, "")
-        const score = item.content?.overall_score ?? 0
+        const score = item.score ?? 0
 
         // Calculate violations across summary or principles
-        const totalViolations = Array.isArray(item.content?.summary)
-          ? (item.content.summary.find((s) => s.name === "critical")?.count ??
-              0) +
-            (item.content.summary.find((s) => s.name === "serious")?.count ??
-              0) +
-            (item.content.summary.find((s) => s.name === "moderate")?.count ??
-              0)
-          : 4
+        const totalViolations = item.violation_count
 
         // Determine score color
         const isHigh = score >= 90
@@ -36,7 +29,6 @@ export const ScanHistory = memo(function ScanHistory({
           <Link
             key={item.id}
             to={`/learner/analyzer/${item.id}`}
-            state={{ result: item.content, scanId: item.id }}
             className="group flex flex-col gap-3 p-4 transition-colors hover:bg-muted/50 sm:flex-row sm:items-center sm:justify-between"
           >
             {/* Left: Domain & Meta */}

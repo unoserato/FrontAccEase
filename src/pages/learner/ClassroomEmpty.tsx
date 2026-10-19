@@ -18,7 +18,7 @@ import { DoorOpen, Info, Lock } from "lucide-react"
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { joinClassroomByCodeAPI } from "@/services/api/CRUD/materialsCRUDAPI"
-import type { ClassroomProps } from "@/const/props/materialProps"
+import type { ClassroomProps } from "@/const/props/classroomProps"
 import { Spinner } from "@/components/ui/spinner"
 import { FieldError } from "@/components/ui/field"
 
