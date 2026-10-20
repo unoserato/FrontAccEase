@@ -36,87 +36,160 @@ import {
   Layers,
   CheckCircle2,
 } from "lucide-react"
-import { instructorClassLogs } from "@/const/data"
+import type { ClassroomAnalyzerLogsResponse } from "@/const/props/analyzerProps"
+import { useClassroomAnalyzerLogs } from "@/services/tanstack/materials"
 
-const usageChartData = [
-  { date: "09-01", scans: 38 },
-  { date: "09-02", scans: 52 },
-  { date: "09-03", scans: 45 },
-  { date: "09-04", scans: 72 },
-  { date: "09-05", scans: 60 },
-  { date: "09-06", scans: 28 },
-  { date: "09-07", scans: 47 },
-]
-
-const classroomDistributionData = [
-  { classroom: "ITEP-306", scans: 100 },
-  { classroom: "WCAG-101", scans: 120 },
-  { classroom: "UIUX-202", scans: 85 },
-  { classroom: "CS-401", scans: 115 },
-  { classroom: "ITEP-308", scans: 100 },
-]
+export interface AnalyzerLogsInstructorProps {
+  data?: ClassroomAnalyzerLogsResponse
+}
 
 const usageChartConfig = {
   scans: {
-    label: "Automated Scans",
+    label: "Total Scans: ",
     color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig
 
 const classroomChartConfig = {
   scans: {
-    label: "Classroom Scans",
+    label: "Combined Scans: ",
     color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig
 
-const principlesData = [
-  {
-    name: "Perceivable",
-    count: 120,
-    pct: 58.54,
-    colorBg: "bg-blue-500",
-    description:
-      "Alt text, color contrast, media alternatives & resizable text",
-  },
-  {
-    name: "Operable",
-    count: 55,
-    pct: 26.83,
-    colorBg: "bg-emerald-500",
-    description: "Keyboard traps, focus indicators, navigation & target sizes",
-  },
-  {
-    name: "Understandable",
-    count: 20,
-    pct: 9.76,
-    colorBg: "bg-amber-500",
-    description: "Form labels, error suggestions, page language & consistency",
-  },
-  {
-    name: "Robust",
-    count: 10,
-    pct: 4.87,
-    colorBg: "bg-purple-500",
-    description: "HTML parsing, ARIA role validation & name/role/value specs",
-  },
-]
-
-export default function AnalyzerLogsInstructor() {
+function AnalyzerLogsInstructorContent({
+  data,
+}: {
+  data: ClassroomAnalyzerLogsResponse
+}) {
   const [search, setSearch] = useState("")
   const navigate = useNavigate()
 
-  const filteredClassLogs = useMemo(() => {
-    if (!search.trim()) return instructorClassLogs
-    const q = search.toLowerCase().trim()
-    return instructorClassLogs.filter(
-      (item) =>
-        item.className.toLowerCase().includes(q) ||
-        item.code.toLowerCase().includes(q)
+  const usageChartData = useMemo(() => {
+    return (data.analyzer_usage_last_7_days || []).map((item) => {
+      const formattedDate =
+        item.date.length >= 10 ? item.date.slice(5) : item.date
+      return {
+        date: formattedDate,
+        scans: item.scan_count,
+      }
+    })
+  }, [data.analyzer_usage_last_7_days])
+
+  const classroomDistributionData = useMemo(() => {
+    return (data.classroom_scans || []).map((item) => ({
+      classroom: item.class_name,
+      scans: item.scan_count,
+    }))
+  }, [data.classroom_scans])
+
+  const totalPrincipleViolations = useMemo(() => {
+    const p = data.issues_per_principle
+    if (!p) return 0
+    return (
+      (p.perceivable || 0) +
+      (p.operable || 0) +
+      (p.understandable || 0) +
+      (p.robust || 0)
     )
-  }, [search])
+  }, [data.issues_per_principle])
+
+  const principlesData = useMemo(() => {
+    const p = data.issues_per_principle || {
+      perceivable: 0,
+      operable: 0,
+      understandable: 0,
+      robust: 0,
+    }
+    const total = totalPrincipleViolations
+
+    const calcPct = (count: number) => (total > 0 ? (count / total) * 100 : 0)
+
+    return [
+      {
+        name: "Perceivable",
+        count: p.perceivable || 0,
+        pct: calcPct(p.perceivable || 0),
+        colorBg: "bg-blue-500",
+        description:
+          "Alt text, color contrast, media alternatives & resizable text",
+      },
+      {
+        name: "Operable",
+        count: p.operable || 0,
+        pct: calcPct(p.operable || 0),
+        colorBg: "bg-emerald-500",
+        description:
+          "Keyboard traps, focus indicators, navigation & target sizes",
+      },
+      {
+        name: "Understandable",
+        count: p.understandable || 0,
+        pct: calcPct(p.understandable || 0),
+        colorBg: "bg-amber-500",
+        description:
+          "Form labels, error suggestions, page language & consistency",
+      },
+      {
+        name: "Robust",
+        count: p.robust || 0,
+        pct: calcPct(p.robust || 0),
+        colorBg: "bg-purple-500",
+        description:
+          "HTML parsing, ARIA role validation & name/role/value specs",
+      },
+    ]
+  }, [data.issues_per_principle, totalPrincipleViolations])
+
+  const filteredClassLogs = useMemo(() => {
+    const list = data.classroom_scans || []
+    if (!search.trim()) return list
+    const q = search.toLowerCase().trim()
+    return list.filter(
+      (item) =>
+        item.class_name.toLowerCase().includes(q) ||
+        item.classroom_id.toLowerCase().includes(q) ||
+        (item.classroom_code && item.classroom_code.toLowerCase().includes(q))
+    )
+  }, [search, data.classroom_scans])
 
   function handleExport() {
+    if (!data.classroom_scans || data.classroom_scans.length === 0) {
+      toast.add({
+        title: "Export Notice",
+        description: "No classroom scan history available to export.",
+        type: "info",
+      })
+      return
+    }
+
+    const headers = [
+      "Classroom ID",
+      "Class Name",
+      "Scan Count",
+      "Enrollment Count",
+    ]
+    const rows = data.classroom_scans.map((item) => [
+      `"${item.classroom_id}"`,
+      `"${item.class_name.replace(/"/g, '""')}"`,
+      item.scan_count,
+      item.enrollment_count,
+    ])
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((e) => e.join(","))].join("\n")
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement("a")
+    link.setAttribute("href", encodedUri)
+    link.setAttribute(
+      "download",
+      `classroom_analyzer_logs_${new Date().toISOString().slice(0, 10)}.csv`
+    )
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+
     toast.add({
       title: "Export Initiated",
       description:
@@ -129,25 +202,25 @@ export default function AnalyzerLogsInstructor() {
     {
       title: "Total Scans Run",
       icon: Globe,
-      value: "520",
+      value: (data.total_scans ?? 0).toLocaleString(),
       footerDesc: "Across all classrooms",
     },
     {
       title: "Active Classrooms",
       icon: GraduationCap,
-      value: "5",
+      value: (data.active_classrooms ?? 0).toLocaleString(),
       footerDesc: "Managed active classes",
     },
     {
       title: "Flagged Issues",
       icon: Layers,
-      value: "205",
+      value: (data.violations ?? 0).toLocaleString(),
       footerDesc: "WCAG 2.2 accessibility violations",
     },
     {
       title: "Overall Pass Rate",
       icon: CheckCircle2,
-      value: "78.43%",
+      value: `${typeof data.pass_rate === "number" ? data.pass_rate.toFixed(1) : (data.pass_rate ?? 0)}%`,
       footerDesc: "Averaged all managed classrooms",
     },
   ]
@@ -159,7 +232,7 @@ export default function AnalyzerLogsInstructor() {
         title="Classroom Analyzer Logs"
         subtitle="Real-time audit history and automated scan execution telemetry across your managed classrooms."
         cta={[
-          <Button onClick={handleExport}>
+          <Button key="export" onClick={handleExport}>
             <FileText className="mr-1.5 size-4" />
             Export Data
           </Button>,
@@ -207,7 +280,7 @@ export default function AnalyzerLogsInstructor() {
               variant="secondary"
               className="w-fit px-3 py-1 text-xs font-semibold"
             >
-              520 Total Scans
+              {data.total_scans ?? 0} Total Scans
             </Badge>
           </CardHeader>
 
@@ -266,7 +339,7 @@ export default function AnalyzerLogsInstructor() {
               variant="outline"
               className="w-fit px-3 py-1 text-xs font-semibold"
             >
-              5
+              {data.active_classrooms ?? data.classroom_scans?.length ?? 0}
             </Badge>
           </CardHeader>
 
@@ -319,15 +392,21 @@ export default function AnalyzerLogsInstructor() {
               Failed Audits by WCAG Principle (POUR)
             </CardTitle>
             <CardDescription className="text-xs text-muted-foreground sm:text-sm">
-              Proportional distribution of 205 accessibility violations detected
-              during classroom audits
+              Proportional distribution of{" "}
+              {totalPrincipleViolations > 0
+                ? totalPrincipleViolations
+                : (data.violations ?? 0)}{" "}
+              accessibility violations detected during classroom audits
             </CardDescription>
           </div>
           <Badge
             variant="secondary"
             className="w-fit px-3 py-1 text-xs font-semibold"
           >
-            205 Flagged Violations
+            {totalPrincipleViolations > 0
+              ? totalPrincipleViolations
+              : (data.violations ?? 0)}{" "}
+            Flagged Violations
           </Badge>
         </CardHeader>
 
@@ -335,16 +414,24 @@ export default function AnalyzerLogsInstructor() {
           {/* Proportional Multi-Segment Progress Bar */}
           <div className="space-y-2">
             <div className="flex h-4 w-full overflow-hidden rounded-full bg-muted p-0.5 ring-1 ring-border/50">
-              {principlesData.map((item, index) => (
-                <div
-                  key={item.name}
-                  className={`h-full ${item.colorBg} transition-all ${
-                    index === 0 ? "rounded-l-full" : ""
-                  } ${index === principlesData.length - 1 ? "rounded-r-full" : ""}`}
-                  style={{ width: `${item.pct}%` }}
-                  title={`${item.name}: ${item.count} violations (${item.pct.toFixed(1)}%)`}
-                />
-              ))}
+              {totalPrincipleViolations === 0 ? (
+                <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
+                  No principle violations detected
+                </div>
+              ) : (
+                principlesData.map((item, index) =>
+                  item.pct > 0 ? (
+                    <div
+                      key={item.name}
+                      className={`h-full ${item.colorBg} transition-all ${
+                        index === 0 ? "rounded-l-full" : ""
+                      } ${index === principlesData.length - 1 ? "rounded-r-full" : ""}`}
+                      style={{ width: `${item.pct}%` }}
+                      title={`${item.name}: ${item.count} violations (${item.pct.toFixed(1)}%)`}
+                    />
+                  ) : null
+                )
+              )}
             </div>
           </div>
 
@@ -408,10 +495,10 @@ export default function AnalyzerLogsInstructor() {
           </div>
         </div>
 
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden pt-0">
           <div className="w-full overflow-x-auto">
-            <Table className="min-w-150">
-              <TableHeader>
+            <Table className="min-w-150 p-4">
+              <TableHeader className="p-10">
                 <TableRow className="bg-muted/40 hover:bg-muted/40">
                   <TableHead className="pl-4 text-xs font-bold whitespace-nowrap text-muted-foreground uppercase">
                     Scans
@@ -440,27 +527,31 @@ export default function AnalyzerLogsInstructor() {
                 ) : (
                   filteredClassLogs.map((item) => (
                     <TableRow
-                      key={item.id}
+                      key={item.classroom_id}
                       onClick={() =>
-                        navigate(`/instructor/logs/classroom/${item.id}`)
+                        navigate(
+                          `/instructor/logs/classroom/${item.classroom_id}`
+                        )
                       }
-                      className="cursor-pointer transition-colors hover:bg-muted/40"
+                      className="cursor-pointer transition-colors even:bg-secondary/30 hover:bg-muted/40"
                     >
                       <TableCell className="pl-4 font-bold whitespace-nowrap text-foreground">
-                        {item.scans}
+                        {item.scan_count}
                       </TableCell>
                       <TableCell className="font-medium whitespace-nowrap text-foreground">
                         <div className="flex flex-col">
                           <span className="font-semibold text-foreground">
-                            {item.className}
+                            {item.class_name}
                           </span>
                           <span className="text-xs text-muted-foreground">
-                            Code: {item.code}
+                            {item.classroom_code
+                              ? `Code: ${item.classroom_code}`
+                              : `ID: ${item.classroom_id.slice(0, 8)}...`}
                           </span>
                         </div>
                       </TableCell>
                       <TableCell className="whitespace-nowrap text-muted-foreground">
-                        {item.enrolled} students
+                        {item.enrollment_count} students
                       </TableCell>
                       <TableCell className="pr-4 text-right whitespace-nowrap">
                         <Button
@@ -468,7 +559,9 @@ export default function AnalyzerLogsInstructor() {
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation()
-                            navigate(`/instructor/logs/classroom/${item.id}`)
+                            navigate(
+                              `/instructor/logs/classroom/${item.classroom_id}`
+                            )
                           }}
                           className="cursor-pointer text-xs font-medium text-foreground hover:text-primary sm:text-sm"
                         >
@@ -486,4 +579,19 @@ export default function AnalyzerLogsInstructor() {
       </div>
     </section>
   )
+}
+
+function AnalyzerLogsInstructorWithQuery() {
+  const { data } = useClassroomAnalyzerLogs()
+  return <AnalyzerLogsInstructorContent data={data} />
+}
+
+export default function AnalyzerLogsInstructor({
+  data,
+}: AnalyzerLogsInstructorProps) {
+  if (data) {
+    return <AnalyzerLogsInstructorContent data={data} />
+  }
+
+  return <AnalyzerLogsInstructorWithQuery />
 }

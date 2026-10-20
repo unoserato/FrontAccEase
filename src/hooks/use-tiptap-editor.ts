@@ -1,13 +1,6 @@
 import type { Editor } from "@tiptap/react"
-import { useCurrentEditor, useEditorState } from "@tiptap/react"
+import { useCurrentEditor } from "@tiptap/react"
 import { useEffect, useState } from "react"
-
-function getActivePageEditor(editor: Editor): Editor | null {
-  const storage = editor.storage as unknown as Record<string, unknown>
-  const pages = storage.pages as { activeEditor?: Editor | null } | undefined
-  if (!pages || !("activeEditor" in pages)) return null
-  return pages.activeEditor ?? null
-}
 
 export function useTiptapEditor(providedEditor?: Editor | null): {
   editor: Editor | null
@@ -17,54 +10,36 @@ export function useTiptapEditor(providedEditor?: Editor | null): {
   const { editor: coreEditor } = useCurrentEditor()
   const mainEditor = providedEditor ?? coreEditor
 
-  const [storageEditor, setStorageEditor] = useState<Editor | null>(null)
+  // Coalesce toolbar re-renders onto requestAnimationFrame so that
+  // typing in the editor is completely non-blocking (0ms input latency).
+  const [, setTick] = useState(0)
 
   useEffect(() => {
-    if (!mainEditor) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setStorageEditor(null)
-      return
+    if (!mainEditor) return
+
+    let rafId: number | null = null
+
+    const handleUpdate = () => {
+      if (rafId !== null) return
+      rafId = requestAnimationFrame(() => {
+        rafId = null
+        setTick((t) => (t + 1) % 1000000)
+      })
     }
 
-    const updateHandler = () =>
-      setStorageEditor(getActivePageEditor(mainEditor))
-
-    updateHandler()
-
-    mainEditor.on("update", updateHandler)
-    mainEditor.on("selectionUpdate", updateHandler)
+    mainEditor.on("selectionUpdate", handleUpdate)
+    mainEditor.on("transaction", handleUpdate)
 
     return () => {
-      mainEditor.off("update", updateHandler)
-      mainEditor.off("selectionUpdate", updateHandler)
+      if (rafId !== null) cancelAnimationFrame(rafId)
+      mainEditor.off("selectionUpdate", handleUpdate)
+      mainEditor.off("transaction", handleUpdate)
     }
   }, [mainEditor])
 
-  useEffect(() => {
-    if (!storageEditor) return
-
-    const handleDestroy = () => setStorageEditor(null)
-
-    storageEditor.on("destroy", handleDestroy)
-    return () => {
-      storageEditor.off("destroy", handleDestroy)
-    }
-  }, [storageEditor])
-
-  const editorState = useEditorState({
-    editor: storageEditor ?? mainEditor,
-    selector(context) {
-      if (!context.editor) {
-        return { editor: null, editorState: undefined, canCommand: undefined }
-      }
-
-      return {
-        editor: context.editor,
-        editorState: context.editor.state,
-        canCommand: context.editor.can,
-      }
-    },
-  })
-
-  return editorState ?? { editor: null }
+  return {
+    editor: mainEditor,
+    editorState: mainEditor?.state,
+    canCommand: mainEditor?.can,
+  }
 }

@@ -49,28 +49,52 @@ export interface QuizJson {
   showTimer?: boolean
 }
 
+export interface InstructorQuizLearner {
+  learner_id: string
+  name: string
+  profile_picture?: string | null
+}
+
+export interface InstructorQuizClassroom {
+  id: string
+  name: string
+  code: string
+  learners: InstructorQuizLearner[]
+}
+
+export type QuizClassroom = InstructorQuizClassroom
+export type QuizLearner = InstructorQuizLearner
+
 export interface QuizProps {
   id: string
   name: string
   status?: string
   principle?: WCAGPrinciple
   tags?: string[]
-  classrooms?: string[]
+  classrooms?: string[] | InstructorQuizClassroom[]
   question_count?: number
   total_points?: number
   time_limit?: number
   due_date?: string
   theme?: string
-  quiz_json: QuizJson
+  quiz_json?: QuizJson
   created_at?: string
   created_by?: string
   attempt_count?: number
+  max_attempts?: number
+  passing_rate?: number
+  no_submission?: number
+  expected_no_submission?: number
   instructor?: { name: string | null }
   quiz_answer?:
     | QuizAnswerKey
     | QuizAnswer
     | QuizAnswer[]
     | Record<string, unknown>
+}
+
+export interface InstructorQuizProps extends Omit<QuizProps, "classrooms"> {
+  classrooms: InstructorQuizClassroom[]
 }
 
 export interface QuizSubmissionProps {
@@ -81,9 +105,7 @@ export interface QuizSubmissionProps {
   content?: Record<string, unknown> | string
   score?: number
   submitted_at?: string
-  submittedAt?: string
   started_at?: string
-  startedAt?: string
   attempt_count?: number
   quiz?: Partial<QuizProps> & {
     name: string

@@ -36,6 +36,7 @@ const LearningMaterials = lazy(
 )
 const Permissions = lazy(() => import("@/pages/schooladmin/Permissions"))
 const Users = lazy(() => import("@/pages/schooladmin/Users"))
+const ProfileView = lazy(() => import("@/pages/common/ProfileView"))
 
 export const schoolAdminRoute = (
   <>
@@ -93,6 +94,10 @@ export const schoolAdminRoute = (
       <Route
         path="permissions"
         element={suspense(<Permissions />, <TableSkeleton />)}
+      />
+      <Route
+        path="profile"
+        element={suspense(<ProfileView />, <PageSkeleton />)}
       />
     </Route>
   </>

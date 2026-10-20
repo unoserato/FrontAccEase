@@ -12,6 +12,11 @@ export interface CursorVisibilityOptions {
    * Reference to the toolbar element that may obscure the cursor
    */
   overlayHeight?: number
+  /**
+   * Whether cursor visibility tracking is enabled
+   * @default true
+   */
+  enabled?: boolean
 }
 
 /**
@@ -20,20 +25,24 @@ export interface CursorVisibilityOptions {
  *
  * @param options.editor The Tiptap editor instance
  * @param options.overlayHeight Toolbar height to account for
+ * @param options.enabled Whether tracking is active (e.g. mobile only)
  * @returns The bounding rect of the body
  */
 export function useCursorVisibility({
   editor,
   overlayHeight = 0,
+  enabled = true,
 }: CursorVisibilityOptions) {
   const { height: windowHeight } = useWindowSize()
   const rect = useBodyRect({
-    enabled: true,
+    enabled,
     throttleMs: 100,
-    useResizeObserver: true,
+    useResizeObserver: enabled,
   })
 
   useEffect(() => {
+    if (!enabled) return
+
     const ensureCursorVisibility = () => {
       if (!editor) return
 
@@ -63,7 +72,7 @@ export function useCursorVisibility({
     }
 
     ensureCursorVisibility()
-  }, [editor, overlayHeight, windowHeight, rect.height])
+  }, [editor, overlayHeight, windowHeight, rect.height, enabled])
 
   return rect
 }

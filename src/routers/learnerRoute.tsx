@@ -12,6 +12,7 @@ const CoreModuleReadOnly = lazy(
 )
 const ModuleReadOnly = lazy(() => import("@/features/shared/ModuleReadOnly"))
 const AnalyzerResults = lazy(() => import("@/pages/common/AnalyzerResults"))
+const ProfileView = lazy(() => import("@/pages/common/ProfileView"))
 const Analyzer = lazy(() => import("@/pages/learner/Analyzer"))
 const AnalyzerExtension = lazy(
   () => import("@/pages/learner/AnalyzerExtension")
@@ -57,6 +58,10 @@ export const learnerRoute = (
       <Route
         path="analyzer/:id"
         element={suspense(<AnalyzerResults />, <DetailSkeleton />)}
+      />
+      <Route
+        path="profile"
+        element={suspense(<ProfileView />, <PageSkeleton />)}
       />
     </Route>
 

@@ -103,7 +103,9 @@ export async function answerCoreInteractiveActivityAPI(
 }
 
 export async function completeCoreActivityAPI(activityId: string) {
-  const response = await api.post(`/learner/pour/activities/complete/${activityId}`)
+  const response = await api.post(
+    `/learner/pour/activities/complete/${activityId}`
+  )
   return response.data
 }
 
@@ -134,5 +136,23 @@ export async function startPrincipleAPI(principle: string) {
   const response = await api.post(
     `/learner/pour/principles/start/${principle.toLowerCase()}`
   )
+  return response.data
+}
+
+export async function createAnalyzerCommentById(
+  log_id: string,
+  comment: string
+) {
+  const data = { comment: comment, log_id: log_id }
+  const response = await api.post(`/instructor/create-analyzer-comment`, data)
+  return response.data
+}
+
+export async function updateAnalyzerCommentById(
+  log_id: string,
+  comment: string
+) {
+  const data = { comment: comment, log_id: log_id }
+  const response = await api.put(`/instructor/update-analyzer-comment`, data)
   return response.data
 }

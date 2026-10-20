@@ -22,6 +22,7 @@ import { toast } from "@/components/ui/toast"
 import { useSubmitCoreAssessment } from "@/services/tanstack/materials"
 import type { CoreModuleAssessmentActivity } from "@/const/props/moduleProps"
 import type { QuizJson } from "@/const/props/quizProps"
+import { useTheme } from "@/components/theme-provider"
 
 interface CoreModuleAssessmentViewProps {
   activity: CoreModuleAssessmentActivity
@@ -41,13 +42,19 @@ export default function CoreModuleAssessmentView({
   activity,
   principleLabel,
 }: CoreModuleAssessmentViewProps) {
-  const [submissionResult, setSubmissionResult] = useState<SubmissionResponse | null>(null)
+  const [submissionResult, setSubmissionResult] =
+    useState<SubmissionResponse | null>(null)
   const [submissionError, setSubmissionError] = useState<string | null>(null)
-  const [lastSubmittedAnswers, setLastSubmittedAnswers] = useState<Record<string, unknown> | null>(null)
+  const [lastSubmittedAnswers, setLastSubmittedAnswers] = useState<Record<
+    string,
+    unknown
+  > | null>(null)
 
   const { mutate: submitAssessment, isPending: isSubmitting } =
     useSubmitCoreAssessment(activity.id)
 
+  const { theme: appTheme } = useTheme()
+  console.log(appTheme)
   const surveyModel = useMemo(() => {
     if (!activity.questions) return null
     try {
@@ -56,7 +63,9 @@ export default function CoreModuleAssessmentView({
           ? JSON.parse(activity.questions)
           : activity.questions
       const model = new Model(questionsData)
-      const theme = resolveSurveyTheme("Default")
+      const theme = resolveSurveyTheme(
+        appTheme == "dark" || appTheme == "system" ? "FlatDark" : "Flat"
+      )
       if (theme) {
         model.applyTheme(theme)
       }
@@ -102,7 +111,9 @@ export default function CoreModuleAssessmentView({
           },
           onError: (err: unknown) => {
             const error = err as {
-              response?: { data?: { detail?: string | Array<{ msg?: string }> } }
+              response?: {
+                data?: { detail?: string | Array<{ msg?: string }> }
+              }
               message?: string
             }
             const detail = error?.response?.data?.detail
@@ -111,7 +122,8 @@ export default function CoreModuleAssessmentView({
                 ? detail
                 : Array.isArray(detail)
                   ? detail.map((d) => d?.msg || JSON.stringify(d)).join(", ")
-                  : error?.message || "Failed to submit assessment answers. Please try again."
+                  : error?.message ||
+                    "Failed to submit assessment answers. Please try again."
 
             setSubmissionError(detailMsg)
             toast.add({
@@ -190,7 +202,10 @@ export default function CoreModuleAssessmentView({
           <Badge variant="outline" className="text-xs font-semibold">
             {principleLabel}
           </Badge>
-          <Badge variant="secondary" className="flex items-center gap-1 text-xs">
+          <Badge
+            variant="secondary"
+            className="flex items-center gap-1 text-xs"
+          >
             <FileQuestion className="size-3" />
             {kindLabel}
           </Badge>
@@ -238,7 +253,7 @@ export default function CoreModuleAssessmentView({
 
       {/* Submission Result Feedback Banner */}
       {submissionResult && (
-        <Card className="animate-in fade-in border-border/80 p-5 shadow-xs">
+        <Card className="animate-in border-border/80 p-5 shadow-xs fade-in">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               {submissionResult.passed ? (
@@ -252,7 +267,9 @@ export default function CoreModuleAssessmentView({
               )}
               <div>
                 <h3 className="text-base font-bold text-foreground">
-                  {submissionResult.passed ? "Assessment Passed!" : "Assessment Needs Work"}
+                  {submissionResult.passed
+                    ? "Assessment Passed!"
+                    : "Assessment Needs Work"}
                 </h3>
                 <p className="text-xs text-muted-foreground">
                   Score:{" "}
@@ -270,7 +287,7 @@ export default function CoreModuleAssessmentView({
                 variant="outline"
                 size="sm"
                 onClick={handleRetake}
-                className="gap-1.5 self-start sm:self-auto cursor-pointer"
+                className="cursor-pointer gap-1.5 self-start sm:self-auto"
               >
                 <RotateCcw className="size-3.5" />
                 Retake Assessment
@@ -282,7 +299,7 @@ export default function CoreModuleAssessmentView({
 
       {/* Submission Error Backup Display */}
       {submissionError && !submissionResult && (
-        <Card className="animate-in fade-in border-destructive/40 bg-destructive/5 p-5 shadow-xs">
+        <Card className="animate-in border-destructive/40 bg-destructive/5 p-5 shadow-xs fade-in">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-3">
               <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-destructive">
@@ -296,7 +313,8 @@ export default function CoreModuleAssessmentView({
                   {submissionError}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Your answers have been preserved. You can re-submit your response, edit your answers, or refresh the activity.
+                  Your answers have been preserved. You can re-submit your
+                  response, edit your answers, or refresh the activity.
                 </p>
               </div>
             </div>
@@ -307,7 +325,7 @@ export default function CoreModuleAssessmentView({
                 size="sm"
                 disabled={isSubmitting}
                 onClick={handleResubmit}
-                className="gap-1.5 cursor-pointer"
+                className="cursor-pointer gap-1.5"
               >
                 {isSubmitting ? (
                   <>
@@ -325,7 +343,7 @@ export default function CoreModuleAssessmentView({
                 variant="outline"
                 size="sm"
                 onClick={handleRefresh}
-                className="gap-1.5 cursor-pointer"
+                className="cursor-pointer gap-1.5"
               >
                 <RefreshCw className="size-3.5" />
                 Refresh
@@ -334,7 +352,7 @@ export default function CoreModuleAssessmentView({
                 variant="secondary"
                 size="sm"
                 onClick={handleEditAnswers}
-                className="gap-1.5 cursor-pointer"
+                className="cursor-pointer gap-1.5"
               >
                 <Edit3 className="size-3.5" />
                 Edit Answers
@@ -343,7 +361,7 @@ export default function CoreModuleAssessmentView({
                 variant="ghost"
                 size="sm"
                 onClick={handleRetake}
-                className="gap-1.5 cursor-pointer text-muted-foreground hover:text-foreground"
+                className="cursor-pointer gap-1.5 text-muted-foreground hover:text-foreground"
               >
                 Retake
               </Button>

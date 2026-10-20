@@ -47,8 +47,8 @@ import {
   Globe,
   Hash,
   Loader2,
+  MessageSquare,
   Network,
-  ShieldCheck,
   Sparkles,
   Timer,
 } from "lucide-react"
@@ -57,7 +57,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "@/components/ui/toast"
 import { cn } from "cn"
 import SearchTemplate from "@/components/common/SearchTemplate"
-import { RichText } from "@/components/learner/RichText"
+import hljs from "highlight.js"
 import { exportAnalyzerReportToPDF } from "@/lib/pdfExport"
 import {
   useAnalyzer,
@@ -66,6 +66,7 @@ import {
 } from "@/services/tanstack/materials"
 import { getDateString } from "@/hooks/date-to-string"
 import copyText from "@/hooks/copy-text"
+import PageSkeleton from "@/components/skeleton/PageSkeleton"
 
 function capitalize(str: string): string {
   if (!str) return ""
@@ -174,9 +175,8 @@ function CopyButton({ text, label }: { text: string; label: string }) {
     e.stopPropagation()
     copyText({
       textToCopy: text,
-      setCopied(value) {
-        setCopied(value)
-      },
+      setCopied,
+      timeout: 2000,
     })
   }
 
@@ -209,25 +209,23 @@ function getFindingConfig(item: {
   if (item.type === "passed") {
     return {
       dot: "bg-emerald-500",
-      badge:
-        "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+      pillClass:
+        "bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/20",
       label: "Passed",
       icon: CheckCircle2,
-      iconColor: "text-emerald-500",
-      previewIconColor: "text-emerald-500",
-      previewTextColor: "text-emerald-400",
+      iconBox:
+        "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 ring-1 ring-emerald-500/20",
     }
   }
   if (item.type === "manual") {
     return {
       dot: "bg-violet-500",
-      badge:
-        "border-violet-500/30 bg-violet-500/10 text-violet-700 dark:text-violet-400",
+      pillClass:
+        "bg-violet-500/15 text-violet-800 dark:text-violet-300 border border-violet-500/20",
       label: "Manual Check",
       icon: Eye,
-      iconColor: "text-violet-500",
-      previewIconColor: "text-violet-400",
-      previewTextColor: "text-violet-300",
+      iconBox:
+        "bg-violet-500/10 text-violet-600 dark:text-violet-400 ring-1 ring-violet-500/20",
     }
   }
 
@@ -235,48 +233,87 @@ function getFindingConfig(item: {
   if (s === "critical") {
     return {
       dot: "bg-rose-500",
-      badge:
-        "border-rose-500/30 bg-rose-500/10 text-rose-700 dark:text-rose-400",
+      pillClass:
+        "bg-rose-500/15 text-rose-850 dark:text-rose-300 border border-rose-500/20",
       label: "Critical",
       icon: AlertCircle,
-      iconColor: "text-rose-500",
-      previewIconColor: "text-rose-400",
-      previewTextColor: "text-rose-300",
+      iconBox:
+        "bg-rose-500/10 text-rose-600 dark:text-rose-400 ring-1 ring-rose-500/20",
     }
   }
   if (s === "serious") {
     return {
       dot: "bg-amber-500",
-      badge:
-        "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400",
+      pillClass:
+        "bg-amber-500/15 text-amber-900 dark:text-amber-300 border border-amber-500/20",
       label: "Serious",
       icon: AlertTriangle,
-      iconColor: "text-amber-500",
-      previewIconColor: "text-amber-400",
-      previewTextColor: "text-amber-300",
+      iconBox:
+        "bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-1 ring-amber-500/20",
     }
   }
   if (s === "moderate") {
     return {
       dot: "bg-orange-500",
-      badge:
-        "border-orange-500/30 bg-orange-500/10 text-orange-700 dark:text-orange-400",
+      pillClass:
+        "bg-orange-500/15 text-orange-900 dark:text-orange-300 border border-orange-500/20",
       label: "Moderate",
       icon: AlertTriangle,
-      iconColor: "text-orange-500",
-      previewIconColor: "text-orange-400",
-      previewTextColor: "text-orange-300",
+      iconBox:
+        "bg-orange-500/10 text-orange-600 dark:text-orange-400 ring-1 ring-orange-500/20",
     }
   }
   return {
     dot: "bg-blue-500",
-    badge: "border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-400",
+    pillClass:
+      "bg-blue-500/15 text-blue-800 dark:text-blue-300 border border-blue-500/20",
     label: "Minor",
     icon: AlertCircle,
-    iconColor: "text-blue-500",
-    previewIconColor: "text-sky-400",
-    previewTextColor: "text-sky-300",
+    iconBox:
+      "bg-blue-500/10 text-blue-600 dark:text-blue-400 ring-1 ring-blue-500/20",
   }
+}
+
+function CodeInspector({
+  code,
+  language,
+  title,
+}: {
+  code: string
+  language: "css" | "html"
+  title: string
+}) {
+  const highlighted = useMemo(() => {
+    try {
+      const lang = language === "html" ? "xml" : language
+      return hljs.highlight(code, { language: lang, ignoreIllegals: true }).value
+    } catch {
+      return code
+    }
+  }, [code, language])
+
+  return (
+    <div className="overflow-hidden rounded-lg border border-border/70 bg-card shadow-xs">
+      <div className="flex items-center justify-between border-b border-border/50 bg-muted/40 px-3.5 py-1.5">
+        <div className="flex items-center gap-2">
+          <Code2 className="size-3.5 text-muted-foreground" />
+          <span className="text-xs font-semibold text-foreground/90">{title}</span>
+          <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs font-semibold text-muted-foreground uppercase">
+            {language}
+          </span>
+        </div>
+        <CopyButton text={code} label={title} />
+      </div>
+      <div className="overflow-x-auto bg-zinc-950 p-3.5 font-mono text-xs text-zinc-100 selection:bg-primary/30 dark:bg-zinc-950">
+        <pre className="whitespace-pre-wrap break-all leading-relaxed">
+          <code
+            dangerouslySetInnerHTML={{ __html: highlighted }}
+            className={`language-${language}`}
+          />
+        </pre>
+      </div>
+    </div>
+  )
 }
 
 function FindingCard({ item }: { item: FindingItem }) {
@@ -297,94 +334,85 @@ function FindingCard({ item }: { item: FindingItem }) {
   const targetPreview = item.selector || item.identifier || item.element
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border/60 bg-card transition-all hover:border-border hover:shadow-xs">
+    <div className="group overflow-hidden rounded-xl border border-border/70 bg-card transition-all duration-200 hover:border-border hover:shadow-xs">
       {/* Header row */}
-      <div className="flex items-start gap-3 p-4">
-        {/* Severity / Status indicator stripe */}
+      <div className="flex items-start gap-3.5 p-4 sm:p-4.5">
+        {/* Left: Severity / Status Icon Box */}
         <div
-          className={`mt-0.5 h-full w-1 shrink-0 self-stretch rounded-full ${config.dot}`}
+          className={cn(
+            "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg font-medium",
+            config.iconBox
+          )}
           aria-hidden="true"
-        />
+        >
+          <Icon className="size-4" />
+        </div>
 
+        {/* Center content */}
         <div className="min-w-0 flex-1 space-y-1.5">
-          {/* Badges row */}
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-1.5">
-              {/* WCAG spec pill */}
-              {item.wcag && (
-                <Badge
-                  variant={"secondary"}
-                  // className="rounded bg-foreground px-1.5 py-0.5 font-mono text-xs font-bold text-background"
-                >
-                  {item.wcag}
-                </Badge>
+          {/* Metadata bar */}
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Severity Pill */}
+            <span
+              className={cn(
+                "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold tracking-wide",
+                config.pillClass
               )}
+            >
+              {config.label}
+            </span>
 
-              {/* Type / Severity Badge */}
-              <Badge
-                variant="secondary"
-                className={`h-5 border px-1.5 text-xs font-semibold ${config.badge}`}
-              >
-                <Icon className={`mr-1 size-3 shrink-0 ${config.iconColor}`} />
-                {config.label}
-              </Badge>
+            {/* WCAG spec */}
+            {item.wcag && (
+              <span className="font-mono text-xs font-semibold text-foreground/80">
+                {item.wcag}
+              </span>
+            )}
 
-              {/* Level Badge */}
-              {item.level && (
-                <Badge
-                  variant="outline"
-                  className="h-5 px-1.5 text-xs font-medium"
-                >
-                  {item.level.startsWith("Level")
-                    ? item.level
-                    : `Level ${item.level}`}
-                </Badge>
-              )}
+            {/* Level */}
+            {item.level && (
+              <span className="text-xs font-medium text-muted-foreground">
+                • Level {item.level.replace(/^level\s*/i, "")}
+              </span>
+            )}
 
-              {/* Count pill (violations) */}
-              {item.count !== undefined && item.count > 1 && (
-                <span className="inline-flex items-center gap-0.5 rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-muted-foreground">
-                  <Hash className="size-2.5" />
-                  {item.count}×
-                </span>
-              )}
-
-              {/* Custom Status badge */}
-              {item.status && (
-                <Badge
-                  variant="outline"
-                  className="h-5 px-1.5 text-xs text-muted-foreground capitalize"
-                >
-                  {item.status}
-                </Badge>
-              )}
-            </div>
-
-            {/* Principle name tag */}
+            {/* Principle tag */}
             {item.principleName && (
-              <Badge
-                variant="outline"
-                className="h-5 shrink-0 px-1.5 text-xs text-muted-foreground"
-              >
+              <span className="rounded-md bg-muted/60 px-2 py-0.5 text-xs font-medium text-muted-foreground">
                 {item.principleName}
-              </Badge>
+              </span>
+            )}
+
+            {/* Multi-instance count badge */}
+            {item.count !== undefined && item.count > 1 && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 font-mono text-xs font-medium text-amber-700 dark:text-amber-400">
+                <Hash className="size-3" />
+                {item.count} instances
+              </span>
+            )}
+
+            {/* Custom Status */}
+            {item.status && item.status.toLowerCase() !== "failed" && (
+              <span className="rounded-md bg-muted/50 px-2 py-0.5 text-xs text-muted-foreground capitalize">
+                {item.status}
+              </span>
             )}
           </div>
 
           {/* Rule description / message */}
-          <p className="text-sm leading-snug font-semibold text-foreground">
+          <h4 className="text-sm font-semibold leading-snug text-foreground">
             {item.message || "Accessibility criterion evaluated."}
-          </p>
+          </h4>
 
-          {/* Collapsed Target Preview chip */}
+          {/* Collapsed Target Preview */}
           {!expanded && targetPreview && (
-            <div className="flex items-center gap-1.5 overflow-hidden pt-0.5">
-              <Code2 className={`size-3 shrink-0`} />
-              <span
-                className={`w-full truncate rounded border border-secondary/5 bg-black px-2 py-2 font-mono text-xs ${config.previewTextColor}`}
-              >
-                {targetPreview}
+            <div className="flex items-center gap-2 pt-0.5">
+              <span className="font-mono text-xs text-muted-foreground">
+                Target:
               </span>
+              <code className="max-w-2xl truncate rounded-md bg-muted/70 px-2 py-0.5 font-mono text-xs font-medium text-foreground/90">
+                {targetPreview}
+              </code>
             </div>
           )}
         </div>
@@ -395,7 +423,7 @@ function FindingCard({ item }: { item: FindingItem }) {
             type="button"
             onClick={() => setExpanded((v) => !v)}
             aria-label={expanded ? "Collapse details" : "Expand details"}
-            className="ml-1 shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+            className="mt-0.5 shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           >
             {expanded ? (
               <ChevronUp className="size-4" />
@@ -408,100 +436,85 @@ function FindingCard({ item }: { item: FindingItem }) {
 
       {/* Expanded drawer panel */}
       {expanded && hasDetails && (
-        <div className="space-y-3.5 border-t bg-secondary px-4 py-3.5">
-          {/* CSS Selector */}
+        <div className="space-y-3.5 border-t border-border/50 bg-muted/20 p-4 sm:p-5">
+          {/* Target Selector */}
           {item.selector && (
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-                  <Code2 className="size-3 text-sky-400" />
-                  Target Selector
-                </span>
-                <CopyButton text={item.selector} label="CSS Selector" />
-              </div>
-              <div className="overflow-hidden rounded-lg border border-white/5">
-                <RichText content={"```css\n" + item.selector + "\n```"} />
+            <CodeInspector
+              code={item.selector}
+              language="css"
+              title="Target Selector"
+            />
+          )}
+
+          {/* Identifier as a clean inline property */}
+          {item.identifier && (
+            <div className="flex items-center gap-2 rounded-lg border border-border/60 bg-card px-3 py-2 text-xs">
+              <span className="flex items-center gap-1 font-medium text-muted-foreground">
+                <Hash className="size-3.5 text-violet-500" />
+                Identifier:
+              </span>
+              <code className="font-mono text-xs font-semibold text-foreground">
+                {item.identifier}
+              </code>
+              <div className="ml-auto">
+                <CopyButton text={item.identifier} label="Identifier" />
               </div>
             </div>
           )}
 
-          {/* Identifier */}
-          {item.identifier && (
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-                  <Hash className="size-3 text-violet-400" />
-                  Identifier
-                </span>
-                <CopyButton text={item.identifier} label="Identifier" />
-              </div>
-              <div className="flex items-center justify-between rounded-lg border border-white/5 bg-zinc-900 px-3 py-2">
-                <span className="font-mono text-xs text-violet-300">
-                  {item.identifier}
-                </span>
-              </div>
-            </div>
+          {/* Element Snippet */}
+          {item.element && (
+            <CodeInspector
+              code={item.element}
+              language="html"
+              title="HTML Element Snippet"
+            />
           )}
 
           {/* AI Evaluation Prompt */}
           {item.evaluationPrompt && (
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 rounded-lg border border-primary/20 bg-primary/5 p-3.5 text-xs">
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-                  <Sparkles className="size-3 text-primary" />
-                  Evaluation Prompt
+                <span className="flex items-center gap-1.5 font-semibold text-primary">
+                  <Sparkles className="size-3.5" />
+                  AI Evaluation Context
                 </span>
                 <CopyButton text={item.evaluationPrompt} label="Prompt" />
               </div>
-              <div className="rounded-lg border border-border/40 bg-muted/40 p-3 text-xs leading-relaxed text-foreground">
+              <p className="leading-relaxed text-foreground/90">
                 {item.evaluationPrompt}
-              </div>
-            </div>
-          )}
-
-          {/* Element HTML snippet */}
-          {item.element && (
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-                  <Code2 className="size-3 text-amber-400" />
-                  Element Snippet
-                </span>
-                <CopyButton text={item.element} label="HTML Snippet" />
-              </div>
-              <div className="overflow-hidden rounded-lg border border-white/5">
-                <RichText
-                  content={"```html\n" + item.element + "\n```"}
-                  className="bg-black"
-                />
-              </div>
+              </p>
             </div>
           )}
 
           {/* Type-exclusive context block */}
           {item.type === "passed" && (
-            <div className="flex items-start gap-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-3 text-xs text-emerald-800 dark:text-emerald-300">
-              <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-500" />
+            <div className="flex items-start gap-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-3.5 text-xs text-emerald-900 dark:text-emerald-200">
+              <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
               <div className="space-y-0.5">
-                <p className="font-semibold">Compliant with WCAG Criteria</p>
-                <p className="text-emerald-700/90 dark:text-emerald-300/80">
+                <p className="font-semibold text-emerald-950 dark:text-emerald-100">
+                  Compliant with WCAG Criteria
+                </p>
+                <p className="leading-relaxed text-emerald-800/90 dark:text-emerald-300/80">
                   This rule verified successfully against{" "}
                   <span className="font-mono font-medium">
                     {item.wcag || "WCAG 2.2"}
                   </span>{" "}
-                  specifications for {item.principleName}. The analyzed DOM
-                  elements satisfy accessibility compliance.
+                  specifications for {item.principleName}. All analyzed elements
+                  satisfy accessibility compliance.
                 </p>
               </div>
             </div>
           )}
 
           {item.type === "manual" && (
-            <div className="flex items-start gap-2.5 rounded-lg border border-violet-500/20 bg-violet-500/10 p-3 text-xs text-violet-800 dark:text-violet-300">
-              <Eye className="mt-0.5 size-4 shrink-0 text-violet-500" />
+            <div className="flex items-start gap-2.5 rounded-lg border border-violet-500/20 bg-violet-500/10 p-3.5 text-xs text-violet-900 dark:text-violet-200">
+              <Eye className="mt-0.5 size-4 shrink-0 text-violet-600 dark:text-violet-400" />
               <div className="space-y-0.5">
-                <p className="font-semibold">Manual Verification Required</p>
-                <p className="text-violet-700/90 dark:text-violet-300/80">
+                <p className="font-semibold text-violet-950 dark:text-violet-100">
+                  Manual Verification Required
+                </p>
+                <p className="leading-relaxed text-violet-800/90 dark:text-violet-300/80">
                   Automated scanners cannot verify human perception, audio/video
                   alternative accuracy, or reading sequence for{" "}
                   <span className="font-mono font-medium">
@@ -513,25 +526,31 @@ function FindingCard({ item }: { item: FindingItem }) {
             </div>
           )}
 
-          {/* Affected instances (for violations) */}
+          {/* Affected elements */}
           {item.type === "issue" &&
             item.examples &&
             item.examples.length > 0 && (
-              <div className="space-y-2">
-                <span className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-                  Affected Instances ({item.examples.length})
-                </span>
+              <div className="space-y-2 pt-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                    Affected Elements ({item.examples.length})
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    Instances across current scan
+                  </span>
+                </div>
                 <div className="flex flex-wrap gap-1.5">
                   {item.examples.map((ex, exIdx) => {
                     const val = ex.selector || ex.identifier || ex.element
                     if (!val) return null
                     return (
-                      <span
+                      <code
                         key={exIdx}
-                        className="inline-flex items-center rounded border border-white/5 bg-zinc-900 px-2 py-0.5 font-mono text-xs text-emerald-400"
+                        className="inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-muted/60 px-2.5 py-1 font-mono text-xs text-foreground/90 transition-colors hover:bg-muted"
                       >
+                        <span className="size-1.5 rounded-full bg-amber-500/80" />
                         {val}
-                      </span>
+                      </code>
                     )
                   })}
                 </div>
@@ -750,13 +769,19 @@ function convertWcagEvaluationToResult(content: Content): Result {
 }
 
 export default function AnalyzerResults({
+  id: propId,
   data: propData,
   scanEntry: propScanEntry,
   result: propResult,
+  hideHeaderBack,
+  backTo,
+  onBack,
+  hideSitemap,
 }: AnalyzerResultsProps = {}) {
-  const { id } = useParams()
+  const { id: routeId } = useParams()
+  const scanId = propId || routeId || ""
   const { data: apiScanData, isLoading: isLoadingScan } = useAnalyzerResultById(
-    id || ""
+    scanId
   )
 
   const rawScanData = propScanEntry || propData || apiScanData
@@ -832,7 +857,7 @@ export default function AnalyzerResults({
   }, [scanEntry])
 
   const { data: sitemapLinks = [], isLoading: isLoadingSitemap } = useSitemap(
-    resultData?.url
+    hideSitemap ? undefined : resultData?.url
   )
 
   const navigate = useNavigate()
@@ -1035,11 +1060,7 @@ export default function AnalyzerResults({
         }))
 
   if (isLoadingScan && !resultData) {
-    return (
-      <div className="flex h-96 items-center justify-center">
-        <Loader2 className="size-8 animate-spin text-primary" />
-      </div>
-    )
+    return <PageSkeleton />
   }
 
   if (!resultData) {
@@ -1064,7 +1085,7 @@ export default function AnalyzerResults({
               Analysis Report Not Found
             </h2>
             <p className="text-sm text-muted-foreground">
-              No accessibility audit record matching ID &ldquo;{id}&rdquo; was
+              No accessibility audit record matching ID &ldquo;{scanId}&rdquo; was
               found. You can run a new automated scan from the analyzer page.
             </p>
           </div>
@@ -1112,9 +1133,11 @@ ${allIssues
   )
   .join("\n")}
 `
-    navigator.clipboard.writeText(summaryText)
-    setCopiedSummary(true)
-    setTimeout(() => setCopiedSummary(false), 2000)
+    copyText({
+      textToCopy: summaryText,
+      setCopied: setCopiedSummary,
+      timeout: 2000,
+    })
   }
 
   // Export PDF handler
@@ -1125,7 +1148,7 @@ ${allIssues
       exportAnalyzerReportToPDF({
         result: resultData,
         scanInfo: {
-          id: scanEntry?.id || id,
+          id: scanEntry?.id,
           createdAt: scanEntry?.created_at,
         },
       })
@@ -1165,13 +1188,25 @@ ${allIssues
       <div className="flex flex-col gap-4 border-b border-border/60 pb-5 md:flex-row md:items-start md:justify-between">
         <div className="space-y-2">
           <div className="flex items-center gap-2.5">
-            <Link
-              to="/learner/analyzer"
-              className="inline-flex size-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              aria-label="Back to URL Analyzer"
-            >
-              <ArrowLeft className="size-4" />
-            </Link>
+            {!hideHeaderBack &&
+              (onBack ? (
+                <button
+                  type="button"
+                  onClick={onBack}
+                  className="inline-flex size-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  aria-label="Back"
+                >
+                  <ArrowLeft className="size-4" />
+                </button>
+              ) : (
+                <Link
+                  to={backTo || "/learner/analyzer"}
+                  className="inline-flex size-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  aria-label="Back to URL Analyzer"
+                >
+                  <ArrowLeft className="size-4" />
+                </Link>
+              ))}
             <h1 className="font-heading text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
               Accessibility Audit
             </h1>
@@ -1250,6 +1285,30 @@ ${allIssues
           </Button>
         </div>
       </div>
+
+      {/* ── Instructor Feedback Banner (if available) ── */}
+      {scanEntry?.instructor_comment && (
+        <Card className="rounded-2xl border border-primary/30 bg-primary/5 p-4 shadow-xs">
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <MessageSquare className="size-4" />
+            </div>
+            <div className="min-w-0 flex-1 space-y-1">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-bold tracking-wider text-primary uppercase">
+                  Instructor Feedback
+                </p>
+                <Badge variant="secondary" className="text-xs">
+                  Official Review
+                </Badge>
+              </div>
+              <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
+                {scanEntry.instructor_comment}
+              </p>
+            </div>
+          </div>
+        </Card>
+      )}
 
       {/* ── Row 1: Score + Violation Breakdown + Audit Scope ── */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -1364,7 +1423,7 @@ ${allIssues
 
         {/* Audit scope card */}
         <Card className="rounded-2xl border border-border/70 bg-card p-5 shadow-xs">
-          <CardHeader className="p-0 pb-3">
+          <CardHeader className="p-0">
             <p className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
               Audit Scope
             </p>
@@ -1377,129 +1436,131 @@ ${allIssues
               </p>
             </div>
 
-            <div className="space-y-2 rounded-xl border border-border/60 bg-muted/20 p-2.5">
-              <div className="flex items-center justify-between gap-3">
-                <span className="flex min-w-0 items-center gap-1.5 font-medium text-foreground">
-                  <Network className="size-3.5 shrink-0 text-primary" />
-                  Discovered Sitemap
-                </span>
-
-                <Popover>
-                  <PopoverTrigger
-                    render={
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-7 shrink-0 gap-1.5 border-border/70 bg-background/70 px-2 text-xs font-semibold text-foreground hover:bg-muted"
-                      >
-                        {isLoadingSitemap ? (
-                          <Loader2 className="size-3 animate-spin text-primary" />
-                        ) : null}
-                        {isLoadingSitemap
-                          ? "Loading"
-                          : `${sitemapLinks.length} ${sitemapLinks.length === 1 ? "page" : "pages"}`}
-                        <ChevronDown className="size-3 text-muted-foreground" />
-                      </Button>
-                    }
-                  />
-
-                  <PopoverContent
-                    align="end"
-                    sideOffset={8}
-                    className="w-80 overflow-hidden rounded-xl border border-border/80 bg-popover p-0 shadow-xl sm:w-96"
-                  >
-                    <PopoverHeader className="gap-1 border-b border-border/60 bg-muted/30 px-4 py-3">
-                      <PopoverTitle className="flex items-center gap-2 text-sm font-bold text-foreground">
-                        <Network className="size-4 text-primary" />
-                        Discovered Sitemap
-                      </PopoverTitle>
-                      <PopoverDescription className="text-xs leading-relaxed">
-                        Choose a page to scan or open it in a new tab.
-                      </PopoverDescription>
-                    </PopoverHeader>
-
-                    {sitemapLinks.length > 0 ? (
-                      <div className="max-h-80 space-y-1 overflow-y-auto p-2">
-                        {sitemapLinks.map((link) => {
-                          const displayPath =
-                            link.replace(/^https?:\/\/[^/]+/i, "") || "/"
-                          const isCurrent = link === resultData.url
-                          const isThisScanning = scanningUrl === link
-
-                          return (
-                            <div
-                              key={link}
-                              className={cn(
-                                "group flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 font-mono text-xs transition-colors",
-                                isThisScanning
-                                  ? "border-primary/40 bg-primary/10 text-primary"
-                                  : isCurrent
-                                    ? "border-border/80 bg-muted text-foreground"
-                                    : "border-transparent text-muted-foreground hover:border-border/70 hover:bg-muted/70 hover:text-foreground"
-                              )}
-                            >
-                              <button
-                                type="button"
-                                onClick={() => handleScanUrl(link)}
-                                disabled={scanMutation.isPending}
-                                title={
-                                  isCurrent
-                                    ? "Currently viewing this page. Select to scan it again."
-                                    : `Scan ${link}`
-                                }
-                                className="flex min-w-0 flex-1 items-center gap-2 text-left font-medium outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed"
-                              >
-                                {isThisScanning ? (
-                                  <Loader2 className="size-3.5 shrink-0 animate-spin text-primary" />
-                                ) : (
-                                  <Sparkles className="size-3.5 shrink-0 text-primary/70" />
-                                )}
-                                <span className="truncate">{displayPath}</span>
-                                {isCurrent && (
-                                  <span className="shrink-0 rounded bg-background px-1.5 py-0.5 text-xs font-bold text-muted-foreground">
-                                    Current
-                                  </span>
-                                )}
-                              </button>
-
-                              <a
-                                href={link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title="Open URL in new tab"
-                                className="shrink-0 rounded p-1 text-muted-foreground transition-colors hover:bg-background hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
-                              >
-                                <ExternalLink className="size-3.5" />
-                              </a>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    ) : (
-                      <div className="px-4 py-5 text-xs leading-relaxed text-muted-foreground">
-                        {isLoadingSitemap
-                          ? "Looking for sitemap links…"
-                          : "No sitemap links were found. This audit covers a single page."}
-                      </div>
-                    )}
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              {scanMutation.isPending && (
-                <div className="flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-2.5 py-2 text-xs font-medium text-foreground">
-                  <Loader2 className="size-3.5 shrink-0 animate-spin text-primary" />
-                  <span className="truncate">
-                    Auditing{" "}
-                    {scanningUrl
-                      ? scanningUrl.replace(/^https?:\/\/[^/]+/i, "") ||
-                        scanningUrl
-                      : "page"}
-                    …
+            {!hideSitemap && (
+              <div className="space-y-2 rounded-xl border border-border/60 bg-muted/20 p-2.5">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="flex min-w-0 items-center gap-1.5 font-medium text-foreground">
+                    <Network className="size-3.5 shrink-0 text-primary" />
+                    Discovered Sitemap
                   </span>
+
+                  <Popover>
+                    <PopoverTrigger
+                      render={
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-7 shrink-0 gap-1.5 border-border/70 bg-background/70 px-2 text-xs font-semibold text-foreground hover:bg-muted"
+                        >
+                          {isLoadingSitemap ? (
+                            <Loader2 className="size-3 animate-spin text-primary" />
+                          ) : null}
+                          {isLoadingSitemap
+                            ? "Loading"
+                            : `${sitemapLinks.length} ${sitemapLinks.length === 1 ? "page" : "pages"}`}
+                          <ChevronDown className="size-3 text-muted-foreground" />
+                        </Button>
+                      }
+                    />
+
+                    <PopoverContent
+                      align="end"
+                      sideOffset={8}
+                      className="w-80 overflow-hidden rounded-xl border border-border/80 bg-popover p-0 shadow-xl sm:w-96"
+                    >
+                      <PopoverHeader className="gap-1 border-b border-border/60 bg-muted/30 px-4 py-3">
+                        <PopoverTitle className="flex items-center gap-2 text-sm font-bold text-foreground">
+                          <Network className="size-4 text-primary" />
+                          Discovered Sitemap
+                        </PopoverTitle>
+                        <PopoverDescription className="text-xs leading-relaxed">
+                          Choose a page to scan or open it in a new tab.
+                        </PopoverDescription>
+                      </PopoverHeader>
+
+                      {sitemapLinks.length > 0 ? (
+                        <div className="max-h-80 space-y-1 overflow-y-auto p-2">
+                          {sitemapLinks.map((link) => {
+                            const displayPath =
+                              link.replace(/^https?:\/\/[^/]+/i, "") || "/"
+                            const isCurrent = link === resultData.url
+                            const isThisScanning = scanningUrl === link
+
+                            return (
+                              <div
+                                key={link}
+                                className={cn(
+                                  "group flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 font-mono text-xs transition-colors",
+                                  isThisScanning
+                                    ? "border-primary/40 bg-primary/10 text-primary"
+                                    : isCurrent
+                                      ? "border-border/80 bg-muted text-foreground"
+                                      : "border-transparent text-muted-foreground hover:border-border/70 hover:bg-muted/70 hover:text-foreground"
+                                )}
+                              >
+                                <button
+                                  type="button"
+                                  onClick={() => handleScanUrl(link)}
+                                  disabled={scanMutation.isPending}
+                                  title={
+                                    isCurrent
+                                      ? "Currently viewing this page. Select to scan it again."
+                                      : `Scan ${link}`
+                                  }
+                                  className="flex min-w-0 flex-1 items-center gap-2 text-left font-medium outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed"
+                                >
+                                  {isThisScanning ? (
+                                    <Loader2 className="size-3.5 shrink-0 animate-spin text-primary" />
+                                  ) : (
+                                    <Sparkles className="size-3.5 shrink-0 text-primary/70" />
+                                  )}
+                                  <span className="truncate">{displayPath}</span>
+                                  {isCurrent && (
+                                    <span className="shrink-0 rounded bg-background px-1.5 py-0.5 text-xs font-bold text-muted-foreground">
+                                      Current
+                                    </span>
+                                  )}
+                                </button>
+
+                                <a
+                                  href={link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  title="Open URL in new tab"
+                                  className="shrink-0 rounded p-1 text-muted-foreground transition-colors hover:bg-background hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:outline-none"
+                                >
+                                  <ExternalLink className="size-3.5" />
+                                </a>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      ) : (
+                        <div className="px-4 py-5 text-xs leading-relaxed text-muted-foreground">
+                          {isLoadingSitemap
+                            ? "Looking for sitemap links…"
+                            : "No sitemap links were found. This audit covers a single page."}
+                        </div>
+                      )}
+                    </PopoverContent>
+                  </Popover>
                 </div>
-              )}
-            </div>
+
+                {scanMutation.isPending && (
+                  <div className="flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-2.5 py-2 text-xs font-medium text-foreground">
+                    <Loader2 className="size-3.5 shrink-0 animate-spin text-primary" />
+                    <span className="truncate">
+                      Auditing{" "}
+                      {scanningUrl
+                        ? scanningUrl.replace(/^https?:\/\/[^/]+/i, "") ||
+                          scanningUrl
+                        : "page"}
+                      …
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="flex items-center justify-between rounded-xl border border-border/60 bg-muted/20 px-2.5 py-2.5">
               <span className="flex items-center gap-1.5 text-muted-foreground">
@@ -1511,10 +1572,10 @@ ${allIssues
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 pt-0.5 text-muted-foreground">
+            {/* <div className="flex items-center gap-1.5 pt-0.5 text-muted-foreground">
               <ShieldCheck className="size-3.5 shrink-0 text-primary" />
               <span>W3C WAI-ARIA authoring practices</span>
-            </div>
+            </div> */}
           </CardContent>
         </Card>
       </div>

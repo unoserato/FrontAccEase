@@ -25,12 +25,16 @@ import {
   sitemapAPI,
   webLLMTasksAPI,
   getWCAGInstruments,
+  getClassroomAnalyzerLogs,
+  getClassroomAnalyzerLogsByClassroomId,
 } from "../api/GET/materialsGETAPI"
 import {
   createExtensionScanAPI,
   completeCoreActivityAPI,
   submitCoreAssessmentActivityAPI,
   answerCoreInteractiveActivityAPI,
+  createAnalyzerCommentById,
+  updateAnalyzerCommentById,
 } from "../api/CRUD/materialsCRUDAPI"
 
 import { staleTime } from "../axios"
@@ -308,5 +312,66 @@ export function useWCAGInstruments() {
     queryKey: ["wcag-instruments"],
     queryFn: getWCAGInstruments,
     staleTime: staleTime,
+  })
+}
+
+export function useClassroomAnalyzerLogs() {
+  return useSuspenseQuery({
+    queryKey: ["classroom-analyzer-logs"],
+    queryFn: getClassroomAnalyzerLogs,
+    staleTime: staleTime,
+  })
+}
+
+export function useClassroomAnalyzerLogsByClassroomId(classroomId: string) {
+  return useQuery({
+    queryKey: ["classroom-analyzer-logs", classroomId],
+    queryFn: () => getClassroomAnalyzerLogsByClassroomId(classroomId),
+    staleTime: staleTime,
+    enabled: Boolean(classroomId),
+  })
+}
+
+export function useCreateAnalyzerComment() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationKey: ["create-analyzer-comment"],
+    mutationFn: ({ scan_id, comment }: { scan_id: string; comment: string }) =>
+      createAnalyzerCommentById(scan_id, comment),
+    onSuccess: (data, variables) => {
+      // Direct cache update instead of refetching
+      queryClient.setQueryData(
+        ["analyzer-result", variables.scan_id],
+        (old: any) => {
+          if (!old) return data
+          if (data && typeof data === "object") {
+            return { ...old, ...data }
+          }
+          return { ...old, instructor_comment: variables.comment }
+        }
+      )
+    },
+  })
+}
+
+export function useUpdateAnalyzerComment() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationKey: ["update-analyzer-comment"],
+    mutationFn: ({ log_id, comment }: { log_id: string; comment: string }) =>
+      updateAnalyzerCommentById(log_id, comment),
+    onSuccess: (data, variables) => {
+      // Direct cache update instead of refetching
+      queryClient.setQueryData(
+        ["analyzer-result", variables.log_id],
+        (old: any) => {
+          if (!old) return data
+          if (data && typeof data === "object") {
+            return { ...old, ...data }
+          }
+          return { ...old, instructor_comment: variables.comment }
+        }
+      )
+    },
   })
 }

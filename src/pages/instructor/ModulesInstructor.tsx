@@ -4,7 +4,7 @@ import TooltipButtonTemplate from "@/components/common/TooltipButtonTemplate"
 import GridListButtonGroupTemplate from "@/components/common/GridListButtonGroupTemplate"
 import EmptyState from "@/components/common/EmptyState"
 import { Button, buttonVariants } from "@/components/ui/button"
-import { Archive, BookOpen, Plus, SearchX } from "lucide-react"
+import { Archive, Book, BookOpen, SearchX } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { useModules } from "@/services/tanstack/materials"
@@ -38,7 +38,7 @@ export default function ModulesInstructor() {
             key="new-module"
             className={`${buttonVariants({ variant: "default" })} `}
           >
-            <Plus />
+            <Book />
             New Module
           </Link>,
         ]}
@@ -88,7 +88,7 @@ export default function ModulesInstructor() {
                 to="./new"
                 className={buttonVariants({ variant: "default" })}
               >
-                <Plus className="size-4" />
+                <Book className="size-4" />
                 New Module
               </Link>
             )

@@ -17,6 +17,7 @@ const AnalyzerLogsClassroomView = lazy(
 const AnalyzerLogsInstructor = lazy(
   () => import("@/pages/instructor/AnalyzerLogsInstructor")
 )
+const ProfileView = lazy(() => import("@/pages/common/ProfileView"))
 const ClassroomInstructor = lazy(
   () => import("@/pages/instructor/ClassroomInstructor")
 )
@@ -85,6 +86,10 @@ export const instructorRoute = (
       <Route
         path="logs/:id"
         element={suspense(<AnalyzerLogsClassroomView />, <TableSkeleton />)}
+      />
+      <Route
+        path="profile"
+        element={suspense(<ProfileView />, <PageSkeleton />)}
       />
     </Route>
 

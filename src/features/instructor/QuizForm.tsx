@@ -45,8 +45,7 @@ export default function QuizForm({
                 .replace(/[^a-zA-Z0-9]/g, "")
                 .toLowerCase()
               const matchedKey = Object.keys(answers).find(
-                (k) =>
-                  k.replace(/[^a-zA-Z0-9]/g, "").toLowerCase() === norm
+                (k) => k.replace(/[^a-zA-Z0-9]/g, "").toLowerCase() === norm
               )
               if (matchedKey && answers[matchedKey] !== undefined) {
                 model.setValue(question.name, answers[matchedKey])
@@ -63,8 +62,7 @@ export default function QuizForm({
                 .replace(/[^a-zA-Z0-9]/g, "")
                 .toLowerCase()
               const matchedKey = Object.keys(correctAnswers).find(
-                (k) =>
-                  k.replace(/[^a-zA-Z0-9]/g, "").toLowerCase() === norm
+                (k) => k.replace(/[^a-zA-Z0-9]/g, "").toLowerCase() === norm
               )
               if (matchedKey) {
                 correctVal = correctAnswers[matchedKey]

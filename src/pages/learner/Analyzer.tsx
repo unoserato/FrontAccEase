@@ -241,6 +241,10 @@ export default function Analyzer() {
     }
   }
 
+  useEffect(() => {
+    document.title = "WCAG Analyzer | FrontAccEase "
+  }, [])
+
   // Handle incoming tasks passed from AnalyzerExtension page
   // useEffect(() => {
   //   const state = location.state as {

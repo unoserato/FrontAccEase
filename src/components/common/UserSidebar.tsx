@@ -1,4 +1,4 @@
-import { LogOut, Settings, SidebarIcon } from "lucide-react"
+import { LogOut, Settings, SidebarIcon, User } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -13,7 +13,7 @@ import {
 } from "../ui/sidebar"
 import { Logo } from "./Logo"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
-import { NavLink, useNavigate } from "react-router-dom"
+import { Link, NavLink, useNavigate } from "react-router-dom"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { useRemoveQueries } from "@/services/tanstack/auth"
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -44,7 +44,6 @@ export default function UserSidebar({ links, user }: UserSidebarProps) {
       navigate("/login", { replace: true })
     },
     onSuccess: () => {
-      // navigate("/login", { replace: true })
       removeQueries(["user"])
     },
     onError: (err: any) => {
@@ -109,24 +108,6 @@ export default function UserSidebar({ links, user }: UserSidebarProps) {
                 setOpen(false)
               }}
             />
-            // <Tooltip>
-            //   <TooltipTrigger
-            //     render={(triggerProps) => (
-            //       <button
-            //         {...triggerProps}
-            //         type="button"
-            //         onClick={(e) => {
-            //           triggerProps.onClick?.(e)
-            //           setOpen(false)
-            //         }}
-            //         className="rounded-md p-2 group-hover/logo:block hover:bg-muted"
-            //       >
-            //         <SidebarIcon size={16} />
-            //       </button>
-            //     )}
-            //   />
-            //   <TooltipContent>Close Sidebar</TooltipContent>
-            // </Tooltip>
           )}
         </div>
       </SidebarHeader>
@@ -165,11 +146,13 @@ export default function UserSidebar({ links, user }: UserSidebarProps) {
           open || openMobile ? "flex-row items-center" : "flex-col-reverse"
         } justify-between pb-4`}
       >
-        <div
+        <Link
+          to={`/${user?.role || "learner"}/profile`}
           onClick={() => {
             if (openMobile) setOpenMobile(false)
           }}
-          className="flex shrink-0 items-center gap-2 overflow-hidden rounded-md py-2"
+          className="flex shrink-0 items-center gap-2 overflow-hidden rounded-md py-2 transition-opacity hover:opacity-80"
+          title="View profile"
         >
           <Avatar>
             <AvatarImage
@@ -178,25 +161,20 @@ export default function UserSidebar({ links, user }: UserSidebarProps) {
                   ? user?.user.profile_picture
                   : ""
               }
-              alt="@shadcn"
-              className="grayscale"
+              alt={user?.user.name || "User"}
+              className="object-cover"
             />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>
+              {user?.user?.name ? user.user.name[0].toUpperCase() : "U"}
+            </AvatarFallback>
           </Avatar>
-          <p className="shrink-0 capitalize">{user?.user.name}</p>
-        </div>
+          <p className="shrink-0 text-sm font-medium text-foreground capitalize">
+            {user?.user.name}
+          </p>
+        </Link>
 
         <div className="flex">
           <Popover>
-            {/* <PopoverTrigger
-              render={
-                <ToolTipTemplate
-                  trigger={<Settings size={16} />}
-                  triggerVariant="ghost"
-                  content="Settings"
-                />
-              }
-            /> */}
             <Tooltip>
               <TooltipTrigger
                 render={
@@ -209,23 +187,6 @@ export default function UserSidebar({ links, user }: UserSidebarProps) {
                   />
                 }
               />
-              {/* <PopoverTrigger
-                render={(popoverProps) => (
-                  <TooltipTrigger
-                    render={(tooltipProps) => (
-                      <Button
-                        {...tooltipProps}
-                        {...popoverProps}
-                        variant="ghost"
-                        size="icon"
-                        aria-label="Settings"
-                      >
-                        <Settings size={16} />
-                      </Button>
-                    )}
-                  />
-                )}
-              /> */}
               <TooltipContent>Settings</TooltipContent>
             </Tooltip>
 
@@ -235,6 +196,20 @@ export default function UserSidebar({ links, user }: UserSidebarProps) {
               sideOffset={8}
               className="flex w-56 flex-col gap-1 rounded-2xl border border-border/60 bg-popover/95 p-2 shadow-xl backdrop-blur-md"
             >
+              {/* Profile Link */}
+              <Link
+                to={`/${user?.role || "learner"}/profile`}
+                onClick={() => {
+                  if (openMobile) setOpenMobile(false)
+                }}
+                className="flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-muted/50"
+              >
+                <User className="size-4 shrink-0 text-muted-foreground" />
+                <span>My Profile</span>
+              </Link>
+
+              <div className="my-0.5 h-px bg-border/40" />
+
               {/* Theme Row */}
               <div className="flex items-center justify-between rounded-xl px-2.5 py-1.5 transition-colors hover:bg-muted/50">
                 <span className="text-sm font-medium text-foreground">

@@ -9,42 +9,34 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import EditorDropdown from "./EditorDropdown"
 import { useNavigate } from "react-router-dom"
 import { useMe } from "@/services/tanstack/auth"
-import type { QuizProps } from "@/const/props/quizProps"
-import { useClassrooms } from "@/services/tanstack/materials"
+import type { InstructorQuizProps } from "@/const/props/quizProps"
 import { getDateString } from "@/hooks/date-to-string"
 
 export type QuizCardTemplateProps = {
-  quiz: QuizProps
+  quiz: InstructorQuizProps
 }
 
 export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
   const [action, setAction] = useState<ActionType>(null)
+  const classrooms = quiz.classrooms ?? []
+
   const { data: user } = useMe()
-  const { data: classrooms } = useClassrooms()
-  const isEditor = user?.role == "instructor"
+  const isEditor = user?.role === "instructor"
   const isMobile = useIsMobile()
   const navigate = useNavigate()
 
-  const quizClassroomIds = quiz.classrooms ?? []
-  const assignedClassrooms = quizClassroomIds
-    .map((cId) => classrooms.find((c) => String(c.id) === String(cId)))
-    .filter(Boolean)
+  const maxAttempts = quiz.max_attempts ?? quiz.attempt_count ?? 1
+  const passingRate = quiz.passing_rate ?? 0
+  const submissionsCount = quiz.no_submission ?? 0
 
-  const totalLearners = assignedClassrooms.reduce(
-    (sum, item) => sum + item!.enrollment_count,
-    0
-  )
-  const submissionsCount = 0
-
-  const avgScore = 0
-
-  const passingRate = 0
+  const totalLearners =
+    quiz.expected_no_submission ??
+    classrooms.reduce((sum, c) => sum + (c.learners?.length || 0), 0)
 
   const dueDate = quiz.due_date || ""
-
   const quizStatus = new Date(dueDate) > new Date() ? "Open" : "Closed"
   const quizAuthor = quiz.created_by
-  const classroomsCount = quiz.classrooms?.length ?? 0
+  const classroomsCount = classrooms.length
   const classroomsLabel =
     classroomsCount === 1 ? "1 Classroom" : `${classroomsCount} Classrooms`
 
@@ -57,7 +49,7 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
     <>
       <Card
         onClick={() => navigate(`/instructor/quizzes/${quiz.id}`)}
-        className="group relative flex w-full cursor-pointer flex-col justify-between overflow-hidden p-4 transition-all hover:shadow-sm sm:p-5"
+        className="group relative flex w-full cursor-pointer flex-col justify-between overflow-hidden p-4 transition-all hover:shadow-xs sm:p-5"
       >
         {/* Top Bar / Dropdown in Top Right Corner */}
         <div className="flex items-center justify-between">
@@ -107,10 +99,10 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground">
-                  Avg. Score
+                  Max Attempts
                 </p>
                 <p className="text-2xl font-extrabold tracking-tight text-foreground">
-                  {avgScore}%
+                  {maxAttempts}
                 </p>
               </div>
             </div>
@@ -177,10 +169,10 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground">
-                  Avg. Score
+                  Max Attempts
                 </p>
                 <p className="text-xl font-extrabold text-foreground lg:text-2xl">
-                  {avgScore}%
+                  {maxAttempts}
                 </p>
               </div>
               <div className="w-32 space-y-1">

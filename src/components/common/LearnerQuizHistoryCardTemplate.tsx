@@ -9,10 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import type {
-  QuizProps,
-  QuizSubmissionProps,
-} from "@/const/props/quizProps"
+import type { QuizProps, QuizSubmissionProps } from "@/const/props/quizProps"
 import { cn } from "@/lib/utils"
 import { Award, ChevronDown, ChevronUp, History } from "lucide-react"
 import { getDateString } from "@/hooks/date-to-string"
@@ -164,7 +161,7 @@ export default function LearnerQuizHistoryCardTemplate({
             const matchedQuiz =
               item.quiz ?? quizzes.find((q) => String(q.id) === String(quizId))
             const quizName = matchedQuiz?.name || `Assessment #${quizId ?? ""}`
-            const submittedAt = item.submitted_at ?? item.submittedAt
+            const submittedAt = item.submitted_at
             const submittedDateText = submittedAt
               ? getDateString(submittedAt)
               : null

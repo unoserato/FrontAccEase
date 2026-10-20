@@ -1,6 +1,8 @@
 import type {
   AnalyzerResultItem,
   AnalyzerSummaryProps,
+  ClassroomAnalyzerLogsDetailResponse,
+  ClassroomAnalyzerLogsResponse,
   WcagEvaluationProps,
 } from "@/const/props/analyzerProps"
 import type { ClassroomProps } from "@/const/props/classroomProps"
@@ -12,6 +14,7 @@ import type {
   ModuleProps,
 } from "@/const/props/moduleProps"
 import type {
+  InstructorQuizProps,
   QuizAnswer,
   QuizProps,
   QuizSubmissionProps,
@@ -45,7 +48,7 @@ export async function getModuleByIdAPI(id: string): Promise<ModuleProps> {
   return response.data
 }
 
-export async function getInstructorQuizzesAPI(): Promise<QuizProps[]> {
+export async function getInstructorQuizzesAPI(): Promise<InstructorQuizProps[]> {
   const response = await api.get(`/instructor/get-all-quiz`)
   return response.data
 }
@@ -119,5 +122,19 @@ export async function getAnalyzerResultByIdAPI(
 
 export async function getWCAGInstruments(): Promise<InstrumentProps[]> {
   const response = await api.get(`/admin/wcag-instrument`)
+  return response.data
+}
+
+export async function getClassroomAnalyzerLogs(): Promise<ClassroomAnalyzerLogsResponse> {
+  const response = await api.get(`/instructor/classroom-analyzer-logs`)
+  return response.data
+}
+
+export async function getClassroomAnalyzerLogsByClassroomId(
+  classroom_id: string
+): Promise<ClassroomAnalyzerLogsDetailResponse> {
+  const response = await api.get(
+    `/instructor/classrooms/analyzer-logs/${classroom_id}`
+  )
   return response.data
 }

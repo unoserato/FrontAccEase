@@ -223,6 +223,9 @@ export function SimpleEditor({
   const [isSearchAndReplaceOpen, setIsSearchAndReplaceOpen] = useState(false)
   const toolbarRef = useRef<HTMLDivElement>(null)
   const searchAndReplaceButtonRef = useRef<HTMLButtonElement>(null)
+  const lastEmittedRef = useRef<any>(null)
+  const isLoadedRef = useRef(false)
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const parseInitialContent = (raw: any) => {
     if (!raw) return content
@@ -280,21 +283,68 @@ export function SimpleEditor({
     ],
     content: parseInitialContent(initialContent),
     onUpdate: ({ editor }) => {
-      onChange?.(editor.getJSON())
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+      debounceTimerRef.current = setTimeout(() => {
+        debounceTimerRef.current = null
+        const json = editor.getJSON()
+        lastEmittedRef.current = json
+        onChange?.(json)
+      }, 250)
+    },
+    onBlur: ({ editor }) => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+        debounceTimerRef.current = null
+      }
+      const json = editor.getJSON()
+      lastEmittedRef.current = json
+      onChange?.(json)
     },
   })
 
+  // Flush any pending debounced change on unmount
   useEffect(() => {
-    if (editor && initialContent) {
-      try {
-        const parsed =
-          typeof initialContent === "string"
-            ? normalizeLessonContent(JSON.parse(initialContent))
-            : normalizeLessonContent(initialContent)
-        editor.commands.setContent(parsed)
-      } catch {
-        editor.commands.setContent(initialContent)
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+        if (editor && !editor.isDestroyed) {
+          const json = editor.getJSON()
+          onChange?.(json)
+        }
       }
+    }
+  }, [editor, onChange])
+
+  useEffect(() => {
+    if (!editor || !initialContent) return
+
+    // Never re-apply the content that was just emitted from this editor's onUpdate
+    if (initialContent === lastEmittedRef.current) return
+
+    // If editor has focus and was already loaded, the user is actively typing.
+    // Overwriting the document while typing causes cursor jumps, line splits, and lag.
+    if (editor.isFocused && isLoadedRef.current) return
+
+    try {
+      const parsed =
+        typeof initialContent === "string"
+          ? normalizeLessonContent(JSON.parse(initialContent))
+          : normalizeLessonContent(initialContent)
+
+      // Skip setContent if the content is already structurally identical
+      const currentDoc = editor.getJSON()
+      if (JSON.stringify(currentDoc) === JSON.stringify(parsed)) {
+        isLoadedRef.current = true
+        return
+      }
+
+      editor.commands.setContent(parsed, { emitUpdate: false })
+      isLoadedRef.current = true
+    } catch {
+      editor.commands.setContent(initialContent, { emitUpdate: false })
+      isLoadedRef.current = true
     }
   }, [editor, initialContent])
 
@@ -308,6 +358,7 @@ export function SimpleEditor({
   const rect = useCursorVisibility({
     editor,
     overlayHeight: toolbarHeight,
+    enabled: isMobile,
   })
 
   useEffect(() => {

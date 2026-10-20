@@ -247,7 +247,10 @@ function QuizEditorContent({
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedClassrooms, setSelectedClassrooms] = useState<string[]>(
-    () => existingQuiz?.classrooms || []
+    () =>
+      existingQuiz?.classrooms?.map((c) =>
+        typeof c === "string" ? c : c.id
+      ) || []
   )
   const [selectedPrinciple, setSelectedPrinciple] = useState<WCAGPrinciple>(
     () => existingQuiz?.principle || "Perceivable"
@@ -437,7 +440,7 @@ function QuizEditorContent({
       if (existingQuiz.principle) setSelectedPrinciple(existingQuiz.principle)
       if (existingQuiz.tags) setSelectedTags(existingQuiz.tags)
       if (existingQuiz.classrooms)
-        setSelectedClassrooms(existingQuiz.classrooms)
+        setSelectedClassrooms(existingQuiz.classrooms.map((c: any) => typeof c === "string" ? c : c.id))
       if (existingQuiz.time_limit !== undefined) {
         setHasTimeLimit(true)
         setTimeLimit(existingQuiz.time_limit)
@@ -546,7 +549,9 @@ function QuizEditorContent({
 
             <div className="flex min-w-0 flex-1 items-center gap-2">
               <h1 className="truncate text-sm font-bold text-foreground sm:text-base">
-                New Quiz
+                {existingQuiz
+                  ? `Editing Quiz - ${existingQuiz.name} `
+                  : "New Quiz"}
               </h1>
 
               {isPublish ? (

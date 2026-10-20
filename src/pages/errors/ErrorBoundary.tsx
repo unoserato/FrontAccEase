@@ -16,7 +16,7 @@ export default function ErrorBoundary() {
     : "Something interrupted the page load. Try again, or return to the home page."
 
   return (
-    <section className="mx-auto flex min-h-dvh items-center bg-background px-4 py-8 text-foreground sm:px-6 lg:px-8">
+    <section className="mx-auto flex min-h-dvh w-full items-center bg-background px-4 py-8 text-foreground sm:px-6 lg:px-8">
       <div
         aria-labelledby="error-title"
         className="mx-auto w-full max-w-xl overflow-hidden rounded-2xl border border-border/80 bg-card shadow-lg"

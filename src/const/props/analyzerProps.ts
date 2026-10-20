@@ -148,6 +148,7 @@ export interface AnalyzerResultItem {
   learner_id?: string
   status?: string | null
   content: Result | string
+  instructor_comment: string | null
 }
 
 export interface WcagEvaluationProps {
@@ -157,12 +158,18 @@ export interface WcagEvaluationProps {
   content: Content | string
   status?: string | null
   created_at?: string
+  instructor_comment: string | null
 }
 
 export interface AnalyzerResultsProps {
+  id?: string
   data?: AnalyzerResultItem | WcagEvaluationProps | Result
   scanEntry?: AnalyzerResultItem | WcagEvaluationProps
   result?: Result
+  hideHeaderBack?: boolean
+  backTo?: string
+  onBack?: () => void
+  hideSitemap?: boolean
 }
 
 // summary
@@ -172,4 +179,59 @@ export interface AnalyzerSummaryProps {
   score: number
   url: string
   violation_count: number
+}
+
+// Instructor Classroom Analyzer Logs
+export interface AnalyzerUsageDay {
+  date: string
+  scan_count: number
+}
+
+export interface IssuesPerPrinciple {
+  perceivable: number
+  operable: number
+  robust: number
+  understandable: number
+}
+
+export interface ClassroomScanItem {
+  classroom_id: string
+  class_name: string
+  classroom_code?: string
+  scan_count: number
+  enrollment_count: number
+  total_violations?: number
+  pass_rate?: number
+  last_scanned_at?: string
+}
+
+export interface ClassroomAnalyzerLogsResponse {
+  total_scans: number
+  active_classrooms: number
+  violations: number
+  pass_rate: number
+  scans_per_classroom: Record<string, number>
+  analyzer_usage_last_7_days: AnalyzerUsageDay[]
+  classroom_scan_count: number
+  issues_per_principle: IssuesPerPrinciple
+  classroom_scans: ClassroomScanItem[]
+}
+
+export interface ClassroomScanDetailItem {
+  id: string
+  url: string | null
+  score: number | null
+  created_at: string
+  violation_count: number
+  learner_name: string
+}
+
+export interface ClassroomAnalyzerLogsDetailResponse {
+  total_scans: number
+  violations: number
+  pass_rate: number
+  analyzer_usage_last_7_days: AnalyzerUsageDay[]
+  classroom_scan_count: number
+  issues_per_principle: IssuesPerPrinciple
+  classroom_scans: ClassroomScanDetailItem[]
 }
