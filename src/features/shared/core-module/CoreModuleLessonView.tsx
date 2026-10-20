@@ -11,9 +11,17 @@ import Typography from "@tiptap/extension-typography"
 import { Selection } from "@tiptap/extensions"
 import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
-import { BookOpen, CheckCircle2 } from "lucide-react"
+import { BookOpen, CheckCircle2, Loader2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { LessonButton } from "@/components/tiptap-extension/lesson-button-extension"
+import { normalizeLessonContent } from "@/components/tiptap-extension/normalize-lesson-content"
 import type { CoreModuleLessonActivity } from "@/const/props/moduleProps"
+import { useCompleteCoreActivity } from "@/services/tanstack/materials"
+import "@/components/tiptap-node/code-block-node/code-block-node.scss"
+import "@/components/tiptap-node/heading-node/heading-node.scss"
+import "@/components/tiptap-node/list-node/list-node.scss"
+import "@/components/tiptap-node/paragraph-node/paragraph-node.scss"
 
 interface CoreModuleLessonViewProps {
   activity: CoreModuleLessonActivity
@@ -25,6 +33,7 @@ export default function CoreModuleLessonView({
   principleLabel,
 }: CoreModuleLessonViewProps) {
   const lessonData = activity.lesson
+  const completeLesson = useCompleteCoreActivity(activity.id)
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -53,6 +62,7 @@ export default function CoreModuleLessonView({
       TaskItem.configure({ nested: true }),
       Highlight.configure({ multicolor: true }),
       Image,
+      LessonButton,
       Typography,
       Superscript,
       Subscript,
@@ -75,7 +85,7 @@ export default function CoreModuleLessonView({
             ? JSON.parse(lessonContent)
             : lessonContent
 
-        editor.commands.setContent(parsedContent)
+        editor.commands.setContent(normalizeLessonContent(parsedContent))
       } catch {
         editor.commands.setContent(lessonContent)
       }
@@ -137,6 +147,22 @@ export default function CoreModuleLessonView({
       </header>
 
       <EditorContent editor={editor} />
+
+      <div className="flex flex-col items-start gap-2 border-t border-border pt-6">
+        <Button
+          disabled={completeLesson.isPending || completeLesson.isSuccess}
+          onClick={() => completeLesson.mutate()}
+        >
+          {completeLesson.isPending && <Loader2 className="size-4 animate-spin" />}
+          {completeLesson.isSuccess && <CheckCircle2 className="size-4" />}
+          {completeLesson.isSuccess ? "Lesson completed" : "Mark lesson complete"}
+        </Button>
+        {completeLesson.isError && (
+          <p className="text-sm text-destructive" role="alert">
+            Could not save lesson completion. Please try again.
+          </p>
+        )}
+      </div>
     </div>
   )
 }

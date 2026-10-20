@@ -102,6 +102,11 @@ export async function answerCoreInteractiveActivityAPI(
   return response.data
 }
 
+export async function completeCoreActivityAPI(activityId: string) {
+  const response = await api.post(`/learner/pour/activities/complete/${activityId}`)
+  return response.data
+}
+
 export async function uploadImageAPI(
   file: File,
   onProgress?: (event: { progress: number }) => void,

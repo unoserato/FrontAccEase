@@ -76,6 +76,8 @@ import { ThemeToggle } from "@/components/tiptap-templates/simple/theme-toggle"
 
 // --- Lib ---
 import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils"
+import { LessonButton } from "@/components/tiptap-extension/lesson-button-extension"
+import { normalizeLessonContent } from "@/components/tiptap-extension/normalize-lesson-content"
 
 // --- Styles ---
 import "@/components/tiptap-templates/simple/simple-editor.scss"
@@ -226,12 +228,12 @@ export function SimpleEditor({
     if (!raw) return content
     if (typeof raw === "string") {
       try {
-        return JSON.parse(raw)
+        return normalizeLessonContent(JSON.parse(raw))
       } catch {
         return raw
       }
     }
-    return raw
+    return typeof raw === "string" ? raw : normalizeLessonContent(raw)
   }
 
   const editor = useEditor({
@@ -259,6 +261,7 @@ export function SimpleEditor({
       TaskItem.configure({ nested: true }),
       Highlight.configure({ multicolor: true }),
       Image,
+      LessonButton,
       Typography,
       Superscript,
       Subscript,
@@ -286,8 +289,8 @@ export function SimpleEditor({
       try {
         const parsed =
           typeof initialContent === "string"
-            ? JSON.parse(initialContent)
-            : initialContent
+            ? normalizeLessonContent(JSON.parse(initialContent))
+            : normalizeLessonContent(initialContent)
         editor.commands.setContent(parsed)
       } catch {
         editor.commands.setContent(initialContent)

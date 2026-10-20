@@ -28,6 +28,7 @@ import {
 } from "../api/GET/materialsGETAPI"
 import {
   createExtensionScanAPI,
+  completeCoreActivityAPI,
   submitCoreAssessmentActivityAPI,
   answerCoreInteractiveActivityAPI,
 } from "../api/CRUD/materialsCRUDAPI"
@@ -213,6 +214,27 @@ export function useCoreModuleProgressActivities(id: string) {
     queryFn: () => getCoreModuleActivitiesAPI(id),
     staleTime: staleTime,
     retry: 1,
+  })
+}
+
+export function useCompleteCoreActivity(activityId?: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationKey: ["complete-core-activity", activityId],
+    mutationFn: (targetId?: string) => {
+      const id = targetId || activityId
+      if (!id) throw new Error("Activity ID is required")
+      return completeCoreActivityAPI(id)
+    },
+    onSuccess: (_, targetId) => {
+      const id = targetId || activityId
+      queryClient.invalidateQueries({ queryKey: ["core-module-progress"] })
+      if (id) {
+        queryClient.invalidateQueries({
+          queryKey: ["core-module-progress-activities", id],
+        })
+      }
+    },
   })
 }
 
