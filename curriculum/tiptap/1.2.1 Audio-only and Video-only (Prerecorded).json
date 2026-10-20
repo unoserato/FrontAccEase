@@ -1,0 +1,303 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.2.1 Audio-only and Video-only (Prerecorded)"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Distinguish prerecorded audio-only from prerecorded video-only content; identify an appropriate equivalent alternative for each; and recognize the exception for media that is itself a clearly identified alternative for text."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Why this criterion exists"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A recorded interview may contain useful information entirely in sound. A person who cannot hear it needs another way to obtain that information. A silent video can communicate a procedure entirely through images, leaving someone who cannot see the video without its instructions. An alternative presents the important information in a form that can be used through another sensory channel."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "WCAG 2.2 success criterion 1.2.1 is Level A. It addresses prerecorded audio-only and prerecorded video-only media. It does not replace the separate criteria for synchronized audio and video. Consult the complete criterion and definitions at https://www.w3.org/TR/WCAG22/#audio-only-and-video-only-prerecorded."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Identify the media type"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Audio-only media has sound with no video or interaction. A podcast episode with a static cover image is an example. Video-only media has moving visual content with no audio or interaction, such as a silent animation showing how to assemble a device. A recorded tutorial with narration and moving visuals is synchronized media; evaluate its captions and visual information using the applicable criteria in guideline 1.2 rather than assuming this criterion alone covers it. WCAG's definition of synchronized media also includes audio or video synchronized with another format or time-based interactive components; consult the definition when classifying interactive media."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Prerecorded means that the content was recorded before presentation. Live audio has separate requirements. Classifying the media correctly matters because the options for alternatives depend on the media type."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Prerecorded audio-only"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "For prerecorded audio-only content, provide an alternative for time-based media that presents equivalent information, unless the exception applies. A transcript is a common way to do this. It should convey the meaningful content of the recording, not just a short description such as “an interview about accessibility.” Include speaker changes and meaningful sounds when they are needed to understand what happens."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Imagine an interview where the speaker says, “The alarm indicates that the machine has stopped,” immediately after a warning tone. A transcript containing only the spoken sentence may leave the reference unclear. Including a note about the warning tone can preserve its meaning. Check an automatically produced transcript for incorrect names, missing words, and technical terms, and correct mistakes before relying on it."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Prerecorded video-only"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "For prerecorded video-only content, the criterion permits either an alternative for time-based media or an audio track that presents equivalent information. For a silent demonstration of a form submission, a written alternative could describe the relevant steps, the values entered, the confirmation message, and any important change in state. An audio track could communicate the same meaningful information for someone who cannot see the demonstration."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A one-line label such as “form video” identifies the subject but does not convey the sequence of actions. The alternative should reflect what a user needs to understand or complete the task. If the video includes a meaningful mistake and correction, include both when they are part of the lesson. Decorative transitions that do not affect the meaning need not dominate the description."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Exception and practical interpretation"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The criterion contains an exception for media that is a media alternative for text and is clearly labeled as such. For example, a clearly labeled recording that presents the same information as a complete article may serve as an alternative for that article. Check the full definition and actual relationship between the media and text. A short page heading, a label, or an unrelated summary is not automatically an equivalent text version of the recording."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Do not assume that merely providing a link labeled “transcript” satisfies the goal. Check that the linked text exists, can be reached, and communicates the relevant information. Also check other applicable criteria, including those concerning the media player and any synchronized media."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Compare two approaches"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A recorded audio interview discusses three steps for reporting an issue. A link labeled “Transcript” opens a page saying only “An interview about reporting issues.” This identifies the topic but does not provide the three steps. A corrected transcript includes the questions, answers, and other meaningful audio information so that the reader can learn the same steps without hearing the recording."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A silent animation demonstrates a task. Its alternative says only “Animation.” A stronger alternative describes the action and result in order: which control is selected, what changes, and how the user knows the task is complete. The appropriate amount of detail depends on what the animation is intended to teach."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Knowledge check"
+        }
+      ]
+    },
+    {
+      "type": "orderedList",
+      "attrs": {
+        "start": 1
+      },
+      "content": [
+        {
+          "type": "listItem",
+          "content": [
+            {
+              "type": "paragraph",
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Does a prerecorded narrated video count as audio-only for this criterion? 2. What information should an alternative to a silent instructional video preserve? 3. When should you examine the exception for a media alternative for text?"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Suggested answers: A video with synchronized narration is synchronized media, not audio-only. The alternative should preserve the meaningful actions and results, including their sequence. Examine the exception when the recording is genuinely an alternative for text and is clearly identified as such; check the full criterion and definition."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Practical activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Choose one prerecorded audio-only item and one silent instructional video. List the information conveyed by each. Draft a transcript for a short audio excerpt and a text alternative for the video's key actions. Ask a classmate who has not played the media to explain the content from your alternatives. Compare their explanation with the original, revise omissions, and document whether the exception applies."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Key takeaways"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Prerecorded audio-only normally needs an equivalent alternative for time-based media. Prerecorded video-only normally needs an equivalent media alternative or audio track. The criterion includes a specific exception for clearly identified media alternatives for text. Evaluate the media type and complete requirements before selecting an approach."
+        }
+      ]
+    }
+  ]
+}

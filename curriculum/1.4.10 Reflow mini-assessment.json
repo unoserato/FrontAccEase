@@ -1,0 +1,58 @@
+{
+  "title": "1.4.10 Reflow Mini-assessment",
+  "description": "Check your understanding of 1.4.10 Reflow.",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "What width applies to vertically scrolling content?",
+          "choices": [
+            "320 CSS pixels",
+            "1024 CSS pixels",
+            "800 device pixels"
+          ],
+          "correctAnswer": "320 CSS pixels",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The criterion specifies a width equivalent to 320 CSS pixels."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "Can a layout requiring two dimensions for meaning be excepted?",
+          "choices": [
+            "Yes",
+            "No",
+            "Only if it is colorful"
+          ],
+          "correctAnswer": "Yes",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The exception concerns content requiring two-dimensional layout for usage or meaning."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "Does an excepted map exempt the entire page?",
+          "choices": [
+            "No",
+            "Yes",
+            "Only on mobile"
+          ],
+          "correctAnswer": "No",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The surrounding content must still be evaluated."
+        }
+      ]
+    }
+  ]
+}

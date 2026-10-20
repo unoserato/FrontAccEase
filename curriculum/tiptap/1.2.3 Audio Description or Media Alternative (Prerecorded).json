@@ -1,0 +1,279 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.2.3 Audio Description or Media Alternative (Prerecorded)"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Identify meaningful visual information in prerecorded synchronized media and distinguish an audio description from an alternative for time-based media. This criterion is Level A."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Why visual information needs an alternative"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "In a narrated tutorial, the presenter may say “Choose this option” while pointing to a control. A viewer who cannot see the pointing gesture does not know which option to select. Audio description adds spoken information about important visual details that the original soundtrack does not already communicate. An alternative for time-based media can instead provide an equivalent account of the synchronized media in text, including meaningful visual and audio information and their sequence."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The criterion permits either audio description or an alternative for time-based media for prerecorded video content in synchronized media, subject to its exception. A document that only summarizes the topic does not convey the full important sequence. A transcript of speech alone may omit the visual instruction."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Build an equivalent account"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Watch the demonstration without sound and note screen text, actions, settings, and results that matter. Then listen without looking and compare what is already communicated. For example, if the narration says “Set the status to Approved” as the action is shown, a duplicate description may not add meaning. If the screen silently shows an error and the presenter continues, include the error and its significance in the alternative or description."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Place audio description where it can be understood alongside the original audio. For a textual alternative, organize the actions, narration, relevant sounds and results in a meaningful sequence. Include interaction opportunities when required by the definition of an alternative for time-based media. Link the alternative where users can locate it."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Scope and related requirements"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The exception applies when the media is a media alternative for text and is clearly labeled as such. Check the full definition and relationship to the text; a title alone is not enough. At Level AA, 1.2.5 requires audio description for prerecorded video in synchronized media, so supplying only a textual alternative for 1.2.3 does not by itself satisfy 1.2.5. Captions address audio information and are assessed separately."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Worked example: a checkout demonstration"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A presenter narrates a checkout process while an error message silently appears: “Card expiration date is invalid.” The speaker then says, “Try again,” without naming the problem. A listener cannot know what needs correction. Audio description inserted in a pause could state that the expiration date field displays an invalid-date error. A complete text alternative could instead describe the spoken instruction, the entered value, the error and the correction in their original order."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A weak alternative saying “The presenter completes checkout” omits the failure and recovery, even though those events are the purpose of the example. Likewise, a description that invents the value entered may introduce misinformation. Base the alternative on the original; identify whether a visual detail is needed to understand the event, rather than narrating every decorative change."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Review with a listener"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Ask a reviewer to follow the audio without watching the screen, or to use the written alternative without playing the recording. Ask them which field failed, what the error said, and what changed before the second attempt. Compare their answer to the actual sequence and fix missing information. Verify that the alternative is clearly linked and reachable. Then separately evaluate captions and, if aiming for AA, the audio-description requirement in 1.2.5."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Decide between the Level A options"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A short recording explains how to submit an accessibility report. It shows a form, fills in fields, and receives a confirmation while the presenter reads only some of the screen text. The team has two choices under this criterion: prepare description for important visual information, or provide an equivalent alternative for time-based media. The choice should account for the full sequence, including an error if the lesson demonstrates how to recover from one. A written alternative should not be limited to a list of steps if the audio contains additional meaningful explanation."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "If audio description is chosen, script it around the original sound. Do not cover the spoken explanation with another voice. If the original soundtrack already names the field, value, and result, repeating all three may add clutter without making additional information available. If it says only “do this,” the description needs to identify the relevant action. A listener should be able to follow why the confirmation appears."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "If a text alternative is chosen, put a clearly labeled link near the recording and ensure it works. A document that is unreachable, incomplete, or out of sequence does not communicate the same experience. If the team also needs Level AA conformance, plan audio description under 1.2.5 rather than treating the Level A choice as the complete media assessment."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Review a short screen-recorded tutorial. List three pieces of information communicated visually, compare them with the narration, and write either a short audio-description script or a synchronized-media text alternative covering the missing information. Explain why each addition matters."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Reference"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "WCAG 2.2: Audio Description or Media Alternative (Prerecorded)",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/TR/WCAG22/#audio-description-or-media-alternative-prerecorded"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " and "
+        },
+        {
+          "type": "text",
+          "text": "W3C Understanding",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/WAI/WCAG22/Understanding/audio-description-or-media-alternative-prerecorded.html"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    }
+  ]
+}

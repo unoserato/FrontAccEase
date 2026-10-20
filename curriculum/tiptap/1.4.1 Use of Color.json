@@ -1,0 +1,260 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.4.1 Use of Color"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Identify information conveyed only by color and add another visible way to convey it. This lesson covers WCAG 2.2 criterion 1.4.1 (Level A): https://www.w3.org/TR/WCAG22/#use-of-color."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Why color alone is not enough"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Color can help users scan a page, but some people cannot distinguish particular colors, use a monochrome display, or see colors differently in bright light. If a form says only “fields in red are required,” a user who cannot distinguish red has no way to identify those fields. Keep color as a useful cue and add text, symbols, patterns, position, or another visual distinction that communicates the same meaning."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Color alone includes more than instructions. Consider status badges, a chart legend, links within a paragraph, and borders on invalid fields. A chart with green and red lines may need direct labels or different line patterns. An error field can show an icon and explanatory text as well as a colored border. If an icon alone carries meaning, ensure its meaning is understandable and available to assistive technology where appropriate."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Apply the principle"
+        }
+      ]
+    },
+    {
+      "type": "codeBlock",
+      "attrs": {
+        "language": "html"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "<label for=\"email\">Email address (required)</label>\n<input id=\"email\" type=\"email\" required aria-describedby=\"email-error\">\n<p id=\"email-error\">Error: Enter an email address such as name@example.com.</p>"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The visible words identify the requirement and error; color can reinforce them. This snippet alone does not establish that the error is shown at the right time or announced appropriately. Check form instructions, error identification, and status messages under their relevant criteria too. Links embedded in prose need a cue other than color; underlining is a straightforward choice. Ensure that users can distinguish the link before hovering or focusing it."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Contrast is related but distinct: a highly contrasting red message still fails to communicate its meaning if the only indication is its color. Conversely, adding a symbol does not excuse inadequate contrast under other applicable criteria."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Worked scenario: a service dashboard"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A dashboard displays a green dot beside completed requests and a red dot beside requests that need attention. A key at the top identifies the colors. The key does not solve the problem for a reader who cannot tell the dots apart: both the marker and its explanation depend on color. A stronger design shows “Complete” or “Action needed” next to each request. Color can still make the list faster to scan, but the words carry the meaning."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Now consider a form with an invalid date. A red border indicates the problem, and a message says “Enter a date in DD/MM/YYYY format.” The message explains the problem, while the border helps locate the field. Associate the message with the input so assistive technologies can discover it. If the message only says “Invalid,” a person may know something is wrong but not how to fix it. This illustrates why 1.4.1 is part of a broader form review, including error identification and suggestions."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Links and visual states"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "In a paragraph, a blue link surrounded by black text may be indistinguishable to someone who cannot distinguish the colors. An underline is a persistent, familiar cue. A border or other non-color visual treatment can also work when it clearly identifies the link. Do not depend solely on hover: touch users may not hover, and keyboard users need to find links before focusing them. Inspect both the default and focused states."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "For a selected item, a stronger border or check mark can supplement the fill color. Ensure the selected state is communicated programmatically when it belongs to an interactive control. For example, native checkboxes expose checked state, while an arbitrary colored square does not automatically become a checkbox. A visual cue that meets this criterion is not a substitute for proper semantics."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Common pitfalls and testing"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A symbol can introduce a new ambiguity. An asterisk might mean “required” in one form and “footnote” in another, so explain its meaning where needed. In a chart, patterns that are nearly identical or too fine to distinguish may be as unhelpful as colors alone. Directly label data series and provide an accessible summary when the chart conveys important information."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Test a page in grayscale as a useful diagnostic, not as the complete conformance test. Disable CSS or inspect with a screen reader to find additional structural and naming problems; these are separate checks. Ask whether a person can identify the required action, error, selection, or relationship without interpreting a color. Document both the original cue and the replacement, then recheck all relevant states."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Design review: an appointment calendar"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Imagine a calendar where available days are green and unavailable days are gray. A person sees the dates but cannot distinguish their states. Adding a legend does not help if it says only “green: available; gray: unavailable.” A better calendar marks each date with visible text such as “Available” or “Full,” or uses a consistently explained symbol alongside the color. If space is limited on a phone, test whether the label still appears and whether it wraps without hiding the date."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Now suppose selected days turn blue while all others remain white. A check mark and a visible selected-state label can provide another cue. The control should expose its state to assistive technology through appropriate semantics; for example, use a native radio group where only one date can be selected. Test the control before selection, after selection, and after using the keyboard to change it. Make sure both visual and programmatic state update together."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Ask a reviewer to describe the status of each date without referring to color. If they must consult an inaccessible explanation or guess the meaning of an unlabeled symbol, revise the design. A grayscale view can reveal a likely issue but cannot prove that every user can identify every cue. Pair it with a manual review of language, shape, position, and interaction states."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Find a form, chart, or status list that uses color. Describe what each color means, then create a version that communicates each meaning without relying on color. View it in grayscale and explain how a user can still identify each item. Inspect accessible names and associated error text when applicable."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "title": "1.3.2 Meaningful Sequence Mini-assessment",
+  "description": "Check your understanding of 1.3.2 Meaningful Sequence.",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "When does WCAG require a correct reading sequence?",
+          "choices": [
+            "When sequence affects meaning",
+            "Only for recipes",
+            "For every visual position regardless of meaning"
+          ],
+          "correctAnswer": "When sequence affects meaning",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "A correct programmatic sequence is required when order affects meaning."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "What can CSS visual reordering leave unchanged?",
+          "choices": [
+            "The DOM reading order",
+            "The meaning of every layout",
+            "The browser viewport"
+          ],
+          "correctAnswer": "The DOM reading order",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Visual layout can change while DOM order stays the same."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "How can you investigate reading order?",
+          "choices": [
+            "Read the DOM sequence with a screen reader",
+            "Check only the background colors",
+            "Count the images"
+          ],
+          "correctAnswer": "Read the DOM sequence with a screen reader",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Reading the source sequence helps reveal order problems."
+        }
+      ]
+    }
+  ]
+}

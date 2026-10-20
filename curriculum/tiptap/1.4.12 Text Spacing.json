@@ -1,0 +1,276 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.4.12 Text Spacing"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Apply the specified user text-spacing overrides and identify lost content or functionality. WCAG 2.2 criterion 1.4.12 is Level AA. Read the "
+        },
+        {
+          "type": "text",
+          "text": "full criterion",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/TR/WCAG22/#text-spacing"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Let text breathe"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Some readers need greater spacing to follow lines and distinguish words. In content implemented using markup languages that support the relevant text style properties, no loss of content or functionality may occur when users set all of these: line height to at least 1.5 times font size; spacing following paragraphs to at least 2 times font size; letter spacing to at least 0.12 times font size; and word spacing to at least 0.16 times font size. The criterion does not require authors to set these values by default."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "For example, a fixed-height card may clip the last line after a user stylesheet increases line height. Allow content containers to grow, avoid hiding overflow that contains needed information, and check controls and labels as well as paragraphs. Apply the four overrides together to test. Some scripts or languages do not use one or more of these text style properties; in those cases only the applicable properties are tested. The criterion addresses supported markup technologies, not every possible image of text."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Apply all four settings"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The values are relative to font size. For a 16-pixel font, the specified settings correspond to at least 24 pixels of line height, 32 pixels following paragraphs, 1.92 pixels of letter spacing, and 2.56 pixels of word spacing. A test stylesheet can use relative units so it scales with different text sizes. Apply all four changes together and inspect computed results. The author does not have to make these values the default; the requirement concerns avoiding loss when users apply the settings in the stated circumstances."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A user stylesheet might set line-height to 1.5, letter-spacing to 0.12em, and word-spacing to 0.16em, with paragraph spacing following each paragraph of 2em. Test the actual document and its interactive states, including embedded content where the settings can be applied. Different testing tools may apply styles differently, so check what actually changed and whether the resulting experience remains usable."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Worked scenario: checkout"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A checkout card has a fixed height and hidden overflow. After the overrides, delivery instructions wrap to more lines and the final sentence is clipped. A payment button remains visible, but the user has lost information needed to complete the task. Let the card grow or otherwise keep all text available, then retest. If a sticky footer covers the expanded content, adjust the layout and check that focused controls can still be reached."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "In the navigation, expanded letter and word spacing causes two links to overlap. Allow the links to wrap or use a layout that accommodates the space. Check labels, buttons, errors, headings, and dynamically inserted results as well as the main paragraphs. Verify the content after opening menus and submitting invalid input: the initial page is only one state."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Interpret the scope"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "This criterion applies to content implemented in markup languages that support the relevant text-style properties. For languages or scripts that do not use one or more properties, only the applicable properties are tested. Images of text have separate considerations; a fixed image cannot necessarily respond to these overrides. A scrollbar by itself is not always a loss, but the user must still be able to access the content and functionality."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Record the stylesheet or test tool, browser, affected element, and observed clipping or overlap. After a repair, repeat the same test and check nearby elements, because changing a container can move other controls. Reflow and resize-text checks have different conditions and should also be performed where applicable."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Try a user stylesheet"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The following illustrative CSS applies the four test values together. Use it in a suitable user-style testing tool and check the tool's behavior in your browser:"
+        }
+      ]
+    },
+    {
+      "type": "codeBlock",
+      "attrs": {
+        "language": "css"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "* {\n  line-height: 1.5 !important;\n  letter-spacing: 0.12em !important;\n  word-spacing: 0.16em !important;\n}\np { margin-bottom: 2em !important; }"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "This test CSS is not an instruction to overwrite an application's default styling. It simulates user changes to find loss of content or functionality. It may also affect nested elements differently depending on the test environment, so inspect the result and computed styles. Apply the criterion's exceptions for scripts that do not use particular spacing properties rather than expecting every writing system to behave identically."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Examine a failure and repair"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "An input label and its error message are positioned absolutely inside a container sized for one line. Increased spacing makes the error wrap, and the second line covers the submit button. Replace the fixed positioning with a layout that lets the label, input, and error take up their natural space. Retest the initial form, the error state, and the corrected state with all four settings active. Confirm the error remains associated with its field and the button remains operable."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Also inspect a modal with a maximum height. If its text grows, the dialog may need an accessible scrolling region or a different layout so the final controls remain available. Test keyboard navigation into and through the dialog, and do not hide a required button behind a fixed footer. A visual screenshot can reveal overlap, but interacting with every control reveals losses that a screenshot may miss."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Keep a record of the original behavior, the user settings, and the repaired behavior. If a result depends on a specific browser or embedded component that cannot receive the overrides, state that limitation. Recheck after layout changes because additional space can shift nearby items into a new conflict."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Apply a user stylesheet with the four specified overrides to an article and a form. Check for clipped text, overlapping controls, and unavailable actions. Repair one affected container and capture before-and-after observations. Note any text styles that do not apply to the language being tested."
+        }
+      ]
+    }
+  ]
+}

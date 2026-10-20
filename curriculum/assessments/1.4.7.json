@@ -1,0 +1,58 @@
+{
+  "questions": {
+    "title": "1.4.7 Low or No Background Audio Mini-assessment",
+    "pages": [
+      {
+        "name": "page1",
+        "title": "Mini-assessment",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "q_1",
+            "title": "Which option can meet the criterion for applicable speech audio?",
+            "choices": [
+              "Provide a way to turn off background sound",
+              "Increase all audio equally",
+              "Add louder music"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_2",
+            "title": "Does reducing the entire recording volume remove background sound?",
+            "choices": [
+              "No",
+              "Yes",
+              "Only for podcasts"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_3",
+            "title": "Is all audio within the criterion’s scope?",
+            "choices": [
+              "No; the criterion has specific conditions and exclusions",
+              "Yes, every sound",
+              "Only live video"
+            ],
+            "isRequired": true
+          }
+        ]
+      }
+    ]
+  },
+  "answer_key": {
+    "q_1": "Provide a way to turn off background sound",
+    "q_2": "No",
+    "q_3": "No; the criterion has specific conditions and exclusions"
+  },
+  "explanations": {
+    "q_1": "Independent control can remove competing sound.",
+    "q_2": "Speech and background remain mixed.",
+    "q_3": "Check prerecorded audio-only scope and exclusions."
+  },
+  "passing_percent": 70,
+  "max_attempts": 3
+}

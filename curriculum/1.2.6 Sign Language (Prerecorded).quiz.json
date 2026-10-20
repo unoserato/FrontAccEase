@@ -1,0 +1,58 @@
+{
+  "title": "1.2.6 Sign Language (Prerecorded) mini-assessment",
+  "description": "Complete after the required lesson activity.",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "Why are captions and sign language interpretation distinct?",
+          "choices": [
+            "A sign language is a distinct language",
+            "Captions are always video",
+            "Sign languages are universal"
+          ],
+          "correctAnswer": "A sign language is a distinct language",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "Sign languages have their own grammar and differ across communities."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "What should remain clear in the interpreted video?",
+          "choices": [
+            "The interpreter’s face, hands, and movements",
+            "Only the interpreter’s shirt",
+            "Only the background"
+          ],
+          "correctAnswer": "The interpreter’s face, hands, and movements",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "Viewers need to see the visual features used in signing."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "What does 1.2.6 cover?",
+          "choices": [
+            "Prerecorded audio in synchronized media",
+            "Every live audio-only event",
+            "Only silent animations"
+          ],
+          "correctAnswer": "Prerecorded audio in synchronized media",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "The criterion addresses prerecorded audio in synchronized media."
+        }
+      ]
+    }
+  ]
+}

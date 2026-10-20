@@ -1,0 +1,58 @@
+{
+  "title": "1.2.8 Media Alternative (Prerecorded) mini-assessment",
+  "description": "Complete after the required lesson activity.",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "What media types does 1.2.8 cover?",
+          "choices": [
+            "Prerecorded synchronized media and prerecorded video-only media",
+            "Only live radio",
+            "Only prerecorded audio-only media"
+          ],
+          "correctAnswer": "Prerecorded synchronized media and prerecorded video-only media",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "The criterion explicitly covers synchronized and video-only prerecorded media."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "Why can a speech-only transcript be incomplete?",
+          "choices": [
+            "It may omit meaningful visual actions and results",
+            "It always contains captions",
+            "It must contain source code"
+          ],
+          "correctAnswer": "It may omit meaningful visual actions and results",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "The alternative must convey relevant visual and audio information."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "What about interactive opportunities in the original media?",
+          "choices": [
+            "Provide a means to achieve equivalent interaction as required by the definition",
+            "Always omit them",
+            "Replace them with a title"
+          ],
+          "correctAnswer": "Provide a means to achieve equivalent interaction as required by the definition",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "The definition addresses opportunities to achieve the same interaction."
+        }
+      ]
+    }
+  ]
+}

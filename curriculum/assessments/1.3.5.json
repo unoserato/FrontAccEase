@@ -1,0 +1,58 @@
+{
+  "questions": {
+    "title": "1.3.5 Identify Input Purpose Mini-assessment",
+    "pages": [
+      {
+        "name": "page1",
+        "title": "Mini-assessment",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "q_1",
+            "title": "Does a visible label alone provide a standardized input-purpose token?",
+            "choices": [
+              "No, the label and machine-readable purpose have different roles",
+              "Yes, all labels are autocomplete tokens",
+              "Yes, if it is bold"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_2",
+            "title": "Which field is within the criterion’s scope when the technology supports it?",
+            "choices": [
+              "A field collecting the user’s email address",
+              "Every arbitrary order identifier",
+              "A heading on an article"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_3",
+            "title": "Why should an order number not use autocomplete=\"email\"?",
+            "choices": [
+              "The token misrepresents the information requested",
+              "Autocomplete always hides labels",
+              "Order numbers cannot be typed"
+            ],
+            "isRequired": true
+          }
+        ]
+      }
+    ]
+  },
+  "answer_key": {
+    "q_1": "No, the label and machine-readable purpose have different roles",
+    "q_2": "A field collecting the user’s email address",
+    "q_3": "The token misrepresents the information requested"
+  },
+  "explanations": {
+    "q_1": "Labels communicate with users; appropriate autocomplete tokens expose standardized purposes.",
+    "q_2": "The user’s email is a listed input purpose; evaluate all applicability conditions.",
+    "q_3": "A token should accurately represent the field’s purpose."
+  },
+  "passing_percent": 70,
+  "max_attempts": 3
+}

@@ -1,0 +1,255 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.3.1 Info and Relationships"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Identify information and relationships conveyed visually, represent them in markup or text, and inspect the result with assistive technology. WCAG 2.2 criterion 1.3.1 is Level A: information, structure, and relationships conveyed through presentation must be programmatically determinable or available in text. Consult the "
+        },
+        {
+          "type": "text",
+          "text": "full criterion",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/TR/WCAG22/#info-and-relationships"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Meaning must survive presentation changes"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A bold line at the top of a section may look like a heading, but a screen reader cannot infer a heading from font size alone. Similarly, alignment may make a price look associated with a product, or a border may make several fields appear to form a group. Users who cannot perceive that presentation still need the same relationships. Programmatically determinable information is exposed through markup and accessibility APIs so software can present it in another form."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Use heading elements for a page outline, lists for lists, and table headers for genuinely tabular data. A field needs an associated label, not merely nearby text or a placeholder. Group related choices with a fieldset and legend. Semantics must reflect the actual meaning: using a heading simply to enlarge text creates a misleading outline. Text can also communicate a relationship, for example “Required fields are marked with an asterisk,” provided the required state is clear for each field."
+        }
+      ]
+    },
+    {
+      "type": "codeBlock",
+      "attrs": {
+        "language": "html"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "<fieldset>\n  <legend>Delivery method</legend>\n  <label><input type=\"radio\" name=\"delivery\" value=\"pickup\"> Pickup</label>\n  <label><input type=\"radio\" name=\"delivery\" value=\"courier\"> Courier</label>\n</fieldset>"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The legend names the group, while each label identifies a choice. Test the group and labels in the accessibility tree and with a screen reader; inspect the rendered page too. A correct heading structure does not automatically make the reading order correct: see 1.3.2. Control names and states are also addressed by 4.1.2."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Examine a page as a structured document"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Imagine an enrollment page with three visually distinct areas: a title, course requirements, and a registration form. A sighted reader may infer hierarchy from larger fonts and whitespace. A screen reader user often navigates using a list of headings or landmarks. If each section title is only a styled span, the page may look organized while that navigation exposes no outline. Write a single main heading for the page and appropriate subordinate headings for the sections. Heading levels communicate hierarchy rather than a font size; use CSS to style them."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A table has a different kind of relationship. In a timetable, each cell's meaning depends on its row and column headings. Use a table for tabular information and mark the headers with appropriate header cells and scope where needed. Do not place independent cards in a table solely to obtain columns. For complex tables, examine whether a simpler structure communicates the data more clearly. A programmatic association must reflect the actual relationship, not simply satisfy a checker."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Associate instructions and groups"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Suppose a form says “Use at least eight characters” beside a password field. Place the instruction in readable text and associate it with the control using an appropriate relationship such as aria-describedby. If several radio buttons answer the question “How should we contact you?”, the individual labels alone identify each choice but may not identify the shared question. A fieldset and legend preserve that group relationship. Do not use a visual border alone as the grouping mechanism."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Required information needs care. A red asterisk with an explanation at the top of the form may be overlooked or read far from the field. Include clear required text or a properly exposed required state at the field, and make sure the visual and programmatic information agree. Similarly, if text is visually emphasized to convey importance, use meaningful emphasis where appropriate, rather than styling that loses the distinction when presentation is removed."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Practice reasoning and inspection"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Start by listing information a sighted user can infer: which labels belong to controls, which cells are headers, which items form a list, and which sections are nested. Then inspect the HTML and accessibility tree to find how each relationship is expressed. Turn off styles as a useful diagnostic, but remember that a page can look sensible without CSS and still lack an association. Navigate the form using a screen reader and listen to the label, group, and instruction announced for each control."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A common mistake is to add ARIA to repair every issue before considering native HTML. Native elements often provide established semantics with less code. Another is to create a heading merely for visual styling, or to place a label next to an input without connecting it. Verify both the information provided and its accuracy. An automated report can identify missing associations, but cannot reliably determine every intended relationship on a complex page."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Worked example: enrollment details"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A course card shows “Introduction to HTML,” “Tuesday,” and “Room 4.” On its own, “Tuesday” is ambiguous: it could mean the start date or a submission deadline. Adding visible labels such as “Meets: Tuesday” and “Location: Room 4” gives every reader the relationship in text. When a visual icon appears beside a label, consider whether it adds information or repeats it. Avoid giving an ornamental icon an alternative that simply repeats “Location” immediately before the same visible word."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Now imagine the card contains a small heading followed by a list of prerequisites. The heading should identify the prerequisite section, and the list should use actual list markup. A screen reader can then announce a list and its number of items. Compare that experience with a group of paragraphs separated only by visual bullets. If the page includes a table showing separate course schedules, mark column and row headers and check associations in the browser; a bold cell by itself is a visual cue, not necessarily a header."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The repair is successful when both visual and programmatic presentations communicate the same important structure. Ask a tester to locate the prerequisite list using headings and to determine which schedule belongs to which course. Their observations supplement the accessibility tree: the tree may show a role, but it does not prove that the wording is meaningful."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Inspect a registration form containing a heading, two related radio buttons and a required email field. Record which relationships are conveyed by size, spacing or color. Implement semantic headings, a fieldset and legend, and an associated label and required indication. Inspect the accessibility tree and navigate the form with a screen reader. Submit the original and revised markup and describe what changed in the information exposed."
+        }
+      ]
+    }
+  ]
+}

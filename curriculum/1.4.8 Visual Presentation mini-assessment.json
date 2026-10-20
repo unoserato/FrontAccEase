@@ -1,0 +1,58 @@
+{
+  "title": "1.4.8 Visual Presentation Mini-assessment",
+  "description": "Check your understanding of 1.4.8 Visual Presentation.",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "What line spacing must a mechanism allow within paragraphs?",
+          "choices": [
+            "At least 1.5",
+            "Exactly 1.0",
+            "At most 1.2"
+          ],
+          "correctAnswer": "At least 1.5",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The condition specifies at least 1.5."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "What must be possible for justification?",
+          "choices": [
+            "Text is not justified on both margins",
+            "All text is fully justified",
+            "Only headings are centered"
+          ],
+          "correctAnswer": "Text is not justified on both margins",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The mechanism must allow non-justified text."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "What maximum width applies to CJK?",
+          "choices": [
+            "40 characters or glyphs",
+            "80 words",
+            "120 characters"
+          ],
+          "correctAnswer": "40 characters or glyphs",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The CJK limit is 40 characters or glyphs."
+        }
+      ]
+    }
+  ]
+}

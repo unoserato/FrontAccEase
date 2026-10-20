@@ -1,0 +1,248 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.4.6 Contrast (Enhanced)"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Apply the enhanced text contrast thresholds in WCAG 2.2 criterion 1.4.6 (Level AAA) and distinguish them from the minimum thresholds: https://www.w3.org/TR/WCAG22/#contrast-enhanced."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Enhanced contrast"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Greater contrast can make text easier to read for people who need more separation between letters and their backgrounds. Under this Level AAA criterion, normal text and images of text generally need at least 7:1; qualifying large-scale text needs at least 4.5:1. Large-scale text is approximately 18 point regular or 14 point bold, or equivalent larger sizes. These are higher thresholds than the 4.5:1 and 3:1 generally used for normal and large text at Level AA under 1.4.3."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Measure foreground against the actual adjacent background. Text on gradients, photographs, overlays, and translucent surfaces needs particular attention: evaluate the least favorable area behind the text. A ratio below the threshold does not pass by rounding. The criterion includes exceptions for incidental text and logotypes; consult its exact wording and definitions before applying them. A higher ratio alone does not establish accessibility: font size, readability, alternative text, and other criteria remain relevant."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Apply the thresholds"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Consider a normal-sized link with a measured ratio of 5:1. It meets the normal-text numeric threshold of 1.4.3 but not the 7:1 threshold of 1.4.6. Change its foreground or background and remeasure rather than assuming a darker-looking color is sufficient. For a qualifying large heading measured at 4.6:1, the numeric enhanced threshold is met; verify the measurement, size, and applicability of any other requirements."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Check default, visited, hover, focus, and error states where relevant. Ensure the link is distinguishable by something other than color where necessary. Non-text controls and graphics have their own contrast requirements; do not apply text thresholds blindly to every icon or border."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Compare AA and AAA in context"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Suppose a normal-sized description on a pale background measures 5.2:1. It exceeds the 4.5:1 numeric minimum for normal text in 1.4.3, but it falls short of this criterion's enhanced 7:1. A qualifying large heading at 4.6:1 meets the enhanced large-text numeric threshold. These examples only establish the comparison of ratios; the actual font size, weight, background, states, and exceptions still need verification."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Increasing contrast does not require choosing only black and white. Select foreground and background combinations that meet the target, fit the design, and remain clear across states. Check that brand colors used for text achieve sufficient contrast against their actual backgrounds. A darker variant of a brand color or a light surface behind text may provide the needed separation. Validate the measured result rather than relying on a color's name or appearance on a particular monitor."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Images, states, and exceptions"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Text over an image can have different backgrounds behind each word. A light region of a photograph may cause white text to fall below the threshold even if another area has plenty of contrast. Use a consistent opaque panel or an overlay with sufficient separation, and measure the effective combination. Account for responsive crops and changing images; an overlay that works for one image may fail for another."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Inspect links, buttons, form labels, errors, selected items, visited links, and hover and focus states. Note whether each is normal or qualifying large text. Text in inactive controls, decorative text, incidental text in a picture, and logotypes have specific exceptions in the criterion. Verify the exact definitions and whether an element genuinely falls within an exception. An inactive style applied to a usable link is not automatically an inactive-component exception."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "A repeatable audit"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Create a list of representative text/background pairs and record the state, actual color values, size, weight, measured ratio, and threshold. For gradients and images, inspect the least favorable area behind the text. Avoid rounding a below-threshold result up. Test with the final opacity and overlay settings rather than the base colors alone. After changing a shared color token, review all places where it is used; one improvement can reduce contrast elsewhere."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A contrast checker is valuable but cannot determine every accessibility outcome. It does not establish meaningful link purpose, readable line length, sufficient text alternatives, or the ability to resize text. Cross-check the relevant criteria and conduct manual inspection of dynamic states. AAA is a conformance level with multiple applicable criteria, so one 7:1 result is not proof of AAA conformance for a page."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Design review: a multi-state link"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A documentation site uses a dark blue link on white for its default state and a lighter purple after a page has been visited. The default normal-sized text measures 8:1, but the visited color measures 5.6:1. The default passes the enhanced numeric threshold while the visited state does not. Choose a darker visited color, preserve a non-color link cue such as an underline, and measure both states again. A focus outline may need its own assessment; passing text contrast does not establish that the outline meets all focus requirements."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Next, a large white heading appears over a hero photograph. The darkest part of the image yields a strong ratio, but the lightest area under the heading yields 3.8:1. If the heading qualifies as large text, that is below the enhanced 4.5:1 threshold. Add a sufficiently dark, stable panel behind the text or alter the image treatment, and repeat the check at each responsive crop. Do not measure only a convenient portion of the image."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "In an audit report, distinguish a measured failure from a suspected failure. Record the ratio, the exact element and state, the threshold used, and the adjustment made. If a tool cannot measure the changing background reliably, investigate with a repeatable sampling method and document the limitation rather than declaring a pass without evidence."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Measure three normal-sized text pairs and one qualifying large text pair on a sample page. Record the ratios and compare them with both Level AA and AAA thresholds. Revise one pair that passes AA but fails AAA, remeasure, and explain any exception claimed."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "title": "1.2.2 Captions (Prerecorded) mini-assessment",
+  "description": "Complete after the required lesson activity.",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "A warning tone changes the meaning of a video scene. What should captions include?",
+          "choices": [
+            "The meaningful warning tone",
+            "Only spoken words",
+            "Only the title"
+          ],
+          "correctAnswer": "The meaningful warning tone",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "Captions convey meaningful sounds as well as speech."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "What makes captions different from a separate transcript?",
+          "choices": [
+            "They are synchronized with the media",
+            "They omit speaker names",
+            "They provide audio description"
+          ],
+          "correctAnswer": "They are synchronized with the media",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "Captions connect the text to the corresponding moment."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "When does the text-alternative exception apply?",
+          "choices": [
+            "When the media is a clearly labeled media alternative for text",
+            "Whenever the page has a heading",
+            "Whenever captions are expensive"
+          ],
+          "correctAnswer": "When the media is a clearly labeled media alternative for text",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "The exception requires the specific relationship and clear identification."
+        }
+      ]
+    }
+  ]
+}

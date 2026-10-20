@@ -1,0 +1,58 @@
+{
+  "title": "1.4.12 Text Spacing Mini-assessment",
+  "description": "Check your understanding of 1.4.12 Text Spacing.",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "Must authors use the specified spacing as their default?",
+          "choices": [
+            "No",
+            "Yes",
+            "Only for headings"
+          ],
+          "correctAnswer": "No",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The requirement is that user overrides cause no loss."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "What letter spacing must be accommodated?",
+          "choices": [
+            "At least 0.12 times font size",
+            "At least 3 times font size",
+            "Exactly zero"
+          ],
+          "correctAnswer": "At least 0.12 times font size",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The specified letter-spacing value is 0.12 times font size."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "What can fail in a fixed-height card after spacing changes?",
+          "choices": [
+            "Text can be clipped",
+            "The DOM disappears",
+            "The page language changes"
+          ],
+          "correctAnswer": "Text can be clipped",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Increased spacing can exceed the available height."
+        }
+      ]
+    }
+  ]
+}

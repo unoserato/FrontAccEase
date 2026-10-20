@@ -1,0 +1,58 @@
+{
+  "title": "1.2.7 Extended Audio Description (Prerecorded) mini-assessment",
+  "description": "Complete after the required lesson activity.",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "When is extended audio description required?",
+          "choices": [
+            "When foreground-audio pauses are insufficient to convey the sense of the video",
+            "Whenever a video has captions",
+            "Only when audio is absent"
+          ],
+          "correctAnswer": "When foreground-audio pauses are insufficient to convey the sense of the video",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "The criterion addresses insufficient pauses for necessary descriptions."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "How does an extended version make time for description?",
+          "choices": [
+            "It pauses the presentation and resumes afterward",
+            "It removes all original speech",
+            "It speeds up the video"
+          ],
+          "correctAnswer": "It pauses the presentation and resumes afterward",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "Pausing creates space for the description."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "Why is “diagram changes” potentially insufficient?",
+          "choices": [
+            "It may omit meaningful changes and relationships",
+            "It contains too many details",
+            "It identifies every state"
+          ],
+          "correctAnswer": "It may omit meaningful changes and relationships",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "An adequate description communicates the sense of the visual content."
+        }
+      ]
+    }
+  ]
+}

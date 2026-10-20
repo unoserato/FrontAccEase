@@ -1,0 +1,52 @@
+{
+  "title": "1.4.6 Contrast (Enhanced) Mini-assessment",
+  "description": "Complete after the required lesson activity.",
+  "showQuestionNumbers": "on",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q1",
+          "title": "What is the general enhanced threshold for normal text?",
+          "choices": [
+            "7:1",
+            "4.5:1"
+          ],
+          "correctAnswer": "7:1",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Normal text generally requires at least 7:1 at the enhanced level."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q2",
+          "title": "What is the enhanced threshold for qualifying large text?",
+          "choices": [
+            "4.5:1",
+            "3:1"
+          ],
+          "correctAnswer": "4.5:1",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Qualifying large text generally requires at least 4.5:1."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q3",
+          "title": "Does a normal-text ratio of 5:1 meet the enhanced threshold?",
+          "choices": [
+            "No",
+            "Yes"
+          ],
+          "correctAnswer": "No",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The enhanced normal-text threshold is 7:1."
+        }
+      ]
+    }
+  ]
+}

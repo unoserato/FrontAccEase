@@ -1,0 +1,58 @@
+{
+  "questions": {
+    "title": "1.2.8 Media Alternative (Prerecorded) mini-assessment",
+    "pages": [
+      {
+        "name": "page1",
+        "title": "Mini-assessment",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "q_1",
+            "title": "What media types does 1.2.8 cover?",
+            "choices": [
+              "Prerecorded synchronized media and prerecorded video-only media",
+              "Only live radio",
+              "Only prerecorded audio-only media"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_2",
+            "title": "Why can a speech-only transcript be incomplete?",
+            "choices": [
+              "It may omit meaningful visual actions and results",
+              "It always contains captions",
+              "It must contain source code"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_3",
+            "title": "What about interactive opportunities in the original media?",
+            "choices": [
+              "Provide a means to achieve equivalent interaction as required by the definition",
+              "Always omit them",
+              "Replace them with a title"
+            ],
+            "isRequired": true
+          }
+        ]
+      }
+    ]
+  },
+  "answer_key": {
+    "q_1": "Prerecorded synchronized media and prerecorded video-only media",
+    "q_2": "It may omit meaningful visual actions and results",
+    "q_3": "Provide a means to achieve equivalent interaction as required by the definition"
+  },
+  "explanations": {
+    "q_1": "The criterion explicitly covers synchronized and video-only prerecorded media.",
+    "q_2": "The alternative must convey relevant visual and audio information.",
+    "q_3": "The definition addresses opportunities to achieve the same interaction."
+  },
+  "passing_percent": 70,
+  "max_attempts": 3
+}

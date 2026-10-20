@@ -1,0 +1,58 @@
+{
+  "title": "1.4.9 Images of Text (No Exception) Mini-assessment",
+  "description": "Check your understanding of 1.4.9 Images of Text (No Exception).",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "How are logotypes treated?",
+          "choices": [
+            "They are considered essential",
+            "They are always prohibited",
+            "They are never text"
+          ],
+          "correctAnswer": "They are considered essential",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The criterion notes that logotypes are considered essential."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "Does alt text alone satisfy the restriction on images of text?",
+          "choices": [
+            "No",
+            "Yes",
+            "Only when short"
+          ],
+          "correctAnswer": "No",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The restriction still applies even when an alternative is supplied."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "What can replace promotional text embedded in a banner?",
+          "choices": [
+            "HTML text styled with CSS",
+            "A larger image of the same text",
+            "An unlabeled icon"
+          ],
+          "correctAnswer": "HTML text styled with CSS",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Real text can adapt to user settings."
+        }
+      ]
+    }
+  ]
+}

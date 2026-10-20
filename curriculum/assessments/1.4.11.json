@@ -1,0 +1,58 @@
+{
+  "questions": {
+    "title": "1.4.11 Non-text Contrast Mini-assessment",
+    "pages": [
+      {
+        "name": "page1",
+        "title": "Mini-assessment",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "q_1",
+            "title": "What ratio generally applies to required non-text visual information?",
+            "choices": [
+              "At least 3:1",
+              "At least 2:1",
+              "Exactly 7:1"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_2",
+            "title": "Are inactive controls included in the component provision?",
+            "choices": [
+              "No, they are excluded",
+              "Yes, always",
+              "Only when colorful"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_3",
+            "title": "Does every decorative border automatically need 3:1?",
+            "choices": [
+              "No, assess information required to identify components and states",
+              "Yes, every border",
+              "Only black borders"
+            ],
+            "isRequired": true
+          }
+        ]
+      }
+    ]
+  },
+  "answer_key": {
+    "q_1": "At least 3:1",
+    "q_2": "No, they are excluded",
+    "q_3": "No, assess information required to identify components and states"
+  },
+  "explanations": {
+    "q_1": "Required visual information generally needs 3:1 against adjacent colors.",
+    "q_2": "Inactive components are excluded.",
+    "q_3": "The provision concerns necessary visual information."
+  },
+  "passing_percent": 70,
+  "max_attempts": 3
+}

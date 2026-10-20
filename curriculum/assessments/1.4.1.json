@@ -1,0 +1,55 @@
+{
+  "questions": {
+    "title": "1.4.1 Use of Color Mini-assessment",
+    "pages": [
+      {
+        "name": "page1",
+        "title": "Mini-assessment",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "q1",
+            "title": "A required field is identified only by a red label. What should be added?",
+            "choices": [
+              "A visible “required” label",
+              "A darker red label"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q2",
+            "title": "Does high contrast alone communicate what red means?",
+            "choices": [
+              "No",
+              "Yes"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q3",
+            "title": "What can distinguish chart lines?",
+            "choices": [
+              "Direct labels or line patterns",
+              "Color alone"
+            ],
+            "isRequired": true
+          }
+        ]
+      }
+    ]
+  },
+  "answer_key": {
+    "q1": "A visible “required” label",
+    "q2": "No",
+    "q3": "Direct labels or line patterns"
+  },
+  "explanations": {
+    "q1": "A visible non-color cue communicates the requirement.",
+    "q2": "Contrast and the use of color convey different things.",
+    "q3": "Labels or patterns convey the distinction without relying on color."
+  },
+  "passing_percent": 70,
+  "max_attempts": 3
+}

@@ -1,0 +1,58 @@
+{
+  "questions": {
+    "title": "1.3.3 Sensory Characteristics Mini-assessment",
+    "pages": [
+      {
+        "name": "page1",
+        "title": "Mini-assessment",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "q_1",
+            "title": "Which instruction identifies a control without relying solely on its location?",
+            "choices": [
+              "Select Continue, the button at the bottom",
+              "Select the button on the right",
+              "Select the round button"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_2",
+            "title": "Why is “press the square button” insufficient as the only instruction?",
+            "choices": [
+              "It relies on perceiving shape",
+              "It uses too many words",
+              "It specifies a control"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_3",
+            "title": "Which related criterion addresses color as the only visual means of conveying information?",
+            "choices": [
+              "1.4.1 Use of Color",
+              "1.3.4 Orientation",
+              "2.4.2 Page Titled"
+            ],
+            "isRequired": true
+          }
+        ]
+      }
+    ]
+  },
+  "answer_key": {
+    "q_1": "Select Continue, the button at the bottom",
+    "q_2": "It relies on perceiving shape",
+    "q_3": "1.4.1 Use of Color"
+  },
+  "explanations": {
+    "q_1": "The label Continue identifies the control independently of its location.",
+    "q_2": "A person who cannot perceive shape needs another identifying cue.",
+    "q_3": "1.4.1 addresses use of color as the only visual means."
+  },
+  "passing_percent": 70,
+  "max_attempts": 3
+}

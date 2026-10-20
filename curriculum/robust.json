@@ -1,0 +1,1581 @@
+{
+  "principle": "Robust",
+  "lessons": [
+    {
+      "title": "4.1.1 Parsing (Obsolete and removed)",
+      "objective": "Explain why 4.1.1 was removed in WCAG 2.2, distinguish obsolete requirements from current accessibility barriers, and use markup and assistive technology tests to investigate remaining issues.",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 1
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "4.1.1 Parsing (Obsolete and removed)"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Learning objectives"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Explain the historical purpose and WCAG 2.2 status of 4.1.1; identify problems that remain relevant under other criteria; and investigate a markup defect without claiming that a validator alone establishes conformance."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Why Robust matters"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Robust content is implemented so browsers, accessibility APIs, and assistive technologies can interpret and operate it reliably. A screen reader uses information exposed through the browser and platform accessibility API; it does not simply read a page's visual layout. A defect in markup or scripting can therefore produce a different experience for someone using assistive technology."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "The WCAG version matters. Success criterion 4.1.1 Parsing was removed from WCAG 2.2 because its original assistive-technology parsing problems no longer have the same utility. It is included here as historical context, not as a current WCAG 2.2 conformance requirement. Consult https://www.w3.org/TR/WCAG22/#parsing-obsolete-and-removed."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "What removal does and does not mean"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "The former criterion addressed particular markup parsing problems, such as malformed elements or duplicate IDs. Its removal does not mean that broken labels, inaccessible controls, or incorrect relationships are acceptable. When an incorrect ID association leaves an input without a programmatically determinable name, investigate that actual failure against the applicable current requirements, including 4.1.2 and, where relevant, 1.3.1."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A duplicate ID is not automatically a WCAG 2.2 failure merely because an automated validator flags it. It can nonetheless cause a label, description, or control relationship to resolve to the wrong element. Determine the user-facing effect rather than assigning an obsolete criterion as the failure."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Use validation as a diagnostic"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Use an HTML validator and browser developer tools to locate structural errors, then inspect the accessibility tree and exercise the affected component with keyboard and assistive technology. Fix invalid nesting and duplicate identifiers when they cause unreliable behavior, and retest the affected task. A clean validation report alone cannot establish that controls have correct names, states, or messages."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "For example, if two form inputs use the same id and a label targets that id, inspect which input receives the label. Give each input a unique id and associate each label with its own control. Then confirm the accessible names in the browser and with a screen reader."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Worked example: duplicate identifiers"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A registration form asks for an email address and a phone number. Both input elements accidentally have id='contact', and their visible labels each use for='contact'. The first input may receive the label association while the second has no reliable accessible name. Visually the form appears understandable, but a person navigating from control to control may hear an incomplete or misleading name."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Begin by identifying each input in browser developer tools and inspecting its computed accessible name. Activate each visible label and observe which input receives focus. A markup validator can point to the duplicate, but the behavior and accessibility tree show why it matters. Correct the example by assigning id='email' and id='phone' and matching each label's for attribute to the intended input. Reinspect the names and activate each label again."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "When documenting the issue, describe the actual effect and cite the applicable current criterion instead of claiming that duplicate identifiers inherently fail the removed 4.1.1 criterion. A broken association can be relevant to information and relationships or to a control's accessible name, depending on the implementation and effect. Record the browser, assistive technology, and steps that reproduce the barrier."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Worked example: malformed nesting"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Suppose an author places a link inside a button so that one visual area seems to perform two actions. A validator may flag invalid interactive nesting. Browsers can repair malformed HTML in different ways, leaving the resulting document structure unlike the source the author intended. Keyboard and assistive technology users may encounter a different sequence of controls or an unclear action."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "First establish whether the user is navigating to a destination or submitting an action. Use a link for navigation and a button for an action, and present separate controls when both are needed. Inspect the browser's rendered DOM and accessibility tree, then use the keyboard to confirm that each control can be reached and activated independently. The diagnostic finding is an opportunity to investigate real barriers; identify any failure using the current criterion that the observed behavior actually violates."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "A practical investigation workflow"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Start with a specific task: for example, a learner is trying to submit their contact details. Record the intended sequence and compare what is displayed with what is exposed to assistive technology. Check labels, relationship targets, focus order, and interactive elements rather than treating a validator's count of errors as a complete accessibility result."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Run an automated markup check to discover suspicious structures, then inspect each relevant finding in context. Some reported markup defects may have no accessibility effect in the tested interface; others can hide important information or make a control unusable. A manually observed barrier still matters even when the page passes a markup validator."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "After fixing a defect, repeat the original user task and retest with appropriate assistive technology. Report remaining uncertainty, because one browser and one screen reader cannot establish universal compatibility. The goal is reliable user-facing behavior backed by evidence, not an artificial score based on the former criterion."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Reflect and apply"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Consider two defects: a duplicate id that causes two labels to target the same input, and a duplicate id that is never referenced and produces no observed effect. Which needs immediate user-facing remediation, and what further tests would you conduct? Both deserve engineering attention, but a WCAG failure should be tied to an applicable requirement and a real impact, not to the removed parsing criterion alone."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Version-specific reporting also matters during an audit. If a customer asks for a WCAG 2.2 assessment, state that 4.1.1 is removed and evaluate the experience against current requirements. If a different standard or version applies, check that standard explicitly rather than assuming the same conformance rules."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Compare the markup"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "In the first form both labels reference the same identifier. The second form assigns each input its own identifier. The visual appearance may be almost identical, so testing only by looking at the form can miss the association error."
+              }
+            ]
+          },
+          {
+            "type": "codeBlock",
+            "attrs": {
+              "language": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "<!-- Problem: both labels target the same id -->\n<label for=\"contact\">Email</label>\n<input id=\"contact\" type=\"email\">\n<label for=\"contact\">Phone</label>\n<input id=\"contact\" type=\"tel\">\n\n<!-- Improved: every label targets its own input -->\n<label for=\"email\">Email</label>\n<input id=\"email\" type=\"email\">\n<label for=\"phone\">Phone</label>\n<input id=\"phone\" type=\"tel\">"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "The for attribute points to the id of the control it labels. Inspect the browser accessibility tree to check the resulting names, and activate each visible label to verify its relationship. Different browsers may repair malformed markup differently, so record the combination used. A corrected association is meaningful because each person can identify the field; uniqueness alone is not proof that the entire form is accessible."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Knowledge check: If a validation tool reports an invalid element but keyboard access, relationships and announced information remain intact, can you automatically claim a WCAG 2.2 parsing failure? No. Investigate the finding and evaluate any actual barrier against the current criteria. Check other applicable requirements before concluding that the experience conforms."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Required practical activity"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Create a small form with two inputs that share an id, each with a label. Use a markup validator to identify the duplicate, inspect both inputs in the accessibility tree, and record the names actually exposed. Give the inputs distinct ids and update the labels, then repeat the inspection. Explain which observed barrier, if any, is relevant to current criteria and why 4.1.1 must not be reported as a WCAG 2.2 requirement. Complete the mini-assessment after this activity."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Key takeaways"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "4.1.1 is obsolete and removed in WCAG 2.2. Markup diagnostics remain useful, but judge current conformance using applicable current criteria and observed effects on users."
+              }
+            ]
+          }
+        ]
+      },
+      "assessment": {
+        "questions": {
+          "title": "4.1.1 Parsing (Obsolete and removed) mini-assessment",
+          "pages": [
+            {
+              "name": "page1",
+              "title": "Knowledge check",
+              "elements": [
+                {
+                  "type": "radiogroup",
+                  "name": "q1",
+                  "title": "What is the status of 4.1.1 in WCAG 2.2?",
+                  "choices": [
+                    "It is obsolete and removed",
+                    "It is a new Level AA requirement",
+                    "It is the sole test of all markup",
+                    "It requires every page to validate as HTML"
+                  ],
+                  "isRequired": true
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "q2",
+                  "title": "A duplicate id makes a form control lose its accessible name. What should you do?",
+                  "choices": [
+                    "Ignore the issue because 4.1.1 was removed",
+                    "Fix the association and evaluate the relevant current criteria",
+                    "Report only a 4.1.1 failure under WCAG 2.2",
+                    "Hide the control from the accessibility tree"
+                  ],
+                  "isRequired": true
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "q3",
+                  "title": "What does a clean markup validation report prove?",
+                  "choices": [
+                    "All assistive technologies will work",
+                    "The site meets every WCAG criterion",
+                    "It is useful diagnostic evidence but does not establish accessibility conformance",
+                    "Every dynamic state is announced correctly"
+                  ],
+                  "isRequired": true
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "q4",
+                  "title": "A validator reports a duplicate ID that has no demonstrated impact. What is the best next step?",
+                  "choices": [
+                    "Automatically report a WCAG 2.2 4.1.1 failure",
+                    "Assume the entire site conforms",
+                    "Ignore all markup diagnostics",
+                    "Investigate whether it affects relationships or user experience under current criteria"
+                  ],
+                  "isRequired": true
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "q5",
+                  "title": "A malformed interactive structure behaves differently after browser parsing. What should you inspect?",
+                  "choices": [
+                    "The rendered DOM, accessibility tree, and actual interaction",
+                    "Only the screenshot",
+                    "Only the color palette",
+                    "Whether the file name ends in HTML"
+                  ],
+                  "isRequired": true
+                }
+              ]
+            }
+          ]
+        },
+        "answer_key": {
+          "q1": "It is obsolete and removed",
+          "q2": "Fix the association and evaluate the relevant current criteria",
+          "q3": "It is useful diagnostic evidence but does not establish accessibility conformance",
+          "q4": "Investigate whether it affects relationships or user experience under current criteria",
+          "q5": "The rendered DOM, accessibility tree, and actual interaction"
+        },
+        "explanations": {
+          "q1": "The criterion was removed from WCAG 2.2; it is included for historical context.",
+          "q2": "A defect can still cause a failure of an applicable current criterion.",
+          "q3": "Markup validation cannot test every interaction or user-facing barrier.",
+          "q4": "A finding needs context and evaluation against applicable current requirements.",
+          "q5": "Browser repair can change the rendered structure; inspect behavior and exposed semantics."
+        },
+        "passing_percent": 70,
+        "max_attempts": 3
+      }
+    },
+    {
+      "title": "4.1.2 Name, Role, Value",
+      "objective": "Identify and test programmatic names, roles, states, and values of interface components, and implement accessible native or custom controls that expose updates to assistive technology.",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 1
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "4.1.2 Name, Role, Value"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Learning objectives"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Describe accessible names, roles, values, and states; choose native HTML controls when appropriate; and test whether custom components expose their state and updates to assistive technologies. WCAG 2.2 4.1.2 is Level A: https://www.w3.org/TR/WCAG22/#name-role-value."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "How interfaces communicate with assistive technology"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A control's accessible name identifies its purpose, its role identifies its type, and its value and states describe its current condition. For example, a screen reader user needs to know that a control is a button named 'Show details' and whether its associated section is expanded. These properties must be programmatically determinable, so software can obtain them without relying on color or visual position."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "When a user can change a state or value, the component needs to expose the change to user agents and assistive technology. This is not the same as merely changing text or a CSS class on screen; the accessibility information must also reflect the updated state."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Start with native controls"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A native button with clear text, a labeled input, or a checkbox used according to its HTML specification supplies useful semantics and interaction behavior. For example, a button with visible text 'Save changes' normally has both an accessible name and button role. An input needs an associated label describing the expected value. Inspect the actual computed name because labels, aria-label, and other naming mechanisms can interact."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Native markup is not a complete accessibility guarantee. A disabled button, confusing label, hidden error, or inaccessible workflow can still create a barrier. Test keyboard interaction and the complete task as well as the accessibility properties."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Custom controls and changing state"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "When a native element cannot meet the design need, expose the correct role, name, state, and value using appropriate semantics and implement the expected keyboard behavior. For a disclosure button, update aria-expanded between false and true as its panel closes and opens. The visual display and exposed state must stay synchronized. A visually clickable div with no name, role, keyboard support, or state is not an equivalent button."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "ARIA does not add behavior by itself. A custom checkbox must respond to keyboard input, update its checked state, and expose that state using a suitable role and aria-checked. Do not add a conflicting ARIA role or state to a native control. Follow the applicable design pattern and test in the browser accessibility tree and with real assistive technology."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Test the full interaction"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Inspect a control before interaction and record its computed name, role, and state or value. Operate it with keyboard, then verify that the visible state and accessibility tree agree. Test representative browser and assistive technology combinations for announcements; an automated audit can find some missing properties but cannot prove a custom widget behaves correctly in all relevant states."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Worked example: a disclosure"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A course page has a 'Show learning objectives' control. The first implementation is a clickable div with a chevron image; JavaScript changes the panel's display, but the div has no accessible name or button role and cannot be activated from the keyboard. The open state is visible because the chevron rotates, yet no programmatic state is exposed. A screen reader user cannot reliably discover what the control does or whether it is expanded."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Replace the div with a button whose text identifies the action. Give it aria-expanded='false' when the panel is hidden, and set the attribute to 'true' when the panel opens. Use an appropriate relationship such as aria-controls if useful for the design, and ensure the referenced panel id is unique. The native button provides expected keyboard activation, while the script synchronizes the exposed expanded state and visible panel."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Inspect the accessibility tree before and after activating the button. Record the button's accessible name, role, and expanded state at each step, and test with keyboard and a screen reader. If the panel opens but aria-expanded remains false, the user receives conflicting information. Correct the state update and repeat the interaction, including closing the panel."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Worked example: custom checkbox"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A custom preferences widget displays a square and label 'Receive reminders'. A mouse click adds a checkmark but the component is built from a generic div. A checkmark alone is visual; it does not expose a checkbox role or checked state. A native input type='checkbox' with an associated label is usually the simplest starting point and provides programmatic checked state and keyboard behavior."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "If a custom implementation is truly necessary, ensure it has a determinable name, a checkbox role, a synchronized aria-checked state, and the expected keyboard interaction. Update the value both when the user acts and when application state changes elsewhere. Test checked, unchecked, and disabled conditions as applicable, including a screen-reader announcement of the changed state. Do not assume that adding role='checkbox' automatically implements the interaction."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Names and values in context"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Accessible names should help a person distinguish controls. Three buttons all named 'Edit' can be ambiguous in a list of courses. A meaningful contextual name such as 'Edit Perceivable lesson' can communicate which item is affected, while remaining consistent with any visible label. The computed name can be affected by aria-label, aria-labelledby, associated labels, and text content, so inspect what is actually exposed instead of guessing from the DOM."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Values also matter. For a volume slider, expose the current value and valid range using the appropriate native input or custom slider semantics; a numeric value without understandable context can be confusing. When a user changes the slider using the keyboard or another input method, the visible and programmatically exposed values must remain synchronized. Related requirements about keyboard use, focus, and labels still apply."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Debugging checklist and reflection"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "For each control, ask: What is its purpose? What role is exposed? What state or value is available before interaction? Can the person change the value through the supported interaction? What state is exposed afterward? Can assistive technology receive the change? Compare the answers with what a sighted mouse user sees and does."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Consider a button that opens a menu. If the visible label says 'Options' but the accessibility tree exposes only 'button', a useful name is missing. If it exposes 'Options, expanded' after the menu has closed, the state is stale. Repair each problem at its source and retest rather than masking it with an unrelated announcement."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "A working disclosure in code"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "The first snippet changes the appearance with a mouse but does not identify a button or provide keyboard activation. The second uses a native button and makes the open state match the panel visibility. Both the initial markup and every state transition matter."
+              }
+            ]
+          },
+          {
+            "type": "codeBlock",
+            "attrs": {
+              "language": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "<!-- Problem: mouse-only generic element -->\n<div onclick=\"panel.hidden = !panel.hidden\">Show details</div>\n\n<!-- Improved: native button and synchronized state -->\n<button id=\"details-button\" type=\"button\"\n        aria-expanded=\"false\" aria-controls=\"details-panel\">\n  Show details\n</button>\n<div id=\"details-panel\" hidden>Lesson objectives go here.</div>\n<script>\n  const button = document.getElementById(\"details-button\");\n  const panel = document.getElementById(\"details-panel\");\n  button.addEventListener(\"click\", () => {\n    const opening = panel.hidden;\n    panel.hidden = !opening;\n    button.setAttribute(\"aria-expanded\", String(opening));\n  });\n</script>"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "The button supplies its role, name and native keyboard activation. The hidden property controls the panel, and aria-expanded communicates the corresponding state. The unique aria-controls target identifies the panel relationship; it does not replace the state or implement the interaction. If application code changes the panel elsewhere, update the attribute on that path too. Native semantics are a starting point, not evidence that the whole experience conforms."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A further part of 4.1.2 is that user-settable states, properties and values must be programmatically settable, with change notifications available to user agents and assistive technology. For a checkbox, a person using assistive technology must be able to change the checked value through the supported interaction, not merely hear an accurate initial state. Keyboard operability also has its own criteria and should be tested separately."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Knowledge check: A disclosure opens visually but its accessible state still says collapsed. Is its initial correct state enough? No. Both the visible panel and the exposed state must remain synchronized throughout use."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Required practical activity"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Build a disclosure using a native button named 'Show details', an associated panel, and aria-expanded. Inspect its accessible name, role, and state while closed. Activate it by keyboard, verify the panel becomes visible and aria-expanded changes to true, then close and verify false. Record any mismatch between the visible state and exposed state, fix it, and test with a screen reader if available. Complete the mini-assessment after this activity."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Key takeaways"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Expose meaningful names, roles, states, and values; keep changes synchronized; prefer native controls; and test the interaction, not only the initial markup."
+              }
+            ]
+          }
+        ]
+      },
+      "assessment": {
+        "questions": {
+          "title": "4.1.2 Name, Role, Value mini-assessment",
+          "pages": [
+            {
+              "name": "page1",
+              "title": "Knowledge check",
+              "elements": [
+                {
+                  "type": "radiogroup",
+                  "name": "q1",
+                  "title": "A button shows or hides details. What must reflect whether its panel is open?",
+                  "choices": [
+                    "Its programmatically exposed expanded state",
+                    "Only its background color",
+                    "Only the panel's position on screen",
+                    "The page title"
+                  ],
+                  "isRequired": true
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "q2",
+                  "title": "Which implementation is the best starting point for an ordinary action?",
+                  "choices": [
+                    "A clickable div with no semantics",
+                    "A native button with a meaningful name",
+                    "An image with no alternative text",
+                    "A paragraph styled to look like a button"
+                  ],
+                  "isRequired": true
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "q3",
+                  "title": "What does adding ARIA to a custom control do?",
+                  "choices": [
+                    "It automatically implements every interaction",
+                    "It replaces all browser and assistive technology testing",
+                    "It can expose semantics but does not implement keyboard behavior",
+                    "It always makes a control conformant"
+                  ],
+                  "isRequired": true
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "q4",
+                  "title": "A disclosure's visible panel closes but aria-expanded remains true. What is wrong?",
+                  "choices": [
+                    "The control has too many visible labels",
+                    "The page needs a status alert for every click",
+                    "The control is automatically correct if it looks closed",
+                    "The programmatic state conflicts with the visible state"
+                  ],
+                  "isRequired": true
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "q5",
+                  "title": "A custom checkbox uses role='checkbox'. What else must its author provide?",
+                  "choices": [
+                    "A name, synchronized checked state, and appropriate interaction",
+                    "Only a background image",
+                    "Only a mouse pointer",
+                    "No further behavior because ARIA adds it"
+                  ],
+                  "isRequired": true
+                }
+              ]
+            }
+          ]
+        },
+        "answer_key": {
+          "q1": "Its programmatically exposed expanded state",
+          "q2": "A native button with a meaningful name",
+          "q3": "It can expose semantics but does not implement keyboard behavior",
+          "q4": "The programmatic state conflicts with the visible state",
+          "q5": "A name, synchronized checked state, and appropriate interaction"
+        },
+        "explanations": {
+          "q1": "The control's exposed state should update with the visible panel.",
+          "q2": "Native buttons provide built-in semantics and interaction when used correctly.",
+          "q3": "The author must implement and test behavior as well as semantics.",
+          "q4": "The exposed state must reflect the current component state.",
+          "q5": "ARIA semantics do not implement interaction or maintain state automatically."
+        },
+        "passing_percent": 70,
+        "max_attempts": 3
+      }
+    },
+    {
+      "title": "4.1.3 Status Messages",
+      "objective": "Recognize status messages and expose appropriate changes to assistive technologies without moving focus, using suitable live-region semantics and practical testing.",
+      "content": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 1
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "4.1.3 Status Messages"
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Learning objectives"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Identify status messages under WCAG 2.2 4.1.3, select suitable status or alert semantics, and test announcement of dynamic updates without unnecessarily moving keyboard focus. This criterion is Level AA: https://www.w3.org/TR/WCAG22/#status-messages."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "What is a status message?"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A status message reports the result or progress of an action, waiting state, or error without taking focus. Examples include 'Search returned 12 results', 'Saving...', 'Changes saved', and an error summary shown after a failed submission. A user who cannot see a change elsewhere on the page needs a way to learn about it while staying at their current place."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Not every changed text node is a status message. Content that receives focus as part of a deliberate navigation or an opened dialog is handled differently. Identify what the update communicates, whether it changes context, and which other criteria may apply."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Choose a suitable live region"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A polite live region can announce non-urgent updates when assistive technology is ready. For example, a persistent element with role='status' can contain 'Changes saved' after a save completes. Use an appropriate assertive alert for important errors requiring prompt attention; excessive assertive announcements can interrupt users and hide other information."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Prefer a live-region container that exists before its content changes. Update the text in that existing container, and test the behavior in relevant browser and assistive technology combinations. Simply adding a message visually, or adding a live-region attribute after an update, may not reliably produce an announcement. Different combinations can vary, so verify rather than assuming."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Focus and content design"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A status message should be programmatically available without receiving focus. Do not move focus to a routine success message just to force an announcement. For an error workflow, choose a focus strategy appropriate to the task and related requirements; 4.1.3 does not prohibit moving focus in every circumstance. A dialog or other change of context has different behavior."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Write concise, meaningful messages that identify the result and any useful next step. An error such as 'Email address is required' is more useful than 'Error'. Avoid announcing every keystroke or repeating the same update unnecessarily. Dynamic content, focus management, instructions, and error identification may also involve other criteria."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Testing a dynamic update"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Keep focus on the search button or input, trigger a search, and listen for a concise result count announced through the live region. Repeat for zero results and a later search. Confirm that the visible message matches the announced text, focus remains usable, and repeated or stale announcements do not obscure the workflow. Automated tooling alone cannot reliably confirm a user's experience of timing and interruption."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Worked example: search results"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A learner enters 'contrast' and activates Search. The results list changes, and a sentence above it becomes '8 results found'. The input retains focus. A sighted user can notice the change, but a screen reader user may continue at the input without knowing a new result count is available. The message conveys the outcome of an action and is a candidate status message."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Place an initially empty status element in the page before the search runs, and update its text when results arrive. A native element with role='status' is a common polite live-region pattern. Ensure the text reflects the actual completed request, such as '8 results found' or 'No results found'. Leave focus where the user's workflow expects it; the status announcement does not require focus."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Test repeated searches as well as the first. Trigger a second query with a different count and verify that the updated message is announced and matches the visible results. Check a slow request, no results, and an error. Avoid repeatedly announcing a loading message while the user types, and prevent an older response from announcing a stale count after a newer search completes."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Worked example: save and error feedback"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "An editor has a Save button. A successful save displays 'Changes saved', while a failed save displays 'Could not save. Check your connection and try again.' Both outcomes can appear without moving focus. A polite status is appropriate for the routine success; an urgent failure may warrant alert semantics when prompt attention is needed. Decide based on impact, not because a louder announcement sounds more noticeable."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "The message should explain the result and a sensible next action. Showing only a red icon or the word 'Error' leaves important information unclear. Confirm that the announcement reflects the result that actually occurred, that it is not duplicated by multiple live regions, and that the person can still continue working. If the save failure triggers a dialog or focus is intentionally moved to an error summary, analyze that workflow separately and apply its related requirements."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Implementation details that affect reliability"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "The live region generally needs to be present before its text changes. Assistive technology observes changes to content exposed through accessibility APIs, and implementation timing can vary across browser and screen reader combinations. An element inserted with both role and final text at the same moment may be missed in some environments. A persistent region updated after creation is a practical pattern, not a substitute for testing."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Use a single coherent message rather than fragmented updates when possible. If an application rapidly replaces 'Searching' with '8 results found', check which announcement a person receives. Provide information in the page as well as through the status region, and avoid hiding essential instructions inside a transient notification. Semantics must align with the message's urgency and should not overwhelm other content."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Differentiate status from navigation"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "A message announcing 'Item added to cart' while focus remains on Add is a status message. Opening the cart as a dialog and moving focus into it is a change of context and requires a different focus and dialog strategy. A form validation error may include a status message, individual field errors, or an error summary; decide what each part communicates and apply the other relevant requirements as well."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "During review, document the trigger, expected message, focus location, assistive technology and browser used, and observed announcement. Ask whether a user can discover the result without finding the changed region manually. If the message is delayed, missing, duplicated, or interrupts vital content, revise the implementation and repeat the task."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "A persistent status region in code"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "The first implementation changes visible text without identifying it as a status update. The improved version places the live region on the page before the update and changes its contents after the result is available. The example models a completed search response; a real application should update the count only after its own request finishes."
+              }
+            ]
+          },
+          {
+            "type": "codeBlock",
+            "attrs": {
+              "language": null
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "<!-- Problem: a visual-only result message -->\n<p id=\"results-message\">3 results found</p>\n\n<!-- Improved: a persistent region updated after an action -->\n<form id=\"search-form\">\n  <label for=\"query\">Search lessons</label>\n  <input id=\"query\" name=\"query\">\n  <button type=\"submit\">Search</button>\n</form>\n<p id=\"search-status\" role=\"status\"></p>\n<script>\n  const form = document.getElementById(\"search-form\");\n  const status = document.getElementById(\"search-status\");\n  form.addEventListener(\"submit\", (event) => {\n    event.preventDefault();\n    const count = 3; // Replace with the completed search result.\n    status.textContent = `${count} results found`;\n  });\n</script>"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "The label identifies the search input. The existing status element exposes an ordinary update through polite status semantics, and the script updates its text without changing focus. Avoid placing an entire changing results list inside the live region: the screen reader might announce too much. A result count and a separately navigable results list give a person a concise notification and a way to explore the content."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Live-region behavior depends on the browser and assistive technology. A DOM inspection showing role=status does not prove the message was announced at a useful time. Test the initial search, a changed result count, zero results and a delayed response. Repeated identical text may not generate a new announcement in every combination; investigate the actual user task rather than assuming that the same update will always be spoken."
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Knowledge check: A dialog opens and focus moves inside it. Is that automatically the same type of status message as a saved notification that leaves focus on the button? No. The dialog is a change of context and needs appropriate dialog and focus behavior; evaluate any remaining status messages separately."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Required practical activity"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Create a search form and an initially empty persistent element with role='status'. After submission, update that element with either '3 results found' or 'No results found'. Keep focus on the form, trigger both outcomes with a keyboard, and verify the accessibility tree and a screen reader announcement where available. Record the outcome and refine wording or timing if the message is missing or duplicated. Complete the mini-assessment after this activity."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "attrs": {
+              "level": 2
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Key takeaways"
+              }
+            ]
+          },
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Expose relevant status updates through suitable semantics without requiring focus, distinguish routine updates from urgent alerts, and test actual dynamic behavior."
+              }
+            ]
+          }
+        ]
+      },
+      "assessment": {
+        "questions": {
+          "title": "4.1.3 Status Messages mini-assessment",
+          "pages": [
+            {
+              "name": "page1",
+              "title": "Knowledge check",
+              "elements": [
+                {
+                  "type": "radiogroup",
+                  "name": "q1",
+                  "title": "A search updates a result count without moving focus. What helps announce the change?",
+                  "choices": [
+                    "Update a persistent polite status region",
+                    "Change only a decorative icon",
+                    "Move focus to the page header on every search",
+                    "Remove the result count"
+                  ],
+                  "isRequired": true
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "q2",
+                  "title": "When is an assertive alert most appropriate?",
+                  "choices": [
+                    "For every letter typed into a search box",
+                    "When an important error needs prompt attention",
+                    "For routine background updates every second",
+                    "For decorative changes"
+                  ],
+                  "isRequired": true
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "q3",
+                  "title": "How should you verify a dynamic status message?",
+                  "choices": [
+                    "Inspect only the initial static page",
+                    "Check only its color",
+                    "Trigger the update and test its announcement while tracking focus",
+                    "Assume any visible message is announced"
+                  ],
+                  "isRequired": true
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "q4",
+                  "title": "A routine save succeeds. Which message is most useful?",
+                  "choices": [
+                    "A color change alone",
+                    "An assertive alert on every keystroke",
+                    "An unrelated page title",
+                    "Changes saved"
+                  ],
+                  "isRequired": true
+                },
+                {
+                  "type": "radiogroup",
+                  "name": "q5",
+                  "title": "What is a useful way to improve reliability of a live region?",
+                  "choices": [
+                    "Create the region before updating its content and test it",
+                    "Insert and remove many competing regions",
+                    "Assume every visual update is announced",
+                    "Move focus on every routine update"
+                  ],
+                  "isRequired": true
+                }
+              ]
+            }
+          ]
+        },
+        "answer_key": {
+          "q1": "Update a persistent polite status region",
+          "q2": "When an important error needs prompt attention",
+          "q3": "Trigger the update and test its announcement while tracking focus",
+          "q4": "Changes saved",
+          "q5": "Create the region before updating its content and test it"
+        },
+        "explanations": {
+          "q1": "A status region can expose routine result updates without receiving focus.",
+          "q2": "Assertive announcements interrupt and should be used for important messages.",
+          "q3": "Testing the changed content and actual assistive technology behavior matters.",
+          "q4": "A concise status confirms the result without unnecessary interruption.",
+          "q5": "A persistent live region is a practical pattern, but behavior must still be tested."
+        },
+        "passing_percent": 70,
+        "max_attempts": 3
+      }
+    }
+  ],
+  "pre": {
+    "questions": {
+      "title": "Robust pre-assessment",
+      "pages": [
+        {
+          "name": "page1",
+          "title": "Knowledge check",
+          "elements": [
+            {
+              "type": "radiogroup",
+              "name": "q1",
+              "title": "An auditor finds duplicate IDs on a page assessed against WCAG 2.2. What should they do first?",
+              "choices": [
+                "Automatically report a 4.1.1 failure for every duplicate",
+                "Determine whether the duplicate creates a barrier and assess it against current criteria",
+                "Treat all duplicate IDs as harmless because 4.1.1 was removed",
+                "Report a failure under 4.1.3 without examining the interface"
+              ],
+              "isRequired": true
+            },
+            {
+              "type": "radiogroup",
+              "name": "q2",
+              "title": "A custom switch looks enabled, but its accessible state says off. What information needs attention?",
+              "choices": [
+                "Only the color contrast of the switch",
+                "Only the position of its visual thumb",
+                "Both the visual state and the programmatically exposed state",
+                "The page title and browser history"
+              ],
+              "isRequired": true
+            },
+            {
+              "type": "radiogroup",
+              "name": "q3",
+              "title": "A shopping page has an icon-only control that submits an order. Which implementation gives the most appropriate starting point?",
+              "choices": [
+                "A focusable span with no label and a mouse handler",
+                "A decorative image whose file name is submit.png",
+                "A generic div with the text hidden from assistive technology",
+                "A native button with an accessible name such as Place order"
+              ],
+              "isRequired": true
+            },
+            {
+              "type": "radiogroup",
+              "name": "q4",
+              "title": "After a save, a message appears beside the form while focus remains on Save. What should the designer consider?",
+              "choices": [
+                "Expose the outcome as a status message that can be announced without moving focus",
+                "Automatically move focus to the browser address bar",
+                "Treat any text change as proof that the message was announced",
+                "Hide the result after one second so users can continue"
+              ],
+              "isRequired": true
+            },
+            {
+              "type": "radiogroup",
+              "name": "q5",
+              "title": "A team checks a control only before a person changes its value. Why is that insufficient?",
+              "choices": [
+                "Controls only need names after interaction",
+                "A valid initial state guarantees all future states are exposed",
+                "The exposed value and notifications must also be checked after changes",
+                "State changes should be communicated only through color"
+              ],
+              "isRequired": true
+            }
+          ]
+        }
+      ]
+    },
+    "answer_key": {
+      "q1": "Determine whether the duplicate creates a barrier and assess it against current criteria",
+      "q2": "Both the visual state and the programmatically exposed state",
+      "q3": "A native button with an accessible name such as Place order",
+      "q4": "Expose the outcome as a status message that can be announced without moving focus",
+      "q5": "The exposed value and notifications must also be checked after changes"
+    },
+    "explanations": {
+      "q1": "4.1.1 is removed in WCAG 2.2, but a duplicate can still disrupt a name or relationship. Test its actual effects against applicable current criteria.",
+      "q2": "A component needs a determinable, accurate state that stays synchronized with the visual interface.",
+      "q3": "A named native button supplies appropriate semantics and activation behavior, while the complete task still needs testing.",
+      "q4": "A save result presented without a change of context is a status message; suitable live-region semantics can make it available without receiving focus.",
+      "q5": "Testing must cover changes as well as initial values, including whether user-settable values can be set programmatically and change notifications are available."
+    },
+    "passing_percent": 70,
+    "max_attempts": 3
+  },
+  "post": {
+    "questions": {
+      "title": "Robust post-assessment",
+      "pages": [
+        {
+          "name": "page1",
+          "title": "Knowledge check",
+          "elements": [
+            {
+              "type": "radiogroup",
+              "name": "q1",
+              "title": "A validator flags a duplicate ID used by two labels. The second input has no accessible name in the browser tree. How should an audit report this under WCAG 2.2?",
+              "choices": [
+                "Report only the removed parsing criterion and ignore the control name",
+                "Fix the association and evaluate the missing name against applicable current criteria",
+                "Ignore the name because the form is visually clear",
+                "Treat the validator warning alone as proof that all form controls fail"
+              ],
+              "isRequired": true
+            },
+            {
+              "type": "radiogroup",
+              "name": "q2",
+              "title": "A custom checkbox announces its name and unchecked state, but assistive technology cannot change it. What is the most complete correction?",
+              "choices": [
+                "Change the visible label while leaving the interaction unchanged",
+                "Announce the checkbox twice whenever it receives focus",
+                "Keep the original code because the initial state is correct",
+                "Use a native checkbox or implement expected input and programmatic state changes, then test both states"
+              ],
+              "isRequired": true
+            },
+            {
+              "type": "radiogroup",
+              "name": "q3",
+              "title": "A disclosure is closed visually, but its button remains exposed as expanded. What should the team do?",
+              "choices": [
+                "Synchronize the expanded state with every panel state change and retest",
+                "Remove the button name to prevent a conflicting announcement",
+                "Rely on the rotating arrow because it is visible",
+                "Add a status alert instead of correcting the state"
+              ],
+              "isRequired": true
+            },
+            {
+              "type": "radiogroup",
+              "name": "q4",
+              "title": "A checkout displays “Payment saved” without moving focus. The team inserts a live-region element already containing that text, but users sometimes hear nothing. What is a reasonable next step?",
+              "choices": [
+                "Make every confirmation assertive and repeat it continuously",
+                "Move focus to the browser tab for each save",
+                "Keep a status region in the page before the update, change its text after saving, and test with assistive technology",
+                "Conclude that visible text proves the announcement works"
+              ],
+              "isRequired": true
+            },
+            {
+              "type": "radiogroup",
+              "name": "q5",
+              "title": "A form submission opens a modal error dialog and moves focus into it. How should this be evaluated?",
+              "choices": [
+                "Assume the dialog is always a 4.1.3 status message because it contains text",
+                "Assess the dialog as a change of context with appropriate focus behavior and evaluate any separate status messages",
+                "Leave focus behind the dialog so that every error is treated as a status message",
+                "Use an assertive live region instead of providing the dialog content"
+              ],
+              "isRequired": true
+            }
+          ]
+        }
+      ]
+    },
+    "answer_key": {
+      "q1": "Fix the association and evaluate the missing name against applicable current criteria",
+      "q2": "Use a native checkbox or implement expected input and programmatic state changes, then test both states",
+      "q3": "Synchronize the expanded state with every panel state change and retest",
+      "q4": "Keep a status region in the page before the update, change its text after saving, and test with assistive technology",
+      "q5": "Assess the dialog as a change of context with appropriate focus behavior and evaluate any separate status messages"
+    },
+    "explanations": {
+      "q1": "The actionable issue is the observed missing control name or relationship. Report the relevant current requirement rather than the removed 4.1.1.",
+      "q2": "Correct initial semantics are insufficient: user-settable state must be changeable and updates must be available to user agents and assistive technology.",
+      "q3": "The exposed state must match the actual state before and after interactions, including changes triggered elsewhere in the application.",
+      "q4": "A pre-existing status region updated when the result arrives is a useful pattern; verify real announcements across representative browser and assistive-technology combinations.",
+      "q5": "A focused dialog is a change of context, unlike an update presented without receiving focus. Other messages and requirements may still need assessment."
+    },
+    "passing_percent": 70,
+    "max_attempts": 3
+  }
+}

@@ -1,0 +1,264 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.4.4 Resize Text"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Test whether text can be resized without loss of content or functionality under WCAG 2.2 criterion 1.4.4 (Level AA): https://www.w3.org/TR/WCAG22/#resize-text."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Why resizing matters"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Some people need larger text to read comfortably. Fixed-height containers, clipped labels, and overlays can make content disappear when a user increases text size. This criterion requires text, other than captions and images of text, to be resizable without assistive technology up to 200 percent without loss of content or functionality. It does not mean that only 200 percent is useful, or that other applicable criteria can be ignored."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Browser zoom is a common way to test, but also consider text-only resizing supported by the browser or platform. Check that the full text remains available and that controls can still be identified and operated. A tooltip cut off by its container or a button label hidden under an icon is a loss even if the page technically zooms. The separate reflow criterion addresses scrolling at specified viewport dimensions; resizing text and reflow overlap but are not identical tests."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Build flexible layouts"
+        }
+      ]
+    },
+    {
+      "type": "codeBlock",
+      "attrs": {
+        "language": "css"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": ".card {\n  max-width: 40rem;\n  padding: 1rem;\n  /* Allow the card to grow as its content grows. */\n  min-height: 8rem;\n}"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Allow content to wrap and containers to grow. Avoid using fixed heights and overflow clipping for text. Relative units can help layouts respond to user settings, but using "
+        },
+        {
+          "type": "text",
+          "text": "rem",
+          "marks": [
+            {
+              "type": "code"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " does not automatically prove compliance. Test at 200 percent, including navigation, dialogs, form labels, errors, and content displayed on focus. Ensure users can still reach and operate all controls."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Worked scenario: account settings"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "An account page has a fixed-height navigation bar and a form card with labels above each input. At 100 percent the page looks correct. At 200 percent, the navigation labels wrap into a second line, but the bar remains the same height, hiding the bottom of the text. The save button still exists, yet its label overlaps another element. Both examples can cause loss of content or functionality. Allow the bar to grow, wrap or reorganize the navigation, and let the card expand with its content."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Avoid solving the problem by truncating text with an ellipsis unless all information remains available to the user through a reliable, accessible mechanism. A tooltip visible only on pointer hover is not a dependable solution for a keyboard or touch user. After changing the layout, verify the full labels and destinations, not only that boxes no longer overlap."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Text resizing and zoom"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The criterion concerns resizing text without assistive technology up to 200 percent. Browser page zoom is a common test because it increases the apparent size of text and interface elements, but it changes the effective viewport as well. Where available, test text-only scaling or user font settings too; they can expose fixed-height containers differently. Record the browser, viewport, scaling method, and percentage so another tester can reproduce the result."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Do not confuse this test with a simple screenshot comparison. Open menus, submit invalid form data, display validation messages, and activate dialogs. Content that appears only after interaction can clip even when the initial page is usable. Try keyboard navigation and verify that a focused element and its full label remain usable. Captions and images of text are excluded from this particular criterion, but other criteria and practical needs still apply to them."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Implementation choices"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Relative units, wrapping, flexible grid tracks, and content-driven heights are useful tools. A minimum height can preserve an intended baseline while allowing growth, but a fixed maximum height combined with hidden overflow can still cut content off. Test long translated strings and user-provided values as well as short sample labels. Avoid disabling browser zoom or restricting scaling to preserve a particular layout."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A layout that resizes text successfully may still require horizontal scrolling in a situation covered by 1.4.10 Reflow. Evaluate the two requirements separately, including their different conditions and exceptions. A successful single-browser test establishes only the tested scenario, so include representative devices and states in the test plan."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Design review: a purchase dialog"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A purchase dialog fits on screen at the default size. At 200 percent, its heading wraps, pushing the price and confirmation controls below the visible portion. If the dialog is fixed to the viewport and cannot scroll, the user may be unable to confirm or cancel. Let the content area scroll when necessary, keep controls reachable in the focus order, and test on a short viewport as well as a large monitor. A scrollable region must itself be usable with the input methods your audience needs."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Test form validation at the enlarged size. A long error message may push the next field down or overlap a floating label. Responsive layout should accommodate the message without hiding instructions or detaching it from the field. Resize while a dialog is already open as well as before opening it; state changes can reveal positioning bugs."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Document a failure with the original viewport, browser, scale, action, and observed loss. For example: “At 200 percent, the Cancel button is below the fixed dialog and cannot be reached.” After the repair, repeat the same steps and check that both action buttons are visible or reachable. Also assess reflow under its own test conditions rather than inferring it from this result."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Choose a page containing a navigation menu, form, and dialog. Increase text to 200 percent with the browser or platform controls, then inspect each component. Record clipping, overlap, missing content, and controls that cannot be used. Repair a failure and repeat the test, including keyboard navigation."
+        }
+      ]
+    }
+  ]
+}

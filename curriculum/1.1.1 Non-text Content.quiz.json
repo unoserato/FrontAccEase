@@ -1,0 +1,56 @@
+{
+  "title": "1.1.1 Non-text Content mini-assessment",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Knowledge check",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q1",
+          "title": "An icon-only button deletes a draft. Which name communicates its purpose?",
+          "choices": [
+            "Delete draft",
+            "Trash can image",
+            "Icon",
+            "Red button"
+          ],
+          "correctAnswer": "Delete draft",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The name should describe the action."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q2",
+          "title": "A purely decorative image adds no information. What indicates it can be skipped?",
+          "choices": [
+            "alt=\"\"",
+            "A filename as alt",
+            "Omit alt",
+            "A detailed color description"
+          ],
+          "correctAnswer": "alt=\"\"",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "An empty alternative indicates decoration; a missing attribute may trigger a fallback."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q3",
+          "title": "A chart conveys important trends and values. What is an appropriate alternative?",
+          "choices": [
+            "Identify the chart and provide equivalent information nearby",
+            "Use only the word chart",
+            "Describe its colors only",
+            "Remove its title"
+          ],
+          "correctAnswer": "Identify the chart and provide equivalent information nearby",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The meaningful data and relationships must remain available."
+        }
+      ]
+    }
+  ]
+}

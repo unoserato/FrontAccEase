@@ -1,0 +1,58 @@
+{
+  "title": "1.2.3 Audio Description or Media Alternative (Prerecorded) mini-assessment",
+  "description": "Complete after the required lesson activity.",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "The presenter says “Choose this option” while pointing silently. What is missing?",
+          "choices": [
+            "The identity of the option",
+            "A decorative transition",
+            "The page background color"
+          ],
+          "correctAnswer": "The identity of the option",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "The listener needs the option identified."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "Which alternatives does 1.2.3 permit?",
+          "choices": [
+            "Audio description or an alternative for time-based media",
+            "Only captions",
+            "Only a title"
+          ],
+          "correctAnswer": "Audio description or an alternative for time-based media",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "Either approach can satisfy this Level A criterion subject to the exception."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "Does a text alternative alone satisfy 1.2.5?",
+          "choices": [
+            "No, 1.2.5 requires audio description",
+            "Yes, always",
+            "Yes, if it is short"
+          ],
+          "correctAnswer": "No, 1.2.5 requires audio description",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "The Level AA requirement separately calls for audio description."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "title": "1.2.4 Captions (Live) mini-assessment",
+  "description": "Complete after the required lesson activity.",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "Which event falls under 1.2.4?",
+          "choices": [
+            "A live video lecture with audio",
+            "A prerecorded podcast",
+            "A silent prerecorded animation"
+          ],
+          "correctAnswer": "A live video lecture with audio",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "The criterion covers live audio in synchronized media."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "Why test the audience microphone?",
+          "choices": [
+            "Its questions must reach the caption feed",
+            "It sets the video resolution",
+            "It creates an audio description"
+          ],
+          "correctAnswer": "Its questions must reach the caption feed",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "The feed must include relevant audience audio."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "Does a transcript released the next day give access to the live discussion?",
+          "choices": [
+            "No, participants need information during the event",
+            "Yes, always",
+            "Only if the transcript has a title"
+          ],
+          "correctAnswer": "No, participants need information during the event",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "Later text does not provide real-time access."
+        }
+      ]
+    }
+  ]
+}

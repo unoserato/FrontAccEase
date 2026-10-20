@@ -1,0 +1,52 @@
+{
+  "title": "1.4.4 Resize Text Mini-assessment",
+  "description": "Complete after the required lesson activity.",
+  "showQuestionNumbers": "on",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q1",
+          "title": "How far must text generally resize without loss?",
+          "choices": [
+            "200 percent",
+            "125 percent"
+          ],
+          "correctAnswer": "200 percent",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The criterion requires resizing up to 200 percent without loss of content or functionality."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q2",
+          "title": "A label is clipped at 200 percent. Is the criterion satisfied?",
+          "choices": [
+            "No",
+            "Yes, if the button works"
+          ],
+          "correctAnswer": "No",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Clipping loses content even when the control remains operable."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q3",
+          "title": "Do relative CSS units alone prove compliance?",
+          "choices": [
+            "No",
+            "Yes"
+          ],
+          "correctAnswer": "No",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Test the resulting content and functionality."
+        }
+      ]
+    }
+  ]
+}

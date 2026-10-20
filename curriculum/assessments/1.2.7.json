@@ -1,0 +1,58 @@
+{
+  "questions": {
+    "title": "1.2.7 Extended Audio Description (Prerecorded) mini-assessment",
+    "pages": [
+      {
+        "name": "page1",
+        "title": "Mini-assessment",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "q_1",
+            "title": "When is extended audio description required?",
+            "choices": [
+              "When foreground-audio pauses are insufficient to convey the sense of the video",
+              "Whenever a video has captions",
+              "Only when audio is absent"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_2",
+            "title": "How does an extended version make time for description?",
+            "choices": [
+              "It pauses the presentation and resumes afterward",
+              "It removes all original speech",
+              "It speeds up the video"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_3",
+            "title": "Why is “diagram changes” potentially insufficient?",
+            "choices": [
+              "It may omit meaningful changes and relationships",
+              "It contains too many details",
+              "It identifies every state"
+            ],
+            "isRequired": true
+          }
+        ]
+      }
+    ]
+  },
+  "answer_key": {
+    "q_1": "When foreground-audio pauses are insufficient to convey the sense of the video",
+    "q_2": "It pauses the presentation and resumes afterward",
+    "q_3": "It may omit meaningful changes and relationships"
+  },
+  "explanations": {
+    "q_1": "The criterion addresses insufficient pauses for necessary descriptions.",
+    "q_2": "Pausing creates space for the description.",
+    "q_3": "An adequate description communicates the sense of the visual content."
+  },
+  "passing_percent": 70,
+  "max_attempts": 3
+}

@@ -1,0 +1,63 @@
+# P1: Accessibility foundations and text alternatives
+
+## Learning objectives
+
+Explain the four WCAG principles and conformance levels; choose context-appropriate alternatives for informative, functional, and decorative images; and test whether an alternative communicates the intended information or action. This lesson addresses WCAG 2.2 success criterion 1.1.1 Non-text Content (Level A). Read its full requirements and exceptions at https://www.w3.org/TR/WCAG22/#non-text-content.
+
+## Why equivalent information matters
+
+A page may communicate a warning through an icon, a product through a photograph, and a trend through a chart. A person who cannot see an image may use a screen reader, a refreshable braille display, or another way of accessing text. A missing or misleading alternative can remove the information or the action entirely. A useful alternative gives the person what is needed in that particular context; it does not merely prove that an attribute exists.
+
+WCAG organizes its guidance around four principles. Information must be perceivable, controls operable, content understandable, and technology robust enough to work with browsers and assistive technologies. A success criterion is a testable requirement within a guideline. A, AA, and AAA are conformance levels, not rankings of a person's needs. Meeting a level involves the applicable criteria and other conformance requirements, including complete pages and processes. A single passing image does not establish that an entire site conforms.
+
+## What a text alternative does
+
+A text alternative communicates the purpose or equivalent information of non-text content in text that can be presented in different ways. The alt attribute on an HTML image is a common mechanism, but the right words depend on why the image appears. Imagine the same photograph of a bicycle on three pages. In a safety article, the lighting and reflectors may be relevant. In a product catalog, distinguishing features may matter. Next to a heading that already says Cycling, the photograph might add no information and be decorative. Context changes the answer.
+
+Writing “image of” or a file name for every image rarely communicates what the reader needs. A screen reader normally identifies an image as an image, so focus on its function or meaningful content. Keep a short alternative concise when possible, without omitting necessary information. If a complex chart needs a detailed explanation, provide that explanation in nearby text and use the alternative to identify the chart and help readers find the explanation.
+
+## Informative, functional, and decorative images
+
+An informative image contributes content not already available nearby. Its alternative should communicate the relevant meaning. A check-mark icon may need “Payment complete” if no adjacent text supplies that message. If the same words are already present, repeating them in the image alternative can cause a screen reader to announce the message twice. Review the whole component rather than the image in isolation.
+
+A functional image is part of a control or link. Its accessible name should communicate the action or destination, not merely describe the picture. A magnifying glass used as a search button needs a name such as “Search,” not “magnifying glass.” When the image is the only content of a button, its alternative can supply the name. When the button already has visible text, an empty alternative on the icon usually avoids duplication. Inspect the actual accessible name, especially if other naming attributes are present.
+
+A decorative image adds no information or function needed to understand or use the page. In HTML, alt="" tells assistive technology the image can be skipped. Omitting alt is different: some screen readers may announce a file name or another fallback. Do not mark an informative chart decorative because its description is inconvenient. Conversely, readers do not need descriptions of every ornamental divider.
+
+## Compare implementations
+
+A button containing only an image with alt="magnifying glass" may be announced using those words. That identifies the artwork but not the action. A user navigating a list of controls needs to know what activation does.
+
+```html
+<button type="submit">
+  <img src="search.svg" alt="Search">
+</button>
+
+<button type="submit">
+  <img src="search.svg" alt=""> Search
+</button>
+```
+
+Both examples can provide the name “Search”: in the first the image supplies it; in the second the visible text does. The second image is decorative within that control. These snippets are starting points, not guarantees of conformance: the surrounding form, keyboard interaction, visible focus, and behavior also need testing.
+
+## Complex content and special cases
+
+A short alternative for a chart cannot always express its data, relationships, and conclusion. For a chart titled “Monthly registrations,” a short alternative might identify it as a line chart and point to a nearby summary. The accompanying text can explain the trend and, when needed, provide the underlying values in an accessible form. Decide what information the chart communicates; the word “chart” alone is not an equivalent account.
+
+The criterion includes specific provisions for controls, time-based media, tests, sensory experiences, CAPTCHA, and decoration. Do not assume one technique covers every case. A text alternative for a video may identify it, while separate media criteria can require additional alternatives such as captions. Some tests would be invalid if their answers were supplied as ordinary text. CAPTCHA has its own provisions; choose less burdensome alternatives where possible. Read the complete criterion and exceptions before deciding what is required.
+
+## Knowledge check
+
+1. A product card already contains the product name. What should you consider before writing an alternative for its photograph?
+2. A trash-can icon is the only content of a button that deletes a draft. What should its name communicate?
+3. Why is an empty alt attribute different from a missing alt attribute?
+
+Suggested reasoning: Determine whether the photograph conveys a useful feature that the surrounding text does not. The button needs an action-oriented name such as “Delete draft.” Empty alt intentionally treats an image as decorative; a missing attribute may trigger an unhelpful fallback. Exact wording depends on context.
+
+## Practical activity
+
+Find or build a page containing an informative image, a linked logo, an icon button, and a decorative image. For each, identify the information or action a user needs, inspect the surrounding text, and propose an alternative. Navigate with a screen reader or inspect the browser accessibility tree. Check whether the name is useful and whether information is repeated. Replace the informative image with its proposed text and ask a classmate whether the page still conveys the intended message. Record unresolved questions instead of treating an automated pass as proof of accessibility.
+
+## Key takeaways
+
+Text alternatives communicate purpose and information in context. Functional images need action or destination names; informative images need meaningful equivalents; decorative images can use an empty alternative. Complex information may need an extended explanation. Test the whole experience and consult the complete criterion, including its exceptions and related media requirements.

@@ -1,0 +1,52 @@
+{
+  "title": "1.4.2 Audio Control Mini-assessment",
+  "description": "Complete after the required lesson activity.",
+  "showQuestionNumbers": "on",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q1",
+          "title": "When does this criterion apply?",
+          "choices": [
+            "Audio automatically plays for more than three seconds",
+            "Any user-initiated audio"
+          ],
+          "correctAnswer": "Audio automatically plays for more than three seconds",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The trigger is automatic audio lasting more than three seconds."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q2",
+          "title": "Is overall system volume the only control sufficient?",
+          "choices": [
+            "No",
+            "Yes"
+          ],
+          "correctAnswer": "No",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Provide pause or stop, or volume control independent of the system volume."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q3",
+          "title": "Does an audio stop control replace applicable transcript requirements?",
+          "choices": [
+            "No",
+            "Yes"
+          ],
+          "correctAnswer": "No",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Media alternatives have separate requirements."
+        }
+      ]
+    }
+  ]
+}

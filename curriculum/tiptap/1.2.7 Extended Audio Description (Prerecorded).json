@@ -1,0 +1,279 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.2.7 Extended Audio Description (Prerecorded)"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Recognize when ordinary pauses cannot accommodate necessary audio description, and explain how extended audio description supplies the missing time. This criterion is Level AAA."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Why extra time can be needed"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Audio description communicates important visual information during a recording. Some sequences contain continuous foreground speech while important actions unfold. A description squeezed into a tiny gap may be too brief to convey the action, while narration placed over the original speech may make both difficult to understand."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Extended audio description pauses the presentation to allow additional description, then resumes it. The criterion applies where pauses in foreground audio are insufficient for audio descriptions to convey the sense of prerecorded video in synchronized media. The need depends on whether meaningful visuals can be conveyed in the available pauses, not merely on whether the recording contains speech."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Plan an extended version"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Review a recording alongside its existing narration. Identify significant visual information that is absent from the soundtrack. Draft clear descriptions and test whether they fit in available pauses without obscuring important audio. Where the necessary description will not fit, select a pause point, stop the presentation, provide the extended description, and resume at the correct point. Make the extended version or feature discoverable and test its controls."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "For example, a presenter continuously explains a process while a silent diagram changes through three important states. An extended version can pause before the next step to describe those changes. A single phrase such as “diagram changes” may omit the relationship between the states, so check that the listener can follow the process."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Related criteria"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Standard audio description is addressed by 1.2.5 at Level AA; extended description addresses the additional situation where ordinary pauses are insufficient. Captions expose audio in text and do not substitute for visual description. Evaluate the media as a whole and make sure any description preserves the original information rather than inventing details."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Worked example: a chart animation"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A speaker continuously explains sales figures while an animated chart changes from monthly to quarterly totals. The color of each series and the axis labels also change, but none of this is spoken. The only natural pause is a fraction of a second, too short to describe the relevant transformation. An extended version can stop the presentation at the change, describe the axes and the relevant relationship between the series, and then resume before the next explanation."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A poor fix places a long description over the speaker's explanation. The listener would have to understand two competing pieces of audio. Another poor fix simply says “chart changes,” leaving the important comparison unclear. Describe what the viewer needs in order to understand the sequence and avoid inferring values the chart does not show."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Review the timing"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Mark each visual event and the audio that occurs at the same time. Draft a concise description, read it aloud, and compare its duration with the available pause. When it will not fit, choose a point that maintains the meaning of the sequence, pause the media, and resume without skipping the original content. Test seeking and playback of the extended version, and ask a listener to explain the chart using only the audio. Revise timing or description when the listener misses a meaningful relationship."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Compare a normal pause with an extended pause"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Suppose a narrator says “First, open the profile,” pauses for four seconds, and then describes the next step. The screen silently shows the profile button being selected. If a concise description of the important action fits naturally in the four-second pause, extended description may not be needed for that moment. Test the actual audio and visuals instead of counting pauses without considering the information that must fit."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "In a second sequence, the narration continues while three warnings appear in succession and affect the following decision. A single short pause cannot convey their content and order. An extended version can pause at the appropriate point, describe the warnings, and then resume the original media. It should retain the original spoken instructions; replacing them with description would sacrifice one set of information to provide another."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Mark description points in a script and compare the finished version with the original. Are events described before a listener needs to understand their consequences? Does playback resume at the correct location? Can users reach the extended version? If users can select between standard and extended versions, label them clearly and test the controls. These checks help expose sequencing and delivery errors that may not be obvious from reading a description script alone."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Examine a clip with continuous speech and a meaningful visual change. Write the missing description, identify the available pauses, and decide whether it fits without covering important audio. If it does not fit, propose a pause and resume point and explain why the extended version is needed."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Reference"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "WCAG 2.2: Extended Audio Description (Prerecorded)",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/TR/WCAG22/#extended-audio-description-prerecorded"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " and "
+        },
+        {
+          "type": "text",
+          "text": "W3C Understanding",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/WAI/WCAG22/Understanding/extended-audio-description-prerecorded.html"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    }
+  ]
+}

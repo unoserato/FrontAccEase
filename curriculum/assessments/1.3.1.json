@@ -1,0 +1,58 @@
+{
+  "questions": {
+    "title": "1.3.1 Info and Relationships Mini-assessment",
+    "pages": [
+      {
+        "name": "page1",
+        "title": "Mini-assessment",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "q_1",
+            "title": "What might be missing when a heading is only a large bold div?",
+            "choices": [
+              "Its heading role and level",
+              "Its background color",
+              "Its spelling"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_2",
+            "title": "How can related radio buttons expose their shared question?",
+            "choices": [
+              "Use a fieldset and legend",
+              "Place them side by side",
+              "Use identical colors"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_3",
+            "title": "How can a label be associated with an input?",
+            "choices": [
+              "Match its for attribute to the input id",
+              "Place unrelated text nearby",
+              "Use a placeholder only"
+            ],
+            "isRequired": true
+          }
+        ]
+      }
+    ]
+  },
+  "answer_key": {
+    "q_1": "Its heading role and level",
+    "q_2": "Use a fieldset and legend",
+    "q_3": "Match its for attribute to the input id"
+  },
+  "explanations": {
+    "q_1": "A native heading exposes the role and level to software.",
+    "q_2": "A fieldset and legend communicate the group and its question.",
+    "q_3": "A matching for and id creates a programmatic association."
+  },
+  "passing_percent": 70,
+  "max_attempts": 3
+}

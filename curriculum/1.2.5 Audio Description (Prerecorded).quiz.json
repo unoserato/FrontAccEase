@@ -1,0 +1,58 @@
+{
+  "title": "1.2.5 Audio Description (Prerecorded) mini-assessment",
+  "description": "Complete after the required lesson activity.",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "What does audio description convey?",
+          "choices": [
+            "Important visual information missing from the audio",
+            "Only background music",
+            "Only the video title"
+          ],
+          "correctAnswer": "Important visual information missing from the audio",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "Description communicates relevant visual information."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "Which alternative satisfies the distinct requirement of 1.2.5?",
+          "choices": [
+            "Audio description",
+            "A speech-only transcript alone",
+            "A caption file alone"
+          ],
+          "correctAnswer": "Audio description",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "This Level AA criterion requires audio description."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "Which criterion addresses insufficient pauses at Level AAA?",
+          "choices": [
+            "1.2.7 Extended Audio Description",
+            "1.2.2 Captions",
+            "1.1.1 Non-text Content"
+          ],
+          "correctAnswer": "1.2.7 Extended Audio Description",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "1.2.7 addresses insufficient pauses in foreground audio."
+        }
+      ]
+    }
+  ]
+}

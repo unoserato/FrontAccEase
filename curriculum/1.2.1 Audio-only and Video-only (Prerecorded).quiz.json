@@ -1,0 +1,56 @@
+{
+  "title": "1.2.1 Audio-only and Video-only (Prerecorded) mini-assessment",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Knowledge check",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q1",
+          "title": "What is a common equivalent alternative for a prerecorded audio-only interview?",
+          "choices": [
+            "A transcript including meaningful dialogue and sounds",
+            "Only the interview title",
+            "A decorative image",
+            "A silent video without equivalent information"
+          ],
+          "correctAnswer": "A transcript including meaningful dialogue and sounds",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "A transcript can communicate the audio information in text."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q2",
+          "title": "Which alternative can convey the content of a silent prerecorded demonstration?",
+          "choices": [
+            "An equivalent text alternative or an equivalent audio track",
+            "A louder soundtrack unrelated to the demonstration",
+            "Only the word animation",
+            "A change in color"
+          ],
+          "correctAnswer": "An equivalent text alternative or an equivalent audio track",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The criterion permits an alternative for time-based media or an audio track for prerecorded video-only."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q3",
+          "title": "A recorded tutorial combines narration and moving visuals. How is it classified?",
+          "choices": [
+            "Synchronized media",
+            "Audio-only",
+            "Video-only",
+            "Live audio-only"
+          ],
+          "correctAnswer": "Synchronized media",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Synchronized audio and video have additional applicable criteria."
+        }
+      ]
+    }
+  ]
+}

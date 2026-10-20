@@ -1,0 +1,58 @@
+{
+  "questions": {
+    "title": "1.4.13 Content on Hover or Focus Mini-assessment",
+    "pages": [
+      {
+        "name": "page1",
+        "title": "Mini-assessment",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "q_1",
+            "title": "What must happen when the pointer moves onto hover-triggered content?",
+            "choices": [
+              "It remains available",
+              "It immediately disappears",
+              "The browser closes"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_2",
+            "title": "When may content stop being persistent?",
+            "choices": [
+              "When the trigger is removed, it is dismissed, or information becomes invalid",
+              "Immediately after one second",
+              "Only after a page reload"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q_3",
+            "title": "What is an exception to dismissibility?",
+            "choices": [
+              "Content communicates an input error",
+              "Content is blue",
+              "Content contains a link"
+            ],
+            "isRequired": true
+          }
+        ]
+      }
+    ]
+  },
+  "answer_key": {
+    "q_1": "It remains available",
+    "q_2": "When the trigger is removed, it is dismissed, or information becomes invalid",
+    "q_3": "Content communicates an input error"
+  },
+  "explanations": {
+    "q_1": "Hover-triggered content must be hoverable.",
+    "q_2": "These are the stated persistence conditions.",
+    "q_3": "Input error content has a dismissibility exception."
+  },
+  "passing_percent": 70,
+  "max_attempts": 3
+}

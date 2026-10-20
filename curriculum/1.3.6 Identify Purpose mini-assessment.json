@@ -1,0 +1,58 @@
+{
+  "title": "1.3.6 Identify Purpose Mini-assessment",
+  "description": "Check your understanding of 1.3.6 Identify Purpose.",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "Which criterion specifically addresses listed input purposes for information about the user?",
+          "choices": [
+            "1.3.5 Identify Input Purpose",
+            "1.3.4 Orientation",
+            "1.4.1 Use of Color"
+          ],
+          "correctAnswer": "1.3.5 Identify Input Purpose",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "1.3.5 has that narrower scope; 1.3.6 addresses components, icons and regions."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "What purpose can a nav element expose?",
+          "choices": [
+            "A navigation region",
+            "A payment status",
+            "An image caption"
+          ],
+          "correctAnswer": "A navigation region",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Native nav semantics identify a navigation region."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "Does naming one icon button prove every page purpose is programmatically determinable?",
+          "choices": [
+            "No, assess all applicable components, icons and regions",
+            "Yes, one named button is sufficient",
+            "Yes, if the icon is colorful"
+          ],
+          "correctAnswer": "No, assess all applicable components, icons and regions",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Each relevant purpose needs evaluation; one named control does not establish page-wide conformance."
+        }
+      ]
+    }
+  ]
+}

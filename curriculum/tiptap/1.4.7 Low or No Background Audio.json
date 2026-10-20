@@ -1,0 +1,234 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.4.7 Low or No Background Audio"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Explain how background sound can obscure speech and identify the options and scope of WCAG 2.2 criterion 1.4.7 (AAA). Read the "
+        },
+        {
+          "type": "text",
+          "text": "full criterion",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/TR/WCAG22/#low-or-no-background-audio"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Make speech distinguishable"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Background music and noise can make speech difficult to understand, especially for people with hearing loss or difficulty processing sound. The criterion applies to prerecorded audio-only content that primarily contains speech in the foreground, is not an audio CAPTCHA or audio logo, and is not vocalization intended to be primarily musical expression, such as singing or rapping. For applicable content, at least one of these is true: there is no background sound; background sound can be turned off; or background sound is at least 20 dB lower than foreground speech, with the criterion's exception for occasional sounds lasting one or two seconds."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "An interview podcast with continuous music under conversation is a typical example to assess. Remove the music, offer a version without it, or measure the relative levels. A volume control for the entire recording does not independently remove background sound. Do not assume a transcript alone satisfies this audio criterion, though transcripts are important under separate media requirements."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Worked scenario: an interview"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A prerecorded interview contains speech over continuous music. It is audio-only, primarily speech, and not an excluded audio CAPTCHA, audio logo, or primarily musical vocalization. Remove the music, provide a way to turn it off, or verify that it is at least 20 dB below the speech, subject to the exception for occasional sounds of one or two seconds. A single volume slider that lowers speech and music together does not independently turn off the background. A transcript provides a useful alternative but does not itself satisfy this audio criterion."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Keep speech and background on separate tracks during production. If relying on a background-off control, verify that it actually removes the background while leaving speech audible. Test after seeking, restarting, and changing the playback device. Check that the control is named and operable with a keyboard. Offering a separate recording without music may be useful, but assess the complete arrangement against the applicable conformance requirements rather than assuming an undiscoverable second file resolves every issue."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Measure and document the mix"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A 20 dB difference is a measurement, not a subjective judgment that the music sounds quiet. Use a suitable audio tool and a consistent method to compare the foreground and background. Examine quiet passages and changes in the mix; a single average may conceal a moment when the background is too loud relative to speech. Document the method, relevant levels, and any short occasional sounds claimed under the exception. Listening tests can reveal intelligibility problems, but do not replace the numerical assessment when relying on that option."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Identify the content and scope before testing. A song primarily consisting of singing is treated differently from a spoken interview with background music. A recording that includes both kinds of material may need careful analysis of what content is being evaluated. Review the exact criterion for exclusions and qualifying conditions. Captions, transcripts, and controls for automatically playing audio have their own requirements; a pass here does not establish conformance with them."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Comparing production choices"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Imagine three releases of the same interview. In the first, speech and background music are permanently mixed together and no control changes the balance. The producer should not assume that a listener can solve the problem by turning up the recording: that raises both tracks and does not improve their relative separation. The producer must evaluate the mix against the 20 dB option or choose another qualifying approach."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "In the second release, a player exposes a “Background music” switch. Turning it off leaves the voice track audible and removes the music throughout the interview. Test the beginning, a section after seeking, and the end. Verify that the player does not silently turn the background back on during a transition. The switch's label and state should make its effect understandable, and a keyboard user should be able to operate it. Check the delivered version, not just an editing project with separate tracks."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "In the third release, the team publishes the interview with no background sound. Verify that this is the actual recording users receive, including advertisements or inserted introductions within the content being assessed. If the delivery system inserts separate media, assess those items in context rather than assuming the interview's clean mix covers everything."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Evaluate borderline situations"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "An occasional brief sound may qualify for the stated exception, but recurring or sustained music cannot be dismissed as occasional simply because it is quiet in some sections. Document when the sound occurs and how long it lasts. An audio logo and an audio CAPTCHA are excluded from the criterion's scope, while other accessibility requirements may still apply. A sung performance is excluded when its vocalization is intended primarily as musical expression; do not extend that exclusion to all spoken material merely because it includes some music."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Ask reviewers to note the type of content, the chosen option, and how they verified it. Where measurement equipment or separate tracks are unavailable, record that limitation instead of guessing at a decibel difference. A transcript and a clean mix can support different user needs and should be evaluated separately."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Review an interview recording plan with music under speech. Propose two ways to meet the criterion and explain how you would verify the result. Identify whether a sung chorus is within the criterion's stated scope."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,308 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.4.13 Content on Hover or Focus"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Recognize additional content triggered by hover or focus and evaluate dismissibility, hoverability, and persistence. WCAG 2.2 criterion 1.4.13 is Level AA; check the "
+        },
+        {
+          "type": "text",
+          "text": "full criterion",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/TR/WCAG22/#content-on-hover-or-focus"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Make additional content usable"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A tooltip or popover can obscure other content, disappear when the pointer moves toward it, or vanish before a reader finishes. When pointer hover or keyboard focus triggers additional content and its removal, the additional content must satisfy three conditions unless their stated exceptions apply."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Dismissible:",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " A mechanism dismisses the content without moving hover or focus, unless the content communicates an input error or does not obscure or replace other content. Escape is a common mechanism. "
+        },
+        {
+          "type": "text",
+          "text": "Hoverable:",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " If pointer hover triggers the content, the pointer can move over the additional content without it disappearing. "
+        },
+        {
+          "type": "text",
+          "text": "Persistent:",
+          "marks": [
+            {
+              "type": "bold"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " The content remains until the hover or focus trigger is removed, the user dismisses it, or its information is no longer valid."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The criterion excludes additional content whose visual presentation is controlled by the user agent and not modified by the author, such as a browser's native title tooltip. A custom tooltip must be tested with pointer and keyboard. A tooltip that appears on hover only may also fail to serve keyboard users under other criteria. Ensure dismissal does not unexpectedly move focus, and test at high zoom where overlap is more likely."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Follow a user's interaction"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A person focuses a help icon and a custom tooltip appears over a form label. The person needs to read the label without losing their place. Since the tooltip obscures other content, offer a way to dismiss it without moving focus or pointer hover; Escape is a common approach. If the additional content communicates an input error or does not obscure or replace other content, the dismissibility condition has a stated exception. Evaluate the actual situation rather than assuming every tooltip is exempt."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A pointer user moves from the trigger toward the tooltip to read it. A gap causes the tooltip to disappear before the pointer reaches it. This prevents the user from hovering over the additional content. Design the trigger and popup interaction so the pointer can reach and remain over the content, then test slowly and at magnification. A short timer that automatically hides the tooltip while the trigger remains active can also violate persistence."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Keyboard and interactive content"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Make relevant information available on focus as well as pointer hover, and give the trigger a clear accessible name. Test the actual focus sequence: enter the trigger, read the additional information, dismiss it, and continue. If a popup contains links or buttons, select an interaction pattern appropriate for interactive content and manage focus deliberately. Merely styling an interactive panel as a tooltip does not make its controls usable."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "At high zoom, the popup may cover more of the page or extend beyond the viewport. Verify that the user can read and dismiss it without losing focus, and that reopening behaves predictably. Test pointer movement, keyboard entry, Escape, trigger removal, and any update that makes the information invalid. Document which of these events closes the content and whether the user can still complete the task."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Apply the scope and exceptions"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The criterion covers additional visible content triggered and removed by hover or focus. The exception for presentation controlled by the user agent and not modified by the author can include a native browser title tooltip. A custom popup is not exempt simply because it looks like a browser tooltip. Dismissibility, hoverability, and persistence are distinct conditions: meeting one does not establish the others."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Record the trigger, popup, any obscured content, dismissal mechanism, and persistence behavior. Check the underlying content and control semantics under other applicable criteria too. For example, an accessible popup does not correct a form control with no usable label."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Test a custom help popup"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Use a button as the trigger and give it a meaningful name, such as “Password requirements.” Show the supplemental text when the button receives focus or pointer hover. Provide an Escape action that closes an obscuring popup without moving focus. Ensure that the pointer can travel from the button onto the popup and remain there. A close delay alone is not sufficient if the content still disappears while the pointer is over it."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Run the sequence with a keyboard: focus the trigger, read the revealed information, press Escape, and continue to the next control. Reopen the popup and verify that its state is consistent. Then run the pointer sequence: hover the trigger, move slowly onto the content, move away, and observe when it closes. Test with magnification and a narrow viewport, where the popup may cover an adjacent field or extend beyond the visible area."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "If the popup contains a link or button, use an interaction pattern that supports reaching and operating that control. A tooltip designed only to describe its trigger may not be suitable for interactive content. Ensure that keyboard users can enter and leave the panel, that focus is visible, and that dismissal returns the user to an understandable place. These checks support other applicable criteria in addition to 1.4.13."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Distinguish the conditions"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A popup that stays open for a long time but disappears when the pointer enters it can fail hoverability. A popup that remains hoverable but covers a field with no way to dismiss it can fail dismissibility. A popup that can be dismissed with Escape but closes after an arbitrary short timer can fail persistence. Test each condition independently and document the result."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "An input-error message has an exception from the dismissibility condition, but that does not automatically exempt it from every other applicable condition or from error-identification requirements. Likewise, a native browser tooltip may fall under the user-agent presentation exception only when the author has not modified its visual presentation. Inspect the actual implementation and read the criterion's full scope before claiming an exception."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Build or inspect a help tooltip shown on hover and focus. Open it with the keyboard, dismiss it with Escape, reopen it and move the pointer from its trigger onto the content. Check that it remains until an allowed dismissal condition occurs. Document any obscured content and the relevant exception if you claim one."
+        }
+      ]
+    }
+  ]
+}

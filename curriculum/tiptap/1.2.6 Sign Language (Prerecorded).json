@@ -1,0 +1,279 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.2.6 Sign Language (Prerecorded)"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Explain the purpose and scope of sign language interpretation for prerecorded synchronized media, and describe how to review an interpreted version. This criterion is Level AAA."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Access through sign language"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Some deaf people use a sign language as a primary language. Captions present written text, while sign language interpretation communicates through a distinct visual language. Sign languages have their own grammar and are not interchangeable with a written language or with one another. The criterion calls for sign language interpretation of prerecorded audio content in synchronized media."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "For a recorded lecture with video and speech, an interpreter can communicate the lecture's audio content in an appropriate sign language. Consider the intended audience and language when choosing interpretation; simply adding an unrelated signing clip or labeling a button “sign language” does not establish that the lecture has been interpreted."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Design and review the presentation"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Work with qualified interpreters and, where possible, people who use the target sign language. Provide the interpreter with scripts, subject vocabulary, speaker names, and context. Present the interpreter so their hands, face, and movements can be seen clearly, with sufficient visual space and without covering essential instructional material. Check synchronization against the audio and review the whole recording, including changes of speaker and important non-speech information."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A tiny inset that obscures the interpreter's hands can make an otherwise present interpretation difficult to use. Enlarge or reposition the interpretation and test it at the sizes at which viewers will actually access the video. An alternative interpreted version may be useful where the player cannot present a usable interpretation alongside the original video."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Relationship to other alternatives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Sign language interpretation does not automatically provide captions or audio description. Evaluate the other relevant criteria separately: captions present audio information as synchronized text, and audio description conveys visual information in speech. The requirement concerns prerecorded audio in synchronized media; distinguish this from live or audio-only content when classifying a source."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Worked example: an interpreted lecture"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A university records an orientation video and adds a small interpreter window. At desktop size the interpretation appears visible, but on a phone the window becomes too small to distinguish hand movements or facial expression. In addition, a slide covers the window during an important explanation. The presence of a signing image does not establish that the interpretation is usable."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Plan a layout with sufficient room for the interpreter, avoid covering essential visual content, and inspect the complete recording at realistic viewing sizes. Verify that the interpreter can be seen throughout the relevant audio, and that the interpreted version stays synchronized when the viewer pauses or seeks. Work with the interpreter on specialized terms and context so that technical material can be conveyed accurately."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Language and quality decisions"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Identify the audience and the appropriate sign language early in production. A language used in one region cannot automatically be assumed to serve all sign-language users elsewhere. Involve people who use that language in evaluation where possible and review whether the interpretation covers the important audio rather than isolated excerpts. Record any limitations discovered during testing. Captions and audio description remain separate considerations, because a visual interpretation does not communicate all audio information in text or all visual content in speech."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Plan for different viewing conditions"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A training team records an interpreter in a studio and overlays the footage on a technical demonstration. On a large monitor the signing is clear, but the embedded player is later used in a narrow column on a phone. The interpreter's hands are now too small to follow. The team should test the presentation at the intended sizes and provide a practical way to view the interpretation clearly, such as an appropriately sized version or supported player layout."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Another error arises when the interpreter is placed over the part of the screen that displays the result being explained. Moving the inset can restore the visual context, but the revised placement still needs testing throughout the recording because important content may appear in different locations. Check that captions, if also displayed, do not overlap the interpreter or the relevant screen information."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The interpreter needs preparation beyond a list of individual words. A technical term may depend on how it is used in the lesson, and speaker changes can alter the meaning of a discussion. Share the script or recording and explain the learning goals. Review the interpreted output with appropriate sign-language expertise, correct errors, and repeat the review after a substantive edit. These practices support quality; they do not turn captions or an untranslated signing placeholder into interpretation."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Plan an interpreted version of a five-minute recorded lecture. Identify the target audience and sign language, information to provide to the interpreter, the layout for displaying interpretation, and two checks for visibility and synchronization. Explain how you would review the outcome with a sign-language user."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Reference"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "WCAG 2.2: Sign Language (Prerecorded)",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/TR/WCAG22/#sign-language-prerecorded"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " and "
+        },
+        {
+          "type": "text",
+          "text": "W3C Understanding",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/WAI/WCAG22/Understanding/sign-language-prerecorded.html"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    }
+  ]
+}

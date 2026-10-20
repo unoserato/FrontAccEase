@@ -1,0 +1,52 @@
+{
+  "title": "1.4.5 Images of Text Mini-assessment",
+  "description": "Complete after the required lesson activity.",
+  "showQuestionNumbers": "on",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q1",
+          "title": "Why use real text where the criterion applies?",
+          "choices": [
+            "It is more adaptable to user presentation settings",
+            "It always meets contrast requirements"
+          ],
+          "correctAnswer": "It is more adaptable to user presentation settings",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Real text generally supports user resizing and styling."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q2",
+          "title": "Does alt text make visible words in an image resize as text?",
+          "choices": [
+            "No",
+            "Yes"
+          ],
+          "correctAnswer": "No",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Alternative text does not make the graphic words themselves adaptable text."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q3",
+          "title": "Are logotypes considered essential under this criterion?",
+          "choices": [
+            "Yes",
+            "No"
+          ],
+          "correctAnswer": "Yes",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Logotypes are considered essential; check the criterion for its scope."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "title": "1.2.9 Audio-only (Live) mini-assessment",
+  "description": "Complete after the required lesson activity.",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "Which example is live audio-only?",
+          "choices": [
+            "A live audio stream without video or interaction",
+            "A silent recorded animation",
+            "A prerecorded narrated video"
+          ],
+          "correctAnswer": "A live audio stream without video or interaction",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "Audio-only contains audio without video or interaction."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "Why is an agenda alone insufficient?",
+          "choices": [
+            "It may omit the actual discussion and decisions",
+            "It is always too long",
+            "It contains speaker names"
+          ],
+          "correctAnswer": "It may omit the actual discussion and decisions",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "The alternative needs equivalent information from the event."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "What should be checked when callers participate?",
+          "choices": [
+            "Caller audio reaches the transcription workflow",
+            "The video resolution",
+            "The poster image size"
+          ],
+          "correctAnswer": "Caller audio reaches the transcription workflow",
+          "isRequired": true,
+          "points": 1,
+          "explanation": "The alternative must convey callers’ relevant contributions."
+        }
+      ]
+    }
+  ]
+}

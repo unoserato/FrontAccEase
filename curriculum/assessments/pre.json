@@ -1,0 +1,84 @@
+{
+  "questions": {
+    "title": "Perceivable pre-assessment",
+    "pages": [
+      {
+        "name": "page1",
+        "title": "Perceivable",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "q1",
+            "title": "Which alternative can communicate the purpose of an informative image?",
+            "choices": [
+              "Context-appropriate text",
+              "Its filename alone",
+              "A decorative border"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q2",
+            "title": "What do captions primarily communicate?",
+            "choices": [
+              "Speech and relevant audio information",
+              "Only visual actions",
+              "The browser version"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q3",
+            "title": "What exposes a form label relationship to software?",
+            "choices": [
+              "An associated HTML label",
+              "Color alone",
+              "An unrelated nearby image"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q4",
+            "title": "Why should a chart not rely only on color to distinguish categories?",
+            "choices": [
+              "Some users cannot perceive the color difference",
+              "All charts must be monochrome",
+              "Color is prohibited"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q5",
+            "title": "What can happen when fixed-width content is enlarged?",
+            "choices": [
+              "Content can be clipped or require unnecessary horizontal scrolling",
+              "All fonts become images",
+              "Keyboard input stops working automatically"
+            ],
+            "isRequired": true
+          }
+        ]
+      }
+    ]
+  },
+  "answer_key": {
+    "q1": "Context-appropriate text",
+    "q2": "Speech and relevant audio information",
+    "q3": "An associated HTML label",
+    "q4": "Some users cannot perceive the color difference",
+    "q5": "Content can be clipped or require unnecessary horizontal scrolling"
+  },
+  "explanations": {
+    "q1": "A useful alternative communicates the relevant purpose or information.",
+    "q2": "Captions communicate audio content in synchronized text.",
+    "q3": "A label association makes the relationship programmatically available.",
+    "q4": "Additional visible cues can communicate distinctions without relying on color alone.",
+    "q5": "Layouts should be tested at applicable resize and reflow conditions."
+  },
+  "passing_percent": 70,
+  "max_attempts": 3
+}

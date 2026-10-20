@@ -1,0 +1,246 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.4.8 Visual Presentation"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Describe the mechanisms required for blocks of text at Level AAA and test them. See "
+        },
+        {
+          "type": "text",
+          "text": "WCAG 2.2 criterion 1.4.8",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/TR/WCAG22/#visual-presentation"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " for precise wording."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Give readers control of text presentation"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "People may need different colors, short lines, unjustified text, or additional spacing to read comfortably. For visual presentation of blocks of text, a mechanism must be available to achieve all five conditions: user-selectable foreground and background colors; width no more than 80 characters or glyphs (40 for CJK); text not justified on both margins; line spacing at least 1.5 within paragraphs and paragraph spacing at least 1.5 times the line spacing; and text resizable without assistive technology up to 200% without horizontal scrolling to read a line in a full-screen window."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A mechanism may be provided by the page, browser, or user agent where available. For example, a reader mode or user stylesheet may satisfy a particular condition, but test it rather than assuming every browser supplies every mechanism. Avoid fixed-height containers that clip text when users increase spacing. For CJK, the width limit is 40 characters or glyphs. This criterion concerns blocks of text; other criteria, including resize text and reflow, have their own scopes and conditions."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Understand the five conditions"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The user needs a mechanism to select foreground and background colors and to make text no wider than 80 characters or glyphs, or 40 for Chinese, Japanese, or Korean. The mechanism must also allow text that is not justified on both margins, line spacing of at least 1.5 within paragraphs, and paragraph spacing of at least 1.5 times the line spacing. Finally, text can be resized without assistive technology up to 200 percent without horizontal scrolling to read a line in a full-screen window. Paragraph spacing is measured against the line spacing, not simply the font size."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "These are conditions users must be able to achieve for blocks of text. A custom preference panel is one possible mechanism; browser or user-agent features may also provide mechanisms where available and accessibility-supported. Verify the actual supported environment. Do not assume every browser has the same reader mode or that an inaccessible custom control is useful. Users should be able to reach and apply the settings without losing the content."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Worked scenario: a reading mode"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "An article offers controls for text size, colors, line width, and spacing. At 200 percent, the main paragraphs wrap, but a fixed-width quotation extends beyond the window. The reader must scroll horizontally to follow each line. Make the quotation responsive and retest. Then set the maximum line width and inspect paragraphs, quotations, and lists, since different styles may affect them differently. Check a CJK article against the 40-character or glyph limit rather than the 80-character limit."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Change the foreground and background colors together and verify the change applies to the actual text and its background. Choose increased line and paragraph spacing and look for clipping. Switch off full justification and check both margins. Record the browser, window condition, settings, and results so another tester can reproduce the experience."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Avoid conflating criteria"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A 200-percent resize check for 1.4.4, a 320-CSS-pixel reflow check under 1.4.10, and the full-screen line-reading condition here are related but not interchangeable. Likewise, 1.4.12 concerns loss after particular spacing overrides, whereas this criterion requires mechanisms for a wider set of presentation conditions. Test each criterion's scope and conditions independently. A single passing color contrast check also does not establish that the user can select both colors."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Review a settings implementation"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A publication adds a settings button above an article. The button opens a panel with controls for foreground and background colors, maximum text width, line spacing, paragraph spacing, justification, and text size. Use the panel with a keyboard and verify that changing a setting updates the article without making the settings panel or its labels unreadable. Test the article after a reload if settings are intended to persist. A mechanism that cannot be reached or operated by the intended user is not useful evidence of an accessible solution."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "To test line width, use representative paragraphs rather than counting the number of pixels in the container and assuming the character count. A proportional font produces different widths for different characters. Inspect several lines, including long words and CJK text where applicable, and use a narrower measure when needed to satisfy the applicable limit. If a single unbreakable item causes overflow, determine whether a safe break, wrapping rule, or alternative presentation can preserve its meaning."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Consider a paragraph with a computed line spacing of 24 pixels. The mechanism must permit paragraph spacing of at least 36 pixels for that setting, because the requirement relates paragraph spacing to line spacing. Repeat the check after increasing the font and line spacing. A fixed 24-pixel paragraph gap would not meet this condition when the line spacing itself is 24 pixels. Avoid containers that hide the additional spacing or clip the following paragraph."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Keep the reading experience coherent"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "When users choose colors, ensure text and its background both change as intended; a component that retains its original background can make selected text unreadable. When a user removes justification, inspect block quotations and dynamically loaded articles as well as the first paragraph. When text reaches 200 percent in a full-screen window, follow each line from start to finish and check for horizontal scrolling. Document the mechanism and supported environment for each condition, rather than recording only that a preferences panel exists."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Use a long article page and identify a mechanism for each of the five conditions. Apply the settings, resize to 200%, and check that lines can be read without horizontal scrolling under the stated full-screen condition. Record the browser and mechanism used, any clipping, and a repair."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "title": "1.3.4 Orientation Mini-assessment",
+  "description": "Check your understanding of 1.3.4 Orientation.",
+  "showQuestionNumbers": "on",
+  "showProgressBar": true,
+  "progressBarLocation": "top",
+  "progressBarType": "questions",
+  "pages": [
+    {
+      "name": "page1",
+      "title": "Mini-assessment",
+      "elements": [
+        {
+          "type": "radiogroup",
+          "name": "q_1",
+          "title": "Why might someone be unable to rotate their device?",
+          "choices": [
+            "It may be mounted to a wheelchair",
+            "All devices have fixed keyboards",
+            "Web pages require portrait mode"
+          ],
+          "correctAnswer": "It may be mounted to a wheelchair",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Mounted devices can be difficult or impossible to rotate."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_2",
+          "title": "When can content be restricted to one orientation under 1.3.4?",
+          "choices": [
+            "When that specific orientation is essential",
+            "Whenever a designer prefers it",
+            "Whenever a screen is narrow"
+          ],
+          "correctAnswer": "When that specific orientation is essential",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "The exception applies when the orientation is essential to the content or operation."
+        },
+        {
+          "type": "radiogroup",
+          "name": "q_3",
+          "title": "Does passing orientation testing automatically establish reflow conformance?",
+          "choices": [
+            "No, reflow has separate requirements",
+            "Yes, they are identical",
+            "Yes, if portrait works"
+          ],
+          "correctAnswer": "No, reflow has separate requirements",
+          "isRequired": true,
+          "points": 1,
+          "feedback": "Reflow has its own test conditions and dimensions."
+        }
+      ]
+    }
+  ]
+}

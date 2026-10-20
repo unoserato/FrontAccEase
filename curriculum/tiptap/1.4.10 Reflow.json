@@ -1,0 +1,267 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.4.10 Reflow"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Test layouts at the specified equivalent viewport sizes and recognize content that genuinely requires a two-dimensional layout. WCAG 2.2 criterion 1.4.10 is Level AA; consult the "
+        },
+        {
+          "type": "text",
+          "text": "full criterion",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/TR/WCAG22/#reflow"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Read without scrolling in two dimensions"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "People who magnify content should not need to scroll horizontally and vertically to read ordinary text. Content must reflow without loss of information or functionality and without two-dimensional scrolling for vertically scrolling content at a width equivalent to 320 CSS pixels, and horizontally scrolling content at a height equivalent to 256 CSS pixels. Content that requires two-dimensional layout for usage or meaning is excepted; examples may include maps, diagrams, games, or data tables where the two-dimensional relationships are essential. Surrounding content still needs assessment."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Use flexible widths and allow text to wrap. A wide fixed-width card can force horizontal scrolling; an adaptive grid that becomes a single column can avoid it. At 400% browser zoom, a 1280 CSS-pixel-wide viewport often becomes equivalent to 320 CSS pixels, but verify the actual viewport and browser behavior. Test menus, dialogs, error messages and controls, not just the main article. An exception for a table does not automatically excuse the entire page."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Test the applicable dimension"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "For vertically scrolling content, evaluate the equivalent of a 320 CSS-pixel width. For horizontally scrolling content, evaluate the equivalent of a 256 CSS-pixel height. These are CSS pixels, not a fixed number of physical screen pixels. Zoom, browser settings, and display scaling affect the relationship. The goal is to avoid scrolling in two dimensions while preserving content and functionality, subject to the criterion's exception."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Starting with a 1280 CSS-pixel-wide viewport and zooming to 400 percent often provides an effective width near 320 CSS pixels. Verify the actual viewport and browser behavior. A phone layout is useful to inspect but is not necessarily the same test setup. Record browser, viewport, zoom, and the steps needed to reproduce the result."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Worked scenario: dashboard cards"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A dashboard has three fixed-width cards. At 320 CSS pixels, the third card extends offscreen and a user must pan horizontally to find its action. Change the layout so cards wrap or stack and allow their contents to grow. Then test the cards' buttons, expanded details, and error states. A responsive layout is not complete if the visible text wraps but the button is clipped by a fixed-height container."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The dashboard also contains a wide data table. If its two-dimensional layout is required for meaning or use, that portion may qualify for the exception. Explain why the relationship requires that layout and make the table usable. The page heading, instructions, and unrelated controls still need evaluation; an excepted table does not exempt the entire page. A developer's preference for a wide design is not by itself an essential two-dimensional need."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Look beyond the initial view"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Open menus, use filters, submit an invalid form, and display a dialog at the test size. A sticky footer can cover a button even when there is no horizontal scrollbar. A menu can disappear without a usable replacement. Check that all information and controls are still available and usable by keyboard. Content may also be lost through overflow clipping, so merely hiding the horizontal scrollbar does not solve reflow."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Maps, diagrams, games, and tables may require two-dimensional presentation, but evaluate each case individually. Consider whether supporting text or controls can reflow outside the excepted region. Record the failure, its impact, the repair, and the retest. Text resizing and reflow overlap, but their test conditions and scope differ; evaluate both rather than treating one pass as proof of the other."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Implementation example"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A responsive grid can allow cards to stack instead of forcing a fixed three-column layout:"
+        }
+      ]
+    },
+    {
+      "type": "codeBlock",
+      "attrs": {
+        "language": "css"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": ".cards {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));\n  gap: 1rem;\n}\n.card { min-width: 0; }"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "This is a starting point, not proof of conformance. Long URLs, preformatted code, wide images, or fixed-width children can still overflow. Inspect each card at the test width, wrap ordinary long text where appropriate, and give images flexible dimensions. Some content, such as code whose formatting conveys meaning, may need individual analysis; do not casually treat every wide block as excepted. Ensure the surrounding explanation and controls still reflow."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Test an entire process"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Start at the first page of a checkout and continue through address entry, payment, review, confirmation, and error recovery at the relevant viewport. At each step, inspect the header, navigation, form, buttons, and transient messages. Zooming may cause a navigation bar to collapse; verify its replacement opens and closes and its controls are reachable. A dialog must not hide the action needed to complete or cancel the task. A clipped validation error can prevent completion even when the main page has no horizontal scrollbar."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "When an interface has a legitimately two-dimensional region, identify the region's boundary and separately test its surroundings. For a map, for example, the user may need two-dimensional panning, but the search field and instructions outside the map can generally reflow. Do not let the exception become a reason to leave unrelated page text offscreen. Capture the viewport and zoom settings, describe the actual loss, and retest the same workflow after repairs."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Test a dashboard at 320 CSS pixels wide or an equivalent zoom setting. Record horizontal scrolling, clipped content and unusable controls. Repair a card layout, then retest. Identify any two-dimensional content and justify whether the exception is necessary."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,252 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.3.4 Orientation"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Explain why fixed orientation can create barriers, test both portrait and landscape views, and recognize the essential-orientation exception. WCAG 2.2 criterion 1.3.4 is Level AA. Content must not restrict viewing and operation to one orientation unless a specific orientation is essential. Consult the "
+        },
+        {
+          "type": "text",
+          "text": "full criterion",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/TR/WCAG22/#orientation"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Support the user's preferred orientation"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Some people mount a device to a wheelchair or use a fixed stand, making rotation difficult. Others rely on a particular orientation for magnification, reach, or an attached keyboard. A page that blocks the application with “Rotate your device” can prevent them from using it even when the content could fit with a different layout."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Use responsive layout to adapt available space and let controls remain usable in both orientations. Avoid scripts or styles that hide essential content in one orientation. Test a real device or emulator in both portrait and landscape, including the complete flow, dialogs, controls and error messages. Orientation testing is related to, but does not replace, reflow testing under 1.4.10."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A specific orientation can be essential to a particular experience, such as a piano application where the orientation is necessary for the interaction. A designer's preference or a layout that is easier to implement does not establish essentiality. Evaluate the specific content and task rather than locking an entire application because one feature has a justified need."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Consider real device use"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A tablet mounted to a wheelchair may be fixed in landscape. A person using a stand, external keyboard, or switch control may also find changing orientation difficult. If a service displays only a rotate-device message in landscape, these users cannot complete a task even if the form could be arranged to fit. Supporting both orientations preserves a user's choice of setup."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A responsive design can rearrange columns, place a navigation menu above content, or allow vertical scrolling as space changes. Start by making information and controls available in both views, then refine the layout. Avoid locking orientation through an API merely because one arrangement looks cleaner. A browser or operating system's orientation lock is a user choice; an author-imposed restriction is the behavior to examine."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Essential means necessary for the experience"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A piano application may need a particular orientation to present its keyboard meaningfully, depending on the actual experience. A digital check or projected slide may also involve a format whose orientation is essential. The exception needs a reason tied to the specific content or operation. A wide data table, a complicated dashboard, or a design preference does not automatically make one orientation essential. Consider whether the surrounding navigation and other tasks can still support both orientations."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "If only one feature has an essential restriction, explain it to the user and avoid unnecessarily blocking unrelated functions. Test the feature itself and document the reason. Accessibility work often involves distinguishing a practical layout challenge from a true requirement of the task."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Test the full journey"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Test portrait and landscape on representative devices or a reliable emulator. Start at the entry screen and proceed through sign-up, errors, dialogs and completion. Check that controls remain visible, reachable and operable and that a warning does not prevent use. Rotate during a partially completed form and verify the user can continue. Record browser, device, viewport and any constraints."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Testing both orientations does not replace testing zoom and reflow. A layout may display in both orientations but clip content at a narrow effective viewport. Likewise, a page that reflows at 320 CSS pixels could still impose an orientation lock. Evaluate the relevant success criteria independently."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Worked example: a registration form"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A registration form presents two columns in landscape and one column in portrait. Both contain the same name, contact and submit controls. This is an adaptive layout: the arrangement changes, but the task remains available. Compare it with a version that replaces the form with a blocking message whenever the screen is landscape. The second version restricts operation to one orientation even though the form could be laid out differently."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Test beyond the first view. Enter a name, rotate, and check that the form retains the value and that the submit button remains reachable. Trigger an error in both orientations and confirm the error can be found and corrected. Open the menu and any help dialog, because an overlay can be available in one orientation while obstructing all controls in the other. Repeating a complete task often reveals failures missed by inspecting a single screenshot."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "An orientation exception requires a substantive reason. A team might claim that a graph is easier to read in landscape; that preference alone does not establish that landscape is essential. Consider a scrollable or responsive presentation and whether a data alternative helps. Conversely, when a particular orientation is genuinely essential to an interaction, document the reason and limit the restriction to what is necessary. The entire service should not automatically be restricted because one isolated feature has a special requirement."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Record the operating system, browser and device dimensions used in the test. Simulators are useful for early feedback but may not reproduce every device or input setup. Ask a user who depends on a fixed mount to evaluate the flow when possible, and treat their report as evidence about usability alongside criterion-based checks."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Test a sign-up flow in portrait and landscape. Record any blocked views, clipped controls, or actions unavailable in either orientation. Adjust the layout so the flow works in both and retest. If you propose an orientation restriction, explain precisely why that orientation is essential to the content or operation."
+        }
+      ]
+    }
+  ]
+}

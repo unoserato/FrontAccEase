@@ -1,0 +1,279 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.2.5 Audio Description (Prerecorded)"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Explain the Level AA audio-description requirement, identify visual information missing from narration, and review an audio-described recording."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "What audio description adds"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Audio description is narration that communicates important visual details in a video, such as a speaker's actions, a change on screen, or text that is not otherwise spoken. It makes visual information available to people who cannot see it. In a recorded demonstration, “A confirmation message appears: Application submitted” communicates a result that would otherwise be silent."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "This criterion requires audio description for prerecorded video content in synchronized media. A textual alternative may satisfy the choice offered by Level A criterion 1.2.3, but does not replace the audio-description requirement at Level AA. Separately assess captions for the soundtrack under 1.2.2."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Prepare a description"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "First listen to the original audio without looking at the picture. Note where a listener cannot understand a reference or misses an important action. Then inspect the corresponding visuals and script concise descriptions of information that matters. Fit descriptions into pauses in the original soundtrack without covering necessary speech or sound. If the original narration already communicates all relevant visual information, assess it against the criterion and definitions instead of adding redundant narration merely to create a separate track."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "For instance, a presenter says “Now confirm the change,” while the screen silently shows an error that prevents saving. A description can report the error in a pause, so the listener understands why the next attempt differs. Review the complete video, not only a selected sample, and make the described version discoverable and operable through the player or a clearly identified alternative version."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "When pauses are too short"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Some videos contain continuous dialogue with no time to convey an important visual sequence. Level AAA criterion 1.2.7 addresses extended audio description where pauses in foreground audio are insufficient. Audio description is not the same as captions: captions expose audio as text, while description exposes visual information through audio."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Worked example: a sign-in tutorial"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "In a recording, a presenter says “The sign-in failed” while a message silently states that the account is locked and a reset link appears. The failure is audible, but the reason and available next action are visual. A description might say, “An account-locked message appears, with a Reset password link.” It should be inserted in an available pause without masking the presenter's next instruction."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A description such as “There is a message” is less useful because it leaves out the reason and link. Conversely, a description should not assert that a reset will succeed if the recording does not establish that outcome. If the narrator already states the complete information, additional narration may not be needed for that moment. Assess all meaningful visual information across the full recording."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Verify the described version"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Listen without seeing the video and try to explain what happened and what action is offered. Compare that account with the visible sequence. Check that description does not cover essential dialogue, that it appears at the appropriate moment, and that the player or alternate version is discoverable. If there is not enough time in foreground-audio pauses, consider the separate extended-description requirement at AAA. Keep captions available as well; a person who cannot hear the new description still needs access to the audio information through other appropriate means."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Distinguish description from a full narration rewrite"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A recording of a form tutorial has a voiceover that names each field, reads the entered value, and reports the confirmation message. In this example the existing narration may already communicate the visual information necessary to understand the lesson. Evaluate the full recording: a later silent warning or status change may still require description. Adding another voice to repeat every field could make the lesson harder to follow without conveying additional information."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Now change the example. The presenter says “This is the problem” while pointing to an unspoken red error message. Description should communicate the message and its meaning, not merely that the screen contains something red. For instance, identify that the required email field is empty if that is what the screen shows. Do not infer a user's motivation, a hidden cause, or a result that is not present in the video."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Check the delivery path from the user's perspective. Is there a clearly identified described version or a control for the description track? Can a keyboard user reach the relevant player control? Test the described version through to its end and compare it with the original. Such player checks are part of delivering usable content; their precise accessibility requirements are assessed under other applicable criteria as well."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Listen to a short recorded tutorial without viewing it. Record moments that are unclear, then watch it and write a description script for missing visual information. Mark the pauses where the description fits and explain whether any important description needs more time."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Reference"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "WCAG 2.2: Audio Description (Prerecorded)",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/TR/WCAG22/#audio-description-prerecorded"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " and "
+        },
+        {
+          "type": "text",
+          "text": "W3C Understanding",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/WAI/WCAG22/Understanding/audio-description-prerecorded.html"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    }
+  ]
+}

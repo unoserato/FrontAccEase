@@ -1,0 +1,319 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.3.6 Identify Purpose"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Explain the Level AAA requirement for programmatic purposes of interface components, icons, and regions; select meaningful markup; and assess the limits of a semantic implementation. Read "
+        },
+        {
+          "type": "text",
+          "text": "WCAG 2.2 criterion 1.3.6",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/TR/WCAG22/#identify-purpose"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Expose purposes that software can recognize"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "People may benefit from personalized presentations, such as familiar symbols for navigation or different ways to identify controls. In content implemented using markup languages, this criterion requires the purpose of user interface components, icons, and regions to be programmatically determinable. It is broader than 1.3.5, which addresses a specific list of input purposes for information about the user."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Use appropriate native elements and standard semantics wherever they accurately describe the purpose. A "
+        },
+        {
+          "type": "text",
+          "text": "nav",
+          "marks": [
+            {
+              "type": "code"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " element identifies a navigation region; a "
+        },
+        {
+          "type": "text",
+          "text": "main",
+          "marks": [
+            {
+              "type": "code"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " element identifies main content; a "
+        },
+        {
+          "type": "text",
+          "text": "button",
+          "marks": [
+            {
+              "type": "code"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " exposes a button role. A search landmark can identify a search region. The mechanism must accurately convey purpose: an accessible name such as “Search” helps a person understand a control, while appropriate machine-readable semantics help software recognize its purpose. Neither a generic role nor an arbitrary label alone necessarily identifies every more specific purpose or icon. Consult the criterion's "
+        },
+        {
+          "type": "text",
+          "text": "Understanding document",
+          "marks": [
+            {
+              "type": "link",
+              "attrs": {
+                "href": "https://www.w3.org/WAI/WCAG22/Understanding/identify-purpose.html"
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " and current supported techniques for the relevant markup and user agents."
+        }
+      ]
+    },
+    {
+      "type": "codeBlock",
+      "attrs": {
+        "language": "html"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "<nav aria-label=\"Primary\">\n  <a href=\"/courses\">Courses</a>\n</nav>\n<main>\n  <h1>Courses</h1>\n  <button type=\"button\">Filter courses</button>\n</main>"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Inspect landmarks, controls and names in the accessibility tree, and test with supported assistive technologies. Native semantics are useful foundations, but inspecting this snippet alone cannot establish full AAA conformance for all controls, icons and regions in a page. Do not add inaccurate roles simply to make the tree look more detailed."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Purpose supports adaptation"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A person may rely on software that presents familiar symbols or simplifies navigation. For that software to adapt an interface, it needs information about what components, icons, and regions are for. An accessible label alone can explain an individual button to a person, but a free-form label is not always a standardized expression of a more specific purpose that software can reliably interpret. Analyze what semantics the implementation actually exposes rather than assuming any label completes the criterion."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The criterion applies to content implemented in markup languages and covers user interface components, icons and regions. This breadth distinguishes it from 1.3.5, whose listed purposes concern inputs collecting information about the user. Native HTML elements and appropriate roles provide useful semantics, but the exact level of purpose conveyed depends on the element, attributes, and supported technology. Consult W3C's current Understanding and techniques material for the applicable technology and use supported, accurate semantics."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Identify regions and controls"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A page may have primary navigation, a main article, a search region and a footer. Mark these using meaningful structural elements where appropriate. If there are multiple navigation regions, provide distinct names so users can tell them apart. A native button exposes its role and is normally preferable to a styled div with click handling. However, the role “button” alone does not tell software every specific action the button performs."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "For an icon-only control, ask what purpose the icon conveys and what semantic information is actually exposed. A trash icon might mean delete, discard, or remove from a list depending on context. Give the control an accurate accessible name and evaluate any additional supported means of identifying its specific purpose. Avoid inventing unsupported role values or using an unrelated role: incorrect semantics can mislead both users and software."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Inspect, test, and document limitations"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Inventory all regions, controls and meaningful icons on a representative page. Use the browser accessibility tree to inspect roles and names, and compare them with what the interface actually does. Check for duplicate or ambiguous landmark names. Test with relevant assistive technologies and consult current technology support for any proposed purpose vocabulary. An accessibility-tree screenshot shows what one browser exposes; it cannot by itself prove all possible adaptations work."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The outcome of the exercise should include unresolved cases. If a generic button role and a text name do not expose a particular purpose in a standardized way, describe that limitation and research supported techniques rather than declaring AAA conformance. Likewise, a decorative icon need not be assigned a misleading action simply because it has an image shape. Evaluate its actual role in the interface."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Worked example: a course dashboard"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A dashboard contains two navigation areas, one for the site and one for the current course. Marking both as navigation regions exposes their general purpose; giving them distinct names such as “Site” and “Course” helps a person or assistive technology distinguish them. A main region identifies the primary content. Inspect the accessibility tree to see whether the landmarks and names are exposed as intended, then navigate by landmarks with a screen reader."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The same dashboard contains a magnifying-glass button. Its visible context and accessible name should make clear whether it opens course search or searches the whole site. A generic button role identifies its control type, while the name communicates the action to users. When evaluating 1.3.6, additionally investigate whether the specific intended purpose is represented using a supported, programmatically determinable mechanism. Do not assume an arbitrary free-form label is always a standardized purpose token."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A common implementation error is to add a role that sounds close to the intended action but has a different meaning in the platform. Another is to label a decorative icon independently so that it repeats a button's name. Prefer accurate native structure, test the exposed result, and use supported semantics only where they fit. If no reliable mechanism for a specific purpose is established, document the gap and consult the current W3C techniques and implementation support rather than claiming success based on visual appearance."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Review the full page, not only the most obvious controls. Icons embedded in menus, supplementary regions, and repeated controls can carry meaning too. For each, state the intended purpose, the information exposed to software, and the evidence from your test. This inventory makes uncertainty visible and directs further investigation."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Review a course page containing navigation, main content, a search control and an icon-only action. Inventory each region, component and icon, then describe the purpose and how software can determine it. Add accurate native semantics and names where needed. Inspect the accessibility tree and document remaining uncertainties about the specific purpose of each icon."
+        }
+      ]
+    }
+  ]
+}

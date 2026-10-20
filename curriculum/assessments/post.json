@@ -1,0 +1,97 @@
+{
+  "questions": {
+    "title": "Perceivable post-assessment",
+    "pages": [
+      {
+        "name": "page1",
+        "title": "Perceivable",
+        "elements": [
+          {
+            "type": "radiogroup",
+            "name": "q1",
+            "title": "A search button contains only an icon. Which name is most useful?",
+            "choices": [
+              "Search",
+              "Magnifying glass",
+              "Image"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q2",
+            "title": "A prerecorded video shows a silent action missing from narration. Which alternative can convey that action?",
+            "choices": [
+              "Audio description",
+              "Captions of speech alone",
+              "An unrelated soundtrack"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q3",
+            "title": "Which markup can identify a group of radio choices and its shared question?",
+            "choices": [
+              "A fieldset with a legend",
+              "A border alone",
+              "A colored background"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q4",
+            "title": "A link is distinguishable from surrounding text only by color. What is a useful improvement?",
+            "choices": [
+              "Add another visible cue such as underlining",
+              "Remove its text",
+              "Use a different color alone"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q5",
+            "title": "A tooltip appears on keyboard focus. What should a user be able to do?",
+            "choices": [
+              "Move the pointer onto it when applicable and dismiss it without moving focus, subject to the criterion",
+              "Only see it while clicking",
+              "Never dismiss it"
+            ],
+            "isRequired": true
+          },
+          {
+            "type": "radiogroup",
+            "name": "q6",
+            "title": "Which check helps identify reflow problems?",
+            "choices": [
+              "Test applicable content at a narrow equivalent viewport without loss of information or functionality",
+              "Check only the logo at full width",
+              "Disable all text"
+            ],
+            "isRequired": true
+          }
+        ]
+      }
+    ]
+  },
+  "answer_key": {
+    "q1": "Search",
+    "q2": "Audio description",
+    "q3": "A fieldset with a legend",
+    "q4": "Add another visible cue such as underlining",
+    "q5": "Move the pointer onto it when applicable and dismiss it without moving focus, subject to the criterion",
+    "q6": "Test applicable content at a narrow equivalent viewport without loss of information or functionality"
+  },
+  "explanations": {
+    "q1": "The accessible name should communicate the action.",
+    "q2": "Audio description communicates relevant visual information.",
+    "q3": "The group and legend expose the shared relationship.",
+    "q4": "Information should not depend solely on color.",
+    "q5": "The hover or focus content criterion has dismissible, hoverable, and persistent conditions and exceptions.",
+    "q6": "Reflow testing examines whether content and functionality remain usable at the applicable dimensions."
+  },
+  "passing_percent": 70,
+  "max_attempts": 3
+}

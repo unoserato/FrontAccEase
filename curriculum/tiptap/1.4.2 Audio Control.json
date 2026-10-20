@@ -1,0 +1,260 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "1.4.2 Audio Control"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Learning objectives"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Recognize when automatically playing audio creates a barrier and identify controls that satisfy WCAG 2.2 criterion 1.4.2 (Level A): https://www.w3.org/TR/WCAG22/#audio-control."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Why control matters"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Unexpected audio can interfere with speech output from a screen reader, distract users, and make it difficult to find the control that stops it. Avoid starting sound automatically where possible. A user-initiated play action gives people a chance to prepare and adjust their environment."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "If audio on a page plays automatically for more than three seconds, the criterion requires a mechanism to pause or stop it, or to control its volume independently of the overall system volume. A system-wide mute alone does not solve the problem for a person who needs to hear screen-reader speech. An automatically playing sound that stops within three seconds is outside this criterion's trigger, although unexpected sound may still be disruptive. The exact threshold is not a recommendation to add short unnecessary sounds."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "The control must be available and usable in the context where the audio plays. A hidden or keyboard-inaccessible control may prevent the user from reaching it. Make its purpose clear and ensure that focus and activation work. Content that fails this criterion can interfere with a user's ability to use the whole page, so the WCAG conformance requirements also matter."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Implementation and testing"
+        }
+      ]
+    },
+    {
+      "type": "codeBlock",
+      "attrs": {
+        "language": "html"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "<audio controls src=\"introduction.mp3\">\n  Your browser does not support this audio player.\n</audio>"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "This example does not use autoplay. Native controls provide a starting point, but verify keyboard operation and accessible names in the browsers used by your audience. If a product requires autoplay, provide a clear, immediately available pause/stop or independent volume control and test the actual behavior. Consider audio started by multiple components and on page reload. Related requirements for captions or transcripts are separate; a pause button does not replace them."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Worked scenario: a welcome page"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A course page starts a 20-second welcome recording when it loads. The only stop button appears after a long navigation menu. A screen-reader user hears both the recording and speech output and may struggle to discover the button. The duration triggers 1.4.2. The team can remove autoplay, or supply an accessible pause or stop control or independent volume control. The control must actually affect the sound on that page and be operable with the methods users rely on."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Suppose the same page plays a short two-second chime automatically. This criterion's more-than-three-second condition is not triggered, but the chime can still interrupt a person. Avoiding unnecessary sound remains a good design choice. Conversely, audio lasting five seconds does not become exempt merely because a control will appear after playback finishes: a user needs a working mechanism for the sound."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Selecting a control strategy"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "An independent volume control changes the page audio without also reducing a screen reader's system output. A pause button suspends playback; a stop button ends it. Label the action clearly, show its state when relevant, and make the control keyboard-operable. If a toggle changes from “Pause” to “Play,” test that its accessible name changes too. Use native controls where practical, and verify behavior in the browsers and assistive technologies your audience uses."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Avoid starting several independent audio streams at once. Even when each has a control, a user may need to find and operate several controls before the page becomes usable. Respect user settings where possible and remember their choices when appropriate. These recommendations support a better experience but do not replace evaluating the exact WCAG requirement."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Test the whole interaction"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Reload the page with sound enabled. Record whether playback starts automatically, how long it lasts, and which control pauses, stops, or independently adjusts it. Navigate to the control using only a keyboard, and check that it can be identified and operated. Repeat with speech output if available. Check embedded or third-party media as well as your own components: users experience the page as a whole."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A page may provide a working pause control and still lack captions or an appropriate alternative for its media. Separate the audio-control test from media accessibility checks, and record unresolved issues rather than marking the entire experience conformant based on one passing control."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Design review: an embedded player"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "A product team embeds a third-party audio player near the bottom of a page. The player starts automatically, and a small pause control is visible inside the frame. Test the actual embedded page: check whether the control receives keyboard focus, whether its name identifies the action, and whether activation stops the sound. If the frame cannot be reached or the control cannot be identified, its visible presence is not enough for the user journey. Work with the provider or choose a player whose controls are usable."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "If the page also starts a separate background soundtrack, stopping the embedded player does not stop that second source. Identify each source and verify that the available controls address the sounds that trigger the criterion. Reload, navigate away and back, and test what happens when the user has already paused. Do not assume that muting a tab is equivalent to an independent page-volume mechanism: muting a whole tab may also silence speech or other desired media from that tab."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Record the duration and behavior observed rather than merely writing “sound accessible.” For example: “The recording starts at page load and continues for 20 seconds; the Pause button is reachable by keyboard and stops it.” Then test any content-specific requirements, such as a transcript, in a separate check."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 2
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Required lesson activity"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Open a sample page with a recording that starts automatically and continues for ten seconds. Using only a keyboard, locate and activate its stop control while a screen reader is speaking. Record whether the control can be found and used, then change the page to require an intentional play action or provide an appropriate control. Retest."
+        }
+      ]
+    }
+  ]
+}
