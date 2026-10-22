@@ -15,6 +15,16 @@
   color: black;
 }
 
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-muted-foreground);
+  border-radius: 0.8rem;
+}
+
 .p-responsive {
   @apply mx-auto max-w-7xl space-y-12 p-4 pb-24 md:p-8 lg:p-12;
 }
@@ -24,7 +34,9 @@
 }
 
 @keyframes dot-bounce {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     transform: translateY(0);
     opacity: 0.45;
   }

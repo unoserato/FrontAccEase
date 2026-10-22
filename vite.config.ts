@@ -19,7 +19,7 @@ export default defineConfig({
     },
     proxy: {
       "/api": {
-        target: "http://192.168.1.109:8001", // Your local FastAPI port
+        target: "http://192.168.1.102:8001", // Your local FastAPI port
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""), // Removes '/api' prefix before forwarding to FastAPI
       },

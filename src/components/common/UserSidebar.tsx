@@ -1,4 +1,5 @@
-import { LogOut, Settings, SidebarIcon, User } from "lucide-react"
+import { useState } from "react"
+import { ChevronsUpDown, LogOut, SidebarIcon, User } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -15,17 +16,16 @@ import { Logo } from "./Logo"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import { Link, NavLink, useNavigate } from "react-router-dom"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { useRemoveQueries } from "@/services/tanstack/auth"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
-import { ModeToggle } from "../modeToggle"
+import { useTheme } from "@/components/theme-provider"
 import ToolTipTemplate from "./TooltipButtonTemplate"
-import { Button } from "../ui/button"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { logoutAPI } from "@/services/api/authAPI"
 import { toast } from "../ui/toast"
 import { type UserProps } from "@/const/props/userProps"
 import GridSkeleton from "../skeleton/GridSkeleton"
+import { cn } from "@/lib/utils"
 
 interface UserSidebarProps {
   links: { name: string; href: string; icon: any }[]
@@ -36,27 +36,27 @@ export default function UserSidebar({ links, user }: UserSidebarProps) {
   const { open, setOpen, openMobile, setOpenMobile } = useSidebar()
   const isMobile = useIsMobile()
   const navigate = useNavigate()
-  const removeQueries = useRemoveQueries()
+  const queryClient = useQueryClient()
+  const { theme, setTheme } = useTheme()
+  const [popoverOpen, setPopoverOpen] = useState(false)
 
   const { mutate, isPending } = useMutation({
     mutationFn: logoutAPI,
-    onMutate: () => {
-      navigate("/login", { replace: true })
-    },
     onSuccess: () => {
-      removeQueries(["user"])
+      queryClient.removeQueries({ queryKey: ["user"] })
+      navigate("/login", { replace: true })
     },
     onError: (err: any) => {
       toast.add({
         title: "Error",
-        description: err.response.data.detail || "Error logging out",
+        description: err.response?.data?.detail || "Error logging out",
         type: "destructive",
       })
     },
   })
 
-  function handleLogout() {
-    mutate()
+  async function handleLogout() {
+    await mutate()
   }
 
   if (isPending) {
@@ -125,7 +125,6 @@ export default function UserSidebar({ links, user }: UserSidebarProps) {
                     <SidebarMenuButton
                       isActive={isActive}
                       tooltip={link.name}
-                      className=""
                       render={(menuProps) => (
                         <span {...menuProps}>
                           <link.icon />
@@ -141,101 +140,133 @@ export default function UserSidebar({ links, user }: UserSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter
-        className={`${
-          open || openMobile ? "flex-row items-center" : "flex-col-reverse"
-        } justify-between pb-4`}
-      >
-        <Link
-          to={`/${user?.role || "learner"}/profile`}
-          onClick={() => {
-            if (openMobile) setOpenMobile(false)
-          }}
-          className="flex shrink-0 items-center gap-2 overflow-hidden rounded-md py-2 transition-opacity hover:opacity-80"
-          title="View profile"
-        >
-          <Avatar>
-            <AvatarImage
-              src={
-                user?.user.profile_picture != null
-                  ? user?.user.profile_picture
-                  : ""
-              }
-              alt={user?.user.name || "User"}
-              className="object-cover"
-            />
-            <AvatarFallback>
-              {user?.user?.name ? user.user.name[0].toUpperCase() : "U"}
-            </AvatarFallback>
-          </Avatar>
-          <p className="shrink-0 text-sm font-medium text-foreground capitalize">
-            {user?.user.name}
-          </p>
-        </Link>
-
-        <div className="flex">
-          <Popover>
-            <Tooltip>
-              <TooltipTrigger
+      <SidebarFooter className="p-2">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+              <PopoverTrigger
                 render={
-                  <PopoverTrigger
-                    render={
-                      <SidebarMenuButton>
-                        <Settings />
-                      </SidebarMenuButton>
-                    }
-                  />
+                  <SidebarMenuButton
+                    size="lg"
+                    tooltip={user?.user.name || "Account"}
+                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  >
+                    <Avatar className="size-8 shrink-0 rounded-lg">
+                      <AvatarImage
+                        src={
+                          user?.user.profile_picture != null
+                            ? user.user.profile_picture
+                            : ""
+                        }
+                        alt={user?.user.name || "User"}
+                        className="object-cover"
+                      />
+                      <AvatarFallback className="rounded-lg">
+                        {user?.user?.name
+                          ? user.user.name[0].toUpperCase()
+                          : "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                      <span className="truncate font-semibold text-foreground capitalize">
+                        {user?.user.name || "User"}
+                      </span>
+                      <span className="truncate text-xs font-normal text-muted-foreground">
+                        {user?.user.email || ""}
+                      </span>
+                    </div>
+                    <ChevronsUpDown className="ml-auto size-4 text-muted-foreground group-data-[collapsible=icon]:hidden" />
+                  </SidebarMenuButton>
                 }
               />
-              <TooltipContent>Settings</TooltipContent>
-            </Tooltip>
-
-            <PopoverContent
-              align="start"
-              side="bottom"
-              sideOffset={8}
-              className="flex w-56 flex-col gap-1 rounded-2xl border border-border/60 bg-popover/95 p-2 shadow-xl backdrop-blur-md"
-            >
-              {/* Profile Link */}
-              <Link
-                to={`/${user?.role || "learner"}/profile`}
-                onClick={() => {
-                  if (openMobile) setOpenMobile(false)
-                }}
-                className="flex items-center gap-2 rounded-xl px-2.5 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-muted/50"
+              <PopoverContent
+                side={isMobile ? "bottom" : "right"}
+                align="end"
+                sideOffset={8}
+                className="w-64 rounded-2xl border border-border/70 bg-popover/95 p-1.5 shadow-xl backdrop-blur-md"
               >
-                <User className="size-4 shrink-0 text-muted-foreground" />
-                <span>My Profile</span>
-              </Link>
+                {/* User Info Header */}
+                <div className="flex flex-col px-3 py-2 text-left">
+                  <span className="truncate text-sm font-bold text-foreground capitalize">
+                    {user?.user.name || "User"}
+                  </span>
+                  <span className="truncate text-xs font-normal text-muted-foreground">
+                    {user?.user.email || ""}
+                  </span>
+                </div>
 
-              <div className="my-0.5 h-px bg-border/40" />
+                <div className="h-px bg-border/50" />
 
-              {/* Theme Row */}
-              <div className="flex items-center justify-between rounded-xl px-2.5 py-1.5 transition-colors hover:bg-muted/50">
-                <span className="text-sm font-medium text-foreground">
-                  Theme
-                </span>
-                <ModeToggle variant="select" />
-              </div>
+                {/* Account */}
+                <Link
+                  to={`/${user?.role || "learner"}/profile`}
+                  onClick={() => {
+                    setPopoverOpen(false)
+                    if (openMobile) setOpenMobile(false)
+                  }}
+                  className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                >
+                  <User className="size-4 shrink-0 text-muted-foreground" />
+                  <span>Account</span>
+                </Link>
 
-              <div className="my-0.5 h-px bg-border/40" />
+                <div className="h-px bg-border/50" />
 
-              {/* Log Out Row */}
-              <Button
-                variant={"ghost"}
-                type="button"
-                onClick={() => {
-                  handleLogout()
-                  if (openMobile) setOpenMobile(false)
-                }}
-                className={"justify-start"}
-              >
-                <LogOut className="size-4 shrink-0" />
-                <span>Log out</span>
-              </Button>
-            </PopoverContent>
-          </Popover>
-        </div>
+                {/* Theme Selector */}
+                <div className="space-y-1 px-1 py-1">
+                  <span className="px-2 text-xs font-semibold text-muted-foreground">
+                    Theme
+                  </span>
+                  <div className="space-y-0.5 pt-0.5">
+                    {[
+                      { label: "System", value: "system" as const },
+                      { label: "Dark", value: "dark" as const },
+                      { label: "Light", value: "light" as const },
+                    ].map((item) => {
+                      const isSelected = theme === item.value
+                      return (
+                        <button
+                          key={item.value}
+                          type="button"
+                          onClick={() => setTheme(item.value)}
+                          className={cn(
+                            "flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs transition-colors hover:bg-muted",
+                            isSelected
+                              ? "font-semibold text-foreground"
+                              : "font-normal text-muted-foreground hover:text-foreground"
+                          )}
+                        >
+                          <span className="flex size-3.5 items-center justify-center">
+                            {isSelected && (
+                              <span className="size-1.5 rounded-full bg-foreground" />
+                            )}
+                          </span>
+                          <span>{item.label}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                <div className="h-px bg-border/50" />
+
+                {/* Log Out */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPopoverOpen(false)
+                    handleLogout()
+                    if (openMobile) setOpenMobile(false)
+                  }}
+                  className="mb-1 flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                >
+                  <LogOut className="size-4 shrink-0 text-muted-foreground" />
+                  <span>Log out</span>
+                </button>
+              </PopoverContent>
+            </Popover>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

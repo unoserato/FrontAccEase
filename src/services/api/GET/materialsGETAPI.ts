@@ -10,6 +10,7 @@ import type { InstructorMaterialsCountProps } from "@/const/props/instructorProp
 import type { InstrumentProps } from "@/const/props/miscellaneousProps"
 import type {
   CoreModuleActivityResponse,
+  CoreModuleProgressPrincipleProps,
   CoreModuleProgressProps,
   ModuleProps,
 } from "@/const/props/moduleProps"
@@ -19,6 +20,7 @@ import type {
   QuizProps,
   QuizSubmissionProps,
 } from "@/const/props/quizProps"
+import type { WCAGPrinciple } from "@/const/props/wcagProps"
 import { api } from "@/services/axios"
 import type { ExtensionScanSession, WebLLMTaskBatch } from "@/services/webLLM"
 
@@ -48,7 +50,9 @@ export async function getModuleByIdAPI(id: string): Promise<ModuleProps> {
   return response.data
 }
 
-export async function getInstructorQuizzesAPI(): Promise<InstructorQuizProps[]> {
+export async function getInstructorQuizzesAPI(): Promise<
+  InstructorQuizProps[]
+> {
   const response = await api.get(`/instructor/get-all-quiz`)
   return response.data
 }
@@ -99,6 +103,14 @@ export async function getCoreModulesAPI(): Promise<CoreModuleProgressProps> {
   return response.data
 }
 
+export async function getCoreModulesPrincipleAPI(
+  principle: WCAGPrinciple | string
+): Promise<CoreModuleProgressPrincipleProps> {
+  const normalized = (principle || "perceivable").toLowerCase()
+  const response = await api.get(`/learner/pour/progress/${normalized}`)
+  return response.data
+}
+
 export async function getCoreModuleActivitiesAPI(
   id: string
 ): Promise<CoreModuleActivityResponse> {
@@ -136,5 +148,15 @@ export async function getClassroomAnalyzerLogsByClassroomId(
   const response = await api.get(
     `/instructor/classrooms/analyzer-logs/${classroom_id}`
   )
+  return response.data
+}
+
+export async function getCurriculumAPI() {
+  const response = await api.get(`/admin/pour/curriculum`)
+  return response.data
+}
+
+export async function getCurriculumContentByIdAPI() {
+  const response = await api.get(`/admin/pour/curriculum`)
   return response.data
 }

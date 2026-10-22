@@ -13,7 +13,6 @@ import {
 import { toast } from "@/components/ui/toast"
 import {
   BookOpen,
-  Camera,
   Check,
   CheckCircle2,
   Copy,
@@ -21,14 +20,24 @@ import {
   KeyRound,
   Loader2,
   Mail,
+  Pencil,
   Shield,
   ShieldCheck,
+  Upload,
   User as UserIcon,
 } from "lucide-react"
 import { cn } from "cn"
 import copyText from "@/hooks/copy-text"
 import PageSkeleton from "@/components/skeleton/PageSkeleton"
 import type { UserRole } from "@/const/props/userProps"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 
 function getInitials(name?: string): string {
   if (!name) return "U"
@@ -107,6 +116,7 @@ export default function ProfileView() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [copiedKey, setCopiedKey] = useState<string | null>(null)
+  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false)
 
   function handleCopy(text: string, key: string) {
     if (!text) return
@@ -215,48 +225,41 @@ export default function ProfileView() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             {/* Avatar & Display Name */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
+              {/* Avatar with click to expand & pencil badge to indicate editing */}
               <div className="group relative -mt-12 inline-block sm:-mt-14">
-                <Avatar className="size-24 rounded-full border-4 border-background bg-muted shadow-md ring-1 ring-border/50">
-                  <AvatarImage
-                    src={user.profile_picture || undefined}
-                    alt={user.name}
-                    className="object-cover"
-                  />
-                  <AvatarFallback className="bg-primary/10 text-xl font-bold text-primary">
-                    {getInitials(user.name)}
-                  </AvatarFallback>
-                </Avatar>
-
-                {/* Avatar upload overlay trigger on hover */}
                 <button
                   type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploadMutation.isPending}
-                  title="Upload profile photo"
-                  aria-label="Upload profile photo"
-                  className="absolute inset-0 flex cursor-pointer items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-100"
+                  onClick={() => setIsImageDialogOpen(true)}
+                  className="group/avatar relative block cursor-pointer rounded-full focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                  title="View and expand profile photo"
+                  aria-label="View and expand profile photo"
                 >
-                  {uploadMutation.isPending ? (
-                    <Loader2 className="size-6 animate-spin text-white" />
-                  ) : (
-                    <Camera className="size-6 text-white" />
-                  )}
+                  <Avatar className="size-24 rounded-full border-4 border-background bg-muted shadow-md ring-1 ring-border/50 transition-opacity group-hover/avatar:opacity-95">
+                    <AvatarImage
+                      src={user.profile_picture || undefined}
+                      alt={user.name}
+                      className="object-cover"
+                    />
+                    <AvatarFallback className="bg-primary/10 text-xl font-bold text-primary">
+                      {getInitials(user.name)}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  {/* Avatar hover overlay */}
+                  <span className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity duration-200 group-hover/avatar:opacity-100">
+                    <Pencil className="size-5 text-white" />
+                  </span>
                 </button>
 
-                {/* Small camera badge in corner */}
+                {/* Pencil badge in corner indicating the image can be edited */}
                 <button
                   type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploadMutation.isPending}
-                  title="Change profile photo"
-                  aria-label="Change profile photo"
-                  className="absolute right-0 bottom-0 flex size-7 cursor-pointer items-center justify-center rounded-full border-2 border-background bg-foreground text-background shadow-xs transition-transform hover:scale-110 disabled:opacity-70"
+                  onClick={() => setIsImageDialogOpen(true)}
+                  title="Edit profile photo"
+                  aria-label="Edit profile photo"
+                  className="absolute right-0 bottom-0 flex size-7 cursor-pointer items-center justify-center rounded-full border-2 border-background bg-foreground text-background shadow-xs transition-transform hover:scale-110 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none active:scale-95"
                 >
-                  {uploadMutation.isPending ? (
-                    <Loader2 className="size-3.5 animate-spin" />
-                  ) : (
-                    <Camera className="size-3.5" />
-                  )}
+                  <Pencil className="size-3.5" />
                 </button>
               </div>
 
@@ -449,6 +452,70 @@ export default function ProfileView() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Dialog for Expanding Profile Image */}
+      <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}>
+        <DialogContent className="max-w-md sm:max-w-md">
+          <DialogHeader className="text-left sm:text-center">
+            <DialogTitle className="text-lg font-bold">
+              Profile Photo
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground">
+              View or change your profile picture
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex flex-col items-center justify-center py-4">
+            <div className="relative mx-auto flex size-60 items-center justify-center overflow-hidden rounded-full border-4 border-background bg-muted shadow-lg ring-1 ring-border sm:size-64">
+              {user.profile_picture ? (
+                <img
+                  src={user.profile_picture}
+                  alt={user.name}
+                  className="size-full object-cover"
+                />
+              ) : (
+                <div className="flex size-full items-center justify-center bg-primary/10 text-6xl font-black text-primary">
+                  {getInitials(user.name)}
+                </div>
+              )}
+
+              {uploadMutation.isPending && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/80 backdrop-blur-xs">
+                  <Loader2 className="size-8 animate-spin text-primary" />
+                  <span className="mt-2 text-xs font-medium text-foreground">
+                    Uploading photo...
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Upload new image button below it */}
+          <div className="flex flex-col items-center gap-2 border-t border-border/50 pt-4">
+            <Button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadMutation.isPending}
+              className="w-full sm:w-auto"
+            >
+              {uploadMutation.isPending ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" />
+                  <span>Uploading photo...</span>
+                </>
+              ) : (
+                <>
+                  <Upload className="size-4" />
+                  <span>Upload New Image</span>
+                </>
+              )}
+            </Button>
+            <p className="text-center text-xs text-muted-foreground">
+              PNG, JPG, JPEG, or WEBP up to 5 MB
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   )
 }

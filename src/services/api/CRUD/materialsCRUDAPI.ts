@@ -3,6 +3,7 @@ import type { Result } from "@/const/props/analyzerProps"
 import type { QuizJson } from "@/const/props/quizProps"
 import { api } from "@/services/axios"
 import type { ExtensionScanSession } from "@/services/webLLM"
+import type { InstrumentProps } from "@/const/props/miscellaneousProps"
 
 export async function createSubmissionTicket(id: string): Promise<QuizJson> {
   const response = await api.post(`/learner/pre-submit-quiz-answer/${id}`)
@@ -162,5 +163,13 @@ export async function updateAnalyzerCommentById(
 ) {
   const data = { comment: comment, log_id: log_id }
   const response = await api.put(`/instructor/update-analyzer-comment`, data)
+  return response.data
+}
+
+export async function updateWCAGInstruments(
+  id: string,
+  data: { principle: string; title: string; content: string }
+): Promise<InstrumentProps[]> {
+  const response = await api.put(`/admin/wcag-instrument/${id}`, data)
   return response.data
 }

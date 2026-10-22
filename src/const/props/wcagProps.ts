@@ -1,8 +1,5 @@
 export type WCAGPrinciple =
-  | "Perceivable"
-  | "Operable"
-  | "Understandable"
-  | "Robust"
+  "Perceivable" | "Operable" | "Understandable" | "Robust"
 
 export const WCAG_PRINCIPLES_DATA: Record<WCAGPrinciple, string[]> = {
   Perceivable: [

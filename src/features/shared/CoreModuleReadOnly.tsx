@@ -12,53 +12,48 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
-  useCoreModuleProgress,
   useCoreModuleProgressActivities,
+  useCoreModuleProgressByPrinciple,
 } from "@/services/tanstack/materials"
 import type {
   CoreModuleAssessmentActivity,
   CoreModuleInteractiveActivity,
   CoreModuleLessonActivity,
+  CoreModuleActivityItemProps,
 } from "@/const/props/moduleProps"
+import type { WCAGPrinciple } from "@/const/props/wcagProps"
 import CoreModuleLessonView from "./core-module/CoreModuleLessonView"
 import CoreModuleAssessmentView from "./core-module/CoreModuleAssessmentView"
 import CoreModuleInteractiveView from "./core-module/CoreModuleInteractiveView"
 
 export default function CoreModuleReadOnly() {
   const { principle_id, activity_id } = useParams()
+  const normalizedPrinciple = (
+    principle_id || "perceivable"
+  ).toLowerCase() as WCAGPrinciple
   const { data: contents } = useCoreModuleProgressActivities(activity_id || "")
-  const { data: coreModuleProgress } = useCoreModuleProgress()
+  const { data: principleProgress } =
+    useCoreModuleProgressByPrinciple(normalizedPrinciple)
   const navigate = useNavigate()
 
-  const principles = useMemo(() => {
-    return coreModuleProgress?.principles || []
-  }, [coreModuleProgress?.principles])
-
-  const matchedPrinciple = useMemo(() => {
-    if (!principles.length) return null
-    return (
-      principles.find(
-        (p) =>
-          p.name.toLowerCase() === principle_id?.toLowerCase() ||
-          p.content?.id === principle_id
-      ) ||
-      // Fallback: search if activity_id belongs to any principle's activities
-      principles.find((p) =>
-        (p.content?.activities || []).some((act) => act.id === activity_id)
-      ) ||
-      principles[0]
-    )
-  }, [principles, principle_id, activity_id])
-
-  const principleContent = matchedPrinciple?.content
-  const principleRouteName =
-    matchedPrinciple?.name || principle_id || "perceivable"
+  const principleRouteName = normalizedPrinciple
+  const principleLabel =
+    (principleProgress?.name
+      ? principleProgress.name.charAt(0).toUpperCase() +
+        principleProgress.name.slice(1).toLowerCase()
+      : "") ||
+    (principle_id
+      ? principle_id.charAt(0).toUpperCase() +
+        principle_id.slice(1).toLowerCase()
+      : "Principle")
 
   const activities = useMemo(() => {
-    return (principleContent?.activities || [])
+    return (
+      (principleProgress?.activities || []) as CoreModuleActivityItemProps[]
+    )
       .slice()
       .sort((a, b) => a.display_order - b.display_order)
-  }, [principleContent?.activities])
+  }, [principleProgress?.activities])
 
   const currentActivityIndex = useMemo(() => {
     if (!activity_id || !activities.length) return -1
@@ -74,25 +69,25 @@ export default function CoreModuleReadOnly() {
 
   const completedActivityIds = useMemo(() => {
     return new Set(
-      (principleContent?.completions || []).map((c) =>
+      (principleProgress?.completions || []).map((c) =>
         String((c as any).activity_id || (c as any).id)
       )
     )
-  }, [principleContent?.completions])
+  }, [principleProgress?.completions])
 
   const isNextActivityLocked = useMemo(() => {
     if (!nextActivity) return false
     const isCompleted = completedActivityIds.has(String(nextActivity.id))
     const isNext =
-      nextActivity.id === principleContent?.next_activity_id ||
-      (!principleContent?.next_activity_id &&
+      nextActivity.id === principleProgress?.next_activity_id ||
+      (!principleProgress?.next_activity_id &&
         completedActivityIds.size === 0 &&
         activities[0]?.id === nextActivity.id)
     return !isCompleted && !isNext
   }, [
     nextActivity,
     completedActivityIds,
-    principleContent?.next_activity_id,
+    principleProgress?.next_activity_id,
     activities,
   ])
 
@@ -115,13 +110,6 @@ export default function CoreModuleReadOnly() {
   const isInteractive =
     activityContent?.kind === "interactive" ||
     Boolean(activityContent && "scenario" in activityContent)
-
-  const principleLabel =
-    principleContent?.revision?.title ||
-    principleContent?.title ||
-    (principle_id
-      ? principle_id.charAt(0).toUpperCase() + principle_id.slice(1)
-      : "Core Principle")
 
   const title =
     (isLesson && activityContent && "lesson" in activityContent
@@ -253,7 +241,7 @@ export default function CoreModuleReadOnly() {
               }
               title={
                 prevActivity
-                  ? `Previous Activity: ${prevActivity.title}`
+                  ? `Previous Activity: ${(prevActivity as any)?.name || (prevActivity as any)?.title}`
                   : "No previous activity"
               }
               aria-label="Previous Activity"
@@ -277,8 +265,8 @@ export default function CoreModuleReadOnly() {
                 !nextActivity
                   ? "Last activity in this principle"
                   : isNextActivityLocked
-                    ? `Locked: Complete earlier activities to unlock "${nextActivity.title}"`
-                    : `Next Activity: ${nextActivity.title}`
+                    ? `Locked: Complete earlier activities to unlock "${(nextActivity as any)?.name || (nextActivity as any)?.title}"`
+                    : `Next Activity: ${(nextActivity as any)?.name || (nextActivity as any)?.title}`
               }
               aria-label="Next Activity"
               className="gap-1 font-semibold"
@@ -364,16 +352,16 @@ export default function CoreModuleReadOnly() {
                   `/learner/modules/${principleRouteName}/${prevActivity.id}`
                 )
               }
-              className="h-auto min-h-11 flex items-center justify-start gap-2.5 py-2 px-3.5 text-left"
-              title={`Previous: ${prevActivity.title}`}
+              className="flex h-auto min-h-11 items-center justify-start gap-2.5 px-3.5 py-2 text-left"
+              title={`Previous: ${prevActivity.name}`}
             >
               <ChevronLeft className="size-4 shrink-0 text-muted-foreground" />
               <div className="flex flex-col items-start leading-tight">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                   Previous Activity
                 </span>
                 <span className="max-w-45 truncate text-xs font-bold text-foreground sm:max-w-60">
-                  {prevActivity.title}
+                  {prevActivity.name}
                 </span>
               </div>
             </Button>
@@ -381,12 +369,12 @@ export default function CoreModuleReadOnly() {
             <Button
               variant="outline"
               onClick={handleBack}
-              className="h-auto min-h-11 flex items-center justify-start gap-2.5 py-2 px-3.5 text-left"
+              className="flex h-auto min-h-11 items-center justify-start gap-2.5 px-3.5 py-2 text-left"
               title="Return to Principle Overview"
             >
               <ArrowLeft className="size-4 shrink-0 text-muted-foreground" />
               <div className="flex flex-col items-start leading-tight">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                   Module Overview
                 </span>
                 <span className="text-xs font-bold text-foreground">
@@ -420,20 +408,20 @@ export default function CoreModuleReadOnly() {
                   `/learner/modules/${principleRouteName}/${nextActivity.id}`
                 )
               }
-              className="h-auto min-h-11 flex items-center justify-end gap-2.5 py-2 px-3.5 text-right"
+              className="flex h-auto min-h-11 items-center justify-end gap-2.5 px-3.5 py-2 text-right"
               title={
                 isNextActivityLocked
-                  ? `Locked: Complete earlier activities first to unlock "${nextActivity.title}"`
-                  : `Next: ${nextActivity.title}`
+                  ? `Locked: Complete earlier activities first to unlock "${nextActivity.name}"`
+                  : `Next: ${nextActivity.name}`
               }
             >
               <div className="flex flex-col items-end leading-tight">
-                <span className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider opacity-85">
+                <span className="flex items-center gap-1 text-xs font-semibold tracking-wider uppercase opacity-85">
                   {isNextActivityLocked && <Lock className="size-2.5" />}
                   {isNextActivityLocked ? "Locked" : "Next Activity"}
                 </span>
                 <span className="max-w-45 truncate text-xs font-bold sm:max-w-60">
-                  {nextActivity.title}
+                  {nextActivity.name}
                 </span>
               </div>
               {isNextActivityLocked ? (
@@ -446,11 +434,11 @@ export default function CoreModuleReadOnly() {
             <Button
               variant="outline"
               onClick={handleBack}
-              className="h-auto min-h-11 flex items-center justify-end gap-2.5 py-2 px-3.5 text-right"
+              className="flex h-auto min-h-11 items-center justify-end gap-2.5 px-3.5 py-2 text-right"
               title="Return to Principle Overview"
             >
               <div className="flex flex-col items-end leading-tight">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                <span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                   Completed Principle
                 </span>
                 <span className="text-xs font-bold text-foreground">

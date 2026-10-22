@@ -4,7 +4,24 @@ import HeaderTemplate from "@/components/common/PageTemplate"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import {
   Sheet,
   SheetContent,
@@ -18,12 +35,22 @@ import {
   type WCAGPrinciple,
 } from "@/const/criterion"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { FileText, PanelLeft } from "lucide-react"
+import {
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  Loader2,
+  PanelLeft,
+  Pencil,
+  Save,
+} from "lucide-react"
 import SearchTemplate from "@/components/common/SearchTemplate"
-import { useWCAGInstruments } from "@/services/tanstack/materials"
+import {
+  useWCAGInstruments,
+  useUpdateWCAGInstrument,
+} from "@/services/tanstack/materials"
 import type { InstrumentProps } from "@/const/props/miscellaneousProps"
-
-// TODO: make it dropddown per 1.1, 1.2. etc
+import { cn } from "@/lib/utils"
 
 interface ParsedInstrument extends InstrumentProps {
   guidelineId: string
@@ -43,18 +70,21 @@ function parseInstrument(item: InstrumentProps): ParsedInstrument {
     : ""
   const criterionName = match ? match[3] : item.title
 
+  // Normalize newlines in content for robust parsing across environments
+  const normalizedContent = (item.content || "").replace(/\r\n/g, "\n")
+
   // Extract level from content e.g. (Level A), (Level AA), (Level AAA), (Level AA) New
-  const levelMatch = item.content.match(
+  const levelMatch = normalizedContent.match(
     /^\s*\(Level\s+(A{1,3})\)(?:\s+(New))?/i
   )
   const level = levelMatch
     ? `Level ${levelMatch[1].toUpperCase()}${levelMatch[2] ? " (New)" : ""}`
-    : item.content.trim().startsWith("Note")
+    : normalizedContent.trim().startsWith("Note")
       ? "Note"
       : null
 
   // Strip leading (Level ...) tag lines
-  const body = item.content
+  const body = normalizedContent
     .replace(/^(\s*\(Level\s+[A-Za-z0-9]+\)(?:\s+New)?\s*)+/i, "")
     .trim()
 
@@ -80,7 +110,12 @@ function compareCriterionNum(a: string, b: string): number {
 }
 
 function renderContentBody(body: string) {
-  const sections = body.split(/\n\n+/).filter(Boolean)
+  // Normalize line endings to \n to support both LF and CRLF strings from database and editor
+  const normalizedBody = (body || "").replace(/\r\n/g, "\n")
+  const sections = normalizedBody
+    .split(/\n\s*\n+/)
+    .map((s) => s.trim())
+    .filter(Boolean)
 
   return (
     <div className="space-y-4 text-sm leading-relaxed text-foreground/90">
@@ -90,9 +125,11 @@ function renderContentBody(body: string) {
           .map((l) => l.trim())
           .filter(Boolean)
 
-        // Check if lines are a bulleted list (- item)
+        if (lines.length === 0) return null
+
+        // Check if lines are a bulleted list (- item or * item)
         const isBulletList =
-          lines.length > 1 && lines.every((line) => line.startsWith("- "))
+          lines.every((line) => line.startsWith("- ") || line.startsWith("* "))
 
         if (isBulletList) {
           return (
@@ -100,7 +137,7 @@ function renderContentBody(body: string) {
               {lines.map((line, lIdx) => (
                 <li key={lIdx} className="flex items-start gap-2">
                   <span className="mt-2 size-1.5 shrink-0 rounded-full bg-foreground/60" />
-                  <span>{line.replace(/^-\s*/, "")}</span>
+                  <span>{line.replace(/^[-*]\s*/, "")}</span>
                 </li>
               ))}
             </ul>
@@ -120,25 +157,48 @@ function renderContentBody(body: string) {
             firstLine === "Sensory" ||
             firstLine === "CAPTCHA" ||
             firstLine === "Decoration, Formatting, Invisible" ||
-            (firstLine.length < 35 && !firstLine.includes(".")))
+            (firstLine.length < 40 && !firstLine.includes(".")))
 
         if (isHeadingAndBody) {
           const heading = firstLine
-          const rest = lines.slice(1).join(" ")
+          const bodyLines = lines.slice(1)
+          const hasBullets = bodyLines.some(
+            (l) => l.startsWith("- ") || l.startsWith("* ")
+          )
+
           return (
             <div
               key={idx}
-              className="space-y-1 rounded-xl border border-border/70 bg-muted/30 p-3.5 sm:p-4"
+              className="space-y-2 rounded-xl border border-border/70 bg-muted/30 p-3.5 sm:p-4"
             >
               <h4 className="font-bold text-foreground">{heading}</h4>
-              <p className="text-muted-foreground">{rest}</p>
+              {hasBullets ? (
+                <div className="space-y-1.5 text-muted-foreground">
+                  {bodyLines.map((bLine, bIdx) =>
+                    bLine.startsWith("- ") || bLine.startsWith("* ") ? (
+                      <div key={bIdx} className="flex items-start gap-2 pl-1">
+                        <span className="mt-2 size-1.5 shrink-0 rounded-full bg-foreground/60" />
+                        <span>{bLine.replace(/^[-*]\s*/, "")}</span>
+                      </div>
+                    ) : (
+                      <p key={bIdx} className="leading-relaxed">
+                        {bLine}
+                      </p>
+                    )
+                  )}
+                </div>
+              ) : (
+                <p className="leading-relaxed text-muted-foreground">
+                  {bodyLines.join(" ")}
+                </p>
+              )}
             </div>
           )
         }
 
         return (
           <p key={idx} className="leading-relaxed">
-            {section}
+            {lines.join(" ")}
           </p>
         )
       })}
@@ -146,23 +206,35 @@ function renderContentBody(body: string) {
   )
 }
 
+const PRINCIPLES: WCAGPrinciple[] = [
+  "Perceivable",
+  "Operable",
+  "Understandable",
+  "Robust",
+]
+
 export default function Instruments() {
   const isMobile = useIsMobile()
   const navigate = useNavigate()
   const { data: instrumentsData } = useWCAGInstruments()
+  const updateMutation = useUpdateWCAGInstrument()
   const { guidelineId } = useParams<{ guidelineId?: string }>()
 
   const [search, setSearch] = useState("")
-  const [selectedCriterionId, setSelectedCriterionId] = useState<string>("1")
+  const [selectedCriterionId, setSelectedCriterionId] = useState<string>("")
   const [sheetOpen, setSheetOpen] = useState(false)
 
-  // Parse all instruments from the API dataset
-  const parsedInstruments = useMemo(() => {
-    return instrumentsData.map(parseInstrument)
-  }, [])
+  // Edit dialog state
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [editPrinciple, setEditPrinciple] = useState<string>("Perceivable")
+  const [editTitle, setEditTitle] = useState("")
+  const [editContent, setEditContent] = useState("")
+  const [editError, setEditError] = useState<string | null>(null)
 
-  // Current active guideline ID from URL or default to "1.1"
-  const selectedGuidelineId = guidelineId || "1.1"
+  // Parse all instruments from the API dataset - recompute when instrumentsData updates
+  const parsedInstruments = useMemo(() => {
+    return (instrumentsData || []).map(parseInstrument)
+  }, [instrumentsData])
 
   // Filter criteria based on search query
   const filteredInstruments = useMemo(() => {
@@ -172,6 +244,8 @@ export default function Instruments() {
       (item) =>
         item.title.toLowerCase().includes(query) ||
         item.principle.toLowerCase().includes(query) ||
+        item.criterionNum.toLowerCase().includes(query) ||
+        item.criterionName.toLowerCase().includes(query) ||
         item.content.toLowerCase().includes(query)
     )
   }, [parsedInstruments, search])
@@ -192,42 +266,116 @@ export default function Instruments() {
     )
   }, [search, matchingGuidelineIds])
 
-  // Criteria belonging to the currently selected guideline
-  const currentGuidelineCriteria = useMemo(() => {
-    return filteredInstruments
+  // Active guideline ID from URL or default to "1.1"
+  const selectedGuidelineId = guidelineId || "1.1"
+
+  // Active criterion resolution
+  const activeCriterion: ParsedInstrument | null = useMemo(() => {
+    if (parsedInstruments.length === 0) return null
+
+    // 1. If explicit criterion ID is selected, find it
+    if (selectedCriterionId) {
+      const match = parsedInstruments.find(
+        (c) => String(c.id) === selectedCriterionId
+      )
+      if (match) return match
+    }
+
+    // 2. Otherwise find the first criterion belonging to the URL guideline
+    const guidelineCriteria = parsedInstruments
       .filter((c) => c.guidelineId === selectedGuidelineId)
       .sort((a, b) => compareCriterionNum(a.criterionNum, b.criterionNum))
-  }, [filteredInstruments, selectedGuidelineId])
 
-  // Sync selected criterion when guidelineId changes or when criteria list changes
-  const [prevGuidelineId, setPrevGuidelineId] = useState(selectedGuidelineId)
-  if (selectedGuidelineId !== prevGuidelineId) {
-    setPrevGuidelineId(selectedGuidelineId)
-    const firstCriterion = currentGuidelineCriteria[0]
-    if (firstCriterion) {
-      setSelectedCriterionId(String(firstCriterion.id))
+    if (guidelineCriteria.length > 0) {
+      return guidelineCriteria[0]
+    }
+
+    // 3. Fallback to the first criterion overall
+    return parsedInstruments[0] || null
+  }, [parsedInstruments, selectedCriterionId, selectedGuidelineId])
+
+  // Sequential navigation (Prev / Next) across all sorted criteria
+  const sortedAllCriteria = useMemo(() => {
+    return [...parsedInstruments].sort((a, b) =>
+      compareCriterionNum(a.criterionNum, b.criterionNum)
+    )
+  }, [parsedInstruments])
+
+  const activeIndex = useMemo(() => {
+    if (!activeCriterion) return -1
+    return sortedAllCriteria.findIndex((c) => c.id === activeCriterion.id)
+  }, [sortedAllCriteria, activeCriterion])
+
+  const prevCriterion =
+    activeIndex > 0 ? sortedAllCriteria[activeIndex - 1] : null
+  const nextCriterion =
+    activeIndex >= 0 && activeIndex < sortedAllCriteria.length - 1
+      ? sortedAllCriteria[activeIndex + 1]
+      : null
+
+  const handleSelectCriterion = (criterion: ParsedInstrument) => {
+    setSelectedCriterionId(String(criterion.id))
+    if (criterion.guidelineId) {
+      navigate(`/admin/instruments/${criterion.guidelineId}`)
+    }
+    if (isMobile) {
+      setSheetOpen(false)
     }
   }
 
-  // Ensure selectedCriterionId belongs to currentGuidelineCriteria
-  const activeCriterion =
-    currentGuidelineCriteria.find(
-      (c) => String(c.id) === selectedCriterionId
-    ) ||
-    currentGuidelineCriteria[0] ||
-    null
-
-  const principles: WCAGPrinciple[] = [
-    "Perceivable",
-    "Operable",
-    "Understandable",
-    "Robust",
-  ]
-
   const handleSelectGuideline = (id: string) => {
     navigate(`/admin/instruments/${id}`)
+    const firstUnderGuideline = parsedInstruments
+      .filter((c) => c.guidelineId === id)
+      .sort((a, b) => compareCriterionNum(a.criterionNum, b.criterionNum))[0]
+    if (firstUnderGuideline) {
+      setSelectedCriterionId(String(firstUnderGuideline.id))
+    }
     if (isMobile) {
       setSheetOpen(false)
+    }
+  }
+
+  const handleOpenEdit = (criterion: ParsedInstrument) => {
+    setEditPrinciple(criterion.principle)
+    setEditTitle(criterion.title)
+    setEditContent(criterion.content)
+    setEditError(null)
+    setIsEditDialogOpen(true)
+  }
+
+  const handleSaveEdit = async () => {
+    if (!activeCriterion) return
+    if (!editTitle.trim()) {
+      setEditError("Criterion title cannot be empty.")
+      return
+    }
+    if (!editContent.trim()) {
+      setEditError("Content cannot be empty.")
+      return
+    }
+
+    setEditError(null)
+    try {
+      await updateMutation.mutateAsync({
+        id: String(activeCriterion.id),
+        data: {
+          principle: editPrinciple,
+          title: editTitle.trim(),
+          content: editContent.trim(),
+        },
+      })
+      setIsEditDialogOpen(false)
+    } catch (err: unknown) {
+      const errObj = err as {
+        response?: { data?: { message?: string } }
+        message?: string
+      }
+      setEditError(
+        errObj?.response?.data?.message ||
+          errObj?.message ||
+          "Failed to update criterion instrument."
+      )
     }
   }
 
@@ -251,124 +399,169 @@ export default function Instruments() {
                   </Button>
                 }
               />
-              <SheetContent side="left" className="p-4">
-                <SheetHeader className="p-0 pb-3">
+              <SheetContent
+                side="left"
+                className="flex h-full w-full flex-col p-0 sm:max-w-md"
+              >
+                <SheetHeader className="shrink-0 border-b border-border/50 p-4">
                   <SheetTitle>Browse Guidelines</SheetTitle>
                 </SheetHeader>
-                <BrowseGuidelinesContent
-                  search={search}
-                  setSearch={setSearch}
-                  principles={principles}
-                  filteredGuidelines={filteredGuidelines}
-                  selectedGuidelineId={selectedGuidelineId}
-                  onSelectGuideline={handleSelectGuideline}
-                  instruments={filteredInstruments}
-                />
+                <div className="min-h-0 flex-1 overflow-y-auto p-4">
+                  <BrowseGuidelinesContent
+                    search={search}
+                    setSearch={setSearch}
+                    principles={PRINCIPLES}
+                    filteredGuidelines={filteredGuidelines}
+                    activeCriterionId={
+                      activeCriterion ? String(activeCriterion.id) : ""
+                    }
+                    selectedGuidelineId={selectedGuidelineId}
+                    onSelectGuideline={handleSelectGuideline}
+                    onSelectCriterion={handleSelectCriterion}
+                    instruments={filteredInstruments}
+                  />
+                </div>
               </SheetContent>
             </Sheet>
           </div>
         )}
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Desktop Left Column: Browse Guidelines Card */}
-        <Card className="hidden border border-border/80 shadow-xs lg:col-span-1 lg:block">
-          <CardHeader className="p-4 sm:p-5">
-            <CardTitle className="text-base font-bold sm:text-lg">
-              Browse guidelines
-            </CardTitle>
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
+        {/* Desktop Left Column: Full-height Browse Guidelines Card */}
+        <Card
+          className="hidden overflow-hidden border border-border/80 shadow-xs lg:sticky lg:top-4 lg:col-span-1 lg:flex lg:flex-col"
+          style={{ height: "calc(100vh - 8.5rem)" }}
+        >
+          <CardHeader className="shrink-0 space-y-3 border-b border-border/50 p-4 sm:p-5">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base font-bold sm:text-lg">
+                Browse guidelines
+              </CardTitle>
+              <span className="text-xs font-semibold text-muted-foreground">
+                {filteredInstruments.length} criteria
+              </span>
+            </div>
+            <SearchTemplate
+              search={search}
+              setSearch={(value) => setSearch(value)}
+              title="principle or criterion"
+            />
           </CardHeader>
-          <CardContent className="p-4 pt-0 sm:p-5 sm:pt-0">
+          <CardContent className="min-h-0 flex-1 overflow-y-auto p-4 pt-4 sm:p-5 sm:pt-4">
             <BrowseGuidelinesContent
               search={search}
               setSearch={setSearch}
-              principles={principles}
+              principles={PRINCIPLES}
               filteredGuidelines={filteredGuidelines}
+              activeCriterionId={
+                activeCriterion ? String(activeCriterion.id) : ""
+              }
               selectedGuidelineId={selectedGuidelineId}
               onSelectGuideline={handleSelectGuideline}
+              onSelectCriterion={handleSelectCriterion}
               instruments={filteredInstruments}
+              showSearchInput={false}
             />
           </CardContent>
         </Card>
 
-        {/* Right Column: Selected Criterion Detail */}
-        <Card className="flex flex-col justify-between shadow-xs lg:col-span-2">
-          {currentGuidelineCriteria.length > 0 && activeCriterion ? (
-            <Tabs
-              value={String(activeCriterion.id)}
-              onValueChange={setSelectedCriterionId}
-              className="flex flex-1 flex-col justify-between p-4 sm:p-6"
-            >
-              <div className="h-fit space-y-6">
-                {/* Sub-criterion TabsList if guideline has multiple criteria */}
-                {currentGuidelineCriteria.length > 1 && (
-                  <div className="space-y-2 pb-4">
-                    <span className="block text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-                      Success Criteria ({currentGuidelineCriteria.length})
+        {/* Right Column: Selected Criterion Detail without Tabs */}
+        <Card
+          className="flex flex-col border border-border/80 shadow-xs lg:col-span-2"
+          style={{ minHeight: "calc(100vh - 8.5rem)" }}
+        >
+          {activeCriterion ? (
+            <div className="flex flex-1 flex-col justify-between space-y-6 p-5 sm:p-7">
+              <div className="space-y-6">
+                {/* Meta Bar & Edit Action */}
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
+                      {activeCriterion.principle}
                     </span>
-                    <TabsList className="flex-wrap justify-start gap-1 bg-muted p-1">
-                      {currentGuidelineCriteria.map((c) => (
-                        <TabsTrigger
-                          key={c.id}
-                          value={String(c.id)}
-                          className="text-xs"
-                        >
-                          <span className="font-bold">{c.criterionNum}</span>
-                          <span className="ml-1 text-muted-foreground">
-                            {c.criterionName}
-                          </span>
-                        </TabsTrigger>
-                      ))}
-                    </TabsList>
+                    <span className="text-muted-foreground/40">•</span>
+                    <span className="text-xs font-medium text-muted-foreground">
+                      Guideline {activeCriterion.guidelineId}
+                    </span>
                   </div>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleOpenEdit(activeCriterion)}
+                    className="gap-1.5 font-medium hover:bg-muted"
+                  >
+                    <Pencil className="size-3.5" />
+                    Edit Instrument
+                  </Button>
+                </div>
+
+                {/* Criterion Title & Level Badge */}
+                <div className="space-y-2">
+                  <h2 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+                    {activeCriterion.title}
+                  </h2>
+                  {activeCriterion.level && (
+                    <div className="pt-1">
+                      <Badge
+                        variant={
+                          activeCriterion.level.includes("Level AAA")
+                            ? "outline"
+                            : activeCriterion.level.includes("Level AA")
+                              ? "secondary"
+                              : "default"
+                        }
+                        className="px-2.5 py-0.5 text-xs font-semibold"
+                      >
+                        {activeCriterion.level}
+                      </Badge>
+                    </div>
+                  )}
+                </div>
+
+                {/* Content Specification & Guidance Box */}
+                <div className="space-y-4 rounded-2xl border border-border/60 bg-card p-5 sm:p-6">
+                  <h3 className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
+                    Criterion Specification & Guidance
+                  </h3>
+                  {renderContentBody(activeCriterion.body)}
+                </div>
+              </div>
+
+              {/* Prev / Next Criterion Navigation Footer */}
+              <div className="mt-auto flex items-center justify-between border-t border-border/60 pt-4 text-xs text-muted-foreground">
+                {prevCriterion ? (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSelectCriterion(prevCriterion)}
+                    className="gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+                  >
+                    <ChevronLeft className="size-4" />
+                    <span className="max-w-35 truncate sm:max-w-55">
+                      {prevCriterion.criterionNum} {prevCriterion.criterionName}
+                    </span>
+                  </Button>
+                ) : (
+                  <div />
                 )}
 
-                {/* TabsContent for each criterion */}
-                {currentGuidelineCriteria.map((c) => (
-                  <TabsContent
-                    key={c.id}
-                    value={String(c.id)}
-                    className="mt-0 space-y-6 p-0 outline-none"
+                {nextCriterion && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSelectCriterion(nextCriterion)}
+                    className="ml-auto gap-1.5 text-xs text-muted-foreground hover:text-foreground"
                   >
-                    {/* Header Info */}
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-1.5">
-                        <span className="text-xs font-bold tracking-wider text-muted-foreground uppercase">
-                          {c.principle}
-                        </span>
-                        <h2 className="text-xl font-extrabold tracking-tight text-foreground sm:text-2xl lg:text-3xl">
-                          {c.title}
-                        </h2>
-                        {c.level && (
-                          <div className="pt-1">
-                            <Badge
-                              variant={
-                                c.level.includes("Level AAA")
-                                  ? "outline"
-                                  : c.level.includes("Level AA")
-                                    ? "secondary"
-                                    : "default"
-                              }
-                              className="font-semibold"
-                            >
-                              {c.level}
-                            </Badge>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Content Box */}
-                    <div className="rounded-2xl border border-border/60 bg-card p-5 sm:p-6">
-                      <h3 className="mb-4 text-xs font-bold tracking-wider text-muted-foreground uppercase">
-                        Criterion Specification & Guidance
-                      </h3>
-                      {renderContentBody(c.body)}
-                    </div>
-                  </TabsContent>
-                ))}
+                    <span className="max-w-35 truncate sm:max-w-55">
+                      {nextCriterion.criterionNum} {nextCriterion.criterionName}
+                    </span>
+                    <ChevronRight className="size-4" />
+                  </Button>
+                )}
               </div>
-            </Tabs>
+            </div>
           ) : (
             <div className="flex h-64 flex-col items-center justify-center p-8 text-center text-muted-foreground">
               <FileText className="mb-2 size-8 opacity-40" />
@@ -376,12 +569,115 @@ export default function Instruments() {
                 No criteria found matching your selection.
               </p>
               <p className="text-xs">
-                Select a guideline from the list or clear your search query.
+                Select a guideline or clear your search query.
               </p>
             </div>
           )}
         </Card>
       </div>
+
+      {/* Edit WCAG Instrument Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="flex max-h-9/10 w-full flex-col overflow-hidden sm:max-w-2xl">
+          <DialogHeader className="shrink-0 border-b border-border/50 p-6 pb-4">
+            <DialogTitle className="text-lg font-bold">
+              Edit WCAG Instrument
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground">
+              Update the WCAG specification, title, or guidance content.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-6">
+            {editError && (
+              <div className="rounded-lg border border-destructive/30 bg-destructive/15 p-3 text-xs font-medium text-destructive">
+                {editError}
+              </div>
+            )}
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-foreground">
+                Principle
+              </label>
+              <Select
+                value={editPrinciple}
+                onValueChange={(val: any) => setEditPrinciple(val)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select principle" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {PRINCIPLES.map((p) => (
+                      <SelectItem key={p} value={p}>
+                        {p}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-foreground">
+                Criterion Title
+              </label>
+              <Input
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                placeholder="e.g. 1.2.1 Audio-only and Video-only (Prerecorded)"
+                className="text-sm font-medium"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-foreground">
+                  Content Specification & Guidance
+                </label>
+                <span className="text-xs text-muted-foreground">
+                  WCAG formatting supported
+                </span>
+              </div>
+              <Textarea
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+                rows={12}
+                className="min-h-55 resize-y font-mono text-xs leading-relaxed"
+                placeholder="Enter criterion content..."
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsEditDialogOpen(false)}
+              disabled={updateMutation.isPending}
+            >
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleSaveEdit}
+              disabled={
+                updateMutation.isPending ||
+                !editTitle.trim() ||
+                !editContent.trim()
+              }
+              className="gap-1.5"
+            >
+              {updateMutation.isPending ? (
+                <Loader2 className="size-3.5 animate-spin" />
+              ) : (
+                <Save className="size-3.5" />
+              )}
+              {updateMutation.isPending ? "Saving..." : "Save Changes"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
   )
 }
@@ -391,26 +687,37 @@ function BrowseGuidelinesContent({
   setSearch,
   principles,
   filteredGuidelines,
+  activeCriterionId,
   selectedGuidelineId,
   onSelectGuideline,
+  onSelectCriterion,
   instruments,
+  showSearchInput = true,
 }: {
   search: string
   setSearch: (val: string) => void
   principles: WCAGPrinciple[]
   filteredGuidelines: WCAGGuideline[]
+  activeCriterionId: string
   selectedGuidelineId: string
   onSelectGuideline: (guidelineId: string) => void
+  onSelectCriterion: (criterion: ParsedInstrument) => void
   instruments: ParsedInstrument[]
+  showSearchInput?: boolean
 }) {
   return (
-    <div className="flex-1 space-y-4">
-      <SearchTemplate
-        search={search}
-        setSearch={(value) => setSearch(value)}
-        title="principle or criterion"
-      />
-      <div className="space-y-6 overflow-y-auto pr-1">
+    <div className="flex flex-1 flex-col space-y-4">
+      {showSearchInput && (
+        <div className="shrink-0">
+          <SearchTemplate
+            search={search}
+            setSearch={(value) => setSearch(value)}
+            title="principle or criterion"
+          />
+        </div>
+      )}
+
+      <div className="flex-1 space-y-5">
         {principles.map((principle) => {
           const guidelinesInPrinciple = filteredGuidelines.filter(
             (g) => g.principle === principle
@@ -419,38 +726,105 @@ function BrowseGuidelinesContent({
           if (guidelinesInPrinciple.length === 0) return null
 
           return (
-            <div key={principle} className="space-y-1.5">
+            <div key={principle} className="space-y-2">
               <h4 className="px-1 text-xs font-bold tracking-wider text-muted-foreground uppercase">
                 {principle}
               </h4>
-              <div className="space-y-1">
+              <div className="space-y-3">
                 {guidelinesInPrinciple.map((guideline) => {
-                  const isActive = selectedGuidelineId === guideline.id
-                  const count = instruments.filter(
-                    (c) => c.guidelineId === guideline.id
-                  ).length
+                  const criteriaInGuideline = instruments
+                    .filter((c) => c.guidelineId === guideline.id)
+                    .sort((a, b) =>
+                      compareCriterionNum(a.criterionNum, b.criterionNum)
+                    )
+
+                  const isGuidelineActive = selectedGuidelineId === guideline.id
 
                   return (
-                    <Button
-                      key={guideline.id}
-                      type="button"
-                      variant={isActive ? "secondary" : "ghost"}
-                      className="w-full justify-between font-medium"
-                      onClick={() => onSelectGuideline(guideline.id)}
-                    >
-                      <span className="truncate">{guideline.name}</span>
-                      {count > 0 && (
-                        <span
-                          className={`rounded-md px-1.5 py-0.5 text-xs font-semibold ${
-                            isActive
-                              ? "bg-foreground/10 text-foreground"
-                              : "bg-muted text-muted-foreground"
-                          }`}
-                        >
-                          {count}
-                        </span>
+                    <div key={guideline.id} className="space-y-1">
+                      {/* Guideline row (static header, not collapsible) */}
+                      <button
+                        type="button"
+                        onClick={() => onSelectGuideline(guideline.id)}
+                        className={cn(
+                          "group flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-xs font-bold transition-colors",
+                          isGuidelineActive
+                            ? "bg-muted/80 text-foreground"
+                            : "text-foreground/80 hover:bg-muted/40 hover:text-foreground"
+                        )}
+                      >
+                        <span className="truncate">{guideline.name}</span>
+                        {criteriaInGuideline.length > 0 && (
+                          <span
+                            className={cn(
+                              "ml-1.5 shrink-0 rounded-md px-1.5 py-0.5 text-xs font-semibold tabular-nums",
+                              isGuidelineActive
+                                ? "bg-foreground/15 text-foreground"
+                                : "bg-muted text-muted-foreground"
+                            )}
+                          >
+                            {criteriaInGuideline.length}
+                          </span>
+                        )}
+                      </button>
+
+                      {/* Nested Criteria List (Always visible / static) */}
+                      {criteriaInGuideline.length > 0 && (
+                        <div className="ml-3 space-y-0.5 border-l border-border/50 pl-2">
+                          {criteriaInGuideline.map((c) => {
+                            const isCriterionActive =
+                              String(c.id) === activeCriterionId
+
+                            // Extract short level tag e.g. "A", "AA", "AAA"
+                            const levelTag = c.level
+                              ? c.level.replace(/^Level\s+/i, "")
+                              : null
+
+                            return (
+                              <button
+                                key={c.id}
+                                type="button"
+                                onClick={() => onSelectCriterion(c)}
+                                className={cn(
+                                  "group flex w-full items-center justify-between rounded-lg px-2 py-1.5 text-left text-xs transition-colors",
+                                  isCriterionActive
+                                    ? "bg-secondary font-semibold text-foreground shadow-2xs"
+                                    : "font-normal text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                                )}
+                              >
+                                <div className="flex min-w-0 items-center gap-1.5">
+                                  <span
+                                    className={cn(
+                                      "shrink-0 font-mono text-xs",
+                                      isCriterionActive
+                                        ? "font-bold text-foreground"
+                                        : "font-medium text-muted-foreground/90"
+                                    )}
+                                  >
+                                    {c.criterionNum}
+                                  </span>
+                                  <span className="truncate">
+                                    {c.criterionName}
+                                  </span>
+                                </div>
+                                {levelTag && (
+                                  <span
+                                    className={cn(
+                                      "ml-1.5 shrink-0 rounded px-1 py-0.5 text-xs font-bold tracking-tight uppercase tabular-nums",
+                                      isCriterionActive
+                                        ? "bg-foreground/15 text-foreground"
+                                        : "bg-muted/80 text-muted-foreground"
+                                    )}
+                                  >
+                                    {levelTag}
+                                  </span>
+                                )}
+                              </button>
+                            )
+                          })}
+                        </div>
                       )}
-                    </Button>
+                    </div>
                   )
                 })}
               </div>

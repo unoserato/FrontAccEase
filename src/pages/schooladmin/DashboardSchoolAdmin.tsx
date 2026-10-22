@@ -1,3 +1,5 @@
+import { useMemo } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import {
   Card,
@@ -9,8 +11,8 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { toast } from "@/components/ui/toast"
-
 import {
   ChartContainer,
   ChartTooltip,
@@ -20,15 +22,26 @@ import {
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts"
 import {
   FileText,
-  Clock,
-  CheckCircle2,
   Zap,
   Users,
   GraduationCap,
   BookOpen,
   FileQuestion,
   ChevronRight,
+  ShieldAlert,
+  ArrowUpRight,
+  Eye,
+  Keyboard,
+  Brain,
+  Code,
+  Layers,
 } from "lucide-react"
+import type { CurriculumPrinciple, CurriculumRevision } from "@/const/props/moduleProps"
+import {
+  useCurriculum,
+  useInstructorMaterialsCount,
+  useWCAGInstruments,
+} from "@/services/tanstack/materials"
 
 const chartData = [
   { date: "09-01", scans: 380 },
@@ -43,139 +56,199 @@ const chartData = [
 const chartConfig = {
   scans: {
     label: "Automated Scans",
-    color: "hsl(var(--primary))",
+    color: "var(--primary)",
   },
 } satisfies ChartConfig
 
-// interface UserScanItem {
-//   id: string
-//   userName: string
-//   userImg?: string
-//   userEmail: string
-//   url: string
-//   classroomName: string | null
-//   classroomCode: string | null
-//   scanTime: string
-//   score: number
-//   criticalIssues: number
-//   seriousIssues: number
-//   minorIssues: number
-//   passedCount: number
-// }
+const topCohorts = [
+  { code: "WCAG-101", name: "Accessibility Fundamentals", scans: 120, passRate: "76.5%", instructor: "Prof. Alan Turing" },
+  { code: "CS-401", name: "Web Accessibility Auditing", scans: 115, passRate: "71.0%", instructor: "Dr. Evelyn Reed" },
+  { code: "ITEP-306", name: "UI/UX & Inclusive Tech", scans: 100, passRate: "82.4%", instructor: "Dr. Evelyn Reed" },
+  { code: "ITEP-308", name: "Assistive Tech Integration", scans: 100, passRate: "79.8%", instructor: "Dr. Marcus Vance" },
+]
+
+function getPrincipleIcon(code: string) {
+  switch (code.toLowerCase()) {
+    case "perceivable":
+      return Eye
+    case "operable":
+      return Keyboard
+    case "understandable":
+      return Brain
+    case "robust":
+      return Code
+    default:
+      return Layers
+  }
+}
 
 export default function DashboardSchoolAdmin() {
+  const navigate = useNavigate()
+  const { data: instructors = [] } = useInstructorMaterialsCount()
+  const { data: curriculum = [] } = useCurriculum()
+  const { data: instruments = [] } = useWCAGInstruments()
+
+  // Real aggregate computations from active faculty & curriculum
+  const totalClassrooms = useMemo(
+    () =>
+      instructors.reduce(
+        (acc, item) => acc + (item.user.classroom_count || 0),
+        0
+      ),
+    [instructors]
+  )
+
+  const totalModules = useMemo(
+    () =>
+      instructors.reduce(
+        (acc, item) => acc + (item.user.module_count || 0),
+        0
+      ),
+    [instructors]
+  )
+
+  const totalQuizzes = useMemo(
+    () =>
+      instructors.reduce(
+        (acc, item) => acc + (item.user.quiz_count || 0),
+        0
+      ),
+    [instructors]
+  )
+
+  // Top instructors by total material contributions
+  const sortedInstructors = useMemo(() => {
+    return [...instructors]
+      .sort((a, b) => {
+        const totalA =
+          (a.user.module_count || 0) +
+          (a.user.quiz_count || 0) +
+          (a.user.classroom_count || 0)
+        const totalB =
+          (b.user.module_count || 0) +
+          (b.user.quiz_count || 0) +
+          (b.user.classroom_count || 0)
+        return totalB - totalA
+      })
+      .slice(0, 4)
+  }, [instructors])
+
   function handleExport() {
     toast.add({
-      title: "System Report Exported",
+      title: "Executive Report Exported",
       description:
-        "Accessibility compliance and scanner telemetry CSV generated.",
+        "Accessibility compliance, curriculum metrics, and telemetry exported to CSV.",
       type: "success",
     })
   }
 
-  // function getInitials(name: string) {
-  //   return name
-  //     .split(" ")
-  //     .map((n) => n[0])
-  //     .join("")
-  //     .slice(0, 2)
-  //     .toUpperCase()
-  // }
+  function getInitials(name: string) {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase()
+  }
 
   const KPI = [
     {
-      title: "Total Users",
+      title: "Faculty & Instructors",
       icon: Users,
-      value: "2,310",
-      footerDesc: `0 Learners • 20 Instructors`,
+      value: instructors.length.toString(),
+      footerDesc: "Registered teaching faculty",
+      href: "/school-admin/instructor-materials",
     },
     {
-      title: "Classrooms",
+      title: "Active Classrooms",
       icon: GraduationCap,
-      value: `0`,
-      footerDesc: "Managed academic cohorts",
+      value: totalClassrooms.toString(),
+      footerDesc: `Managed across ${instructors.length} faculty`,
+      href: "/school-admin/instructor-materials",
     },
     {
-      title: "Published Modules",
+      title: "Authored Modules",
       icon: BookOpen,
-      value: `0`,
-      footerDesc: "Curriculum learning units",
+      value: totalModules.toString(),
+      footerDesc: "Faculty-created learning units",
+      href: "/school-admin/instructor-materials",
     },
     {
-      title: "Quizzes",
+      title: "Active Evaluations",
       icon: FileQuestion,
-      value: `0`,
-      footerDesc: "Active student assessments",
+      value: totalQuizzes.toString(),
+      footerDesc: "Quizzes deployed in cohorts",
+      href: "/school-admin/instructor-materials",
     },
   ]
 
   return (
     <section className="p-responsive space-y-6">
-      {/* Header with Export Action */}
+      {/* Header */}
       <HeaderTemplate
         title="Admin Dashboard"
-        subtitle="System-wide overview of accessibility compliance, classroom cohorts, user activity, and scanner telemetry."
+        subtitle="Institution-wide overview of accessibility compliance, faculty curriculum delivery, and student scanner telemetry."
         cta={[
-          <Button key="export" onClick={handleExport}>
+          <Button key="export" onClick={handleExport} className="cursor-pointer">
             <FileText className="mr-1.5 size-4" />
             Export System Report
           </Button>,
         ]}
       />
 
-      {/* Row 1: The 4 Core Domain Pillar KPI Metric Cards */}
+      {/* Row 1: The 4 Core Domain Executive KPI Metric Cards */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {KPI.map((kpi) => (
-          <Card key={kpi.title}>
+          <Card
+            key={kpi.title}
+            onClick={() => navigate(kpi.href)}
+            className="group cursor-pointer transition-all hover:border-border hover:shadow-xs"
+          >
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
+              <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-foreground">
                 {kpi.title}
               </CardTitle>
               <CardAction>
-                <kpi.icon className="size-4" />
+                <kpi.icon className="size-4 text-muted-foreground transition-colors group-hover:text-foreground" />
               </CardAction>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
                 {kpi.value}
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {kpi.footerDesc}
+              <p className="mt-1 flex items-center justify-between text-xs text-muted-foreground">
+                <span>{kpi.footerDesc}</span>
+                <ChevronRight className="size-3.5 opacity-0 transition-opacity group-hover:opacity-100" />
               </p>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      {/* Row 2: Full-Width Analyzer Usage Analytics Bar Chart */}
+      {/* Row 2: Scanner Activity Chart + Institutional POUR Curriculum */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="col-span-2">
-          <Card className="p-6">
+        {/* Left (2 cols): Full-Width Analyzer Usage Analytics */}
+        <div className="lg:col-span-2">
+          <Card className="flex h-full flex-col p-6">
             <CardHeader className="flex flex-col gap-2 p-0 pb-6 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <CardTitle className="text-lg font-bold sm:text-xl">
                   Analyzer Usage Analytics
                 </CardTitle>
                 <CardDescription className="text-xs text-muted-foreground sm:text-sm">
-                  Total automated accessibility analyzer scans executed per date
+                  Daily automated accessibility audits executed by learners
                 </CardDescription>
               </div>
               <div className="flex items-center gap-2">
-                <Badge
-                  variant="outline"
-                  className="px-2.5 py-1 text-xs font-medium"
-                >
-                  488 scans/day avg
+                <Badge variant="outline" className="px-2.5 py-1 text-xs font-medium">
+                  488 avg scans/day
                 </Badge>
-                <Badge
-                  variant="secondary"
-                  className="px-3 py-1 text-xs font-semibold"
-                >
+                <Badge variant="secondary" className="px-2.5 py-1 text-xs font-semibold">
                   3,420 Total Scans
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-0">
+            <CardContent className="flex-1 p-0">
               <ChartContainer config={chartConfig} className="max-h-65 w-full">
                 <BarChart
                   accessibilityLayer
@@ -183,20 +256,20 @@ export default function DashboardSchoolAdmin() {
                   margin={{ top: 20, right: 10, left: -20, bottom: 0 }}
                 >
                   <CartesianGrid
-                    vertical={true}
+                    vertical={false}
                     strokeDasharray="3 3"
                     className="stroke-muted"
                   />
                   <XAxis
                     dataKey="date"
-                    tickLine={true}
+                    tickLine={false}
                     tickMargin={10}
-                    axisLine={true}
+                    axisLine={false}
                     className="text-xs font-medium text-muted-foreground"
                   />
                   <YAxis
-                    tickLine={true}
-                    axisLine={true}
+                    tickLine={false}
+                    axisLine={false}
                     className="text-xs font-medium text-muted-foreground"
                   />
                   <ChartTooltip
@@ -209,249 +282,264 @@ export default function DashboardSchoolAdmin() {
                   />
                 </BarChart>
               </ChartContainer>
+
+              <div className="mt-4 flex items-center justify-between border-t border-border/40 pt-4 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1.5">
+                  <Zap className="size-3.5 text-amber-500" />
+                  Engine: Client WebLLM & Automated Rule Engine
+                </span>
+                <Link
+                  to="/school-admin/analyzer-logs"
+                  className="flex items-center gap-1 font-semibold text-foreground hover:text-primary hover:underline"
+                >
+                  Open Analyzer Logs <ArrowUpRight className="size-3.5" />
+                </Link>
+              </div>
             </CardContent>
           </Card>
         </div>
-        <div className="space-y-6 lg:col-span-1">
-          <Card className="space-y-4 p-6">
-            <CardHeader className="flex flex-row items-center justify-between p-0 pb-1">
-              <div>
-                <CardTitle className="text-base font-bold sm:text-lg">
-                  Scanner Performance
-                </CardTitle>
-                <CardDescription className="text-xs text-muted-foreground">
-                  Automated engine latency & compliance index
-                </CardDescription>
-              </div>
-              <Badge variant="outline" className="text-xs font-medium">
-                <Zap className="mr-1 size-3 text-muted-foreground" />
-                Active
-              </Badge>
-            </CardHeader>
 
-            <CardContent className="space-y-4 p-0">
-              {/* Avg Scan Duration Block */}
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    Average Scan Duration
+        {/* Right (1 col): Institutional POUR Curriculum Status */}
+        <div className="lg:col-span-1">
+          <Card className="flex h-full flex-col justify-between p-6">
+            <div>
+              <CardHeader className="flex flex-row items-center justify-between p-0 pb-4">
+                <div>
+                  <CardTitle className="text-base font-bold sm:text-lg">
+                    Core Curriculum
                   </CardTitle>
-                  <CardAction>
-                    <Clock className="size-4" />
-                  </CardAction>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-                    10.52
-                    <span className="text-sm font-normal text-muted-foreground">
-                      s
-                    </span>
-                  </p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Across all scan requests
-                  </p>
-                </CardContent>
-              </Card>
-              {/* Overall Pass Rate Block */}
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    Overall Passing Rate
-                  </CardTitle>
-                  <CardAction>
-                    <CheckCircle2 className="size-4" />
-                  </CardAction>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-                    78.43
-                    <span className="text-sm font-normal text-muted-foreground">
-                      %
-                    </span>
-                  </p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    University-wide compliance rate
-                  </p>
-                </CardContent>
-              </Card>
-            </CardContent>
+                  <CardDescription className="text-xs text-muted-foreground">
+                    Institutional WCAG 2.2 Principles
+                  </CardDescription>
+                </div>
+                <Badge variant="outline" className="text-xs font-medium">
+                  {curriculum.length} Units
+                </Badge>
+              </CardHeader>
+
+              <div className="space-y-2.5">
+                {curriculum.map((item: CurriculumPrinciple) => {
+                  const Icon = getPrincipleIcon(item.code)
+                  const publishedRev =
+                    item.revisions?.find((r: CurriculumRevision) => r.status === "published") ||
+                    item.revisions?.[0]
+                  const version = publishedRev?.version ?? 1
+
+                  return (
+                    <Link
+                      key={item.id}
+                      to={`/school-admin/learning-materials/${item.code}`}
+                      className="group flex items-center justify-between rounded-lg border border-border/50 bg-muted/20 p-3 transition-colors hover:border-border hover:bg-muted/40"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-foreground text-background">
+                          <Icon className="size-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="truncate text-xs font-semibold text-foreground group-hover:text-primary">
+                            {item.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {publishedRev?.status === "published"
+                              ? `Version ${version} • Published`
+                              : "Draft Status"}
+                          </p>
+                        </div>
+                      </div>
+                      <ChevronRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+
+            <div className="mt-4 border-t border-border/40 pt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/school-admin/learning-materials")}
+                className="w-full cursor-pointer justify-between text-xs font-semibold"
+              >
+                <span>Manage Curriculum</span>
+                <ArrowUpRight className="size-3.5" />
+              </Button>
+            </div>
           </Card>
         </div>
       </div>
 
-      {/* Row 3: Operational Workspace (Scanner Performance + User-Specific Recent Audit Activity) */}
+      {/* Row 3: Faculty Activity Breakdown & Top Audited Cohorts */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Left Column (1/3): Scanner Performance & Metrics (Colorless / Neutral) */}
-        <div className="space-y-6 lg:col-span-1">
-          <Card className="space-y-4 p-6">
-            <CardHeader className="p-0 pb-1">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base font-bold sm:text-lg">
-                  Analyzer Telemetry
-                </CardTitle>
-              </div>
-              <CardDescription className="text-xs text-muted-foreground">
-                Automated student DOM accessibility audits
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-4 p-0">
-              <div className="grid grid-cols-2 gap-3 rounded-xl border border-border/50 bg-muted/40 p-3.5">
+        {/* Left (2 cols): Faculty Engagement & Materials Activity */}
+        <div className="lg:col-span-2">
+          <Card className="flex h-full flex-col justify-between p-6">
+            <div>
+              <CardHeader className="flex flex-row items-center justify-between p-0 pb-4">
                 <div>
-                  <span className="block text-xs font-medium text-muted-foreground">
-                    Total Scans
-                  </span>
-                  <span className="text-xl font-bold text-foreground">520</span>
+                  <CardTitle className="text-lg font-bold sm:text-xl">
+                    Faculty Engagement & Authorship
+                  </CardTitle>
+                  <CardDescription className="text-xs text-muted-foreground sm:text-sm">
+                    Instructors authoring active courseware, classrooms, and evaluations
+                  </CardDescription>
                 </div>
-                <div>
-                  <span className="block text-xs font-medium text-muted-foreground">
-                    Pass Rate
-                  </span>
-                  <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
-                    78.4%
-                  </span>
-                </div>
-              </div>
+                <Badge variant="secondary" className="px-2.5 py-1 text-xs font-semibold">
+                  {instructors.length} Faculty Members
+                </Badge>
+              </CardHeader>
 
-              {/* Classroom Distribution Mini Bars */}
-              <div className="space-y-2 pt-1">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">
-                    Top Scanned Classrooms
-                  </span>
-                  <span className="font-semibold text-foreground">Scans</span>
-                </div>
-
-                <div className="space-y-2">
-                  {[
-                    { code: "WCAG-101", count: 120, pct: 100 },
-                    { code: "CS-401", count: 115, pct: 95 },
-                    { code: "ITEP-306", count: 100, pct: 83 },
-                    { code: "UIUX-202", count: 85, pct: 70 },
-                  ].map((item) => (
-                    <div key={item.code} className="space-y-1">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-mono text-muted-foreground">
-                          {item.code}
-                        </span>
-                        <span className="font-semibold text-foreground">
-                          {item.count}
-                        </span>
+              <div className="divide-y divide-border/40">
+                {sortedInstructors.length === 0 ? (
+                  <div className="py-8 text-center text-xs text-muted-foreground">
+                    No faculty material records found.
+                  </div>
+                ) : (
+                  sortedInstructors.map((ins) => (
+                    <div
+                      key={ins.user.id}
+                      onClick={() =>
+                        navigate(`/school-admin/instructor-materials/${ins.user.id}`)
+                      }
+                      className="group flex cursor-pointer items-center justify-between py-3.5 transition-colors hover:bg-muted/30"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Avatar className="size-9 border border-border">
+                          <AvatarImage
+                            src={ins.user.profile_picture || ""}
+                            alt={ins.user.name}
+                          />
+                          <AvatarFallback className="text-xs font-semibold">
+                            {getInitials(ins.user.name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-sm font-semibold text-foreground group-hover:text-primary">
+                            {ins.user.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {ins.user.email || `${ins.user.name.toLowerCase().replace(/[^a-z0-9]/g, "")}@institution.edu`}
+                          </p>
+                        </div>
                       </div>
-                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                        <div
-                          className="h-full rounded-full bg-primary"
-                          style={{ width: `${item.pct}%` }}
-                        />
+
+                      <div className="flex items-center gap-4 text-xs sm:gap-6">
+                        <div className="text-right">
+                          <span className="font-semibold text-foreground">
+                            {ins.user.classroom_count || 0}
+                          </span>
+                          <p className="text-xs text-muted-foreground">Classrooms</p>
+                        </div>
+                        <div className="text-right">
+                          <span className="font-semibold text-foreground">
+                            {ins.user.module_count || 0}
+                          </span>
+                          <p className="text-xs text-muted-foreground">Modules</p>
+                        </div>
+                        <div className="text-right">
+                          <span className="font-semibold text-foreground">
+                            {ins.user.quiz_count || 0}
+                          </span>
+                          <p className="text-xs text-muted-foreground">Quizzes</p>
+                        </div>
+                        <ChevronRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
                       </div>
                     </div>
-                  ))}
-                </div>
+                  ))
+                )}
               </div>
+            </div>
 
+            <div className="mt-4 border-t border-border/40 pt-4">
               <Button
                 variant="outline"
-                className="w-full cursor-pointer text-xs font-semibold"
+                size="sm"
+                onClick={() => navigate("/school-admin/instructor-materials")}
+                className="w-full cursor-pointer justify-between text-xs font-semibold"
               >
-                View Full Analyzer Logs
-                <ChevronRight className="ml-1 size-3.5" />
+                <span>View All Faculty Courseware</span>
+                <ArrowUpRight className="size-3.5" />
               </Button>
-            </CardContent>
+            </div>
           </Card>
         </div>
 
-        {/* Right Column (2/3): User-Specific Recent Audit Activity */}
-        <div className="space-y-6 lg:col-span-2">
-          <Card className="p-6">
-            <CardHeader className="flex flex-row items-center justify-between p-0 pb-4">
+        {/* Right (1 col): Top Audited Cohorts & Instruments Summary */}
+        <div className="space-y-6 lg:col-span-1">
+          {/* Top Scanned Cohorts */}
+          <Card className="space-y-4 p-6">
+            <CardHeader className="flex flex-row items-center justify-between p-0 pb-1">
               <div>
-                <CardTitle className="text-lg font-bold sm:text-xl">
-                  Recent Audit Activity
+                <CardTitle className="text-base font-bold sm:text-lg">
+                  Top Audited Cohorts
                 </CardTitle>
-                <CardDescription className="text-xs text-muted-foreground sm:text-sm">
-                  User-specific automated accessibility scans and classroom
-                  contexts
+                <CardDescription className="text-xs text-muted-foreground">
+                  Highest volume student cohorts
                 </CardDescription>
               </div>
-              <Badge
-                variant="secondary"
-                className="px-2.5 py-1 text-xs font-semibold"
-              >
-                24 scans/hr
+              <Badge variant="outline" className="text-xs font-medium">
+                Live Audits
               </Badge>
             </CardHeader>
 
             <CardContent className="space-y-3 p-0">
-              {/* {userScans.map((scan) => (
+              {topCohorts.map((cohort) => (
                 <div
-                  key={scan.id}
-                  className="flex flex-col gap-3 rounded-xl bg-muted/40 p-3.5 transition-colors hover:bg-muted/60 sm:flex-row sm:items-center sm:justify-between"
+                  key={cohort.code}
+                  className="rounded-lg border border-border/40 bg-muted/20 p-3"
                 >
-                  <div className="flex min-w-0 items-center gap-3">
-                    <Avatar className="size-9 shrink-0 border border-border">
-                      <AvatarImage src={scan.userImg} alt={scan.userName} />
-                      <AvatarFallback className="text-xs font-semibold">
-                        {getInitials(scan.userName)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <p className="truncate text-sm font-semibold text-foreground">
-                          {scan.userName}
-                        </p>
-                        {scan.classroomCode ? (
-                          <Badge
-                            variant="outline"
-                            className="text-xs font-normal"
-                          >
-                            {scan.classroomCode}
-                          </Badge>
-                        ) : (
-                          <Badge
-                            variant="secondary"
-                            className="text-xs font-normal text-muted-foreground"
-                          >
-                            No Classroom
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                        <span className="flex max-w-50 items-center gap-1 truncate sm:max-w-xs">
-                          <Globe className="size-3 shrink-0" />
-                          <span className="truncate">{scan.url}</span>
-                        </span>
-                        <span>•</span>
-                        <span>{scan.scanTime}</span>
-                      </div>
-                    </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-foreground">
+                      {cohort.code}
+                    </span>
+                    <Badge variant="secondary" className="px-1.5 py-0 text-xs font-medium">
+                      {cohort.passRate} Pass
+                    </Badge>
                   </div>
-
-                  <div className="flex shrink-0 items-center justify-between gap-3 self-start sm:self-auto">
-                    <div className="flex items-center gap-2">
-                      <Badge
-                        variant={
-                          scan.score >= 80
-                            ? "secondary"
-                            : scan.score >= 70
-                              ? "outline"
-                              : "destructive"
-                        }
-                        className="text-xs font-semibold"
-                      >
-                        {scan.score}% Score
-                      </Badge>
-                    </div>
-                    <Button
-                      variant="link"
-                      size="sm"
-                      className="cursor-pointer text-xs font-medium"
-                    >
-                      View
-                    </Button>
+                  <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                    {cohort.name} • {cohort.instructor}
+                  </p>
+                  <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
+                    <span>Audit Volume</span>
+                    <span className="font-mono font-medium text-foreground">
+                      {cohort.scans} scans
+                    </span>
                   </div>
                 </div>
-              ))} */}
+              ))}
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/school-admin/analyzer-logs")}
+                className="w-full cursor-pointer justify-between text-xs font-semibold"
+              >
+                <span>Inspect All Classroom Logs</span>
+                <ChevronRight className="size-3.5" />
+              </Button>
             </CardContent>
+          </Card>
+
+          {/* WCAG Compliance Instrument Banner */}
+          <Card
+            onClick={() => navigate("/school-admin/instruments")}
+            className="group cursor-pointer p-4 transition-all hover:border-border hover:shadow-xs"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <ShieldAlert className="size-4" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-foreground group-hover:text-primary">
+                    Accessibility Instruments
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {instruments.length} WCAG evaluation guidelines active
+                  </p>
+                </div>
+              </div>
+              <ArrowUpRight className="size-4 text-muted-foreground group-hover:text-foreground" />
+            </div>
           </Card>
         </div>
       </div>

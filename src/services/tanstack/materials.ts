@@ -27,6 +27,8 @@ import {
   getWCAGInstruments,
   getClassroomAnalyzerLogs,
   getClassroomAnalyzerLogsByClassroomId,
+  getCurriculumAPI,
+  getCoreModulesPrincipleAPI,
 } from "../api/GET/materialsGETAPI"
 import {
   createExtensionScanAPI,
@@ -35,6 +37,7 @@ import {
   answerCoreInteractiveActivityAPI,
   createAnalyzerCommentById,
   updateAnalyzerCommentById,
+  updateWCAGInstruments,
 } from "../api/CRUD/materialsCRUDAPI"
 
 import { staleTime } from "../axios"
@@ -43,6 +46,7 @@ import {
   getInstructorMaterialsModulesAPI,
   getModuleByIdAPI,
 } from "../api/GET/materialsGETAPI"
+import type { WCAGPrinciple } from "@/const/props/wcagProps"
 
 export function useModules() {
   return useSuspenseQuery({
@@ -208,6 +212,20 @@ export function useCoreModuleProgress() {
     queryKey: ["core-module-progress"],
     queryFn: getCoreModulesAPI,
     staleTime: staleTime,
+    refetchOnWindowFocus: false,
+    retry: 1,
+  })
+}
+
+export function useCoreModuleProgressByPrinciple(
+  principle: WCAGPrinciple | string
+) {
+  const normalized = (principle || "perceivable").toLowerCase() as WCAGPrinciple
+  return useSuspenseQuery({
+    queryKey: ["core-module-progress", normalized],
+    queryFn: () => getCoreModulesPrincipleAPI(normalized),
+    staleTime: staleTime,
+    refetchOnWindowFocus: false,
     retry: 1,
   })
 }
@@ -217,6 +235,7 @@ export function useCoreModuleProgressActivities(id: string) {
     queryKey: ["core-module-progress-activities", id],
     queryFn: () => getCoreModuleActivitiesAPI(id),
     staleTime: staleTime,
+    refetchOnWindowFocus: false,
     retry: 1,
   })
 }
@@ -315,6 +334,27 @@ export function useWCAGInstruments() {
   })
 }
 
+export function useUpdateWCAGInstrument() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationKey: ["update-wcag-instrument"],
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string
+      data: { principle: string; title: string; content: string }
+    }) => updateWCAGInstruments(id, data),
+    onSuccess: (updatedInstruments) => {
+      if (Array.isArray(updatedInstruments)) {
+        queryClient.setQueryData(["wcag-instruments"], updatedInstruments)
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["wcag-instruments"] })
+      }
+    },
+  })
+}
+
 export function useClassroomAnalyzerLogs() {
   return useSuspenseQuery({
     queryKey: ["classroom-analyzer-logs"],
@@ -373,5 +413,13 @@ export function useUpdateAnalyzerComment() {
         }
       )
     },
+  })
+}
+
+export function useCurriculum() {
+  return useSuspenseQuery({
+    queryKey: ["curriculum"],
+    queryFn: getCurriculumAPI,
+    staleTime: staleTime,
   })
 }

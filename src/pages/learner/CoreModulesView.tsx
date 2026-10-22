@@ -1,7 +1,7 @@
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import type { PrincipleProgressProps } from "@/const/props/moduleProps"
+import { Progress } from "@/components/ui/progress"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import NotFound from "../errors/NotFound"
 import { Badge } from "@/components/ui/badge"
@@ -22,11 +22,30 @@ import {
 } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { useMe } from "@/services/tanstack/auth"
-import { useCoreModuleProgress } from "@/services/tanstack/materials"
+import { useCoreModuleProgressByPrinciple } from "@/services/tanstack/materials"
 import { cn } from "@/lib/utils"
+import type { WCAGPrinciple } from "@/const/props/wcagProps"
+import type { CoreModuleProgressPrincipleProps } from "@/const/props/moduleProps"
 
-function getActivityKindLabel(kind: string): string {
-  switch (kind) {
+export type CoreModuleActivityItem =
+  CoreModuleProgressPrincipleProps["activities"][number]
+export type CoreModuleCompletionItem =
+  CoreModuleProgressPrincipleProps["completions"][number]
+
+const WCAG_PRINCIPLES = [
+  "perceivable",
+  "operable",
+  "understandable",
+  "robust",
+] as const
+
+function formatPrincipleTitle(name?: string): string {
+  if (!name) return ""
+  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+}
+
+function getActivityTypeLabel(type: string): string {
+  switch (type?.toLowerCase()) {
     case "pre":
       return "Pre-Assessment"
     case "post":
@@ -38,29 +57,12 @@ function getActivityKindLabel(kind: string): string {
     case "interactive":
       return "Interactive"
     default:
-      return kind
+      return type ? type.charAt(0).toUpperCase() + type.slice(1) : "Activity"
   }
 }
 
-function getActivityDescription(kind: string): string {
-  switch (kind) {
-    case "pre":
-      return "Diagnostic baseline assessment measuring prerequisite WCAG knowledge."
-    case "post":
-      return "Final comprehensive evaluation measuring your criteria comprehension."
-    case "lesson":
-      return "Curriculum lesson breakdown, specifications, and compliant code examples."
-    case "mini":
-      return "Quick formative assessment checking understanding of preceding concepts."
-    case "interactive":
-      return "Hands-on remediation exercise to identify and correct accessibility defects."
-    default:
-      return "Educational module activity."
-  }
-}
-
-function getActivityIcon(kind: string) {
-  switch (kind) {
+function getActivityIcon(type: string) {
+  switch (type?.toLowerCase()) {
     case "pre":
       return ClipboardCheck
     case "post":
@@ -76,109 +78,94 @@ function getActivityIcon(kind: string) {
   }
 }
 
-function getActivityLink(
-  principleName: string,
-  activityId: string,
-  kind: string
-): string {
-  if (kind === "pre" || kind === "mini" || kind === "post") {
-    return `/learner/modules/${principleName}/${activityId}`
-  }
-  return `/learner/modules/${principleName}/${activityId}`
-}
-
-function getPrincipleTitle(
-  item?: PrincipleProgressProps | { name: string; content?: any } | null
-): string {
-  if (!item) return ""
-  return (
-    (item as any).content?.revision?.title ||
-    (item as any).content?.title ||
-    ((item as any).name
-      ? (item as any).name.charAt(0).toUpperCase() + (item as any).name.slice(1)
-      : "")
-  )
-}
-
 export default function CoreModulesView() {
-  const { principleId } = useParams()
+  const { principleId } = useParams<{ principleId: string }>()
   const navigate = useNavigate()
   const { data: user } = useMe()
-  const { data: coreModuleProgress } = useCoreModuleProgress()
 
-  const principles = useMemo(() => {
-    return coreModuleProgress?.principles || []
-  }, [coreModuleProgress?.principles])
+  // Always normalize principleId to lowercase for URL and API integrity
+  const normalizedPrinciple = (
+    principleId?.toLowerCase() || "perceivable"
+  ).toLowerCase() as WCAGPrinciple
 
-  const currentIndex = useMemo(() => {
-    return principles.findIndex(
-      (p) =>
-        p.name.toLowerCase() === principleId?.toLowerCase() ||
-        p.content.id === principleId
-    )
-  }, [principles, principleId])
+  // If URL contains TitleCase (e.g., /learner/modules/Perceivable), immediately rewrite to lowercase
+  useEffect(() => {
+    if (principleId && principleId !== principleId.toLowerCase()) {
+      navigate(`/learner/modules/${principleId.toLowerCase()}`, {
+        replace: true,
+      })
+    }
+  }, [principleId, navigate])
 
-  const matchedPrinciple =
-    currentIndex !== -1 ? principles[currentIndex] : undefined
-  const principleContent = matchedPrinciple?.content
+  const { data: coreModuleProgress } =
+    useCoreModuleProgressByPrinciple(normalizedPrinciple)
 
-  const prevPrinciple = currentIndex > 0 ? principles[currentIndex - 1] : null
+  const currentIndex = WCAG_PRINCIPLES.indexOf(normalizedPrinciple as any)
+  const prevPrinciple =
+    currentIndex > 0 ? WCAG_PRINCIPLES[currentIndex - 1] : null
   const nextPrinciple =
-    currentIndex >= 0 && currentIndex < principles.length - 1
-      ? principles[currentIndex + 1]
+    currentIndex >= 0 && currentIndex < WCAG_PRINCIPLES.length - 1
+      ? WCAG_PRINCIPLES[currentIndex + 1]
       : null
 
   const activities = useMemo(() => {
-    return (principleContent?.activities || [])
+    return ((coreModuleProgress?.activities || []) as CoreModuleActivityItem[])
       .slice()
       .sort((a, b) => a.display_order - b.display_order)
-  }, [principleContent?.activities])
+  }, [coreModuleProgress?.activities])
 
   const completedActivityIds = useMemo(() => {
     return new Set(
-      (principleContent?.completions || []).map((c) =>
-        String((c as any).activity_id || (c as any).id)
-      )
+      (
+        (coreModuleProgress?.completions || []) as CoreModuleCompletionItem[]
+      ).map((c) => String(c.activity_id))
     )
-  }, [principleContent?.completions])
+  }, [coreModuleProgress?.completions])
 
-  const attemptsMap = useMemo(() => {
-    const map = new Map<
-      string,
-      { score?: number; passed?: boolean; attempt_number?: number }
-    >()
-    ;(principleContent?.attempts || []).forEach((att) => {
-      if (att.activity_id) {
-        map.set(String(att.activity_id), att as any)
-      }
-    })
-    return map
-  }, [principleContent?.attempts])
+  const nextActivityId = coreModuleProgress?.next_activity_id
+
+  // Effective next activity: use nextActivityId if valid, else first incomplete activity
+  const effectiveNextActivityId = useMemo(() => {
+    if (nextActivityId && activities.some((a) => a.id === nextActivityId)) {
+      return nextActivityId
+    }
+    const firstIncomplete = activities.find(
+      (a) => !completedActivityIds.has(String(a.id))
+    )
+    return firstIncomplete?.id || null
+  }, [nextActivityId, activities, completedActivityIds])
+
+  const totalActivities = activities.length
+  const completedCount =
+    coreModuleProgress?.completed_activites ??
+    (coreModuleProgress as any)?.completed_activities ??
+    completedActivityIds.size
+  const completedPercent =
+    totalActivities > 0
+      ? Math.min(100, Math.round((completedCount / totalActivities) * 100))
+      : 0
+
+  // const nextActivity = useMemo(() => {
+  //   if (effectiveNextActivityId) {
+  //     return activities.find((a) => a.id === effectiveNextActivityId) || null
+  //   }
+  //   return null
+  // }, [activities, effectiveNextActivityId])
 
   const remainingActivities = useMemo(() => {
-    return activities
-      .filter((a) => !completedActivityIds.has(String(a.id)))
-      .slice(0, 4)
-      .map((a) => ({
-        id: a.id,
-        title: a.title,
-        icon: getActivityIcon(a.kind),
-      }))
+    return activities.filter((a) => !completedActivityIds.has(String(a.id)))
   }, [activities, completedActivityIds])
 
-  if (!matchedPrinciple && coreModuleProgress) {
+  if (!coreModuleProgress && !principleId) {
     return <NotFound />
   }
 
   const isEditor = user?.role === "admin" || false
-  const completedPercent = Math.round(principleContent?.percentage ?? 0)
-  const principleName = matchedPrinciple?.name || principleId || "perceivable"
-  const principleTitle =
-    principleContent?.revision?.title ||
-    principleContent?.title ||
-    principleName.charAt(0).toUpperCase() + principleName.slice(1)
+  const principleTitle = formatPrincipleTitle(
+    coreModuleProgress?.name || normalizedPrinciple
+  )
   const principleDescription =
-    principleContent?.revision?.description ||
+    coreModuleProgress?.description ||
     "Master foundational WCAG success criteria through interactive learning and assessment."
 
   return (
@@ -188,44 +175,58 @@ export default function CoreModulesView() {
         subtitle={principleDescription}
         backTo="/learner/modules"
         cta={[
-          <Button
-            key="prev-principle"
-            variant="outline"
-            size="sm"
-            disabled={!prevPrinciple}
-            onClick={() =>
-              prevPrinciple &&
-              navigate(`/learner/modules/${prevPrinciple.name}`)
-            }
-            title={
-              prevPrinciple
-                ? `Previous: ${getPrincipleTitle(prevPrinciple)}`
-                : "No previous principle"
-            }
-            className="gap-1.5 font-semibold"
-          >
-            <ChevronLeft className="size-4" />
-            Previous
-          </Button>,
-          <Button
-            key="next-principle"
-            variant="outline"
-            size="sm"
-            disabled={!nextPrinciple}
-            onClick={() =>
-              nextPrinciple &&
-              navigate(`/learner/modules/${nextPrinciple.name}`)
-            }
-            title={
-              nextPrinciple
-                ? `Next: ${getPrincipleTitle(nextPrinciple)}`
-                : "No next principle"
-            }
-            className="gap-1.5 font-semibold"
-          >
-            Next
-            <ChevronRight className="size-4" />
-          </Button>,
+          prevPrinciple ? (
+            <Link
+              key="prev-principle"
+              to={`/learner/modules/${prevPrinciple}`}
+              className={cn(
+                buttonVariants({ variant: "outline", size: "sm" }),
+                "gap-1.5 font-semibold"
+              )}
+              title={`Previous: ${formatPrincipleTitle(prevPrinciple)}`}
+            >
+              <ChevronLeft className="size-4" />
+              Previous
+            </Link>
+          ) : (
+            <Button
+              key="prev-principle"
+              variant="outline"
+              size="sm"
+              disabled
+              className="gap-1.5 font-semibold opacity-50"
+              title="No previous principle"
+            >
+              <ChevronLeft className="size-4" />
+              Previous
+            </Button>
+          ),
+          nextPrinciple ? (
+            <Link
+              key="next-principle"
+              to={`/learner/modules/${nextPrinciple}`}
+              className={cn(
+                buttonVariants({ variant: "outline", size: "sm" }),
+                "gap-1.5 font-semibold"
+              )}
+              title={`Next: ${formatPrincipleTitle(nextPrinciple)}`}
+            >
+              Next
+              <ChevronRight className="size-4" />
+            </Link>
+          ) : (
+            <Button
+              key="next-principle"
+              variant="outline"
+              size="sm"
+              disabled
+              className="gap-1.5 font-semibold opacity-50"
+              title="No next principle"
+            >
+              Next
+              <ChevronRight className="size-4" />
+            </Button>
+          ),
         ]}
       />
 
@@ -240,9 +241,7 @@ export default function CoreModulesView() {
                 Learning Pathway
               </CardTitle>
               <Badge variant="secondary" className="text-xs font-semibold">
-                {principleContent?.completed_activities ?? 0} /{" "}
-                {principleContent?.total_activities ?? activities.length}{" "}
-                Completed
+                {completedCount} / {totalActivities} Completed
               </Badge>
             </div>
 
@@ -251,14 +250,11 @@ export default function CoreModulesView() {
                 <Card className="flex flex-col items-center justify-center border-dashed p-10 text-center">
                   <Layers className="mb-3 size-10 text-muted-foreground/40" />
                   <h3 className="text-base font-bold text-foreground">
-                    {principleContent?.status === "unavailable"
-                      ? "Curriculum Under Construction"
-                      : "No Activities Available"}
+                    No Activities Available
                   </h3>
                   <p className="mt-1 max-w-sm text-xs text-muted-foreground">
-                    {principleContent?.status === "unavailable"
-                      ? "This WCAG principle module is currently being finalized. Check back soon for interactive lessons and assessments."
-                      : "Activities for this module have not been published yet."}
+                    Activities for this module have not been published yet.
+                    Check back soon for interactive lessons and assessments.
                   </p>
                   <Button
                     variant="outline"
@@ -276,13 +272,12 @@ export default function CoreModulesView() {
                       String(activity.id)
                     )
                     const isNext =
-                      activity.id === principleContent?.next_activity_id ||
-                      (!principleContent?.next_activity_id &&
-                        completedActivityIds.size === 0 &&
-                        activities[0]?.id === activity.id)
+                      !isCompleted && activity.id === effectiveNextActivityId
+                    // URL manipulation protection: locked if not completed and not current next activity
                     const isLocked = !isCompleted && !isNext
-                    const attempt = attemptsMap.get(String(activity.id))
-                    const ActivityIcon = getActivityIcon(activity.kind)
+                    const ActivityIcon = getActivityIcon(activity.type)
+                    // Ensure link is always lowercase to prevent title case routing issues
+                    const activityLink = `/learner/modules/${normalizedPrinciple}/${activity.id}`
 
                     return (
                       <div
@@ -333,19 +328,19 @@ export default function CoreModulesView() {
                               <div className="space-y-1">
                                 <div className="flex flex-wrap items-center gap-2">
                                   <h3 className="text-base font-bold tracking-tight text-foreground sm:text-lg">
-                                    {activity.title}
+                                    {activity.name}
                                   </h3>
                                   <Badge
                                     variant={
-                                      activity.kind === "lesson"
+                                      activity.type === "lesson"
                                         ? "default"
-                                        : activity.kind === "interactive"
+                                        : activity.type === "interactive"
                                           ? "secondary"
                                           : "outline"
                                     }
                                     className="text-xs font-bold tracking-wider uppercase"
                                   >
-                                    {getActivityKindLabel(activity.kind)}
+                                    {getActivityTypeLabel(activity.type)}
                                   </Badge>
                                   {isNext && (
                                     <Badge
@@ -355,34 +350,21 @@ export default function CoreModulesView() {
                                       Up Next
                                     </Badge>
                                   )}
-                                  {activity.required &&
-                                    !isCompleted &&
-                                    !isNext && (
-                                      <span className="text-xs font-medium text-muted-foreground">
-                                        Required
-                                      </span>
-                                    )}
+                                  {isLocked && (
+                                    <span className="text-xs font-medium text-muted-foreground">
+                                      Locked
+                                    </span>
+                                  )}
                                 </div>
                                 <p className="text-xs text-muted-foreground">
-                                  {getActivityDescription(activity.kind)}
+                                  {activity.description ||
+                                    "Educational curriculum activity."}
                                 </p>
                               </div>
                             </div>
 
                             {/* Right side Status & Action */}
                             <div className="flex shrink-0 items-center gap-3 self-end sm:self-auto">
-                              {attempt && typeof attempt.score === "number" && (
-                                <Badge
-                                  variant="secondary"
-                                  className={`text-xs font-semibold ${
-                                    attempt.passed
-                                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                                      : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                                  }`}
-                                >
-                                  Score: {Math.round(attempt.score)}%
-                                </Badge>
-                              )}
                               {isLocked ? (
                                 <Button
                                   variant="ghost"
@@ -396,18 +378,18 @@ export default function CoreModulesView() {
                                 </Button>
                               ) : (
                                 <Link
-                                  to={getActivityLink(
-                                    principleName,
-                                    activity.id,
-                                    activity.kind
-                                  )}
+                                  to={activityLink}
                                   className={buttonVariants({
                                     variant: isNext ? "default" : "outline",
                                     size: "sm",
                                     className: "font-semibold shadow-2xs",
                                   })}
                                 >
-                                  {isCompleted ? "Review" : "Continue"}
+                                  {isCompleted
+                                    ? "Review"
+                                    : completedCount > 0
+                                      ? "Continue"
+                                      : "Start"}
                                   {isNext && (
                                     <ChevronRight className="ml-1 size-3.5" />
                                   )}
@@ -427,7 +409,7 @@ export default function CoreModulesView() {
             <div className="flex flex-col gap-3 border-t border-border/60 pt-6 sm:flex-row sm:items-center sm:justify-between">
               {prevPrinciple ? (
                 <Link
-                  to={`/learner/modules/${prevPrinciple.name}`}
+                  to={`/learner/modules/${prevPrinciple}`}
                   className={cn(
                     buttonVariants({ variant: "outline" }),
                     "group flex h-auto w-full flex-col items-start gap-1 p-3.5 text-left sm:w-auto sm:max-w-xs"
@@ -438,7 +420,7 @@ export default function CoreModulesView() {
                     Previous Module
                   </span>
                   <span className="max-w-full truncate font-bold text-foreground">
-                    {getPrincipleTitle(prevPrinciple)}
+                    {formatPrincipleTitle(prevPrinciple)}
                   </span>
                 </Link>
               ) : (
@@ -447,7 +429,7 @@ export default function CoreModulesView() {
 
               {nextPrinciple ? (
                 <Link
-                  to={`/learner/modules/${nextPrinciple.name}`}
+                  to={`/learner/modules/${nextPrinciple}`}
                   className={cn(
                     buttonVariants({ variant: "outline" }),
                     "group ml-auto flex h-auto w-full flex-col items-end gap-1 p-3.5 text-right sm:w-auto sm:max-w-xs"
@@ -458,7 +440,7 @@ export default function CoreModulesView() {
                     <ChevronRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
                   </span>
                   <span className="max-w-full truncate font-bold text-foreground">
-                    {getPrincipleTitle(nextPrinciple)}
+                    {formatPrincipleTitle(nextPrinciple)}
                   </span>
                 </Link>
               ) : (
@@ -506,14 +488,11 @@ export default function CoreModulesView() {
                     </span>
                   </div>
                   {/* Progress Bar */}
-                  <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-muted">
-                    <div
-                      className="h-full rounded-full bg-foreground transition-all duration-500"
-                      style={{
-                        width: `${completedPercent}%`,
-                      }}
-                    />
-                  </div>
+                  <Progress
+                    value={completedPercent}
+                    className="mt-3 w-full [&_[data-slot=progress-indicator]]:bg-foreground [&_[data-slot=progress-track]]:h-2.5"
+                    aria-label="Module Progress"
+                  />
                 </div>
 
                 {/* Progress Stats */}
@@ -523,27 +502,63 @@ export default function CoreModulesView() {
                       Activities
                     </p>
                     <p className="mt-1 text-base font-bold text-foreground sm:text-lg">
-                      {principleContent?.completed_activities ?? 0} /{" "}
-                      {principleContent?.total_activities ?? activities.length}
+                      {completedCount} / {totalActivities}
                     </p>
                   </div>
                   <div>
                     <p className="text-xs font-medium text-muted-foreground">
-                      Lessons
+                      Status
                     </p>
                     <p className="mt-1 text-base font-bold text-foreground sm:text-lg">
-                      {principleContent?.completed_lessons ?? 0} /{" "}
-                      {principleContent?.total_lessons ?? 0}
+                      {completedCount === totalActivities && totalActivities > 0
+                        ? "Completed"
+                        : "In Progress"}
                     </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Card 2: Earned Badges */}
-            <EarnedBagdes principleData={principleContent} />
+            {/* Card 2: Next Up Focus Card */}
+            {/* {nextActivity && (
+              <Card className="border border-primary/40 bg-primary/5 shadow-sm">
+                <CardHeader className="p-4 pb-2 sm:p-5">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Sparkles className="size-4" />
+                    <span className="text-xs font-bold tracking-wider text-primary uppercase">
+                      Next Milestone
+                    </span>
+                  </div>
+                  <CardTitle className="mt-1 text-base font-bold text-foreground sm:text-lg">
+                    {nextActivity.name}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 p-4 pt-0 sm:p-5 sm:pt-0">
+                  <p className="line-clamp-2 text-xs text-muted-foreground">
+                    {nextActivity.description ||
+                      "Continue your progress on this module."}
+                  </p>
+                  <Link
+                    to={`/learner/modules/${normalizedPrinciple}/${nextActivity.id}`}
+                    className={cn(
+                      buttonVariants({ variant: "default", size: "sm" }),
+                      "w-full justify-center gap-1.5 font-semibold shadow-2xs"
+                    )}
+                  >
+                    Continue Activity
+                    <ChevronRight className="size-3.5" />
+                  </Link>
+                </CardContent>
+              </Card>
+            )} */}
 
-            {/* Card 3: Remaining Activities */}
+            {/* Card 3: Earned Badges */}
+            <EarnedBadges
+              completedCount={completedCount}
+              completedPercent={completedPercent}
+            />
+
+            {/* Card 4: Remaining Activities */}
             <Card className="border border-border/80 shadow-sm">
               <CardHeader className="p-4 sm:p-5">
                 <div className="flex items-center gap-2 text-foreground">
@@ -555,18 +570,18 @@ export default function CoreModulesView() {
               </CardHeader>
               <CardContent className="space-y-2.5 p-4 pt-0 sm:p-5 sm:pt-0">
                 {remainingActivities.length > 0 ? (
-                  remainingActivities.map((rem) => {
-                    const IconComponent = rem.icon
+                  remainingActivities.slice(0, 4).map((rem) => {
+                    const RemIcon = getActivityIcon(rem.type)
                     return (
                       <div
                         key={rem.id}
                         className="flex items-center gap-3 rounded-lg bg-muted/40 px-3 py-2.5 text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground"
                       >
                         <div className="flex size-7 shrink-0 items-center justify-center rounded-md border border-border/50 bg-background text-muted-foreground">
-                          <IconComponent className="size-4" />
+                          <RemIcon className="size-4" />
                         </div>
                         <span className="truncate text-xs font-semibold sm:text-sm">
-                          {rem.title}
+                          {rem.name}
                         </span>
                       </div>
                     )
@@ -581,40 +596,112 @@ export default function CoreModulesView() {
           </div>
         )}
       </div>
+
+      {/* ========================================================================= */}
+      {/* ======================== PREVIOUS UI (COMMENTED OUT) ==================== */}
+      {/* ========================================================================= */}
+      {/*
+      <div className="hidden" aria-hidden="true">
+        <HeaderTemplate
+          title={principleTitle}
+          subtitle={principleDescription}
+          backTo="/learner/modules"
+          cta={[
+            <Button
+              key="prev-principle-old"
+              variant="outline"
+              size="sm"
+              disabled={!prevPrinciple}
+              className="gap-1.5 font-semibold"
+            >
+              <ChevronLeft className="size-4" />
+              Previous
+            </Button>,
+            <Button
+              key="next-principle-old"
+              variant="outline"
+              size="sm"
+              disabled={!nextPrinciple}
+              className="gap-1.5 font-semibold"
+            >
+              Next
+              <ChevronRight className="size-4" />
+            </Button>,
+          ]}
+        />
+        <div className="grid grid-cols-1 gap-6 pt-6 sm:pt-6 lg:grid-cols-3">
+          <div className="space-y-4 lg:col-span-2">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                  Learning Pathway (Old)
+                </CardTitle>
+              </div>
+              <CardContent className="p-0 sm:pt-0">
+                <div className="w-full space-y-4">
+                  {activities.map((activity) => (
+                    <div key={activity.id} className="group flex w-full gap-3 sm:gap-5">
+                      <div className="flex shrink-0 flex-col items-center gap-1">
+                        <div className="flex size-7 items-center justify-center rounded-full bg-foreground text-background">
+                          <CheckCircle2 className="size-4" />
+                        </div>
+                        <div className="mt-2 h-full w-0.5 bg-border group-last:hidden" />
+                      </div>
+                      <div className="w-full rounded-xl border bg-card p-4 shadow-sm sm:p-5">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="flex items-start gap-3">
+                            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-foreground/10 text-foreground">
+                              <BookOpen className="size-5" />
+                            </div>
+                            <div className="space-y-1">
+                              <h3 className="text-base font-bold tracking-tight text-foreground sm:text-lg">
+                                {activity.name}
+                              </h3>
+                              <p className="text-xs text-muted-foreground">{activity.description}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </div>
+          </div>
+        </div>
+      </div>
+      */}
     </section>
   )
 }
 
-export function EarnedBagdes({
-  principleData,
+export function EarnedBadges({
+  completedCount = 0,
+  completedPercent = 0,
 }: {
-  principleData?: PrincipleProgressProps
+  completedCount?: number
+  completedPercent?: number
 }) {
-  const { data: coreProgress } = useCoreModuleProgress()
-  const activeData =
-    principleData ||
-    coreProgress?.principles.find((p) => p.name === "perceivable")?.content
-
   const badges = [
     {
       id: "b1",
-      title: "Screen Reader Rookie",
+      title: "Foundations Pioneer",
       subtitle:
-        (activeData?.completed_lessons ?? 0) > 0
-          ? `${activeData?.completed_lessons} lesson${activeData?.completed_lessons === 1 ? "" : "s"} completed`
-          : "Complete your first lesson",
+        completedCount > 0
+          ? `${completedCount} activit${completedCount === 1 ? "y" : "ies"} completed`
+          : "Complete your first activity",
       icon: Volume2,
-      earned: (activeData?.completed_lessons ?? 0) > 0,
+      earned: completedCount > 0,
     },
     {
       id: "b2",
-      title: "ARIA Explorer",
+      title: "WCAG Explorer",
       subtitle:
-        (activeData?.percentage ?? 0) > 0
-          ? `${Math.round(activeData?.percentage ?? 0)}% foundations met`
-          : "Foundations Met",
+        completedPercent > 0
+          ? `${completedPercent}% foundations met`
+          : "Start module to earn badge",
       icon: Compass,
-      earned: (activeData?.percentage ?? 0) > 0,
+      earned: completedPercent > 0,
     },
   ]
 
@@ -662,3 +749,5 @@ export function EarnedBagdes({
     </Card>
   )
 }
+
+export const EarnedBagdes = EarnedBadges

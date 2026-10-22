@@ -196,7 +196,7 @@ export default function Dashboard() {
 
   const userName = userProfile?.user?.name
 
-  const overallProgress = Math.round(coreModuleProgress?.percentage ?? 0)
+  const overallProgress = Math.round(coreModuleProgress?.overall_progress ?? 0)
 
   const KPI = [
     {
@@ -204,8 +204,8 @@ export default function Dashboard() {
       icon: Sparkles,
       value: `${overallProgress}%`,
       footerDesc:
-        (coreModuleProgress?.completed_activities ?? 0) > 0
-          ? `${coreModuleProgress.completed_activities} of ${coreModuleProgress.total_activities} activities done`
+        (coreModuleProgress?.overall_progress ?? 0) > 0
+          ? `Your current`
           : "Start your first module activity",
     },
     {
@@ -316,7 +316,10 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Left Column (2 spans): Continue Learning & Due Assessments */}
         <div className="space-y-6 lg:col-span-2">
-          <ContinueLearningCard />
+          <ContinueLearningCard
+            active_principle={coreModuleProgress.active_principle}
+            next_activity={coreModuleProgress.next_activity}
+          />
 
           {/* Due Quizzes Section */}
           <div className="space-y-4">
