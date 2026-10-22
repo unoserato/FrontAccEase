@@ -37,6 +37,7 @@ import {
   useExtensionScan,
   useWebLLMTasks,
 } from "@/services/tanstack/materials"
+import { saveAnalyzerResultAPI } from "@/services/api/CRUD/materialsCRUDAPI"
 import { ScanHistory } from "@/components/learner/ScanHistory"
 import { CreateMLCEngine, type MLCEngine } from "@mlc-ai/web-llm"
 import {
@@ -119,8 +120,11 @@ export default function Analyzer() {
     webLLMTasksMutation.isPending ||
     isWebLLMPending
 
-  async function saveAndOpenResult(data: Result) {
+  async function saveAndOpenResult(data: Result, saveToBackend = false) {
     setError("")
+    const savedResult = saveToBackend
+      ? await saveAnalyzerResultAPI(data)
+      : undefined
     await queryClient.invalidateQueries({
       queryKey: ["analyzer-logs"],
     })
@@ -142,7 +146,7 @@ export default function Analyzer() {
     const updatedHistory = queryClient.getQueryData<AnalyzerResultItem[]>([
       "analyzer-logs",
     ])
-    const targetId = updatedHistory?.[0]?.id || newId
+    const targetId = savedResult?.data.id || updatedHistory?.[0]?.id || newId
 
     navigate(`/learner/analyzer/${targetId}`)
   }
@@ -229,7 +233,7 @@ export default function Analyzer() {
         targetUrl,
         (performance.now() - startedAt) / 1000
       )
-      await saveAndOpenResult(compiled)
+      await saveAndOpenResult(compiled, true)
     } catch (scanError) {
       setError(
         scanError instanceof Error

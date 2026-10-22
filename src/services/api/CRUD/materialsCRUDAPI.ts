@@ -1,4 +1,5 @@
 import type { ClassroomProps } from "@/const/props/classroomProps"
+import type { Result } from "@/const/props/analyzerProps"
 import type { QuizJson } from "@/const/props/quizProps"
 import { api } from "@/services/axios"
 import type { ExtensionScanSession } from "@/services/webLLM"
@@ -15,6 +16,13 @@ export async function updateSubmissionTicket(id: string, answer: object) {
 
 export async function createExtensionScanAPI(): Promise<ExtensionScanSession> {
   const response = await api.post("/accessibility/scans")
+  return response.data
+}
+
+export async function saveAnalyzerResultAPI(
+  content: Result
+): Promise<{ success: boolean; data: { id: string } }> {
+  const response = await api.post("/accessibility/save-result", { content })
   return response.data
 }
 
