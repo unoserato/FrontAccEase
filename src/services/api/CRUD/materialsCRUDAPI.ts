@@ -4,6 +4,7 @@ import { api } from "@/services/axios"
 import type { ExtensionScanSession } from "@/services/webLLM"
 import type { InstrumentProps } from "@/const/props/miscellaneousProps"
 import type { ModuleProps } from "@/const/props/moduleProps"
+import type { ClassroomProps } from "@/const/props/classroomProps"
 
 export async function createSubmissionTicket(id: string): Promise<QuizJson> {
   const response = await api.post(`/learner/pre-submit-quiz-answer/${id}`)
@@ -48,7 +49,7 @@ export async function unarhiveModuleAPI(
 
 export async function joinClassroomByCodeAPI(
   code: string
-): Promise<ModuleProps[]> {
+): Promise<ClassroomProps[]> {
   const response = await api.post(`/learner/enroll-classroom/${code}`)
   return response.data
 }
