@@ -59,11 +59,6 @@ export async function getClassroomContentViewById(
   return response.data
 }
 
-export async function createInstructorQuizAPI(payload: any) {
-  const response = await api.post(`/helper/create-quiz`, payload)
-  return response.data
-}
-
 export async function udpateInstructorQuizAPI(id: string, payload: any) {
   const response = await api.put(`/helper/update-quiz/${id}`, payload)
   return response.data

@@ -1,7 +1,6 @@
 import HeaderTemplate from "@/components/common/PageTemplate"
 import SearchTemplate from "@/components/common/SearchTemplate"
 import TooltipButtonTemplate from "@/components/common/TooltipButtonTemplate"
-import GridListButtonGroupTemplate from "@/components/common/GridListButtonGroupTemplate"
 import EmptyState from "@/components/common/EmptyState"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Archive, Book, BookOpen, SearchX } from "lucide-react"
@@ -12,7 +11,6 @@ import ModuleCardTemplate from "@/components/common/ModuleCardTemplate"
 
 export default function ModulesInstructor() {
   const [search, setSearch] = useState("")
-  const [gridView, setGridView] = useState(true)
   const { data: modules } = useModules()
 
   const filteredModules = modules
@@ -60,10 +58,6 @@ export default function ModulesInstructor() {
               content="Archived Modules"
             />
           </Link>
-          <GridListButtonGroupTemplate
-            gridView={gridView}
-            setGridView={(e) => setGridView(e)}
-          />
         </div>
       </div>
 
@@ -94,16 +88,10 @@ export default function ModulesInstructor() {
             )
           }
         />
-      ) : gridView ? (
+      ) : (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
           {filteredModules.map((module) => (
             <ModuleCardTemplate key={module.id} module={module} />
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-col gap-2">
-          {filteredModules.map((module) => (
-            <ModuleCardTemplate key={module.id} module={module} view="list" />
           ))}
         </div>
       )}

@@ -9,14 +9,20 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import EditorDropdown from "./EditorDropdown"
 import { useNavigate } from "react-router-dom"
 import { useMe } from "@/services/tanstack/auth"
-import type { InstructorQuizProps } from "@/const/props/quizProps"
+import type { InstructorQuizProps, QuizProps } from "@/const/props/quizProps"
 import { getDateString } from "@/hooks/date-to-string"
 
 export type QuizCardTemplateProps = {
-  quiz: InstructorQuizProps
+  quiz: InstructorQuizProps | QuizProps | any
+  href?: string
+  onClick?: () => void
 }
 
-export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
+export default function QuizCardTemplate({
+  quiz,
+  href,
+  onClick,
+}: QuizCardTemplateProps) {
   const [action, setAction] = useState<ActionType>(null)
   const classrooms = quiz.classrooms ?? []
 
@@ -31,11 +37,21 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
 
   const totalLearners =
     quiz.expected_no_submission ??
-    classrooms.reduce((sum, c) => sum + (c.learners?.length || 0), 0)
+    classrooms.reduce(
+      (sum: number, c: any) => sum + (c.learners?.length || 0),
+      0
+    )
 
   const dueDate = quiz.due_date || ""
-  const quizStatus = new Date(dueDate) > new Date() ? "Open" : "Closed"
-  const quizAuthor = quiz.created_by
+  const quizStatus =
+    quiz.status == "Draft"
+      ? "Draft"
+      : dueDate
+        ? new Date(dueDate) > new Date()
+          ? "Open"
+          : "Closed"
+        : "Active"
+  const quizAuthor = quiz.created_by || "Instructor"
   const classroomsCount = classrooms.length
   const classroomsLabel =
     classroomsCount === 1 ? "1 Classroom" : `${classroomsCount} Classrooms`
@@ -45,10 +61,20 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
     Math.max(0, Math.round((submissionsCount / (totalLearners || 1)) * 100))
   )
 
+  const handleClick = () => {
+    if (onClick) {
+      onClick()
+    } else if (href) {
+      navigate(href)
+    } else {
+      navigate(`/instructor/quizzes/${quiz.id}`)
+    }
+  }
+
   return (
     <>
       <Card
-        onClick={() => navigate(`/instructor/quizzes/${quiz.id}`)}
+        onClick={handleClick}
         className="group relative flex w-full cursor-pointer flex-col justify-between overflow-hidden p-4 transition-all hover:shadow-xs sm:p-5"
       >
         {/* Top Bar / Dropdown in Top Right Corner */}
@@ -79,7 +105,7 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
           /* Mobile Stacked View */
           <div className="mt-3 space-y-4 pr-6">
             <div>
-              <Badge>{quiz.principle}</Badge>
+              {quiz.principle && <Badge>{quiz.principle}</Badge>}
               <h3 className="mt-2 text-base font-bold text-foreground">
                 {quiz.name}
               </h3>
@@ -148,7 +174,7 @@ export default function QuizCardTemplate({ quiz }: QuizCardTemplateProps) {
           <div className="mt-3 flex items-center justify-between gap-6 pr-8">
             {/* Title & Author */}
             <div className="min-w-0 flex-1 space-y-1">
-              <Badge>{quiz.principle}</Badge>
+              {quiz.principle && <Badge>{quiz.principle}</Badge>}
               <h3 className="mt-2 truncate text-base font-bold text-foreground lg:text-lg">
                 {quiz.name}
               </h3>

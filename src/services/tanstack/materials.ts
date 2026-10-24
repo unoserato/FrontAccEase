@@ -29,6 +29,9 @@ import {
   getClassroomAnalyzerLogsByClassroomId,
   getCurriculumAPI,
   getCoreModulesPrincipleAPI,
+  getAdminAnalyzerLogs,
+  getAdminAllUsers,
+  getAnalyzerLogsByInstructorId,
 } from "../api/GET/materialsGETAPI"
 import {
   createExtensionScanAPI,
@@ -42,6 +45,7 @@ import {
 
 import { staleTime } from "../axios"
 import {
+  getInstructorMaterialsByInstructorId,
   getInstructorMaterialsCountAPI,
   getInstructorMaterialsModulesAPI,
   getModuleByIdAPI,
@@ -77,6 +81,15 @@ export function useInstructorMaterialsCount() {
     queryKey: ["instructor-materials-list"],
     queryFn: getInstructorMaterialsCountAPI,
     staleTime: staleTime,
+  })
+}
+
+export function useInstructorMaterialsByInstructorId(id?: string) {
+  return useQuery({
+    queryKey: ["instructor-materials", id],
+    queryFn: id ? () => getInstructorMaterialsByInstructorId(id) : skipToken,
+    staleTime: staleTime,
+    enabled: Boolean(id),
   })
 }
 
@@ -423,3 +436,33 @@ export function useCurriculum() {
     staleTime: staleTime,
   })
 }
+
+export function useAdminAnalyzerLogs() {
+  return useSuspenseQuery({
+    queryKey: ["admin-analyzer-logs"],
+    queryFn: getAdminAnalyzerLogs,
+    staleTime: staleTime,
+  })
+}
+
+export function useAdminAllUsers() {
+  return useSuspenseQuery({
+    queryKey: ["admin-users"],
+    queryFn: getAdminAllUsers,
+    staleTime: staleTime,
+  })
+}
+
+export function useAnalyzerLogsByInstructorId(instructorId?: string) {
+  return useQuery({
+    queryKey: ["admin-instructor-analyzer-logs", instructorId],
+    queryFn: instructorId
+      ? () => getAnalyzerLogsByInstructorId(instructorId)
+      : skipToken,
+    staleTime: staleTime,
+    enabled: Boolean(instructorId),
+  })
+}
+
+
+

@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   DialogContent,
@@ -16,6 +16,7 @@ import type { QuizProps } from "@/const/props/quizProps"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   arhiveModuleAPI,
+  deleteInstructorQuizAPI,
   unarhiveModuleAPI,
 } from "@/services/api/CRUD/materialsCRUDAPI"
 import { toast } from "../ui/toast"
@@ -59,7 +60,7 @@ export default function DeleteArchiveDialog({
   const isModalOpen =
     action === "archive" || action === "delete" || action == "unarchive"
 
-  const { mutate: archiveModule, isPending: isArchiving } = useMutation({
+  const { mutate: archiveModule, isPending: isArchivingModule } = useMutation({
     mutationFn: arhiveModuleAPI,
     onSuccess: (data) => {
       toast.add({
@@ -72,15 +73,30 @@ export default function DeleteArchiveDialog({
     },
   })
 
-  const { mutate: unarchiveModule, isPending: isUnarchiving } = useMutation({
-    mutationFn: unarhiveModuleAPI,
+  const { mutate: unarchiveModule, isPending: isUnarchivingModule } =
+    useMutation({
+      mutationFn: unarhiveModuleAPI,
+      onSuccess: (data) => {
+        toast.add({
+          type: "success",
+          title: "Module Unarchived",
+          description: "Successfully unarchived module",
+        })
+        queryClient.setQueryData(["modules"], data)
+
+        setAction(null)
+      },
+    })
+
+  const { mutate: deleteQuiz, isPending: isDeletingQuiz } = useMutation({
+    mutationFn: deleteInstructorQuizAPI,
     onSuccess: (data) => {
       toast.add({
         type: "success",
-        title: "Module Unarchived",
-        description: "Successfully unarchived module",
+        title: "Quiz Deleted",
+        description: "Successfully deleted quiz",
       })
-      queryClient.setQueryData(["modules"], data)
+      queryClient.setQueryData(["instructor-quizzes"], data)
 
       setAction(null)
     },
@@ -92,6 +108,31 @@ export default function DeleteArchiveDialog({
   function handleUnarchiveModule() {
     unarchiveModule(item.id)
   }
+  function handleDeleteQuiz() {
+    deleteQuiz(item.id)
+  }
+
+  const status = useMemo(() => {
+    if (isArchivingModule) {
+      return "Archiving..."
+    }
+    if (isUnarchivingModule) {
+      return "Unarchiving..."
+    }
+    if (isArchivingModule) {
+      return "Archiving..."
+    }
+    if (isDeletingQuiz) {
+      return "Deleting..."
+    }
+
+    return action === "archive"
+      ? `Archive`
+      : action === "unarchive"
+        ? `Unarchive`
+        : `Delete`
+  }, [isArchivingModule, isUnarchivingModule, isDeletingQuiz])
+
   return (
     <Dialog
       open={isModalOpen}
@@ -137,8 +178,11 @@ export default function DeleteArchiveDialog({
           </DialogClose>
 
           <Button
+            className={`capitalize`}
             variant={action === "delete" ? "destructive" : "default"}
-            disabled={isArchiving || isUnarchiving}
+            disabled={
+              isArchivingModule || isUnarchivingModule || isDeletingQuiz
+            }
             onClick={() => {
               if (action === "archive" && itemType === "module") {
                 handleArchiveModule()
@@ -146,17 +190,12 @@ export default function DeleteArchiveDialog({
               if (action === "unarchive" && itemType === "module") {
                 handleUnarchiveModule()
               }
+              if (action === "delete" && itemType === "quiz") {
+                handleDeleteQuiz()
+              }
             }}
           >
-            {action === "archive"
-              ? isArchiving
-                ? "Archiving..."
-                : "Archive"
-              : action === "unarchive"
-                ? isUnarchiving
-                  ? "Unarchiving..."
-                  : "Unarchive"
-                : "Delete"}
+            {status}
           </Button>
         </DialogFooter>
       </DialogContent>

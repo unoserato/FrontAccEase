@@ -1,4 +1,5 @@
 import type {
+  AdminAnalyzerLogsResponse,
   AnalyzerResultItem,
   AnalyzerSummaryProps,
   ClassroomAnalyzerLogsDetailResponse,
@@ -6,7 +7,10 @@ import type {
   WcagEvaluationProps,
 } from "@/const/props/analyzerProps"
 import type { ClassroomProps } from "@/const/props/classroomProps"
-import type { InstructorMaterialsCountProps } from "@/const/props/instructorProps"
+import type {
+  InstructorMaterialsCountProps,
+  InstructorMaterialsDetailProps,
+} from "@/const/props/instructorProps"
 import type { InstrumentProps } from "@/const/props/miscellaneousProps"
 import type {
   CoreModuleActivityResponse,
@@ -21,6 +25,7 @@ import type {
   QuizSubmissionProps,
 } from "@/const/props/quizProps"
 import type { WCAGPrinciple } from "@/const/props/wcagProps"
+import type { UserProps } from "@/const/props/userProps"
 import { api } from "@/services/axios"
 import type { ExtensionScanSession, WebLLMTaskBatch } from "@/services/webLLM"
 
@@ -146,7 +151,7 @@ export async function getClassroomAnalyzerLogsByClassroomId(
   classroom_id: string
 ): Promise<ClassroomAnalyzerLogsDetailResponse> {
   const response = await api.get(
-    `/instructor/classrooms/analyzer-logs/${classroom_id}`
+    `/helper/classroom-analyzer-logs/${classroom_id}`
   )
   return response.data
 }
@@ -158,5 +163,31 @@ export async function getCurriculumAPI() {
 
 export async function getCurriculumContentByIdAPI() {
   const response = await api.get(`/admin/pour/curriculum`)
+  return response.data
+}
+
+export async function getInstructorMaterialsByInstructorId(
+  instructor_id: string
+): Promise<InstructorMaterialsDetailProps> {
+  const response = await api.get(`/admin/instructor-materials/${instructor_id}`)
+  return response.data
+}
+
+export async function getAdminAnalyzerLogs(): Promise<AdminAnalyzerLogsResponse> {
+  const response = await api.get(`/admin/all-analyzer-logs`)
+  return response.data
+}
+
+export async function getAnalyzerLogsByInstructorId(
+  instructor_id: string
+): Promise<ClassroomAnalyzerLogsResponse> {
+  const response = await api.get(
+    `/admin/all-analyzer-logs/instructor/${instructor_id}`
+  )
+  return response.data
+}
+
+export async function getAdminAllUsers(): Promise<UserProps[]> {
+  const response = await api.get(`/admin/users`)
   return response.data
 }

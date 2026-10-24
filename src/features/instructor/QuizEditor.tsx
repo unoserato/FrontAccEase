@@ -101,12 +101,10 @@ import {
   useQuizById,
 } from "@/services/tanstack/materials"
 import type { ClassroomProps } from "@/const/props/classroomProps"
-import { useMutation } from "@tanstack/react-query"
-import {
-  createInstructorQuizAPI,
-  udpateInstructorQuizAPI,
-} from "@/services/api/materialsAPI"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { udpateInstructorQuizAPI } from "@/services/api/materialsAPI"
 import { useInvalidateQueries } from "@/services/tanstack/auth"
+import { createInstructorQuizAPI } from "@/services/api/CRUD/materialsCRUDAPI"
 
 /**
  * Maps a question's unique `name` to its correct answer.
@@ -228,91 +226,97 @@ function extractAnswerKey(quiz: QuizJson): AnswerKey {
   return key
 }
 
-interface DebouncedInputProps
-  extends Omit<React.ComponentProps<typeof Input>, "value" | "onChange"> {
+interface DebouncedInputProps extends Omit<
+  React.ComponentProps<typeof Input>,
+  "value" | "onChange"
+> {
   value: string | number | undefined
   onValueChange: (value: string) => void
   debounceMs?: number
 }
 
 const DebouncedInput = React.memo(
-  React.forwardRef<HTMLInputElement, DebouncedInputProps>(function DebouncedInput(
-    { value, onValueChange, debounceMs = 150, onBlur, onFocus, ...props },
-    ref
-  ) {
-    const [localValue, setLocalValue] = useState(value ?? "")
-    const isFocusedRef = useRef(false)
-    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-    const latestValueRef = useRef(localValue)
+  React.forwardRef<HTMLInputElement, DebouncedInputProps>(
+    function DebouncedInput(
+      { value, onValueChange, debounceMs = 150, onBlur, onFocus, ...props },
+      ref
+    ) {
+      const [localValue, setLocalValue] = useState(value ?? "")
+      const isFocusedRef = useRef(false)
+      const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+      const latestValueRef = useRef(localValue)
 
-    useEffect(() => {
-      if (!isFocusedRef.current) {
-        setLocalValue(value ?? "")
-        latestValueRef.current = value ?? ""
-      }
-    }, [value])
-
-    const flush = useCallback(
-      (val: string) => {
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current)
-          timeoutRef.current = null
+      useEffect(() => {
+        if (!isFocusedRef.current) {
+          setLocalValue(value ?? "")
+          latestValueRef.current = value ?? ""
         }
-        onValueChange(val)
-      },
-      [onValueChange]
-    )
+      }, [value])
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const nextVal = e.target.value
-      setLocalValue(nextVal)
-      latestValueRef.current = nextVal
+      const flush = useCallback(
+        (val: string) => {
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current)
+            timeoutRef.current = null
+          }
+          onValueChange(val)
+        },
+        [onValueChange]
+      )
 
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-      timeoutRef.current = setTimeout(() => {
-        flush(nextVal)
-      }, debounceMs)
-    }
+      const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const nextVal = e.target.value
+        setLocalValue(nextVal)
+        latestValueRef.current = nextVal
 
-    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-      isFocusedRef.current = false
-      if (timeoutRef.current) {
-        flush(String(latestValueRef.current ?? ""))
-      }
-      onBlur?.(e)
-    }
-
-    const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-      isFocusedRef.current = true
-      onFocus?.(e)
-    }
-
-    useEffect(() => {
-      return () => {
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current)
         }
+        timeoutRef.current = setTimeout(() => {
+          flush(nextVal)
+        }, debounceMs)
       }
-    }, [])
 
-    return (
-      <Input
-        {...props}
-        ref={ref}
-        value={localValue}
-        onChange={handleChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-      />
-    )
-  })
+      const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        isFocusedRef.current = false
+        if (timeoutRef.current) {
+          flush(String(latestValueRef.current ?? ""))
+        }
+        onBlur?.(e)
+      }
+
+      const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+        isFocusedRef.current = true
+        onFocus?.(e)
+      }
+
+      useEffect(() => {
+        return () => {
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current)
+          }
+        }
+      }, [])
+
+      return (
+        <Input
+          {...props}
+          ref={ref}
+          value={localValue}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+      )
+    }
+  )
 )
 DebouncedInput.displayName = "DebouncedInput"
 
-interface DebouncedTextareaProps
-  extends Omit<React.ComponentProps<typeof Textarea>, "value" | "onChange"> {
+interface DebouncedTextareaProps extends Omit<
+  React.ComponentProps<typeof Textarea>,
+  "value" | "onChange"
+> {
   value: string | undefined
   onValueChange: (value: string) => void
   debounceMs?: number
@@ -554,12 +558,7 @@ const QuestionCard = React.memo(function QuestionCard({
       )}
 
       {/* 2. OBJECTIVE CHOICE TYPES (radiogroup, checkbox, dropdown, ranking) */}
-      {[
-        "radiogroup",
-        "checkbox",
-        "dropdown",
-        "ranking",
-      ].includes(q.type) && (
+      {["radiogroup", "checkbox", "dropdown", "ranking"].includes(q.type) && (
         <div className="mt-4 space-y-3">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
@@ -1251,10 +1250,11 @@ function QuizEditorContent({
   }
 
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { mutate: createQuiz, isPending: isCreating } = useMutation({
     mutationKey: ["instructor-quizzes"],
     mutationFn: createInstructorQuizAPI,
-    onSuccess: () => {
+    onSuccess: (data) => {
       isDirtyRef.current = false
       setIsDirty(false)
       try {
@@ -1262,13 +1262,16 @@ function QuizEditorContent({
       } catch (err) {
         console.warn("Failed to clean up draft after save:", err)
       }
+      setIsSaveDialogOpen(false)
       toast.add({
         type: "success",
         title: "Quiz saved",
         description: "Your quiz has been created successfully.",
       })
-      navigate("/instructor/quizzes")
-      setIsSaveDialogOpen(false)
+      queryClient.setQueryData(["instructor-quizzes"], data)
+      setTimeout(() => {
+        navigate(QUIZZES_PATH)
+      }, 100)
     },
     onError: (err: any) => {
       console.error("Error creating quiz:", err)
@@ -1293,14 +1296,16 @@ function QuizEditorContent({
       } catch (err) {
         console.warn("Failed to clean up draft after save:", err)
       }
+      setIsSaveDialogOpen(false)
       toast.add({
         type: "success",
         title: "Quiz updated",
         description: "Your quiz has been updated successfully.",
       })
       invalidateQueries([["quiz", existingQuiz!.id]])
-      navigate("/instructor/quizzes")
-      setIsSaveDialogOpen(false)
+      setTimeout(() => {
+        navigate(QUIZZES_PATH)
+      }, 100)
     },
     onError: (err: any) => {
       console.error("Error updating quiz:", err)
@@ -1344,12 +1349,7 @@ function QuizEditorContent({
 
   // Stable callbacks for QuestionCard to avoid cascade re-rendering
   const handleUpdateQuestion = useCallback(
-    (
-      pIdx: number,
-      qIdx: number,
-      key: keyof QuestionElement,
-      value: any
-    ) => {
+    (pIdx: number, qIdx: number, key: keyof QuestionElement, value: any) => {
       setQuizJson((prev) => updateQuestion(prev, pIdx, qIdx, key, value))
     },
     []
@@ -1398,7 +1398,7 @@ function QuizEditorContent({
     { enableOnFormTags: true }
   )
 
-  useUnmount({ when: isDirty })
+  useUnmount({ when: () => isDirtyRef.current })
 
   return (
     <Tabs

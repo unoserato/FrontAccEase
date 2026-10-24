@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react"
+import { useNavigate } from "react-router-dom"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import SearchTemplate from "@/components/common/SearchTemplate"
 import {
@@ -21,13 +22,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog"
-import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -39,200 +33,208 @@ import {
   ChevronRight,
   Globe,
   GraduationCap,
-  CheckCircle2,
-  Clock,
+  Layers,
+  Users,
 } from "lucide-react"
-import { useNavigate } from "react-router-dom"
+import type { AdminAnalyzerLogsResponse } from "@/const/props/analyzerProps"
+import { useAdminAnalyzerLogs } from "@/services/tanstack/materials"
 
-interface OrgClassLogItem {
-  id: string
-  scans: number
-  className: string
-  code: string
-  instructor: string
-  enrolled: number
-  passRate: string
-  flaggedCount: number
+export interface AnalyzerLogsSchoolAdminProps {
+  data?: AdminAnalyzerLogsResponse
 }
-
-const orgClassLogs: OrgClassLogItem[] = [
-  {
-    id: "1",
-    scans: 100,
-    className: "ITEP 306 - UI / UX and Cross Platform Technologies",
-    code: "ITEP-306",
-    instructor: "Dr. Evelyn Reed",
-    enrolled: 42,
-    passRate: "82.4%",
-    flaggedCount: 35,
-  },
-  {
-    id: "2",
-    scans: 120,
-    className: "WCAG 101 - Web Accessibility Fundamentals",
-    code: "WCAG-101",
-    instructor: "Prof. Alan Turing",
-    enrolled: 38,
-    passRate: "76.5%",
-    flaggedCount: 52,
-  },
-  {
-    id: "3",
-    scans: 85,
-    className: "UIUX 202 - Inclusive UI/UX Engineering",
-    code: "UIUX-202",
-    instructor: "Sarah Jenkins",
-    enrolled: 45,
-    passRate: "88.1%",
-    flaggedCount: 22,
-  },
-  {
-    id: "4",
-    scans: 115,
-    className: "CS 401 - Advanced Web Accessibility Auditing",
-    code: "CS-401",
-    instructor: "Dr. Evelyn Reed",
-    enrolled: 29,
-    passRate: "71.0%",
-    flaggedCount: 64,
-  },
-  {
-    id: "5",
-    scans: 100,
-    className: "ITEP 308 - Assistive Technology Integration",
-    code: "ITEP-308",
-    instructor: "Dr. Marcus Vance",
-    enrolled: 50,
-    passRate: "79.8%",
-    flaggedCount: 32,
-  },
-  {
-    id: "6",
-    scans: 90,
-    className: "QA 102 - Software Quality & Compliance Testing",
-    code: "QA-102",
-    instructor: "Prof. Alan Turing",
-    enrolled: 34,
-    passRate: "84.2%",
-    flaggedCount: 26,
-  },
-]
-
-const usageChartData = [
-  { date: "09-01", scans: 380 },
-  { date: "09-02", scans: 520 },
-  { date: "09-03", scans: 450 },
-  { date: "09-04", scans: 720 },
-  { date: "09-05", scans: 600 },
-  { date: "09-06", scans: 280 },
-  { date: "09-07", scans: 470 },
-]
-
-const instructorUsageData = [
-  { instructor: "Dr. Evelyn Reed", scans: 215 },
-  { instructor: "Prof. Alan Turing", scans: 210 },
-  { instructor: "Dr. Marcus Vance", scans: 100 },
-  { instructor: "Sarah Jenkins", scans: 85 },
-  { instructor: "Prof. Elena Gomez", scans: 60 },
-]
 
 const usageChartConfig = {
   scans: {
-    label: "Automated Scans",
+    label: "Total Scans: ",
     color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig
 
 const instructorChartConfig = {
   scans: {
-    label: "Faculty Scans",
+    label: "Instructor Scans: ",
     color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig
 
-const principlesData = [
-  {
-    name: "Perceivable",
-    count: 120,
-    pct: 58.54,
-    colorBg: "bg-blue-500",
-    description:
-      "Alt text, color contrast, media alternatives & resizable text",
-  },
-  {
-    name: "Operable",
-    count: 55,
-    pct: 26.83,
-    colorBg: "bg-emerald-500",
-    description: "Keyboard traps, focus indicators, navigation & target sizes",
-  },
-  {
-    name: "Understandable",
-    count: 20,
-    pct: 9.76,
-    colorBg: "bg-amber-500",
-    description: "Form labels, error suggestions, page language & consistency",
-  },
-  {
-    name: "Robust",
-    count: 10,
-    pct: 4.87,
-    colorBg: "bg-purple-500",
-    description: "HTML parsing, ARIA role validation & name/role/value specs",
-  },
-]
-
-export default function AnalyzerLogsSchoolAdmin() {
+function AnalyzerLogsSchoolAdminContent({
+  data,
+}: {
+  data: AdminAnalyzerLogsResponse
+}) {
   const [search, setSearch] = useState("")
-  const [selectedClass, setSelectedClass] = useState<OrgClassLogItem | null>(
-    null
-  )
   const navigate = useNavigate()
 
-  const filteredClassLogs = useMemo(() => {
-    if (!search.trim()) return orgClassLogs
-    const q = search.toLowerCase().trim()
-    return orgClassLogs.filter(
-      (item) =>
-        item.className.toLowerCase().includes(q) ||
-        item.code.toLowerCase().includes(q) ||
-        item.instructor.toLowerCase().includes(q)
+  const usageChartData = useMemo(() => {
+    return (data.analyzer_usage_last_7_days || []).map((item) => {
+      const formattedDate =
+        item.date.length >= 10 ? item.date.slice(5) : item.date
+      return {
+        date: formattedDate,
+        scans: item.scan_count,
+      }
+    })
+  }, [data.analyzer_usage_last_7_days])
+
+  const instructorDistributionData = useMemo(() => {
+    return (data.instructor_scans || []).map((item) => ({
+      instructor: item.instructor_name,
+      scans: item.scans,
+    }))
+  }, [data.instructor_scans])
+
+  const totalPrincipleViolations = useMemo(() => {
+    const p = data.issues_per_principle
+    if (!p) return 0
+    return (
+      (p.perceivable || 0) +
+      (p.operable || 0) +
+      (p.understandable || 0) +
+      (p.robust || 0)
     )
-  }, [search])
+  }, [data.issues_per_principle])
+
+  const principlesData = useMemo(() => {
+    const p = data.issues_per_principle || {
+      perceivable: 0,
+      operable: 0,
+      understandable: 0,
+      robust: 0,
+    }
+    const total = totalPrincipleViolations
+    const calcPct = (count: number) => (total > 0 ? (count / total) * 100 : 0)
+
+    return [
+      {
+        name: "Perceivable",
+        count: p.perceivable || 0,
+        pct: calcPct(p.perceivable || 0),
+        colorBg: "bg-blue-500",
+        description:
+          "Alt text, color contrast, media alternatives & resizable text",
+      },
+      {
+        name: "Operable",
+        count: p.operable || 0,
+        pct: calcPct(p.operable || 0),
+        colorBg: "bg-emerald-500",
+        description:
+          "Keyboard traps, focus indicators, navigation & target sizes",
+      },
+      {
+        name: "Understandable",
+        count: p.understandable || 0,
+        pct: calcPct(p.understandable || 0),
+        colorBg: "bg-amber-500",
+        description:
+          "Form labels, error suggestions, page language & consistency",
+      },
+      {
+        name: "Robust",
+        count: p.robust || 0,
+        pct: calcPct(p.robust || 0),
+        colorBg: "bg-purple-500",
+        description:
+          "HTML parsing, ARIA role validation & name/role/value specs",
+      },
+    ]
+  }, [data.issues_per_principle, totalPrincipleViolations])
+
+  const filteredInstructorLogs = useMemo(() => {
+    const list = data.instructor_scans || []
+    if (!search.trim()) return list
+    const q = search.toLowerCase().trim()
+    return list.filter(
+      (item) =>
+        item.instructor_name.toLowerCase().includes(q) ||
+        item.instructor_id.toLowerCase().includes(q)
+    )
+  }, [search, data.instructor_scans])
+
+  const totalClassrooms = useMemo(() => {
+    return (data.instructor_scans || []).reduce(
+      (acc, curr) => acc + (curr.classroom_count || 0),
+      0
+    )
+  }, [data.instructor_scans])
+
+  const totalEnrollment = useMemo(() => {
+    return (data.instructor_scans || []).reduce(
+      (acc, curr) => acc + (curr.enrollment_count || 0),
+      0
+    )
+  }, [data.instructor_scans])
 
   function handleExport() {
+    if (!data.instructor_scans || data.instructor_scans.length === 0) {
+      toast.add({
+        title: "Export Notice",
+        description: "No instructor scan history available to export.",
+        type: "info",
+      })
+      return
+    }
+
+    const headers = [
+      "Instructor ID",
+      "Instructor Name",
+      "Scan Count",
+      "Classrooms",
+      "Total Enrolled",
+    ]
+    const rows = data.instructor_scans.map((item) => [
+      `"${item.instructor_id}"`,
+      `"${item.instructor_name.replace(/"/g, '""')}"`,
+      item.scans,
+      item.classroom_count,
+      item.enrollment_count,
+    ])
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((e) => e.join(","))].join("\n")
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement("a")
+    link.setAttribute("href", encodedUri)
+    link.setAttribute(
+      "download",
+      `institution_analyzer_logs_${new Date().toISOString().slice(0, 10)}.csv`
+    )
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+
     toast.add({
       title: "Export Initiated",
-      description:
-        "LSPU institutional analyzer log history CSV report has been generated.",
+      description: "Institution analyzer logs CSV report has been generated.",
       type: "success",
     })
   }
 
   const KPI = [
     {
-      title: "Total Org Scans",
+      title: "Total Scans Run",
       icon: Globe,
-      value: "3,420",
-      footerDesc: "Across all classrooms",
+      value: (data.total_scans ?? 0).toLocaleString(),
+      footerDesc: "Across all institution classrooms",
     },
     {
-      title: "Active Classrooms",
+      title: "Active Instructors",
       icon: GraduationCap,
-      value: "18",
-      footerDesc: "Classrooms under the organization",
+      value: (data.instructor_scans?.length ?? 0).toLocaleString(),
+      footerDesc: `${totalClassrooms} managed classroom cohorts`,
     },
     {
-      title: "Average Scan Duration",
-      icon: Clock,
-      value: "10.52s",
-      footerDesc: "Across all scan requests",
+      title: "Flagged Issues",
+      icon: Layers,
+      value: (data.violations ?? 0).toLocaleString(),
+      footerDesc: "WCAG 2.2 accessibility violations",
     },
     {
-      title: "Institutional Pass Rate",
-      icon: CheckCircle2,
-      value: "78.43%",
-      footerDesc: "University-wide compliance rate",
+      title: "Total Students",
+      icon: Users,
+      value: totalEnrollment.toLocaleString(),
+      footerDesc: "Active learners enrolled in cohorts",
     },
   ]
 
@@ -240,8 +242,8 @@ export default function AnalyzerLogsSchoolAdmin() {
     <section className="p-responsive space-y-6">
       {/* Header */}
       <HeaderTemplate
-        title="Laguna State Polytechnic University Scans"
-        subtitle="Organization-wide automated accessibility scan telemetry across all instructors, departments, and classroom cohorts."
+        title="Institution Analyzer Logs"
+        subtitle="Institutional telemetry and automated accessibility audit history across faculty and courses."
         cta={[
           <Button key="export" onClick={handleExport}>
             <FileText className="mr-1.5 size-4" />
@@ -250,7 +252,7 @@ export default function AnalyzerLogsSchoolAdmin() {
         ]}
       />
 
-      {/* Row 1: The 4 Core Domain Pillar KPI Metric Cards */}
+      {/* Row 1: KPI Cards */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {KPI.map((kpi) => (
           <Card key={kpi.title}>
@@ -274,24 +276,25 @@ export default function AnalyzerLogsSchoolAdmin() {
         ))}
       </div>
 
-      {/* Row 2: Dual Bar Charts Grid (Usage Analytics + Scans by Instructor) */}
+      {/* Row 2: Dual Bar Charts Grid (Usage Analytics + Faculty Scan Distribution) */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Chart 1: Analyzer Usage Analytics */}
+        {/* Chart 1: Daily Activity */}
         <Card>
           <CardHeader className="flex flex-col gap-2 pb-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <CardTitle className="text-lg font-bold sm:text-xl">
-                Analyzer Usage Analytics
+                Institution Usage Analytics
               </CardTitle>
               <CardDescription className="text-xs text-muted-foreground sm:text-sm">
-                Total automated scans executed per date across LSPU
+                Total automated analyzer scans executed across all cohorts (last
+                7 days)
               </CardDescription>
             </div>
             <Badge
               variant="secondary"
               className="w-fit px-3 py-1 text-xs font-semibold"
             >
-              3,420 Total Scans
+              {data.total_scans ?? 0} Total Scans
             </Badge>
           </CardHeader>
 
@@ -335,22 +338,22 @@ export default function AnalyzerLogsSchoolAdmin() {
           </CardContent>
         </Card>
 
-        {/* Chart 2: Scans by Instructor / Faculty Usage */}
+        {/* Chart 2: Instructor Scan Volume Comparison */}
         <Card>
           <CardHeader className="flex flex-col gap-2 pb-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <CardTitle className="text-lg font-bold sm:text-xl">
-                Scans by Faculty Member
+                Faculty Scan Distribution
               </CardTitle>
               <CardDescription className="text-xs text-muted-foreground sm:text-sm">
-                Comparative audit activity across instructors in the institution
+                Automated scan volume generated under each faculty member
               </CardDescription>
             </div>
             <Badge
               variant="outline"
               className="w-fit px-3 py-1 text-xs font-semibold"
             >
-              12 Active Faculty
+              {data.instructor_scans?.length ?? 0} Instructors
             </Badge>
           </CardHeader>
 
@@ -361,7 +364,7 @@ export default function AnalyzerLogsSchoolAdmin() {
             >
               <BarChart
                 accessibilityLayer
-                data={instructorUsageData}
+                data={instructorDistributionData}
                 margin={{ top: 20, right: 10, left: -20, bottom: 0 }}
               >
                 <CartesianGrid
@@ -374,7 +377,7 @@ export default function AnalyzerLogsSchoolAdmin() {
                   tickLine={true}
                   tickMargin={10}
                   axisLine={true}
-                  className="truncate text-xs font-medium text-muted-foreground"
+                  className="text-xs font-medium text-muted-foreground"
                 />
                 <YAxis
                   tickLine={true}
@@ -395,7 +398,7 @@ export default function AnalyzerLogsSchoolAdmin() {
         </Card>
       </div>
 
-      {/* Row 3: WCAG Principles Failed Audits (Single Shared Multi-Segment Progress Bar) */}
+      {/* Row 3: WCAG Principle Compliance Breakdown (POUR) */}
       <Card className="p-6">
         <CardHeader className="flex flex-col gap-2 p-0 pb-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -403,36 +406,50 @@ export default function AnalyzerLogsSchoolAdmin() {
               Failed Audits by WCAG Principle (POUR)
             </CardTitle>
             <CardDescription className="text-xs text-muted-foreground sm:text-sm">
-              University-wide distribution of 205 total failed audits across
-              WCAG 2.2 core principles
+              Proportional distribution of{" "}
+              {totalPrincipleViolations > 0
+                ? totalPrincipleViolations
+                : (data.violations ?? 0)}{" "}
+              accessibility violations detected campus-wide
             </CardDescription>
           </div>
           <Badge
             variant="secondary"
             className="w-fit px-3 py-1 text-xs font-semibold"
           >
-            205 Total Issues
+            {totalPrincipleViolations > 0
+              ? totalPrincipleViolations
+              : (data.violations ?? 0)}{" "}
+            Flagged Violations
           </Badge>
         </CardHeader>
 
         <CardContent className="space-y-6 p-0">
-          {/* Shared Stacked Multi-Segment Progress Bar */}
+          {/* Multi-Segment Progress Bar */}
           <div className="space-y-2">
             <div className="flex h-4 w-full overflow-hidden rounded-full bg-muted p-0.5 ring-1 ring-border/50">
-              {principlesData.map((item, index) => (
-                <div
-                  key={item.name}
-                  className={`h-full ${item.colorBg} transition-all ${
-                    index === 0 ? "rounded-l-full" : ""
-                  } ${index === principlesData.length - 1 ? "rounded-r-full" : ""}`}
-                  style={{ width: `${item.pct}%` }}
-                  title={`${item.name}: ${item.count} failed audits (${item.pct.toFixed(1)}%)`}
-                />
-              ))}
+              {totalPrincipleViolations === 0 ? (
+                <div className="flex h-full w-full items-center justify-center text-xs text-muted-foreground">
+                  No principle violations detected
+                </div>
+              ) : (
+                principlesData.map((item, index) =>
+                  item.pct > 0 ? (
+                    <div
+                      key={item.name}
+                      className={`h-full ${item.colorBg} transition-all ${
+                        index === 0 ? "rounded-l-full" : ""
+                      } ${index === principlesData.length - 1 ? "rounded-r-full" : ""}`}
+                      style={{ width: `${item.pct}%` }}
+                      title={`${item.name}: ${item.count} violations (${item.pct.toFixed(1)}%)`}
+                    />
+                  ) : null
+                )
+              )}
             </div>
           </div>
 
-          {/* Legend Grid */}
+          {/* 4-Card Principle Metric Breakdown */}
           <div className="grid grid-cols-1 gap-4 border-t pt-4 sm:grid-cols-2 lg:grid-cols-4">
             {principlesData.map((item) => (
               <div
@@ -471,46 +488,43 @@ export default function AnalyzerLogsSchoolAdmin() {
         </CardContent>
       </Card>
 
-      {/* Row 4: Organization Classroom & Faculty Execution Logs Table */}
+      {/* Row 4: Instructor Scan Logs Table */}
       <div className="space-y-4">
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
           <div>
             <h3 className="text-base font-bold text-foreground sm:text-lg">
-              University Classroom Scans
+              Faculty Analyzer Telemetry
             </h3>
             <p className="text-xs text-muted-foreground">
-              Comprehensive scan histories across all faculty members and
-              academic sections
+              Select an instructor to view their course materials and classroom
+              activity
             </p>
           </div>
           <div className="w-full max-w-md sm:w-72">
             <SearchTemplate
               search={search}
               setSearch={setSearch}
-              title="class, instructor, or code"
+              title="instructor name or ID"
             />
           </div>
         </div>
 
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden pt-0">
           <div className="w-full overflow-x-auto">
-            <Table className="min-w-150">
-              <TableHeader>
+            <Table className="min-w-150 p-4">
+              <TableHeader className="p-10">
                 <TableRow className="bg-muted/40 hover:bg-muted/40">
                   <TableHead className="pl-4 text-xs font-bold whitespace-nowrap text-muted-foreground uppercase">
                     Scans
                   </TableHead>
                   <TableHead className="text-xs font-bold whitespace-nowrap text-muted-foreground uppercase">
-                    Class & Code
-                  </TableHead>
-                  <TableHead className="text-xs font-bold whitespace-nowrap text-muted-foreground uppercase">
                     Instructor
                   </TableHead>
                   <TableHead className="text-xs font-bold whitespace-nowrap text-muted-foreground uppercase">
-                    Enrolled
+                    Classrooms
                   </TableHead>
                   <TableHead className="text-xs font-bold whitespace-nowrap text-muted-foreground uppercase">
-                    Pass Rate
+                    Enrolled Students
                   </TableHead>
                   <TableHead className="w-28 pr-4 text-right text-xs font-bold whitespace-nowrap text-muted-foreground uppercase">
                     Action
@@ -518,22 +532,23 @@ export default function AnalyzerLogsSchoolAdmin() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredClassLogs.length === 0 ? (
+                {filteredInstructorLogs.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      colSpan={6}
+                      colSpan={5}
                       className="h-32 text-center text-muted-foreground"
                     >
-                      No university classroom scan logs found matching "{search}
-                      ".
+                      No instructor records found matching "{search}".
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredClassLogs.map((item) => (
+                  filteredInstructorLogs.map((item) => (
                     <TableRow
-                      key={item.id}
-                      onClick={() => setSelectedClass(item)}
-                      className="cursor-pointer transition-colors hover:bg-muted/40"
+                      key={item.instructor_id}
+                      onClick={() =>
+                        navigate(`/admin/logs/${item.instructor_id}`)
+                      }
+                      className="cursor-pointer transition-colors even:bg-secondary/30 hover:bg-muted/40"
                     >
                       <TableCell className="pl-4 font-bold whitespace-nowrap text-foreground">
                         {item.scans}
@@ -541,30 +556,18 @@ export default function AnalyzerLogsSchoolAdmin() {
                       <TableCell className="font-medium whitespace-nowrap text-foreground">
                         <div className="flex flex-col">
                           <span className="font-semibold text-foreground">
-                            {item.className}
+                            {item.instructor_name}
                           </span>
                           <span className="text-xs text-muted-foreground">
-                            Code: {item.code}
+                            ID: {item.instructor_id.slice(0, 8)}...
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-sm whitespace-nowrap text-foreground">
-                        {item.instructor}
+                      <TableCell className="whitespace-nowrap text-muted-foreground">
+                        {item.classroom_count} classes
                       </TableCell>
                       <TableCell className="whitespace-nowrap text-muted-foreground">
-                        {item.enrolled} students
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap">
-                        <Badge
-                          variant={
-                            parseFloat(item.passRate) >= 80
-                              ? "secondary"
-                              : "outline"
-                          }
-                          className="text-xs font-semibold"
-                        >
-                          {item.passRate}
-                        </Badge>
+                        {item.enrollment_count} students
                       </TableCell>
                       <TableCell className="pr-4 text-right whitespace-nowrap">
                         <Button
@@ -572,7 +575,7 @@ export default function AnalyzerLogsSchoolAdmin() {
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation()
-                            navigate(`/admin/logs/classroom/${item.id}`)
+                            navigate(`/admin/logs/${item.instructor_id}`)
                           }}
                           className="cursor-pointer text-xs font-medium text-foreground hover:text-primary sm:text-sm"
                         >
@@ -588,58 +591,21 @@ export default function AnalyzerLogsSchoolAdmin() {
           </div>
         </Card>
       </div>
-
-      {/* Details Dialog for Selected Classroom */}
-      <Dialog
-        open={Boolean(selectedClass)}
-        onOpenChange={(open) => !open && setSelectedClass(null)}
-      >
-        <DialogContent className="max-w-md space-y-4 p-6 sm:max-w-md">
-          {selectedClass && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="text-lg font-bold">
-                  {selectedClass.code} Audit Summary
-                </DialogTitle>
-                <DialogDescription className="text-xs text-muted-foreground sm:text-sm">
-                  {selectedClass.className} • {selectedClass.instructor}
-                </DialogDescription>
-              </DialogHeader>
-
-              <div className="grid grid-cols-2 gap-3 pt-2">
-                <div className="space-y-0.5 rounded-lg bg-muted/40 p-3">
-                  <p className="text-xs text-muted-foreground">Total Scans</p>
-                  <p className="text-base font-bold text-foreground">
-                    {selectedClass.scans}
-                  </p>
-                </div>
-                <div className="space-y-0.5 rounded-lg bg-muted/40 p-3">
-                  <p className="text-xs text-muted-foreground">
-                    Enrolled Students
-                  </p>
-                  <p className="text-base font-bold text-foreground">
-                    {selectedClass.enrolled}
-                  </p>
-                </div>
-                <div className="space-y-0.5 rounded-lg bg-muted/40 p-3">
-                  <p className="text-xs text-muted-foreground">Pass Rate</p>
-                  <p className="text-base font-bold text-emerald-600 dark:text-emerald-400">
-                    {selectedClass.passRate}
-                  </p>
-                </div>
-                <div className="space-y-0.5 rounded-lg bg-muted/40 p-3">
-                  <p className="text-xs text-muted-foreground">
-                    Flagged Issues
-                  </p>
-                  <p className="text-base font-bold text-amber-600 dark:text-amber-400">
-                    {selectedClass.flaggedCount}
-                  </p>
-                </div>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
     </section>
   )
+}
+
+function AnalyzerLogsSchoolAdminWithQuery() {
+  const { data } = useAdminAnalyzerLogs()
+  return <AnalyzerLogsSchoolAdminContent data={data} />
+}
+
+export default function AnalyzerLogsSchoolAdmin({
+  data,
+}: AnalyzerLogsSchoolAdminProps) {
+  if (data) {
+    return <AnalyzerLogsSchoolAdminContent data={data} />
+  }
+
+  return <AnalyzerLogsSchoolAdminWithQuery />
 }

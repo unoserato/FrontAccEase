@@ -19,16 +19,18 @@ import { getDateString } from "@/hooks/date-to-string"
 import { useMe } from "@/services/tanstack/auth"
 import { useEffect } from "react"
 import { useModuleById } from "@/services/tanstack/materials"
+import DetailSkeleton from "@/components/skeleton/DetailSkeleton"
 
 interface ReadOnlyProps {
   href?: string
 }
 
 export default function ModuleReadOnly({ href }: ReadOnlyProps) {
-  const { id } = useParams()
+  const { id, moduleId } = useParams()
+  const targetId = moduleId || id
   const navigate = useNavigate()
   const { data: user } = useMe()
-  const { data: targetDoc } = useModuleById(id!)
+  const { data: targetDoc, isPending } = useModuleById(targetId!)
   const isEditor = user?.role === "instructor"
 
   function handleBack() {
@@ -93,6 +95,10 @@ export default function ModuleReadOnly({ href }: ReadOnlyProps) {
       }
     }
   }, [editor, targetDoc])
+
+  if (isPending) {
+    return <DetailSkeleton />
+  }
 
   if (!targetDoc) {
     return (

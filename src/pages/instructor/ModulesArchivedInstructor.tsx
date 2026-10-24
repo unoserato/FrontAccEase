@@ -1,14 +1,12 @@
 import HeaderTemplate from "@/components/common/PageTemplate"
 
 import SearchTemplate from "@/components/common/SearchTemplate"
-import GridListButtonGroupTemplate from "@/components/common/GridListButtonGroupTemplate"
 import { useState } from "react"
 import { useModules } from "@/services/tanstack/materials"
 import ModuleCardTemplate from "@/components/common/ModuleCardTemplate"
 
 export default function ModulesInstructor() {
   const [search, setSearch] = useState("")
-  const [gridView, setGridView] = useState(true)
   const { data: modules } = useModules()
 
   const filteredModules = modules
@@ -39,27 +37,13 @@ export default function ModulesInstructor() {
             title="modules or principle"
           />
         </div>
-        <div className="flex shrink-0 items-center justify-end gap-2">
-          <GridListButtonGroupTemplate
-            gridView={gridView}
-            setGridView={(e) => setGridView(e)}
-          />
-        </div>
       </div>
 
-      {gridView ? (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
-          {filteredModules.map((module) => (
-            <ModuleCardTemplate key={module.id} module={module} view="grid" />
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-col gap-2">
-          {filteredModules.map((module) => (
-            <ModuleCardTemplate key={module.id} module={module} view="list" />
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
+        {filteredModules.map((module) => (
+          <ModuleCardTemplate key={module.id} module={module} view="grid" />
+        ))}
+      </div>
     </section>
   )
 }

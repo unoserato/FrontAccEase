@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link, useParams, useSearchParams } from "react-router-dom"
+import { Link, useLocation, useParams, useSearchParams } from "react-router-dom"
 import HeaderTemplate from "@/components/common/PageTemplate"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -26,17 +26,23 @@ import ModuleCardTemplate from "@/components/common/ModuleCardTemplate"
 import { Badge } from "@/components/ui/badge"
 import copyText from "@/hooks/copy-text"
 import { useClassroomContentView } from "@/services/tanstack/materials"
+import { useMe } from "@/services/tanstack/auth"
 import type { ClassroomViewProps } from "@/const/props/classroomProps"
 import ErrorBoundary from "../errors/ErrorBoundary"
 import PageSkeleton from "@/components/skeleton/PageSkeleton"
 import QuizSubmissionsCardTemplate from "@/components/instructor/QuizSubmissionsCardTemplate"
 
 export default function ClassroomInstructorView() {
-  const { id } = useParams()
+  const { id, classroomId, instructorId } = useParams()
+  const targetClassroomId = classroomId || id
+  const location = useLocation()
+  const { data: user } = useMe()
+  const isAdmin = user?.role === "admin" || location.pathname.startsWith("/admin")
+
   const [searchParams, setSearchParams] = useSearchParams()
   const [copied, setCopied] = useState(false)
   const { data: classroom, isPending: isClassroomPending } =
-    useClassroomContentView(id!)
+    useClassroomContentView(targetClassroomId!)
 
   const tabParam = searchParams.get("tab")
   const activeTabValue =
@@ -112,7 +118,12 @@ export default function ClassroomInstructorView() {
         </div>
 
         <TabsContent value="dashboard" className="mt-4 sm:mt-6">
-          <Dashboard classroom={classroom} />
+          <Dashboard
+            classroom={classroom}
+            isAdmin={isAdmin}
+            instructorId={instructorId}
+            classroomId={targetClassroomId}
+          />
         </TabsContent>
 
         <TabsContent value="quizzes" className="mt-4 sm:mt-6">
@@ -128,7 +139,17 @@ export default function ClassroomInstructorView() {
   )
 }
 
-function Dashboard({ classroom }: { classroom: ClassroomViewProps }) {
+function Dashboard({
+  classroom,
+  isAdmin = false,
+  instructorId,
+  classroomId,
+}: {
+  classroom: ClassroomViewProps
+  isAdmin?: boolean
+  instructorId?: string
+  classroomId?: string
+}) {
   // Filter modules and quizzes assigned to this classroom
   const classroomModules = classroom.modules
   const classroomQuizzes = classroom.quizzes
@@ -199,13 +220,15 @@ function Dashboard({ classroom }: { classroom: ClassroomViewProps }) {
               Learning modules assigned to {classroom.classroom.name}
             </p>
           </div>
-          <Link
-            to="/instructor/modules"
-            className={buttonVariants({ variant: "link", size: "sm" })}
-          >
-            View all modules
-            <ArrowUpRight className="ml-1 size-3.5" />
-          </Link>
+          {!isAdmin && (
+            <Link
+              to="/instructor/modules"
+              className={buttonVariants({ variant: "link", size: "sm" })}
+            >
+              View all modules
+              <ArrowUpRight className="ml-1 size-3.5" />
+            </Link>
+          )}
         </div>
 
         {classroomModules.length === 0 ? (
@@ -214,9 +237,20 @@ function Dashboard({ classroom }: { classroom: ClassroomViewProps }) {
           </Card>
         ) : (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {classroomModules.map((module) => (
-              <ModuleCardTemplate key={module.id} module={module} />
-            ))}
+            {classroomModules.map((module) => {
+              const moduleHref =
+                isAdmin && instructorId && classroomId
+                  ? `/admin/instructor-materials/${instructorId}/${classroomId}/${module.id}`
+                  : undefined
+
+              return (
+                <ModuleCardTemplate
+                  key={module.id}
+                  module={module}
+                  href={moduleHref}
+                />
+              )
+            })}
           </div>
         )}
       </div>
@@ -232,13 +266,15 @@ function Dashboard({ classroom }: { classroom: ClassroomViewProps }) {
               Evaluations assigned to {classroom.classroom.name}
             </p>
           </div>
-          <Link
-            to="/instructor/quizzes"
-            className={buttonVariants({ variant: "link", size: "sm" })}
-          >
-            View all quizzes
-            <ArrowUpRight className="ml-1 size-3.5" />
-          </Link>
+          {!isAdmin && (
+            <Link
+              to="/instructor/quizzes"
+              className={buttonVariants({ variant: "link", size: "sm" })}
+            >
+              View all quizzes
+              <ArrowUpRight className="ml-1 size-3.5" />
+            </Link>
+          )}
         </div>
 
         {classroomQuizzes.length === 0 ? (

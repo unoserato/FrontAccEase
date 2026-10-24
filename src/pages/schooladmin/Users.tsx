@@ -35,26 +35,35 @@ import {
   UserCog,
   UserPlus,
 } from "lucide-react"
-import { instructors, learners, type UserProps } from "@/const/data"
+import type { UserProps } from "@/const/props/userProps"
+import { useAdminAllUsers } from "@/services/tanstack/materials"
+import { toast } from "@/components/ui/toast"
 
-export default function Users() {
+export interface UsersProps {
+  data?: UserProps[]
+}
+
+function UsersContent({ data }: { data: UserProps[] }) {
   const [searchParams, setSearchParams] = useSearchParams()
   const activeTab = searchParams.get("tab") || "all"
 
   const [search, setSearch] = useState("")
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
-  // Combine learners and instructors for 'all' tab
-  const allUsers = useMemo<UserProps[]>(() => {
-    return [...learners, ...instructors]
-  }, [])
+  const learners = useMemo(() => {
+    return data.filter((item) => item.role.toLowerCase() === "learner")
+  }, [data])
+
+  const instructors = useMemo(() => {
+    return data.filter((item) => item.role.toLowerCase() === "instructor")
+  }, [data])
 
   // Filter users based on tab selection
   const tabFilteredUsers = useMemo<UserProps[]>(() => {
     if (activeTab === "learners") return learners
     if (activeTab === "instructors") return instructors
-    return allUsers
-  }, [activeTab, allUsers])
+    return data
+  }, [activeTab, learners, instructors, data])
 
   // Filter users based on search query
   const filteredUsers = useMemo<UserProps[]>(() => {
@@ -62,9 +71,9 @@ export default function Users() {
     const query = search.toLowerCase()
     return tabFilteredUsers.filter(
       (u) =>
-        u.name.toLowerCase().includes(query) ||
+        u.user.name.toLowerCase().includes(query) ||
         u.role.toLowerCase().includes(query) ||
-        getEmail(u).toLowerCase().includes(query)
+        u.user.email.toLowerCase().includes(query)
     )
   }, [tabFilteredUsers, search])
 
@@ -81,29 +90,15 @@ export default function Users() {
     })
   }
 
-  // Helper functions
-  function getEmail(user: UserProps) {
-    return `${user.name.toLowerCase().replace(/[^a-z0-9]/g, "")}@gmail.com`
-  }
-
-  function getInitials(name: string) {
-    return name
-      .split(" ")
-      .map((part) => part[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase()
-  }
-
   const isAllSelected =
     filteredUsers.length > 0 &&
-    filteredUsers.every((u) => selectedIds.includes(u.id))
+    filteredUsers.every((u) => selectedIds.includes(u.user.id))
 
   function toggleSelectAll() {
     if (isAllSelected) {
       setSelectedIds([])
     } else {
-      setSelectedIds(filteredUsers.map((u) => u.id))
+      setSelectedIds(filteredUsers.map((u) => u.user.id))
     }
   }
 
@@ -113,15 +108,54 @@ export default function Users() {
     )
   }
 
+  function handleExport() {
+    if (data.length === 0) {
+      toast.add({
+        title: "Export Notice",
+        description: "No user records to export.",
+        type: "info",
+      })
+      return
+    }
+
+    const headers = ["User ID", "Name", "Email", "Role"]
+    const rows = data.map((u) => [
+      `"${u.user.id}"`,
+      `"${u.user.name.replace(/"/g, '""')}"`,
+      `"${u.user.email}"`,
+      `"${u.role}"`,
+    ])
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((e) => e.join(","))].join("\n")
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement("a")
+    link.setAttribute("href", encodedUri)
+    link.setAttribute(
+      "download",
+      `users_export_${new Date().toISOString().slice(0, 10)}.csv`
+    )
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+
+    toast.add({
+      title: "Export Initiated",
+      description: "Users list CSV report has been generated.",
+      type: "success",
+    })
+  }
+
   return (
     <section className="p-responsive space-y-6">
       {/* Header */}
       <HeaderTemplate
         title="Users"
-        subtitle="Manage system users, roles, and instructor invitations."
+        subtitle="Manage system users, roles, and faculty accounts across the institution."
         cta={[
-          <Button key="export">
-            <FileText />
+          <Button key="export" onClick={handleExport}>
+            <FileText className="mr-1.5 size-4" />
             Export Data
           </Button>,
         ]}
@@ -135,7 +169,7 @@ export default function Users() {
       >
         <div className="overflow-x-auto pb-1">
           <TabsList className="w-full justify-start sm:w-auto">
-            <TabsTrigger value="all">All Users ({allUsers.length})</TabsTrigger>
+            <TabsTrigger value="all">All Users ({data.length})</TabsTrigger>
             <TabsTrigger value="learners">
               Learners ({learners.length})
             </TabsTrigger>
@@ -158,7 +192,7 @@ export default function Users() {
               <TooltipButtonTemplate
                 triggerTextIcon={<RefreshCw />}
                 triggerVariant="outline"
-                content="Refresh user list"
+                content="Clear search filter"
                 onClick={() => setSearch("")}
               />
 
@@ -216,9 +250,9 @@ export default function Users() {
         </div>
 
         {/* User Table Card */}
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden pt-0">
           <div className="w-full overflow-x-auto">
-            <Table className="min-w-162.5">
+            <Table className="min-w-162.5 p-4">
               <TableHeader>
                 <TableRow className="bg-muted/40 hover:bg-muted/40">
                   <TableHead className="w-12 pl-4">
@@ -246,40 +280,43 @@ export default function Users() {
                   </TableRow>
                 ) : (
                   filteredUsers.map((u) => {
-                    const isSelected = selectedIds.includes(u.id)
+                    const isSelected = selectedIds.includes(u.user.id)
                     return (
                       <TableRow
-                        key={u.id}
+                        key={u.user.id}
                         data-state={isSelected ? "selected" : undefined}
-                        className="group"
+                        className="group even:bg-secondary/30 hover:bg-muted/40"
                       >
                         <TableCell className="pl-4">
                           <Checkbox
                             checked={isSelected}
-                            onCheckedChange={() => toggleSelectUser(u.id)}
-                            aria-label={`Select ${u.name}`}
+                            onCheckedChange={() => toggleSelectUser(u.user.id)}
+                            aria-label={`Select ${u.user.name}`}
                           />
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
                           <div className="flex items-center gap-3">
                             <Avatar size="sm">
-                              <AvatarImage src={u.img} alt={u.name} />
-                              <AvatarFallback>
-                                {getInitials(u.name)}
-                              </AvatarFallback>
+                              <AvatarImage
+                                src={u.user.profile_picture || undefined}
+                                alt={u.user.name}
+                              />
+                              <AvatarFallback>{u.user.name[0]}</AvatarFallback>
                             </Avatar>
                             <span className="font-medium text-foreground">
-                              {u.name}
+                              {u.user.name}
                             </span>
                           </div>
                         </TableCell>
                         <TableCell className="whitespace-nowrap text-muted-foreground">
-                          {getEmail(u)}
+                          {u.user.email}
                         </TableCell>
                         <TableCell className="whitespace-nowrap">
                           <Badge
                             variant={
-                              u.role === "instructor" ? "default" : "secondary"
+                              u.role.toLowerCase() === "instructor"
+                                ? "default"
+                                : "secondary"
                             }
                             className="capitalize"
                           >
@@ -329,4 +366,17 @@ export default function Users() {
       </Tabs>
     </section>
   )
+}
+
+function UsersWithQuery() {
+  const { data = [] } = useAdminAllUsers()
+  return <UsersContent data={data} />
+}
+
+export default function Users({ data }: UsersProps) {
+  if (data) {
+    return <UsersContent data={data} />
+  }
+
+  return <UsersWithQuery />
 }

@@ -16,27 +16,53 @@ import { useMe } from "@/services/tanstack/auth"
 import { Users } from "lucide-react"
 import type { ClassroomProps } from "@/const/props/classroomProps"
 
+export type ClassroomCardTemplateProps = {
+  classroom: ClassroomProps | {
+    id: string
+    name: string
+    code?: string
+    classroom_code?: string
+    enrollment_count?: number
+    archived?: boolean
+  }
+  href?: string
+  onClick?: () => void
+}
+
 export default function ClassroomCardTemplate({
   classroom,
-}: {
-  classroom: ClassroomProps
-}) {
+  href,
+  onClick,
+}: ClassroomCardTemplateProps) {
   const [action, setAction] = useState<ActionType>(null)
   const navigate = useNavigate()
   const { data: user } = useMe()
   const isEditor = user?.role == "instructor"
 
+  const classroomCode = classroom.classroom_code || (classroom as any).code || "Classroom"
+  const enrollmentCount = classroom.enrollment_count ?? 0
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick()
+    } else if (href) {
+      navigate(href)
+    } else {
+      navigate(`/${user?.role || "instructor"}/classroom/${classroom.id}`)
+    }
+  }
+
   return (
     <>
       <Card
-        onClick={() => navigate(`/${user.role}/classroom/${classroom.id}`)}
+        onClick={handleClick}
         className="group relative flex min-h-52 w-full cursor-pointer flex-col justify-between overflow-hidden p-0 sm:min-h-56"
       >
         {/* Google Classroom Header Banner */}
         <CardHeader className="relative bg-foreground p-4 pr-12 text-background sm:p-5">
           <div className="space-y-1 pr-6">
             <CardTitle className="line-clamp-1 text-base font-bold text-background capitalize sm:text-lg">
-              {classroom.classroom_code}
+              {classroomCode}
             </CardTitle>
             <CardDescription className="line-clamp-1 text-xs text-background/80 sm:text-sm">
               {classroom.name}
@@ -61,8 +87,8 @@ export default function ClassroomCardTemplate({
             </div>
             <div>
               <p className="text-xs font-semibold text-foreground sm:text-sm">
-                {classroom.enrollment_count}{" "}
-                {classroom.enrollment_count === 1 ? "Learner" : "Learners"}
+                {enrollmentCount}{" "}
+                {enrollmentCount === 1 ? "Learner" : "Learners"}
               </p>
               <p className="text-xs text-muted-foreground sm:text-xs">
                 Enrolled
@@ -72,7 +98,7 @@ export default function ClassroomCardTemplate({
 
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-xs sm:text-xs">
-              Active
+              {classroom.archived ? "Archived" : "Active"}
             </Badge>
           </div>
         </CardContent>

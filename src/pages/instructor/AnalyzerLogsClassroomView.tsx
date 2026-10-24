@@ -59,6 +59,7 @@ import {
 } from "@/services/tanstack/materials"
 import { mockClassroomAnalyzerLogsDetail } from "@/const/classroomAnalyzerLogsDetailMock"
 import { getDateString } from "@/hooks/date-to-string"
+import { useMe } from "@/services/tanstack/auth"
 
 export interface AnalyzerLogsClassroomViewProps {
   data?: ClassroomAnalyzerLogsDetailResponse
@@ -255,10 +256,161 @@ function buildFallbackScanResult(scan: ClassroomScanDetailItem): Result {
   }
 }
 
+function InstructorCommentSection({
+  selectedScan,
+}: {
+  selectedScan: ClassroomScanDetailItem
+}) {
+  const { data: scanDetail } = useAnalyzerResultById(selectedScan.id)
+  const createCommentMutation = useCreateAnalyzerComment()
+  const updateCommentMutation = useUpdateAnalyzerComment()
+
+  const existingComment =
+    scanDetail && "instructor_comment" in scanDetail
+      ? scanDetail.instructor_comment
+      : null
+
+  const [commentInput, setCommentInput] = useState(existingComment || "")
+
+  useEffect(() => {
+    setCommentInput(existingComment || "")
+  }, [existingComment])
+
+  const isSavingComment =
+    createCommentMutation.isPending || updateCommentMutation.isPending
+
+  const handleSaveComment = () => {
+    if (isSavingComment) return
+    const trimmed = commentInput.trim()
+
+    if (existingComment) {
+      updateCommentMutation.mutate(
+        {
+          log_id: selectedScan.id,
+          comment: trimmed,
+        },
+        {
+          onSuccess: () => {
+            toast.add({
+              title: "Feedback Updated",
+              description: "Instructor comment has been updated for this scan.",
+              type: "success",
+            })
+          },
+          onError: (err: unknown) => {
+            toast.add({
+              title: "Failed to Update Comment",
+              description:
+                err instanceof Error
+                  ? err.message
+                  : "Failed to update comment. Please try again.",
+              type: "error",
+            })
+          },
+        }
+      )
+    } else {
+      createCommentMutation.mutate(
+        {
+          scan_id: selectedScan.id,
+          comment: trimmed,
+        },
+        {
+          onSuccess: () => {
+            toast.add({
+              title: "Feedback Saved",
+              description:
+                "Instructor comment has been recorded for this scan.",
+              type: "success",
+            })
+          },
+          onError: (err: unknown) => {
+            toast.add({
+              title: "Failed to Save Comment",
+              description:
+                err instanceof Error
+                  ? err.message
+                  : "Failed to record comment. Please try again.",
+              type: "error",
+            })
+          },
+        }
+      )
+    }
+  }
+
+  return (
+    <div className="border-t border-border/70 bg-card/95 px-5 py-4 backdrop-blur-xs sm:px-6">
+      <div className="space-y-2.5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <MessageSquare className="size-4" />
+            </div>
+            <span className="text-sm font-bold text-foreground">
+              Instructor Comment & Feedback
+            </span>
+            {existingComment ? (
+              <Badge
+                variant="outline"
+                className="text-xs font-semibold text-emerald-600 dark:text-emerald-400"
+              >
+                Feedback Saved
+              </Badge>
+            ) : null}
+          </div>
+          <span className="text-xs text-muted-foreground">
+            This feedback is visible to {selectedScan.learner_name} on their audit report.
+          </span>
+        </div>
+
+        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-start">
+          <Textarea
+            value={commentInput}
+            onChange={(e) => setCommentInput(e.target.value)}
+            placeholder={`Leave feedback or grading guidance for ${selectedScan.learner_name}...`}
+            rows={2}
+            className="flex-1 resize-y bg-background text-xs sm:text-sm"
+          />
+          <Button
+            type="button"
+            size="sm"
+            onClick={handleSaveComment}
+            disabled={
+              isSavingComment ||
+              !commentInput.trim() ||
+              commentInput.trim() === (existingComment || "").trim()
+            }
+            className="shrink-0 gap-1.5 font-semibold"
+          >
+            {isSavingComment ? (
+              <>
+                <Loader2 className="size-3.5 animate-spin" />
+                <span>
+                  {existingComment ? "Updating..." : "Saving..."}
+                </span>
+              </>
+            ) : (
+              <>
+                <Send className="size-3.5" />
+                <span>
+                  {existingComment ? "Update Comment" : "Save Comment"}
+                </span>
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function AnalyzerLogsClassroomView({
   data: propData,
 }: AnalyzerLogsClassroomViewProps = {}) {
   const { id } = useParams<{ id: string }>()
+  const { data: user } = useMe()
+  const isInstructor = user?.role === "instructor"
   const { data: classrooms = [] } = useClassrooms()
   const { data: apiData } = useClassroomAnalyzerLogsByClassroomId(id || "")
 
@@ -269,7 +421,6 @@ export default function AnalyzerLogsClassroomView({
   }, [classrooms, id])
 
   const className = currentClassroom?.name || "BSIT 3A WMAD"
-  const classCode = currentClassroom?.classroom_code || "ITEP-306"
 
   const [search, setSearch] = useState("")
   const [isScansOpen, setIsScansOpen] = useState(true)
@@ -466,94 +617,14 @@ export default function AnalyzerLogsClassroomView({
     return buildFallbackScanResult(selectedScan)
   }, [selectedScan])
 
-  // Instructor comment management
-  const [commentInput, setCommentInput] = useState("")
-  const { data: scanDetail } = useAnalyzerResultById(selectedScan?.id || "")
-  const createCommentMutation = useCreateAnalyzerComment()
-  const updateCommentMutation = useUpdateAnalyzerComment()
-
-  const isSavingComment =
-    createCommentMutation.isPending || updateCommentMutation.isPending
-
-  const existingComment =
-    scanDetail && "instructor_comment" in scanDetail
-      ? scanDetail.instructor_comment
-      : null
-
-  useEffect(() => {
-    if (selectedScan) {
-      setCommentInput(existingComment || "")
-    } else {
-      setCommentInput("")
-    }
-  }, [selectedScan, existingComment])
-
-  const handleSaveComment = () => {
-    if (!selectedScan || isSavingComment) return
-    const trimmed = commentInput.trim()
-
-    if (existingComment) {
-      updateCommentMutation.mutate(
-        {
-          log_id: selectedScan.id,
-          comment: trimmed,
-        },
-        {
-          onSuccess: () => {
-            toast.add({
-              title: "Feedback Updated",
-              description: "Instructor comment has been updated for this scan.",
-              type: "success",
-            })
-          },
-          onError: (err: unknown) => {
-            toast.add({
-              title: "Failed to Update Comment",
-              description:
-                err instanceof Error
-                  ? err.message
-                  : "Failed to update comment. Please try again.",
-              type: "error",
-            })
-          },
-        }
-      )
-    } else {
-      createCommentMutation.mutate(
-        {
-          scan_id: selectedScan.id,
-          comment: trimmed,
-        },
-        {
-          onSuccess: () => {
-            toast.add({
-              title: "Feedback Saved",
-              description: "Instructor comment has been recorded for this scan.",
-              type: "success",
-            })
-          },
-          onError: (err: unknown) => {
-            toast.add({
-              title: "Failed to Save Comment",
-              description:
-                err instanceof Error
-                  ? err.message
-                  : "Failed to record comment. Please try again.",
-              type: "error",
-            })
-          },
-        }
-      )
-    }
-  }
-
   return (
     <section className="p-responsive space-y-6">
       {/* Header */}
       <HeaderTemplate
-        backTo="/instructor/logs"
+        backTo="-1"
         title={className}
-        subtitle={`Section Code: ${classCode} • Student automated scan audit history, WCAG principle telemetry, and compliance reports.`}
+        subtitle={`Review students' automated accessibility scans, WCAG principle results, and compliance reports.`}
+        // subtitle={`Section Code: ${classCode} • Student automated scan audit history, WCAG principle telemetry, and compliance reports.`}
         cta={[
           <Button key="export" onClick={handleExport}>
             <FileText className="mr-1.5 size-4" />
@@ -992,72 +1063,10 @@ export default function AnalyzerLogsClassroomView({
                 />
               </div>
 
-              {/* ── Instructor Comment Box Section ── */}
-              <div className="border-t border-border/70 bg-card/95 px-5 py-4 backdrop-blur-xs sm:px-6">
-                <div className="space-y-2.5">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                        <MessageSquare className="size-4" />
-                      </div>
-                      <span className="text-sm font-bold text-foreground">
-                        Instructor Comment & Feedback
-                      </span>
-                      {existingComment ? (
-                        <Badge
-                          variant="outline"
-                          className="text-xs font-semibold text-emerald-600 dark:text-emerald-400"
-                        >
-                          Feedback Saved
-                        </Badge>
-                      ) : null}
-                    </div>
-                    <span className="text-xs text-muted-foreground">
-                      This feedback is visible to {selectedScan.learner_name} on
-                      their audit report.
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col gap-2.5 sm:flex-row sm:items-start">
-                    <Textarea
-                      value={commentInput}
-                      onChange={(e) => setCommentInput(e.target.value)}
-                      placeholder={`Leave feedback or grading guidance for ${selectedScan.learner_name}...`}
-                      rows={2}
-                      className="flex-1 resize-y bg-background text-xs sm:text-sm"
-                    />
-                    <Button
-                      type="button"
-                      size="sm"
-                      onClick={handleSaveComment}
-                      disabled={
-                        isSavingComment ||
-                        !commentInput.trim() ||
-                        commentInput.trim() === (existingComment || "").trim()
-                      }
-                      className="shrink-0 gap-1.5 font-semibold"
-                    >
-                      {isSavingComment ? (
-                        <>
-                          <Loader2 className="size-3.5 animate-spin" />
-                          <span>
-                            {existingComment ? "Updating..." : "Saving..."}
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <Send className="size-3.5" />
-                          <span>
-                            {existingComment
-                              ? "Update Comment"
-                              : "Save Comment"}
-                          </span>
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              </div>
+              {/* ── Instructor Comment Box Section (Only for Instructors) ── */}
+              {isInstructor && (
+                <InstructorCommentSection selectedScan={selectedScan} />
+              )}
             </div>
           )}
         </DialogContent>

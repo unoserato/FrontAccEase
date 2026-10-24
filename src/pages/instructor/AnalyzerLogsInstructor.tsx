@@ -57,10 +57,14 @@ const classroomChartConfig = {
   },
 } satisfies ChartConfig
 
-function AnalyzerLogsInstructorContent({
+export function AnalyzerLogsInstructorContent({
   data,
+  baseClassroomLogUrl = "/instructor/logs/classroom",
+  instructorName,
 }: {
   data: ClassroomAnalyzerLogsResponse
+  baseClassroomLogUrl?: string
+  instructorName?: string
 }) {
   const [search, setSearch] = useState("")
   const navigate = useNavigate()
@@ -229,8 +233,13 @@ function AnalyzerLogsInstructorContent({
     <section className="p-responsive space-y-6">
       {/* Header */}
       <HeaderTemplate
-        title="Classroom Analyzer Logs"
-        subtitle="Real-time audit history and automated scan execution telemetry across your managed classrooms."
+        title={instructorName ? `${instructorName} - Classroom Logs` : "Classroom Analyzer Logs"}
+        subtitle={
+          instructorName
+            ? `Real-time audit history and automated scan execution telemetry for ${instructorName}'s managed classrooms.`
+            : "Real-time audit history and automated scan execution telemetry across your managed classrooms."
+        }
+        backTo={instructorName ? "-1" : undefined}
         cta={[
           <Button key="export" onClick={handleExport}>
             <FileText className="mr-1.5 size-4" />
@@ -307,6 +316,7 @@ function AnalyzerLogsInstructorContent({
                   className="text-xs font-medium text-muted-foreground"
                 />
                 <YAxis
+                  allowDecimals={false}
                   tickLine={true}
                   axisLine={true}
                   className="text-xs font-medium text-muted-foreground"
@@ -366,6 +376,7 @@ function AnalyzerLogsInstructorContent({
                   className="text-xs font-medium text-muted-foreground"
                 />
                 <YAxis
+                  allowDecimals={false}
                   tickLine={true}
                   axisLine={true}
                   className="text-xs font-medium text-muted-foreground"
@@ -530,7 +541,7 @@ function AnalyzerLogsInstructorContent({
                       key={item.classroom_id}
                       onClick={() =>
                         navigate(
-                          `/instructor/logs/classroom/${item.classroom_id}`
+                          `${baseClassroomLogUrl}/${item.classroom_id}`
                         )
                       }
                       className="cursor-pointer transition-colors even:bg-secondary/30 hover:bg-muted/40"
@@ -560,7 +571,7 @@ function AnalyzerLogsInstructorContent({
                           onClick={(e) => {
                             e.stopPropagation()
                             navigate(
-                              `/instructor/logs/classroom/${item.classroom_id}`
+                              `${baseClassroomLogUrl}/${item.classroom_id}`
                             )
                           }}
                           className="cursor-pointer text-xs font-medium text-foreground hover:text-primary sm:text-sm"

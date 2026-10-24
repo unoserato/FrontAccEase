@@ -48,14 +48,15 @@ import { getDateString } from "@/hooks/date-to-string"
 import QuizSubmissionsCardTemplate from "@/components/instructor/QuizSubmissionsCardTemplate"
 
 export default function QuizzesInstructorView() {
-  const { id } = useParams()
+  const { id, quizId } = useParams()
+  const targetQuizId = quizId || id
   const { data: user } = useMe()
   const { data: quizzes = [] } = useInstructorQuizzes()
-  const { data: submissions = [] } = useQuizSubmissionsById(id)
+  const { data: submissions = [] } = useQuizSubmissionsById(targetQuizId)
 
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const quiz = quizzes.find((q) => q.id === id)
+  const quiz = quizzes.find((q) => q.id === targetQuizId)
 
   if (!quiz) {
     return <NotFound />

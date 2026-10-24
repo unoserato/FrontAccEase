@@ -1,9 +1,9 @@
-import type { ClassroomProps } from "@/const/props/classroomProps"
 import type { Result } from "@/const/props/analyzerProps"
-import type { QuizJson } from "@/const/props/quizProps"
+import type { InstructorQuizProps, QuizJson } from "@/const/props/quizProps"
 import { api } from "@/services/axios"
 import type { ExtensionScanSession } from "@/services/webLLM"
 import type { InstrumentProps } from "@/const/props/miscellaneousProps"
+import type { ModuleProps } from "@/const/props/moduleProps"
 
 export async function createSubmissionTicket(id: string): Promise<QuizJson> {
   const response = await api.post(`/learner/pre-submit-quiz-answer/${id}`)
@@ -27,19 +27,28 @@ export async function saveAnalyzerResultAPI(
   return response.data
 }
 
-export async function arhiveModuleAPI(id: string): Promise<ClassroomProps[]> {
-  const response = await api.post(`/instructor/archive-module/${id}`)
+export async function deleteModuleAPI(module_id: string) {
+  const response = await api.post(`/instructor/delete-module/${module_id}`)
   return response.data
 }
 
-export async function unarhiveModuleAPI(id: string): Promise<ClassroomProps[]> {
-  const response = await api.post(`/instructor/unarchive-module/${id}`)
+export async function arhiveModuleAPI(
+  module_id: string
+): Promise<ModuleProps[]> {
+  const response = await api.post(`/instructor/archive-module/${module_id}`)
+  return response.data
+}
+
+export async function unarhiveModuleAPI(
+  module_id: string
+): Promise<ModuleProps[]> {
+  const response = await api.post(`/instructor/unarchive-module/${module_id}`)
   return response.data
 }
 
 export async function joinClassroomByCodeAPI(
   code: string
-): Promise<ClassroomProps[]> {
+): Promise<ModuleProps[]> {
   const response = await api.post(`/learner/enroll-classroom/${code}`)
   return response.data
 }
@@ -171,5 +180,19 @@ export async function updateWCAGInstruments(
   data: { principle: string; title: string; content: string }
 ): Promise<InstrumentProps[]> {
   const response = await api.put(`/admin/wcag-instrument/${id}`, data)
+  return response.data
+}
+
+export async function createInstructorQuizAPI(
+  payload: any
+): Promise<InstructorQuizProps[]> {
+  const response = await api.post(`/helper/create-quiz`, payload)
+  return response.data
+}
+
+export async function deleteInstructorQuizAPI(
+  quiz_id: string
+): Promise<InstructorQuizProps[]> {
+  const response = await api.delete(`/instructor/delete-quiz/${quiz_id}`)
   return response.data
 }

@@ -7,6 +7,9 @@ import PageSkeleton from "@/components/skeleton/PageSkeleton"
 import TableSkeleton from "@/components/skeleton/TableSkeleton"
 import { suspense } from "@/components/skeleton/suspense"
 
+const AnalyzerLogsSchoolAdminView = lazy(
+  () => import("@/pages/schooladmin/AnalyzerLogsSchoolAdminView")
+)
 const ModuleReadOnly = lazy(() => import("@/features/shared/ModuleReadOnly"))
 const AnalyzerLogsClassroomView = lazy(
   () => import("@/pages/instructor/AnalyzerLogsClassroomView")
@@ -61,20 +64,32 @@ export const schoolAdminRoute = (
         element={suspense(<InstructorMaterials />, <GridSkeleton />)}
       />
       <Route
-        path="instructor-materials/:id"
+        path="instructor-materials/:instructorId"
         element={suspense(<InstructorMaterialsView />, <DetailSkeleton />)}
       />
       <Route
-        path="instructor-materials/:id/classroom/:id"
+        path="instructor-materials/:instructorId/:classroomId"
         element={suspense(<ClassroomInstructorView />, <DetailSkeleton />)}
       />
       <Route
-        path="instructor-materials/:id/modules/:id"
+        path="instructor-materials/:instructorId/:classroomId/:moduleId"
         element={suspense(<ModuleReadOnly />, <DetailSkeleton />)}
       />
       <Route
-        path="instructor-materials/:id/quizzes/:id"
+        path="instructor-materials/:instructorId/modules/:moduleId"
+        element={suspense(<ModuleReadOnly />, <DetailSkeleton />)}
+      />
+      <Route
+        path="instructor-materials/:instructorId/quizzes/:quizId"
         element={suspense(<QuizzesInstructorView />, <TableSkeleton />)}
+      />
+      <Route
+        path="instructor-materials/:instructorId/classroom/:classroomId"
+        element={suspense(<ClassroomInstructorView />, <DetailSkeleton />)}
+      />
+      <Route
+        path="instructor-materials/:instructorId/classroom/:classroomId/:moduleId"
+        element={suspense(<ModuleReadOnly />, <DetailSkeleton />)}
       />
       <Route
         path="instruments"
@@ -88,6 +103,10 @@ export const schoolAdminRoute = (
       <Route
         path="logs"
         element={suspense(<AnalyzerLogsSchoolAdmin />, <TableSkeleton />)}
+      />
+      <Route
+        path="logs/:instructor_id"
+        element={suspense(<AnalyzerLogsSchoolAdminView />, <TableSkeleton />)}
       />
       <Route
         path="logs/classroom/:id"

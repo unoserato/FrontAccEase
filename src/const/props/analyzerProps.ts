@@ -235,3 +235,21 @@ export interface ClassroomAnalyzerLogsDetailResponse {
   issues_per_principle: IssuesPerPrinciple
   classroom_scans: ClassroomScanDetailItem[]
 }
+
+// School Admin All Analyzer Logs
+export interface AdminInstructorScanItem {
+  instructor_id: string
+  instructor_name: string
+  scans: number
+  classroom_count: number
+  enrollment_count: number
+}
+
+export interface AdminAnalyzerLogsResponse {
+  total_scans: number
+  violations: number
+  issues_per_principle: IssuesPerPrinciple
+  analyzer_usage_last_7_days: AnalyzerUsageDay[]
+  instructor_scans: AdminInstructorScanItem[]
+}
+

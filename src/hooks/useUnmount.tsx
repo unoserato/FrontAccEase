@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useBlocker } from "react-router-dom"
 
 interface UsePromptProps {
-  when: boolean
+  when: boolean | (() => boolean)
   message?: string
 }
 
@@ -12,8 +12,10 @@ export function useUnmount({
 }: UsePromptProps) {
   // 1. Handle in-app React Router navigation
   const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) =>
-      when && currentLocation.pathname !== nextLocation.pathname
+    ({ currentLocation, nextLocation }) => {
+      const isBlocked = typeof when === "function" ? when() : when
+      return Boolean(isBlocked) && currentLocation.pathname !== nextLocation.pathname
+    }
   )
 
   useEffect(() => {
@@ -30,7 +32,8 @@ export function useUnmount({
   // 2. Handle browser refresh, closing tab, or typing a new URL
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (!when) return
+      const isBlocked = typeof when === "function" ? when() : when
+      if (!isBlocked) return
       e.preventDefault()
       e.returnValue = message // Required for modern browser confirmation dialogs
       return message
