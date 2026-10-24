@@ -80,7 +80,7 @@ export default function ModuleReadOnly({ href }: ReadOnlyProps) {
 
   // Sync content dynamically when document finishes loading
   useEffect(() => {
-    if (editor && targetDoc.content) {
+    if (editor && targetDoc && targetDoc.content) {
       try {
         const parsedContent =
           typeof targetDoc.content === "string"

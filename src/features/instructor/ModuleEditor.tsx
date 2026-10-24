@@ -30,15 +30,17 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { useHotkeys } from "react-hotkeys-hook"
 import { cn } from "cn"
+import EmptyState from "@/components/common/EmptyState"
 import SearchTemplate from "@/components/common/SearchTemplate"
 import { useUnmount } from "@/hooks/useUnmount"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createModuleAPI } from "@/services/api/materialsAPI"
 import { toast } from "@/components/ui/toast"
-import { useClassrooms, useModules } from "@/services/tanstack/materials"
+import { useClassrooms, useModuleById } from "@/services/tanstack/materials"
 import { isMac } from "@/lib/tiptap-utils"
 import { EditorShortcutGuide } from "./EditorShortcutGuide"
 import type { WCAGPrinciple } from "@/const/props/wcagProps"
+import PageSkeleton from "@/components/skeleton/PageSkeleton"
 
 const MODULES_PATH = "/instructor/modules"
 const AUTOSAVE_STORAGE_PREFIX = "frontaccease_module_draft_"
@@ -68,12 +70,13 @@ function formatDraftDate(timestamp: number) {
 
 export default function ModuleEditor() {
   const { id } = useParams()
-  const { data: modules } = useModules()
+  const { data: existingModule, isPending: existingModulePending } =
+    useModuleById(id)
   const { data: classrooms } = useClassrooms()
-  const existingModule = useMemo(
-    () => (id ? modules?.find((doc) => String(doc.id) === String(id)) : null),
-    [id, modules]
-  )
+  // const existingModule = useMemo(
+  //   () => (id ? modules?.find((doc) => String(doc.id) === String(id)) : null),
+  //   [id, modules]
+  // )
   const navigate = useNavigate()
 
   const storageKey = useMemo(
@@ -124,8 +127,7 @@ export default function ModuleEditor() {
   if (existingModule && existingModule.id !== prevModuleId) {
     setPrevModuleId(existingModule.id)
     setName(existingModule.name)
-    if (existingModule.principle)
-      setSelectedPrinciple(existingModule.principle)
+    if (existingModule.principle) setSelectedPrinciple(existingModule.principle)
     if (existingModule.classroom_id)
       setSelectedClassrooms(existingModule.classroom_id)
     contentRef.current = existingModule.content
@@ -136,7 +138,7 @@ export default function ModuleEditor() {
   const checkedDraftRef = useRef(false)
   useEffect(() => {
     if (checkedDraftRef.current) return
-    if (id && !modules) return
+    if (id && !existingModule) return
 
     checkedDraftRef.current = true
     try {
@@ -168,7 +170,7 @@ export default function ModuleEditor() {
     } catch (err) {
       console.warn("Failed to read local autosave draft:", err)
     }
-  }, [id, modules, existingModule, storageKey])
+  }, [id, existingModule, storageKey])
 
   // Debounced Autosave to localStorage (1000ms after last change)
   useEffect(() => {
@@ -375,6 +377,20 @@ export default function ModuleEditor() {
     saveModule(payload)
   }
 
+  if (id && existingModulePending) {
+    return <PageSkeleton />
+  }
+
+  if (id && !existingModule) {
+    return (
+      <EmptyState
+        title="Module not found"
+        description="The module you are trying to edit does not exist or may have been deleted."
+        className="h-full"
+      />
+    )
+  }
+
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden bg-background">
       {/* Header Bar */}
@@ -463,7 +479,7 @@ export default function ModuleEditor() {
             >
               <Keyboard className="size-4" />
               <span className="hidden sm:inline">Shortcuts</span>
-              <kbd className="hidden md:inline-flex items-center rounded border border-border/70 bg-muted/80 px-1 py-0.5 font-mono text-xs text-muted-foreground">
+              <kbd className="hidden items-center rounded border border-border/70 bg-muted/80 px-1 py-0.5 font-mono text-xs text-muted-foreground md:inline-flex">
                 {isMac() ? "⌘/" : "Ctrl+/"}
               </kbd>
             </Button>

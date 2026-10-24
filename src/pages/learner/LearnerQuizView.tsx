@@ -25,10 +25,11 @@ import {
   updateSubmissionTicket,
 } from "@/services/api/CRUD/materialsCRUDAPI"
 import NotFound from "../errors/NotFound"
+import PageSkeleton from "@/components/skeleton/PageSkeleton"
 
 export default function LearnerQuizView() {
   const { id } = useParams()
-  const { data: quiz } = useQuizById(id!)
+  const { data: quiz, isPending } = useQuizById(id!)
   // const { data: classrooms } = useClassrooms()
   // const { data: contents } = useClassroomContentView(classrooms[0]?.id)
   // const quiz = contents.quizzes.find((quiz) => quiz.id === id)
@@ -74,9 +75,9 @@ export default function LearnerQuizView() {
       updateSubmissionTicket(id, answer),
   })
 
-  const totalQuestions = quiz.question_count
-  const timeLimit = quiz.time_limit
-  const maxAttempts = quiz.attempt_count || 0
+  const totalQuestions = quiz?.question_count ?? 0
+  const timeLimit = quiz?.time_limit ?? 0
+  const maxAttempts = quiz?.attempt_count || 0
 
   // Monitor fullscreen exit, tab switching, and window blur (Alt+Tab) during quiz
   useEffect(() => {
@@ -149,6 +150,8 @@ export default function LearnerQuizView() {
       return
     }
 
+    if (!quiz) return
+
     setIsCompleted(true)
     setIsQuizActive(false)
     await document.exitFullscreen()
@@ -180,6 +183,9 @@ export default function LearnerQuizView() {
       console.error("Quiz submission failed:", error)
     }
   }
+
+  if (isPending) return <PageSkeleton />
+  if (!quiz) return <NotFound />
 
   // Active Fullscreen Quiz View
   if (isQuizActive) {

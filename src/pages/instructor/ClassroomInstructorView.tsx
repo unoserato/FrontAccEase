@@ -52,6 +52,7 @@ export default function ClassroomInstructorView() {
       },
       { replace: true }
     )
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   if (isClassroomPending) return <PageSkeleton />
@@ -82,7 +83,7 @@ export default function ClassroomInstructorView() {
             ) : (
               <Copy className="mr-1.5 size-4 text-muted-foreground" />
             )}
-            <span>Join Code: {classroom.classroom.classroom_code}</span>
+            <span>{classroom.classroom.classroom_code}</span>
           </Button>,
           <Button key="export" onClick={() => alert("Export data")}>
             <FileText className="mr-1.5 size-4" />
@@ -251,7 +252,9 @@ function Dashboard({ classroom }: { classroom: ClassroomViewProps }) {
                 key={quiz.id}
                 quiz={quiz}
                 classrooms={[classroom.classroom]}
+                learners={classroom.learners}
                 submissions={classroom.submissions}
+                viewMode="by-quiz"
               />
             ))}
           </div>
@@ -266,13 +269,22 @@ function Quizzes({ classroom }: { classroom: ClassroomViewProps }) {
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6 py-4 sm:py-6">
-      {quizzes.map((quiz) => (
-        <QuizSubmissionsCardTemplate
-          quiz={quiz}
-          classrooms={[classroom.classroom]}
-          submissions={classroom.submissions}
-        />
-      ))}
+      {quizzes.length === 0 ? (
+        <Card className="p-8 text-center text-xs text-muted-foreground">
+          No assessments assigned to this classroom yet.
+        </Card>
+      ) : (
+        quizzes.map((quiz) => (
+          <QuizSubmissionsCardTemplate
+            key={quiz.id}
+            quiz={quiz}
+            classrooms={[classroom.classroom]}
+            learners={classroom.learners}
+            submissions={classroom.submissions}
+            viewMode="by-quiz"
+          />
+        ))
+      )}
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useParams, Link, useNavigate } from "react-router-dom"
 import { useHotkeys } from "react-hotkeys-hook"
 import { cn } from "@/lib/utils"
@@ -32,6 +32,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Field, FieldLabel } from "@/components/ui/field"
 import SearchTemplate from "@/components/common/SearchTemplate"
 import EmptyState from "@/components/common/EmptyState"
+import PageSkeleton from "@/components/skeleton/PageSkeleton"
+import { toast } from "@/components/ui/toast"
 
 // Features & Types
 import QuizForm from "@/features/instructor/QuizForm"
@@ -66,6 +68,8 @@ import {
   Globe,
   Lock,
   AlertCircle,
+  History,
+  RefreshCw,
 } from "lucide-react"
 
 // Constants & Data
@@ -113,6 +117,36 @@ import { useInvalidateQueries } from "@/services/tanstack/auth"
 type AnswerKey = Record<string, QuestionElement["correctAnswer"]>
 
 const QUIZZES_PATH = "/instructor/quizzes"
+const AUTOSAVE_STORAGE_PREFIX = "frontaccease_quiz_draft_"
+
+interface QuizDraft {
+  id?: string
+  quizJson: QuizJson
+  principle: WCAGPrinciple
+  tags: string[]
+  classrooms: string[]
+  theme: string
+  hasTimeLimit: boolean
+  timeLimit: number
+  attemptCount: number
+  dueDate: string | null
+  createdBy: string
+  updatedAt: number
+}
+
+function formatTime(timestamp: number) {
+  const d = new Date(timestamp)
+  return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+}
+
+function formatDraftDate(timestamp: number) {
+  const d = new Date(timestamp)
+  const isToday = new Date().toDateString() === d.toDateString()
+  if (isToday) {
+    return `today at ${d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`
+  }
+  return `${d.toLocaleDateString([], { month: "short", day: "numeric" })} at ${d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`
+}
 
 const QUESTION_TYPE_OPTIONS: {
   value: QuestionType
@@ -182,13 +216,533 @@ function stitchCorrectAnswer(
   }
 }
 
+function extractAnswerKey(quiz: QuizJson): AnswerKey {
+  const key: AnswerKey = {}
+  for (const page of quiz.pages) {
+    for (const q of page.elements || []) {
+      if (q.name) {
+        key[q.name] = q.correctAnswer
+      }
+    }
+  }
+  return key
+}
+
+interface DebouncedInputProps
+  extends Omit<React.ComponentProps<typeof Input>, "value" | "onChange"> {
+  value: string | number | undefined
+  onValueChange: (value: string) => void
+  debounceMs?: number
+}
+
+const DebouncedInput = React.memo(
+  React.forwardRef<HTMLInputElement, DebouncedInputProps>(function DebouncedInput(
+    { value, onValueChange, debounceMs = 150, onBlur, onFocus, ...props },
+    ref
+  ) {
+    const [localValue, setLocalValue] = useState(value ?? "")
+    const isFocusedRef = useRef(false)
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const latestValueRef = useRef(localValue)
+
+    useEffect(() => {
+      if (!isFocusedRef.current) {
+        setLocalValue(value ?? "")
+        latestValueRef.current = value ?? ""
+      }
+    }, [value])
+
+    const flush = useCallback(
+      (val: string) => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current)
+          timeoutRef.current = null
+        }
+        onValueChange(val)
+      },
+      [onValueChange]
+    )
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const nextVal = e.target.value
+      setLocalValue(nextVal)
+      latestValueRef.current = nextVal
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+      timeoutRef.current = setTimeout(() => {
+        flush(nextVal)
+      }, debounceMs)
+    }
+
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      isFocusedRef.current = false
+      if (timeoutRef.current) {
+        flush(String(latestValueRef.current ?? ""))
+      }
+      onBlur?.(e)
+    }
+
+    const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+      isFocusedRef.current = true
+      onFocus?.(e)
+    }
+
+    useEffect(() => {
+      return () => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current)
+        }
+      }
+    }, [])
+
+    return (
+      <Input
+        {...props}
+        ref={ref}
+        value={localValue}
+        onChange={handleChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      />
+    )
+  })
+)
+DebouncedInput.displayName = "DebouncedInput"
+
+interface DebouncedTextareaProps
+  extends Omit<React.ComponentProps<typeof Textarea>, "value" | "onChange"> {
+  value: string | undefined
+  onValueChange: (value: string) => void
+  debounceMs?: number
+}
+
+const DebouncedTextarea = React.memo(
+  React.forwardRef<HTMLTextAreaElement, DebouncedTextareaProps>(
+    function DebouncedTextarea(
+      { value, onValueChange, debounceMs = 150, onBlur, onFocus, ...props },
+      ref
+    ) {
+      const [localValue, setLocalValue] = useState(value ?? "")
+      const isFocusedRef = useRef(false)
+      const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+      const latestValueRef = useRef(localValue)
+
+      useEffect(() => {
+        if (!isFocusedRef.current) {
+          setLocalValue(value ?? "")
+          latestValueRef.current = value ?? ""
+        }
+      }, [value])
+
+      const flush = useCallback(
+        (val: string) => {
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current)
+            timeoutRef.current = null
+          }
+          onValueChange(val)
+        },
+        [onValueChange]
+      )
+
+      const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const nextVal = e.target.value
+        setLocalValue(nextVal)
+        latestValueRef.current = nextVal
+
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current)
+        }
+        timeoutRef.current = setTimeout(() => {
+          flush(nextVal)
+        }, debounceMs)
+      }
+
+      const handleBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+        isFocusedRef.current = false
+        if (timeoutRef.current) {
+          flush(String(latestValueRef.current ?? ""))
+        }
+        onBlur?.(e)
+      }
+
+      const handleFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+        isFocusedRef.current = true
+        onFocus?.(e)
+      }
+
+      useEffect(() => {
+        return () => {
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current)
+          }
+        }
+      }, [])
+
+      return (
+        <Textarea
+          {...props}
+          ref={ref}
+          value={localValue}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+      )
+    }
+  )
+)
+DebouncedTextarea.displayName = "DebouncedTextarea"
+
+const QuestionCard = React.memo(function QuestionCard({
+  q,
+  qIdx,
+  validPageIndex,
+  isActive,
+  totalQuestions,
+  onSelect,
+  onUpdateQuestion,
+  onUpdateChoice,
+  onAddChoice,
+  onDeleteChoice,
+  onDuplicateQuestion,
+  onDeleteQuestion,
+  onMoveQuestion,
+}: {
+  q: QuestionElement
+  qIdx: number
+  validPageIndex: number
+  isActive: boolean
+  totalQuestions: number
+  onSelect: () => void
+  onUpdateQuestion: (
+    validPageIndex: number,
+    qIdx: number,
+    key: keyof QuestionElement,
+    value: any
+  ) => void
+  onUpdateChoice: (
+    validPageIndex: number,
+    qIdx: number,
+    cIdx: number,
+    val: string
+  ) => void
+  onAddChoice: (validPageIndex: number, qIdx: number) => void
+  onDeleteChoice: (validPageIndex: number, qIdx: number, cIdx: number) => void
+  onDuplicateQuestion: (validPageIndex: number, qIdx: number) => void
+  onDeleteQuestion: (validPageIndex: number, qIdx: number) => void
+  onMoveQuestion: (
+    validPageIndex: number,
+    qIdx: number,
+    direction: "up" | "down"
+  ) => void
+}) {
+  return (
+    <Card
+      key={q.name || qIdx}
+      onClick={onSelect}
+      className={cn(
+        "relative border bg-background p-4 shadow-sm transition-all sm:p-6",
+        isActive
+          ? "border-l-4 border-l-primary shadow-md ring-1 ring-primary/20"
+          : "hover:border-border/80"
+      )}
+    >
+      {/* Drag / Active indicator handle */}
+      <div className="mb-2 flex items-center justify-center text-muted-foreground/30">
+        <GripVertical className="size-4" />
+      </div>
+
+      {/* Question Title & Type Selection Header */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex-1 space-y-1">
+          <DebouncedInput
+            value={q.title}
+            onValueChange={(val) =>
+              onUpdateQuestion(validPageIndex, qIdx, "title", val)
+            }
+            placeholder={`Question ${qIdx + 1}`}
+            className="h-10 text-base font-semibold text-foreground focus-visible:bg-muted/30"
+          />
+        </div>
+
+        {/* Top Right Controls: Question Type Selector & Individual Points */}
+        <div className="flex shrink-0 items-center gap-2">
+          {/* Question Objective Type Selector */}
+          <div className="w-full sm:w-56">
+            <select
+              value={q.type}
+              onChange={(e) =>
+                onUpdateQuestion(
+                  validPageIndex,
+                  qIdx,
+                  "type",
+                  e.target.value as QuestionType
+                )
+              }
+              className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-xs font-medium text-foreground shadow-xs transition-colors focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+            >
+              {QUESTION_TYPE_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Individual Question Points Input */}
+          <div className="flex h-10 items-center gap-1.5 rounded-md border border-input bg-muted/40 px-3 py-1 shadow-xs transition-colors focus-within:border-primary focus-within:ring-1 focus-within:ring-primary hover:bg-muted/70">
+            <span className="text-xs font-semibold whitespace-nowrap text-muted-foreground">
+              Pts:
+            </span>
+            <DebouncedInput
+              type="number"
+              min={1}
+              max={100}
+              value={q.points ?? 5}
+              onValueChange={(val) => {
+                const num = Math.max(1, parseInt(val) || 1)
+                onUpdateQuestion(validPageIndex, qIdx, "points", num)
+              }}
+              className="h-7 w-12 border-none bg-transparent p-0 text-center text-xs font-bold text-foreground shadow-none focus-visible:ring-0"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* --- QUESTION ANSWER TYPES CONTENT --- */}
+
+      {/* 1. BOOLEAN QUESTION TYPE */}
+      {q.type === "boolean" && (
+        <div className="mt-4 space-y-3 rounded-lg border bg-muted/20 p-4">
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              <CheckCircle2 className="size-3.5 text-emerald-500" />
+              Select Correct Answer
+            </span>
+          </div>
+          <div className="flex gap-6">
+            <label className="flex cursor-pointer items-center gap-2.5 rounded-md border bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/40">
+              <input
+                type="radio"
+                name={`correct_${q.name}`}
+                className="size-4 accent-emerald-600"
+                checked={q.correctAnswer === true}
+                onChange={() =>
+                  onUpdateQuestion(validPageIndex, qIdx, "correctAnswer", true)
+                }
+              />
+              True
+            </label>
+
+            <label className="flex cursor-pointer items-center gap-2.5 rounded-md border bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/40">
+              <input
+                type="radio"
+                name={`correct_${q.name}`}
+                className="size-4 accent-emerald-600"
+                checked={q.correctAnswer === false}
+                onChange={() =>
+                  onUpdateQuestion(validPageIndex, qIdx, "correctAnswer", false)
+                }
+              />
+              False
+            </label>
+          </div>
+        </div>
+      )}
+
+      {/* 2. OBJECTIVE CHOICE TYPES (radiogroup, checkbox, dropdown, ranking) */}
+      {[
+        "radiogroup",
+        "checkbox",
+        "dropdown",
+        "ranking",
+      ].includes(q.type) && (
+        <div className="mt-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+              <CheckCircle2 className="size-3.5 text-emerald-500" />
+              {q.type === "ranking"
+                ? "Define Correct Item Order (Top to Bottom)"
+                : q.type === "checkbox"
+                  ? "Select Correct Answer(s)"
+                  : "Select Single Correct Answer"}
+            </span>
+          </div>
+
+          <div className="space-y-2">
+            {q.choices?.map((choice, cIdx) => {
+              const isCorrect =
+                q.type === "checkbox"
+                  ? Array.isArray(q.correctAnswer) &&
+                    q.correctAnswer.includes(choice)
+                  : q.correctAnswer === choice
+
+              return (
+                <div key={cIdx} className="flex items-center gap-3">
+                  {/* Choice Indicator */}
+                  {q.type === "ranking" ? (
+                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
+                      {cIdx + 1}
+                    </span>
+                  ) : q.type === "checkbox" ? (
+                    <input
+                      type="checkbox"
+                      title="Mark as correct answer"
+                      className="size-4 cursor-pointer rounded accent-emerald-600"
+                      checked={isCorrect}
+                      onChange={(e) => {
+                        const currentAns = Array.isArray(q.correctAnswer)
+                          ? q.correctAnswer
+                          : []
+                        const newAns = e.target.checked
+                          ? [...currentAns, choice]
+                          : currentAns.filter((a) => a !== choice)
+                        onUpdateQuestion(
+                          validPageIndex,
+                          qIdx,
+                          "correctAnswer",
+                          newAns
+                        )
+                      }}
+                    />
+                  ) : (
+                    <input
+                      type="radio"
+                      name={`correct_${q.name}`}
+                      title="Mark as correct answer"
+                      className="size-4 cursor-pointer accent-emerald-600"
+                      checked={isCorrect}
+                      onChange={() =>
+                        onUpdateQuestion(
+                          validPageIndex,
+                          qIdx,
+                          "correctAnswer",
+                          choice
+                        )
+                      }
+                    />
+                  )}
+
+                  <DebouncedInput
+                    value={choice}
+                    onValueChange={(val) =>
+                      onUpdateChoice(validPageIndex, qIdx, cIdx, val)
+                    }
+                    placeholder={`Option ${cIdx + 1}`}
+                    className={cn(
+                      "h-9 flex-1 text-sm transition-colors",
+                      isCorrect || q.type === "ranking"
+                        ? "border-emerald-500/50 bg-emerald-500/5 font-medium dark:bg-emerald-950/20"
+                        : ""
+                    )}
+                  />
+
+                  <Button
+                    type="button"
+                    disabled={(q.choices?.length || 0) <= 1}
+                    onClick={() => onDeleteChoice(validPageIndex, qIdx, cIdx)}
+                    variant="ghost"
+                    size="icon-sm"
+                    className="text-muted-foreground hover:text-destructive"
+                  >
+                    <X className="size-4" />
+                  </Button>
+                </div>
+              )
+            })}
+          </div>
+
+          <Button
+            type="button"
+            onClick={() => onAddChoice(validPageIndex, qIdx)}
+            variant="outline"
+            size="sm"
+            className="mt-1 h-8 gap-1.5 text-xs"
+          >
+            <Plus className="size-3.5" /> Add Choice
+          </Button>
+        </div>
+      )}
+
+      {/* Question Bottom Action Toolbar */}
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t pt-3">
+        <div className="flex items-center gap-1.5">
+          <Button
+            type="button"
+            disabled={qIdx === 0}
+            onClick={() => onMoveQuestion(validPageIndex, qIdx, "up")}
+            variant="ghost"
+            size="icon-sm"
+            title="Move Question Up"
+          >
+            <ArrowUp className="size-4" />
+          </Button>
+          <Button
+            type="button"
+            disabled={qIdx === totalQuestions - 1}
+            onClick={() => onMoveQuestion(validPageIndex, qIdx, "down")}
+            variant="ghost"
+            size="icon-sm"
+            title="Move Question Down"
+          >
+            <ArrowDown className="size-4" />
+          </Button>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 border-r pr-4">
+            <Switch
+              checked={q.isRequired ?? true}
+              onCheckedChange={(checked) =>
+                onUpdateQuestion(validPageIndex, qIdx, "isRequired", checked)
+              }
+              id={`req_${q.name}`}
+            />
+            <label
+              htmlFor={`req_${q.name}`}
+              className="cursor-pointer text-xs font-medium text-muted-foreground"
+            >
+              Required
+            </label>
+          </div>
+
+          <Button
+            type="button"
+            onClick={() => onDuplicateQuestion(validPageIndex, qIdx)}
+            variant="ghost"
+            size="icon-sm"
+            title="Duplicate Question"
+          >
+            <Copy className="size-4" />
+          </Button>
+
+          <Button
+            type="button"
+            onClick={() => onDeleteQuestion(validPageIndex, qIdx)}
+            variant="ghost"
+            size="icon-sm"
+            title="Delete Question"
+            className="text-destructive hover:bg-destructive/10"
+          >
+            <Trash className="size-4" />
+          </Button>
+        </div>
+      </div>
+    </Card>
+  )
+})
+QuestionCard.displayName = "QuestionCard"
+
 export default function QuizEditor() {
   const { id } = useParams()
-  const { data: existingQuiz } = useQuizById(id!)
+  const { data: existingQuiz, isPending: existingQuizPending } = useQuizById(id)
   const answerQuery = useQuizAnswerById(existingQuiz?.id)
 
-  if (id && !existingQuiz) {
-    return <EmptyState title="Quiz not found" />
+  if (id && existingQuizPending) {
+    return <PageSkeleton />
   }
 
   if (existingQuiz && answerQuery.isPending) {
@@ -207,9 +761,14 @@ export default function QuizEditor() {
     )
   }
 
+  if (id && !existingQuiz) {
+    return <EmptyState title="Quiz not found" className="h-full" />
+  }
+
   return (
     <QuizEditorContent
       key={existingQuiz?.id ?? "new"}
+      id={id}
       existingQuiz={existingQuiz ?? null}
       savedAnswerKey={answerQuery.data}
     />
@@ -217,9 +776,11 @@ export default function QuizEditor() {
 }
 
 function QuizEditorContent({
+  id,
   existingQuiz,
   savedAnswerKey,
 }: {
+  id?: string
   existingQuiz: QuizProps | null
   savedAnswerKey?: AnswerKey
 }) {
@@ -266,6 +827,230 @@ function QuizEditorContent({
   })
   const savingError = ""
 
+  const storageKey = useMemo(
+    () => `${AUTOSAVE_STORAGE_PREFIX}${id ? String(id) : "new"}`,
+    [id]
+  )
+
+  const isDirtyRef = useRef(false)
+  const [isDirty, setIsDirty] = useState(false)
+  const [autosaveState, setAutosaveState] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle")
+  const [lastSavedTime, setLastSavedTime] = useState<number | null>(null)
+  const [draftData, setDraftData] = useState<QuizDraft | null>(null)
+  const [hasDraftPrompt, setHasDraftPrompt] = useState(false)
+
+  const isInitializedRef = useRef(false)
+  const isRestoringRef = useRef(false)
+  const autosaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Keep a ref of the latest data so debounced callbacks and unload handlers
+  // always access fresh values without needing quizJson in their dependencies
+  const currentDataRef = useRef<Omit<QuizDraft, "updatedAt">>({
+    id: id ? String(id) : undefined,
+    quizJson,
+    principle: selectedPrinciple,
+    tags: selectedTags,
+    classrooms: selectedClassrooms,
+    theme: selectedTheme,
+    hasTimeLimit,
+    timeLimit,
+    attemptCount,
+    dueDate: dueDate ? dueDate.toISOString() : null,
+    createdBy,
+  })
+
+  useEffect(() => {
+    currentDataRef.current = {
+      id: id ? String(id) : undefined,
+      quizJson,
+      principle: selectedPrinciple,
+      tags: selectedTags,
+      classrooms: selectedClassrooms,
+      theme: selectedTheme,
+      hasTimeLimit,
+      timeLimit,
+      attemptCount,
+      dueDate: dueDate ? dueDate.toISOString() : null,
+      createdBy,
+    }
+  })
+
+  // Schedule autosave with debounce; avoids re-rendering while actively typing
+  const scheduleAutosave = useCallback(() => {
+    if (!isDirtyRef.current) {
+      isDirtyRef.current = true
+      setIsDirty(true)
+    }
+
+    if (autosaveTimerRef.current) {
+      clearTimeout(autosaveTimerRef.current)
+    }
+
+    autosaveTimerRef.current = setTimeout(() => {
+      try {
+        setAutosaveState("saving")
+        const draft: QuizDraft = {
+          ...currentDataRef.current,
+          updatedAt: Date.now(),
+        }
+        localStorage.setItem(storageKey, JSON.stringify(draft))
+        setAutosaveState("saved")
+        setLastSavedTime(draft.updatedAt)
+      } catch (err) {
+        console.error("Local quiz autosave failed:", err)
+        setAutosaveState("error")
+      }
+    }, 1000)
+  }, [storageKey])
+
+  // Check for existing local autosave draft on mount / when existingQuiz is available
+  const checkedDraftRef = useRef(false)
+  useEffect(() => {
+    if (checkedDraftRef.current) return
+    if (id && !existingQuiz) return
+
+    checkedDraftRef.current = true
+    try {
+      const raw = localStorage.getItem(storageKey)
+      if (!raw) return
+      const parsed = JSON.parse(raw) as QuizDraft
+
+      const initialJson = existingQuiz
+        ? stitchCorrectAnswer(getQuizJson(existingQuiz), savedAnswerKey ?? {})
+        : DEFAULT_QUIZ_JSON
+      const initialPrinciple = existingQuiz?.principle || "Perceivable"
+      const initialTags = existingQuiz?.tags || []
+      const initialClassrooms =
+        existingQuiz?.classrooms?.map((c) =>
+          typeof c === "string" ? c : c.id
+        ) || []
+      const initialTheme = existingQuiz?.theme || "Default"
+      const initialTimeLimit = existingQuiz?.time_limit || 0
+      const initialAttemptCount = existingQuiz?.attempt_count || 3
+
+      const isDiff =
+        JSON.stringify(parsed.quizJson) !== JSON.stringify(initialJson) ||
+        parsed.principle !== initialPrinciple ||
+        JSON.stringify(parsed.tags || []) !== JSON.stringify(initialTags) ||
+        JSON.stringify(parsed.classrooms || []) !==
+          JSON.stringify(initialClassrooms) ||
+        parsed.theme !== initialTheme ||
+        parsed.timeLimit !== initialTimeLimit ||
+        parsed.attemptCount !== initialAttemptCount
+
+      if (isDiff && parsed.updatedAt) {
+        setTimeout(() => {
+          setDraftData(parsed)
+          setHasDraftPrompt(true)
+        }, 0)
+      }
+    } catch (err) {
+      console.warn("Failed to read local autosave quiz draft:", err)
+    }
+  }, [id, existingQuiz, savedAnswerKey, storageKey])
+
+  // Trigger autosave on changes
+  useEffect(() => {
+    if (!isInitializedRef.current) {
+      isInitializedRef.current = true
+      return
+    }
+    if (isRestoringRef.current) {
+      isRestoringRef.current = false
+      return
+    }
+    scheduleAutosave()
+  }, [
+    quizJson,
+    selectedPrinciple,
+    selectedTags,
+    selectedClassrooms,
+    selectedTheme,
+    hasTimeLimit,
+    timeLimit,
+    attemptCount,
+    dueDate,
+    createdBy,
+    scheduleAutosave,
+  ])
+
+  // Save immediately on tab close or refresh if dirty
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (!isDirtyRef.current) return
+      try {
+        const draft: QuizDraft = {
+          ...currentDataRef.current,
+          updatedAt: Date.now(),
+        }
+        localStorage.setItem(storageKey, JSON.stringify(draft))
+      } catch (err) {
+        console.warn("Failed to write quiz draft before unload:", err)
+      }
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload)
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload)
+      if (autosaveTimerRef.current) {
+        clearTimeout(autosaveTimerRef.current)
+      }
+    }
+  }, [storageKey])
+
+  function handleRestoreDraft() {
+    if (!draftData) return
+    isRestoringRef.current = true
+    isDirtyRef.current = true
+    setQuizJson(draftData.quizJson)
+    if (draftData.principle) setSelectedPrinciple(draftData.principle)
+    if (draftData.tags) setSelectedTags(draftData.tags)
+    if (draftData.classrooms) setSelectedClassrooms(draftData.classrooms)
+    if (draftData.theme) setSelectedTheme(draftData.theme)
+    if (draftData.hasTimeLimit !== undefined) {
+      setHasTimeLimit(draftData.hasTimeLimit)
+      setTimeLimit(draftData.timeLimit || 0)
+    }
+    if (draftData.attemptCount !== undefined) {
+      setAttemptCount(draftData.attemptCount)
+    }
+    if (draftData.dueDate) {
+      const parsed = new Date(draftData.dueDate)
+      if (!isNaN(parsed.getTime())) {
+        setDueDate(parsed)
+      }
+    }
+    if (draftData.createdBy) {
+      setCreatedBy(draftData.createdBy)
+    }
+    setIsDirty(true)
+    setHasDraftPrompt(false)
+    setLastSavedTime(draftData.updatedAt)
+    setAutosaveState("saved")
+    toast.add({
+      type: "success",
+      title: "Draft restored",
+      description: "Your locally saved draft has been loaded into the editor.",
+    })
+  }
+
+  function handleDiscardDraft() {
+    try {
+      localStorage.removeItem(storageKey)
+    } catch (err) {
+      console.warn("Failed to discard local quiz draft:", err)
+    }
+    setDraftData(null)
+    setHasDraftPrompt(false)
+    toast.add({
+      type: "info",
+      title: "Draft discarded",
+      description: "Local draft discarded. Showing saved quiz version.",
+    })
+  }
+
   const computedTotalQuestions = useMemo(() => {
     return quizJson.pages.reduce(
       (acc, page) => acc + (page.elements?.length || 0),
@@ -281,20 +1066,8 @@ function QuizEditorContent({
     }, 0)
   }, [quizJson])
 
-  const answerKey = useMemo(() => {
-    const key: AnswerKey = {}
-    for (const page of quizJson.pages) {
-      for (const q of page.elements || []) {
-        if (q.name) {
-          key[q.name] = q.correctAnswer
-        }
-      }
-    }
-    return key
-  }, [quizJson])
-
-  // Safeguards ensuring users do not submit empty or invalid data
-  const validationErrors = useMemo(() => {
+  // Validation logic evaluated on demand (when save dialog is shown or upon saving)
+  const getValidationErrors = useCallback((): string[] => {
     const errors: string[] = []
 
     if (!quizJson.title?.trim()) {
@@ -333,13 +1106,18 @@ function QuizEditorContent({
       errors.push("Every choice option must have non-empty text.")
     }
 
-    // eslint-disable-next-line react-hooks/purity
     if (dueDate && dueDate.getTime() < Date.now() && !existingQuiz) {
       errors.push("Due date & time cannot be set in the past.")
     }
 
     return errors
   }, [quizJson, computedTotalQuestions, dueDate, existingQuiz])
+
+  // Safeguards error list (evaluated only when save dialog is opened)
+  const validationErrors = useMemo(() => {
+    if (!isSaveDialogOpen) return []
+    return getValidationErrors()
+  }, [isSaveDialogOpen, getValidationErrors])
 
   const isPublish = selectedClassrooms.length > 0
   const isAllSelected =
@@ -378,6 +1156,9 @@ function QuizEditorContent({
   }
 
   const previewQuizProps: QuizProps = useMemo(() => {
+    if (activeTab !== "preview") {
+      return {} as QuizProps
+    }
     const updatedQuizJson: QuizJson = {
       ...quizJson,
       timeLimit: hasTimeLimit ? timeLimit : undefined,
@@ -400,6 +1181,7 @@ function QuizEditorContent({
       attempt_count: attemptCount,
     }
   }, [
+    activeTab,
     existingQuiz?.id,
     existingQuiz?.created_at,
     quizJson,
@@ -440,7 +1222,11 @@ function QuizEditorContent({
       if (existingQuiz.principle) setSelectedPrinciple(existingQuiz.principle)
       if (existingQuiz.tags) setSelectedTags(existingQuiz.tags)
       if (existingQuiz.classrooms)
-        setSelectedClassrooms(existingQuiz.classrooms.map((c: any) => typeof c === "string" ? c : c.id))
+        setSelectedClassrooms(
+          existingQuiz.classrooms.map((c: any) =>
+            typeof c === "string" ? c : c.id
+          )
+        )
       if (existingQuiz.time_limit !== undefined) {
         setHasTimeLimit(true)
         setTimeLimit(existingQuiz.time_limit)
@@ -456,8 +1242,11 @@ function QuizEditorContent({
     }
   }
 
-  // Save action handler - opens Save Dialog
+  // Save action handler - opens Save Dialog (flushing any active focused input first)
   const handleSave = () => {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur()
+    }
     setIsSaveDialogOpen(true)
   }
 
@@ -466,8 +1255,28 @@ function QuizEditorContent({
     mutationKey: ["instructor-quizzes"],
     mutationFn: createInstructorQuizAPI,
     onSuccess: () => {
+      isDirtyRef.current = false
+      setIsDirty(false)
+      try {
+        localStorage.removeItem(storageKey)
+      } catch (err) {
+        console.warn("Failed to clean up draft after save:", err)
+      }
+      toast.add({
+        type: "success",
+        title: "Quiz saved",
+        description: "Your quiz has been created successfully.",
+      })
       navigate("/instructor/quizzes")
       setIsSaveDialogOpen(false)
+    },
+    onError: (err: any) => {
+      console.error("Error creating quiz:", err)
+      toast.add({
+        type: "error",
+        title: "Error saving quiz",
+        description: "An error occurred while creating the quiz.",
+      })
     },
   })
 
@@ -477,18 +1286,38 @@ function QuizEditorContent({
     mutationFn: ({ id, payload }: { id: string; payload: any }) =>
       udpateInstructorQuizAPI(id, payload),
     onSuccess: () => {
+      isDirtyRef.current = false
+      setIsDirty(false)
+      try {
+        localStorage.removeItem(storageKey)
+      } catch (err) {
+        console.warn("Failed to clean up draft after save:", err)
+      }
+      toast.add({
+        type: "success",
+        title: "Quiz updated",
+        description: "Your quiz has been updated successfully.",
+      })
       invalidateQueries([["quiz", existingQuiz!.id]])
       navigate("/instructor/quizzes")
       setIsSaveDialogOpen(false)
     },
-    onError: () => {},
+    onError: (err: any) => {
+      console.error("Error updating quiz:", err)
+      toast.add({
+        type: "error",
+        title: "Error updating quiz",
+        description: "An error occurred while updating the quiz.",
+      })
+    },
   })
 
   // Confirm save execution
   const confirmSave = () => {
-    if (validationErrors.length > 0) return
+    const errors = getValidationErrors()
+    if (errors.length > 0) return
     const payload = {
-      answer_key: answerKey,
+      answer_key: extractAnswerKey(quizJson),
       name: quizJson.title,
       status: isPublish ? "Open" : "Draft",
       principle: selectedPrinciple,
@@ -513,6 +1342,52 @@ function QuizEditorContent({
     }
   }
 
+  // Stable callbacks for QuestionCard to avoid cascade re-rendering
+  const handleUpdateQuestion = useCallback(
+    (
+      pIdx: number,
+      qIdx: number,
+      key: keyof QuestionElement,
+      value: any
+    ) => {
+      setQuizJson((prev) => updateQuestion(prev, pIdx, qIdx, key, value))
+    },
+    []
+  )
+
+  const handleUpdateChoice = useCallback(
+    (pIdx: number, qIdx: number, cIdx: number, val: string) => {
+      setQuizJson((prev) => updateChoice(prev, pIdx, qIdx, cIdx, val))
+    },
+    []
+  )
+
+  const handleAddChoice = useCallback((pIdx: number, qIdx: number) => {
+    setQuizJson((prev) => addChoice(prev, pIdx, qIdx))
+  }, [])
+
+  const handleDeleteChoice = useCallback(
+    (pIdx: number, qIdx: number, cIdx: number) => {
+      setQuizJson((prev) => deleteChoice(prev, pIdx, qIdx, cIdx))
+    },
+    []
+  )
+
+  const handleDuplicateQuestion = useCallback((pIdx: number, qIdx: number) => {
+    setQuizJson((prev) => duplicateQuestion(prev, pIdx, qIdx))
+  }, [])
+
+  const handleDeleteQuestion = useCallback((pIdx: number, qIdx: number) => {
+    setQuizJson((prev) => deleteQuestion(prev, pIdx, qIdx))
+  }, [])
+
+  const handleMoveQuestion = useCallback(
+    (pIdx: number, qIdx: number, direction: "up" | "down") => {
+      setQuizJson((prev) => moveQuestion(prev, pIdx, qIdx, direction))
+    },
+    []
+  )
+
   // Ctrl+S / Cmd+S Hotkey
   useHotkeys(
     "mod+s",
@@ -523,7 +1398,7 @@ function QuizEditorContent({
     { enableOnFormTags: true }
   )
 
-  useUnmount({ when: !!quizJson.title || !isCreating || !isUpdating })
+  useUnmount({ when: isDirty })
 
   return (
     <Tabs
@@ -565,6 +1440,36 @@ function QuizEditorContent({
                   Draft
                 </span>
               )}
+
+              {/* Local Autosave Telemetry Indicator */}
+              <div className="hidden shrink-0 items-center gap-1.5 text-xs text-muted-foreground lg:inline-flex">
+                {autosaveState === "saving" && (
+                  <span className="flex items-center gap-1 text-muted-foreground">
+                    <RefreshCw className="size-3 animate-spin text-muted-foreground" />
+                    Saving draft...
+                  </span>
+                )}
+                {autosaveState === "saved" && lastSavedTime && (
+                  <span
+                    className="flex items-center gap-1 text-muted-foreground/80"
+                    title={`Draft saved to your browser on ${new Date(lastSavedTime).toLocaleString()}`}
+                  >
+                    <Check className="size-3 text-emerald-500" />
+                    Saved locally ({formatTime(lastSavedTime)})
+                  </span>
+                )}
+                {autosaveState === "error" && (
+                  <span className="flex items-center gap-1 text-destructive">
+                    <AlertCircle className="size-3" />
+                    Autosave error
+                  </span>
+                )}
+                {autosaveState === "idle" && isDirty && (
+                  <span className="text-muted-foreground/60">
+                    Unsaved changes
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -598,6 +1503,40 @@ function QuizEditorContent({
         </div>
       </header>
 
+      {/* Unsaved Local Draft Recovery Banner */}
+      {hasDraftPrompt && draftData && (
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-amber-500/30 bg-amber-500/10 px-4 py-2 text-xs text-amber-950 sm:px-6 dark:text-amber-200">
+          <div className="flex min-w-0 items-center gap-2">
+            <History className="size-4 shrink-0 text-amber-600 dark:text-amber-400" />
+            <span className="truncate">
+              <strong>Unsaved draft found</strong> from{" "}
+              {formatDraftDate(draftData.updatedAt)}. Would you like to restore
+              your recent changes?
+            </span>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant="default"
+              onClick={handleRestoreDraft}
+              className="h-7 bg-amber-600 px-3 text-xs text-white hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600"
+            >
+              Restore Draft
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              onClick={handleDiscardDraft}
+              className="h-7 px-2 text-xs hover:bg-amber-500/20"
+            >
+              Discard
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Main Content Workspace - Main Editor & Preview Tabs */}
       <TabsContent
         value="editor"
@@ -614,11 +1553,11 @@ function QuizEditorContent({
                 >
                   Quiz Title
                 </FieldLabel>
-                <Input
+                <DebouncedInput
                   id="quiz-title-input"
                   value={quizJson.title}
-                  onChange={(e) =>
-                    setQuizJson({ ...quizJson, title: e.target.value })
+                  onValueChange={(val) =>
+                    setQuizJson((prev) => ({ ...prev, title: val }))
                   }
                   placeholder="Untitled Quiz Assessment"
                   className="h-11 text-base font-bold text-foreground sm:text-lg"
@@ -632,12 +1571,12 @@ function QuizEditorContent({
                 >
                   Quiz Description
                 </FieldLabel>
-                <Textarea
+                <DebouncedTextarea
                   id="quiz-desc-input"
                   maxLength={500}
                   value={quizJson.description || ""}
-                  onChange={(e) =>
-                    setQuizJson({ ...quizJson, description: e.target.value })
+                  onValueChange={(val) =>
+                    setQuizJson((prev) => ({ ...prev, description: val }))
                   }
                   placeholder="Provide description or instructions for students..."
                   className="min-h-17.5 text-sm text-foreground focus-visible:ring-1"
@@ -728,12 +1667,12 @@ function QuizEditorContent({
                   <label htmlFor="attempt-count" className="font-medium">
                     Attempts:
                   </label>
-                  <Input
-                    type={"number"}
+                  <DebouncedInput
+                    type="number"
                     className="w-fit"
                     placeholder="Default 3"
                     value={attemptCount}
-                    onChange={(e) => setAttemptCount(Number(e.target.value))}
+                    onValueChange={(val) => setAttemptCount(Number(val) || 1)}
                   />
                 </div>
               </div>
@@ -798,11 +1737,11 @@ function QuizEditorContent({
                     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
                       0{validPageIndex + 1}
                     </span>
-                    <Input
+                    <DebouncedInput
                       value={activePage.title}
-                      onChange={(e) =>
+                      onValueChange={(val) =>
                         setQuizJson((prev) =>
-                          updatePageTitle(prev, validPageIndex, e.target.value)
+                          updatePageTitle(prev, validPageIndex, val)
                         )
                       }
                       placeholder="Section Title (e.g. Web Accessibility Principles)"
@@ -848,400 +1787,24 @@ function QuizEditorContent({
 
               {/* Questions Container for Active Section */}
               <div className="space-y-4">
-                {activePage.elements.map((q, qIdx) => {
-                  const isActive = activeQId === q.name
-
-                  return (
-                    <Card
-                      key={q.name || qIdx}
-                      onClick={() => setActiveQId(q.name)}
-                      className={cn(
-                        "relative border bg-background p-4 shadow-sm transition-all sm:p-6",
-                        isActive
-                          ? "border-l-4 border-l-primary shadow-md ring-1 ring-primary/20"
-                          : "hover:border-border/80"
-                      )}
-                    >
-                      {/* Drag / Active indicator handle */}
-                      <div className="mb-2 flex items-center justify-center text-muted-foreground/30">
-                        <GripVertical className="size-4" />
-                      </div>
-
-                      {/* Question Title & Type Selection Header */}
-                      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="flex-1 space-y-1">
-                          <Input
-                            value={q.title}
-                            onChange={(e) =>
-                              setQuizJson((prev) =>
-                                updateQuestion(
-                                  prev,
-                                  validPageIndex,
-                                  qIdx,
-                                  "title",
-                                  e.target.value
-                                )
-                              )
-                            }
-                            placeholder={`Question ${qIdx + 1}`}
-                            className="h-10 text-base font-semibold text-foreground focus-visible:bg-muted/30"
-                          />
-                        </div>
-
-                        {/* Top Right Controls: Question Type Selector & Individual Points */}
-                        <div className="flex shrink-0 items-center gap-2">
-                          {/* Question Objective Type Selector */}
-                          <div className="w-full sm:w-56">
-                            <select
-                              value={q.type}
-                              onChange={(e) =>
-                                setQuizJson((prev) =>
-                                  updateQuestion(
-                                    prev,
-                                    validPageIndex,
-                                    qIdx,
-                                    "type",
-                                    e.target.value as QuestionType
-                                  )
-                                )
-                              }
-                              className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-xs font-medium text-foreground shadow-xs transition-colors focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
-                            >
-                              {QUESTION_TYPE_OPTIONS.map((opt) => (
-                                <option key={opt.value} value={opt.value}>
-                                  {opt.label}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-
-                          {/* Individual Question Points Input */}
-                          <div className="flex h-10 items-center gap-1.5 rounded-md border border-input bg-muted/40 px-3 py-1 shadow-xs transition-colors focus-within:border-primary focus-within:ring-1 focus-within:ring-primary hover:bg-muted/70">
-                            <span className="text-xs font-semibold whitespace-nowrap text-muted-foreground">
-                              Pts:
-                            </span>
-                            <Input
-                              type="number"
-                              min={1}
-                              max={100}
-                              value={q.points ?? 5}
-                              onChange={(e) => {
-                                const val = Math.max(
-                                  1,
-                                  parseInt(e.target.value) || 1
-                                )
-                                setQuizJson((prev) =>
-                                  updateQuestion(
-                                    prev,
-                                    validPageIndex,
-                                    qIdx,
-                                    "points",
-                                    val
-                                  )
-                                )
-                              }}
-                              className="h-7 w-12 border-none bg-transparent p-0 text-center text-xs font-bold text-foreground shadow-none focus-visible:ring-0"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* --- QUESTION ANSWER TYPES CONTENT --- */}
-
-                      {/* 1. BOOLEAN QUESTION TYPE */}
-                      {q.type === "boolean" && (
-                        <div className="mt-4 space-y-3 rounded-lg border bg-muted/20 p-4">
-                          <div className="flex items-center justify-between">
-                            <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-                              <CheckCircle2 className="size-3.5 text-emerald-500" />
-                              Select Correct Answer
-                            </span>
-                          </div>
-                          <div className="flex gap-6">
-                            <label className="flex cursor-pointer items-center gap-2.5 rounded-md border bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/40">
-                              <input
-                                type="radio"
-                                name={`correct_${q.name}`}
-                                className="size-4 accent-emerald-600"
-                                checked={q.correctAnswer === true}
-                                onChange={() =>
-                                  setQuizJson((prev) =>
-                                    updateQuestion(
-                                      prev,
-                                      validPageIndex,
-                                      qIdx,
-                                      "correctAnswer",
-                                      true
-                                    )
-                                  )
-                                }
-                              />
-                              True
-                            </label>
-
-                            <label className="flex cursor-pointer items-center gap-2.5 rounded-md border bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/40">
-                              <input
-                                type="radio"
-                                name={`correct_${q.name}`}
-                                className="size-4 accent-emerald-600"
-                                checked={q.correctAnswer === false}
-                                onChange={() =>
-                                  setQuizJson((prev) =>
-                                    updateQuestion(
-                                      prev,
-                                      validPageIndex,
-                                      qIdx,
-                                      "correctAnswer",
-                                      false
-                                    )
-                                  )
-                                }
-                              />
-                              False
-                            </label>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 2. OBJECTIVE CHOICE TYPES (radiogroup, checkbox, dropdown, ranking) */}
-                      {[
-                        "radiogroup",
-                        "checkbox",
-                        "dropdown",
-                        "ranking",
-                      ].includes(q.type) && (
-                        <div className="mt-4 space-y-3">
-                          <div className="flex items-center justify-between">
-                            <span className="flex items-center gap-1.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-                              <CheckCircle2 className="size-3.5 text-emerald-500" />
-                              {q.type === "ranking"
-                                ? "Define Correct Item Order (Top to Bottom)"
-                                : q.type === "checkbox"
-                                  ? "Select Correct Answer(s)"
-                                  : "Select Single Correct Answer"}
-                            </span>
-                          </div>
-
-                          <div className="space-y-2">
-                            {q.choices?.map((choice, cIdx) => {
-                              const isCorrect =
-                                q.type === "checkbox"
-                                  ? Array.isArray(q.correctAnswer) &&
-                                    q.correctAnswer.includes(choice)
-                                  : q.correctAnswer === choice
-
-                              return (
-                                <div
-                                  key={cIdx}
-                                  className="flex items-center gap-3"
-                                >
-                                  {/* Choice Indicator */}
-                                  {q.type === "ranking" ? (
-                                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground">
-                                      {cIdx + 1}
-                                    </span>
-                                  ) : q.type === "checkbox" ? (
-                                    <input
-                                      type="checkbox"
-                                      title="Mark as correct answer"
-                                      className="size-4 cursor-pointer rounded accent-emerald-600"
-                                      checked={isCorrect}
-                                      onChange={(e) => {
-                                        const currentAns = Array.isArray(
-                                          q.correctAnswer
-                                        )
-                                          ? q.correctAnswer
-                                          : []
-                                        const newAns = e.target.checked
-                                          ? [...currentAns, choice]
-                                          : currentAns.filter(
-                                              (a) => a !== choice
-                                            )
-                                        setQuizJson((prev) =>
-                                          updateQuestion(
-                                            prev,
-                                            validPageIndex,
-                                            qIdx,
-                                            "correctAnswer",
-                                            newAns
-                                          )
-                                        )
-                                      }}
-                                    />
-                                  ) : (
-                                    <input
-                                      type="radio"
-                                      name={`correct_${q.name}`}
-                                      title="Mark as correct answer"
-                                      className="size-4 cursor-pointer accent-emerald-600"
-                                      checked={isCorrect}
-                                      onChange={() =>
-                                        setQuizJson((prev) =>
-                                          updateQuestion(
-                                            prev,
-                                            validPageIndex,
-                                            qIdx,
-                                            "correctAnswer",
-                                            choice
-                                          )
-                                        )
-                                      }
-                                    />
-                                  )}
-
-                                  <Input
-                                    value={choice}
-                                    onChange={(e) =>
-                                      setQuizJson((prev) =>
-                                        updateChoice(
-                                          prev,
-                                          validPageIndex,
-                                          qIdx,
-                                          cIdx,
-                                          e.target.value
-                                        )
-                                      )
-                                    }
-                                    placeholder={`Option ${cIdx + 1}`}
-                                    className={cn(
-                                      "h-9 flex-1 text-sm transition-colors",
-                                      isCorrect || q.type === "ranking"
-                                        ? "border-emerald-500/50 bg-emerald-500/5 font-medium dark:bg-emerald-950/20"
-                                        : ""
-                                    )}
-                                  />
-
-                                  <Button
-                                    type="button"
-                                    disabled={(q.choices?.length || 0) <= 1}
-                                    onClick={() =>
-                                      setQuizJson((prev) =>
-                                        deleteChoice(
-                                          prev,
-                                          validPageIndex,
-                                          qIdx,
-                                          cIdx
-                                        )
-                                      )
-                                    }
-                                    variant="ghost"
-                                    size="icon-sm"
-                                    className="text-muted-foreground hover:text-destructive"
-                                  >
-                                    <X className="size-4" />
-                                  </Button>
-                                </div>
-                              )
-                            })}
-                          </div>
-
-                          <Button
-                            type="button"
-                            onClick={() =>
-                              setQuizJson((prev) =>
-                                addChoice(prev, validPageIndex, qIdx)
-                              )
-                            }
-                            variant="outline"
-                            size="sm"
-                            className="mt-1 h-8 gap-1.5 text-xs"
-                          >
-                            <Plus className="size-3.5" /> Add Choice
-                          </Button>
-                        </div>
-                      )}
-
-                      {/* Question Bottom Action Toolbar */}
-                      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t pt-3">
-                        <div className="flex items-center gap-1.5">
-                          <Button
-                            type="button"
-                            disabled={qIdx === 0}
-                            onClick={() =>
-                              setQuizJson((prev) =>
-                                moveQuestion(prev, validPageIndex, qIdx, "up")
-                              )
-                            }
-                            variant="ghost"
-                            size="icon-sm"
-                            title="Move Question Up"
-                          >
-                            <ArrowUp className="size-4" />
-                          </Button>
-                          <Button
-                            type="button"
-                            disabled={qIdx === activePage.elements.length - 1}
-                            onClick={() =>
-                              setQuizJson((prev) =>
-                                moveQuestion(prev, validPageIndex, qIdx, "down")
-                              )
-                            }
-                            variant="ghost"
-                            size="icon-sm"
-                            title="Move Question Down"
-                          >
-                            <ArrowDown className="size-4" />
-                          </Button>
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-2 border-r pr-4">
-                            <Switch
-                              checked={q.isRequired ?? true}
-                              onCheckedChange={(checked) =>
-                                setQuizJson((prev) =>
-                                  updateQuestion(
-                                    prev,
-                                    validPageIndex,
-                                    qIdx,
-                                    "isRequired",
-                                    checked
-                                  )
-                                )
-                              }
-                              id={`req_${q.name}`}
-                            />
-                            <label
-                              htmlFor={`req_${q.name}`}
-                              className="cursor-pointer text-xs font-medium text-muted-foreground"
-                            >
-                              Required
-                            </label>
-                          </div>
-
-                          <Button
-                            type="button"
-                            onClick={() =>
-                              setQuizJson((prev) =>
-                                duplicateQuestion(prev, validPageIndex, qIdx)
-                              )
-                            }
-                            variant="ghost"
-                            size="icon-sm"
-                            title="Duplicate Question"
-                          >
-                            <Copy className="size-4" />
-                          </Button>
-
-                          <Button
-                            type="button"
-                            onClick={() =>
-                              setQuizJson((prev) =>
-                                deleteQuestion(prev, validPageIndex, qIdx)
-                              )
-                            }
-                            variant="ghost"
-                            size="icon-sm"
-                            title="Delete Question"
-                            className="text-destructive hover:bg-destructive/10"
-                          >
-                            <Trash className="size-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  )
-                })}
+                {activePage.elements.map((q, qIdx) => (
+                  <QuestionCard
+                    key={q.name || qIdx}
+                    q={q}
+                    qIdx={qIdx}
+                    validPageIndex={validPageIndex}
+                    isActive={activeQId === q.name}
+                    totalQuestions={activePage.elements.length}
+                    onSelect={() => setActiveQId(q.name)}
+                    onUpdateQuestion={handleUpdateQuestion}
+                    onUpdateChoice={handleUpdateChoice}
+                    onAddChoice={handleAddChoice}
+                    onDeleteChoice={handleDeleteChoice}
+                    onDuplicateQuestion={handleDuplicateQuestion}
+                    onDeleteQuestion={handleDeleteQuestion}
+                    onMoveQuestion={handleMoveQuestion}
+                  />
+                ))}
               </div>
 
               {/* Add Question Button in Active Section */}
@@ -1287,7 +1850,9 @@ function QuizEditorContent({
                 <span>Reset Preview</span>
               </Button>
             </div>
-            <QuizForm quiz={previewQuizProps} key={previewKey} />
+            {activeTab === "preview" && (
+              <QuizForm quiz={previewQuizProps} key={previewKey} />
+            )}
           </Card>
         </div>
       </TabsContent>
@@ -1376,13 +1941,13 @@ function QuizEditorContent({
                   <span className="text-xs font-medium text-foreground">
                     Duration Limit:
                   </span>
-                  <Input
+                  <DebouncedInput
                     type="number"
                     min={1}
                     max={600}
                     value={timeLimit || 30}
-                    onChange={(e) =>
-                      setTimeLimit(Math.max(1, parseInt(e.target.value) || 1))
+                    onValueChange={(val) =>
+                      setTimeLimit(Math.max(1, parseInt(val) || 1))
                     }
                     className="h-8 w-20 text-xs font-semibold"
                   />

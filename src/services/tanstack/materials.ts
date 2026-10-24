@@ -88,10 +88,10 @@ export function useInstructorMaterialsModules(id: string) {
   })
 }
 
-export function useModuleById(id: string) {
-  return useSuspenseQuery({
+export function useModuleById(id?: string) {
+  return useQuery({
     queryKey: ["module", id],
-    queryFn: () => getModuleByIdAPI(id),
+    queryFn: id ? () => getModuleByIdAPI(id) : skipToken,
     staleTime: staleTime,
   })
 }
@@ -113,10 +113,10 @@ export function useInstructorQuizzes() {
   })
 }
 
-export function useQuizById(id: string) {
-  return useSuspenseQuery({
+export function useQuizById(id?: string) {
+  return useQuery({
     queryKey: ["quiz", id],
-    queryFn: () => getQuizByIdAPI(id),
+    queryFn: id ? () => getQuizByIdAPI(id) : skipToken,
     staleTime: staleTime,
   })
 }

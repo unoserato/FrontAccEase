@@ -478,6 +478,7 @@ function SubmissionsTab({
       <QuizSubmissionsCardTemplate
         quiz={quiz}
         submissions={submissions}
+        viewMode="by-classroom"
       />
     </div>
   )
